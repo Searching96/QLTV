@@ -35,19 +35,19 @@ namespace QLTV
             using (var context = new QLTVContext())
             {
                 var dsTuaSach = context.TUASACH
-                                       .Where(ts => !ts.IsDeleted)
-                                       .Select(ts => new
-                                       {
-                                           ts.MaTuaSach,
-                                           ts.TenTuaSach,
-                                           ts.SoLuong,
-                                           ts.HanMuonToiDa,
-                                           DSTacGia = string.Join(", ", ts.TUASACH_TACGIA
-                                                            .Select(ts_tg => ts_tg.IDTacGiaNavigation.TenTacGia)),
-                                           DSTheLoai = string.Join(", ", ts.TUASACH_THELOAI
-                                                             .Select(ts_tl => ts_tl.IDTheLoaiNavigation.TenTheLoai))
-                                       })
-                                       .ToList();
+                    .Where(ts => !ts.IsDeleted)
+                    .Select(ts => new
+                    {
+                        ts.MaTuaSach,
+                        ts.TenTuaSach,
+                        ts.SoLuong,
+                        ts.HanMuonToiDa,
+                        DSTacGia = string.Join(", ", ts.TUASACH_TACGIA
+                            .Select(ts_tg => ts_tg.IDTacGiaNavigation.TenTacGia)),
+                        DSTheLoai = string.Join(", ", ts.TUASACH_THELOAI
+                            .Select(ts_tl => ts_tl.IDTheLoaiNavigation.TenTheLoai))
+                    })
+                    .ToList();
 
                 dgTuaSach.ItemsSource = dsTuaSach;
             }
@@ -78,9 +78,9 @@ namespace QLTV
 
                 // Tìm tựa sách cần sửa
                 var tuaSachToUpdate = context.TUASACH
-                                             .Include(ts => ts.TUASACH_TACGIA)
-                                             .Include(ts => ts.TUASACH_THELOAI)
-                                             .FirstOrDefault(ts => ts.MaTuaSach == maTuaSach);
+                    .Include(ts => ts.TUASACH_TACGIA)
+                    .Include(ts => ts.TUASACH_THELOAI)
+                    .FirstOrDefault(ts => ts.MaTuaSach == maTuaSach);
 
                 if (tuaSachToUpdate != null)
                 {
@@ -134,7 +134,7 @@ namespace QLTV
         private void dgTuaSach_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             var selectedItem = dgTuaSach.SelectedItem;
-        
+
             if (selectedItem != null)
             {
                 dynamic selectedBook = selectedItem;
@@ -166,8 +166,8 @@ namespace QLTV
             using (var context = new QLTVContext())
             {
                 allAuthors = context.TACGIA
-                                    .Where(tg => !tg.IsDeleted)
-                                    .ToList();
+                    .Where(tg => !tg.IsDeleted)
+                    .ToList();
             }
 
             // Mở cửa sổ WDChonTacGia
@@ -187,14 +187,14 @@ namespace QLTV
 
             // Tách DSTacGia thành các tên tác giả dựa vào dấu phẩy
             var lstTenTacGia = DSTacGia.Split(new[] { ", " }, StringSplitOptions.RemoveEmptyEntries)
-                                       .Select(tg => tg.Trim())
-                                       .ToList();
+                .Select(tg => tg.Trim())
+                .ToList();
 
             // Lấy danh sách từ cơ sở dữ liệu khớp với tên
             using (var context = new QLTVContext())
             {
                 return context.TACGIA.Where(tg => lstTenTacGia
-                              .Contains(tg.TenTacGia)).ToList();
+                    .Contains(tg.TenTacGia)).ToList();
             }
         }
 
@@ -208,12 +208,12 @@ namespace QLTV
             using (var context = new QLTVContext())
             {
                 allCategories = context.THELOAI
-                                       .Where(tl => !tl.IsDeleted)
-                                       .ToList();
+                    .Where(tl => !tl.IsDeleted)
+                    .ToList();
             }
 
             // Mở cửa sổ WDChonTacGia
-            var awChonTheLoai= new AWChonTheLoai(allCategories, currentCategories);
+            var awChonTheLoai = new AWChonTheLoai(allCategories, currentCategories);
 
             if (awChonTheLoai.ShowDialog() == true)
             {
@@ -228,8 +228,8 @@ namespace QLTV
             if (string.IsNullOrWhiteSpace(DSTheLoai)) return new List<THELOAI>();
 
             var lstTenTheLoai = DSTheLoai.Split(new[] { ", " }, StringSplitOptions.RemoveEmptyEntries)
-                                         .Select(tl => tl.Trim())
-                                         .ToList();
+                .Select(tl => tl.Trim())
+                .ToList();
 
             using (var context = new QLTVContext())
             {
@@ -288,7 +288,50 @@ namespace QLTV
 
         private void btnTimKiem_Click(object sender, RoutedEventArgs e)
         {
+            string searchTerm = tbxThongTinTimKiem.Text.Trim();
+            string selectedProperty = ((ComboBoxItem)cbbThuocTinhTimKiem.SelectedItem)?.Content.ToString();
 
+            // Kiểm tra nếu không có gì được chọn
+            if (string.IsNullOrEmpty(selectedProperty))
+            {
+                MessageBox.Show("Vui lòng chọn thuộc tính tìm kiếm", "Thông báo", MessageBoxButton.OK, MessageBoxImage.Warning);
+                return;
+            }
+
+            using (var context = new QLTVContext())
+            {
+                // Truy vấn cơ sở dữ liệu để lấy tất cả các tựa sách
+                var query = context.TUASACH
+                    .Where(ts => !ts.IsDeleted)
+                    .Select(ts => new
+                    {
+                        ts.MaTuaSach,
+                        ts.TenTuaSach,
+                        ts.SoLuong,
+                        ts.HanMuonToiDa,
+                        DSTacGia = string.Join(", ", ts.TUASACH_TACGIA.Select(ts_tg => ts_tg.IDTacGiaNavigation.TenTacGia)),
+                        DSTheLoai = string.Join(", ", ts.TUASACH_THELOAI.Select(ts_tl => ts_tl.IDTheLoaiNavigation.TenTheLoai))
+                    })
+                    .AsEnumerable() // Chuyển về IEnumerable để lọc trên máy khách
+                    .ToList();
+
+                // Lọc theo thuộc tính tìm kiếm được chọn
+                if (selectedProperty == "Tên Tựa Sách")
+                {
+                    query = query.Where(ts => ts.TenTuaSach.Contains(searchTerm)).ToList();
+                }
+                else if (selectedProperty == "Tác Giả")
+                {
+                    query = query.Where(ts => ts.DSTacGia.Contains(searchTerm)).ToList();
+                }
+                else if (selectedProperty == "Thể Loại")
+                {
+                    query = query.Where(ts => ts.DSTheLoai.Contains(searchTerm)).ToList();
+                }
+
+                // Cập nhật ItemsSource cho DataGrid
+                dgTuaSach.ItemsSource = query;
+            }
         }
     }
 }

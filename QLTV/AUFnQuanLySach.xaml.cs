@@ -16,7 +16,7 @@ using System.Windows.Shapes;
 namespace QLTV
 {
     /// <summary>
-    /// Interaction logic for AUFnQuanLySach.xaml
+    /// Interaction logic for ADUCQuanLySach.xaml
     /// </summary>
     public partial class AUFnQuanLySach : UserControl
     {
@@ -38,6 +38,11 @@ namespace QLTV
         private void btnQuanLyTheLoai_Click(object sender, RoutedEventArgs e)
         {
             OpenTab("Quản lý thể loại", new AUQuanLyTheLoai());
+        }
+
+        private void btnQuanLySach_Click(object sender, RoutedEventArgs e)
+        {
+            OpenTab("Quản lý sách", new AUQuanLySach());
         }
 
         private void OpenTab(string header, UserControl content)
@@ -62,7 +67,7 @@ namespace QLTV
             closeButton.Click += (s, e) => tcFnQuanLySach.Items.Remove(tabItem);
 
             // Thêm header và close button vào stack panel
-            headerPanel.Children.Add(headerText); 
+            headerPanel.Children.Add(headerText);
             headerPanel.Children.Add(closeButton);
 
             // Gán headerPanel cho header (cục chọn tab) của 1 tab

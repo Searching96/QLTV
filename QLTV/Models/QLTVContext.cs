@@ -255,6 +255,9 @@ public partial class QLTVContext : DbContext
 
         modelBuilder.Entity<SACH>(entity =>
         {
+            entity.Property(e => e.IsAvailable)
+                .IsRequired()
+                .HasDefaultValueSql("((1))");
             entity.Property(e => e.MaSach)
                 .HasMaxLength(6)
                 .IsUnicode(false)

@@ -21,7 +21,7 @@
             </Grid.RowDefinitions>
 
             <TextBlock Grid.Row="0" Text="Thông Tin Tựa Sách" FontSize="18"
-                       FontWeight="Bold" HorizontalAlignment="Left" Margin="5"/>
+                   FontWeight="Bold" HorizontalAlignment="Left" Margin="5"/>
 
             <!--Section hien thi sach duoc chon-->
             <Grid Grid.Row="1">
@@ -41,58 +41,58 @@
                 </Grid.RowDefinitions>
 
                 <TextBlock Text="Mã Tựa Sách:" Grid.Row="0" Grid.Column="0" 
-                           VerticalAlignment="Center"/>
+                       VerticalAlignment="Center"/>
                 <TextBox x:Name="tbxMaTuaSach" Grid.Row="0" Grid.Column="1"
-                         VerticalAlignment="Center"/>
+                     VerticalAlignment="Center"/>
                 <TextBlock Text="Tên Tựa Sách:" Grid.Row="0" Grid.Column="2" 
-                           VerticalAlignment="Center"/>
+                       VerticalAlignment="Center"/>
                 <TextBox x:Name="tbxTenTuaSach" Grid.Row="0" Grid.Column="3"
-                         VerticalAlignment="Center"/>
+                     VerticalAlignment="Center"/>
                 <TextBlock Text="Tác Giả:" Grid.Row="0" Grid.Column="4" 
-                           VerticalAlignment="Center"/>
+                       VerticalAlignment="Center"/>
                 <Grid x:Name="grTacGia" Grid.Row="0" Grid.Column="5">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="7*"/>
                         <ColumnDefinition Width="1*"/>
                     </Grid.ColumnDefinitions>
                     <TextBox x:Name="tbxDSTacGia" Grid.Column="0"
-                             VerticalAlignment="Center"/>
+                         VerticalAlignment="Center"/>
                     <Button x:Name="btnSuaTacGia" Grid.Column="1" Content="E"
-                            VerticalAlignment="Center" Click="btnSuaTacGia_Click"/>
+                        VerticalAlignment="Center" Click="btnSuaTacGia_Click"/>
                 </Grid>
                 <TextBlock Text="Thể Loại:" Grid.Row="1" Grid.Column="0" 
-                           VerticalAlignment="Center"/>
+                       VerticalAlignment="Center"/>
                 <Grid x:Name="grTheLoai" Grid.Row="1" Grid.Column="1">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="7*"/>
                         <ColumnDefinition Width="1*"/>
                     </Grid.ColumnDefinitions>
                     <TextBox x:Name="tbxDSTheLoai" Grid.Column="0"
-                             VerticalAlignment="Center"/>
+                         VerticalAlignment="Center"/>
                     <Button x:Name="btnSuaTheLoai" Grid.Column="1" Content="E"
-                            VerticalAlignment="Center" Click="btnSuaTheLoai_Click"/>
+                        VerticalAlignment="Center" Click="btnSuaTheLoai_Click"/>
                 </Grid>
                 <TextBlock Text="Số Lượng:" Grid.Row="1" Grid.Column="2" 
-                           VerticalAlignment="Center"/>
+                       VerticalAlignment="Center"/>
                 <TextBox x:Name="tbxSoLuong" Grid.Row="1" Grid.Column="3"
-                         VerticalAlignment="Center"/>
+                     VerticalAlignment="Center"/>
                 <TextBlock Text="Hạn Mượn Tối Đa:" Grid.Row="1" Grid.Column="4" 
-                           VerticalAlignment="Center"/>
+                       VerticalAlignment="Center"/>
                 <TextBox x:Name="tbxHanMuonToiDa" Grid.Row="1" Grid.Column="5"
-                         VerticalAlignment="Center"/>
+                     VerticalAlignment="Center"/>
             </Grid>
 
             <!--CRUD buttons-->
             <StackPanel Grid.Row="2" Orientation="Horizontal"  
-                        HorizontalAlignment="Left" Margin="5">
+                    HorizontalAlignment="Left" Margin="5">
                 <Button x:Name="btnThemTuaSach" Content="Thêm" Background="Gray" 
-                        Margin="5, 0, 0, 0" Click="btnThemTuaSach_Click"/>
+                    Margin="5, 0, 0, 0" Click="btnThemTuaSach_Click"/>
                 <Button x:Name="btnSuaTuaSach" Content="Sửa" Background="Gray" 
-                        Margin="5, 0, 0, 0" Click="btnSuaTuaSach_Click"/>
+                    Margin="5, 0, 0, 0" Click="btnSuaTuaSach_Click"/>
                 <Button x:Name="btnXoaTuaSach" Content="Xóa" Background="Gray" 
-                        Margin="5, 0, 0, 0" Click="btnXoaTuaSach_Click"/>
+                    Margin="5, 0, 0, 0" Click="btnXoaTuaSach_Click"/>
                 <Button x:Name="btnLamMoi" Content="Làm mới" Background="Gray" 
-                        Margin="5, 0, 0, 0" Click="btnLamMoi_Click"/>
+                    Margin="5, 0, 0, 0" Click="btnLamMoi_Click"/>
             </StackPanel>
         </Grid>
 
@@ -104,7 +104,7 @@
             </Grid.ColumnDefinitions>
 
             <TextBlock Text="Danh Sách Các Tựa Sách" Grid.Column="0" FontWeight="Bold"
-                       FontSize="26" VerticalAlignment="Center"/>
+                   FontSize="26" VerticalAlignment="Center"/>
             <Grid Grid.Column="1">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="1*"/>
@@ -125,8 +125,8 @@
         </Grid>
 
         <DataGrid x:Name="dgTuaSach" Grid.Row="2" SelectionMode="Single"
-                  SelectionUnit="FullRow" IsReadOnly="true" AutoGenerateColumns="False"
-                  SelectionChanged="dgTuaSach_SelectionChanged">
+              SelectionUnit="FullRow" IsReadOnly="true" AutoGenerateColumns="False"
+              SelectionChanged="dgTuaSach_SelectionChanged">
             <DataGrid.Columns>
                 <DataGridTextColumn Header="Mã Tựa Sách" Width="*" Binding="{Binding MaTuaSach}"/>
                 <DataGridTextColumn Header="Tên Tựa Sách" Width="*" Binding="{Binding TenTuaSach}"/>

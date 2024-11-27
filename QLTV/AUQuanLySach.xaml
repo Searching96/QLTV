@@ -1,0 +1,156 @@
+﻿<UserControl x:Class="QLTV.AUQuanLySach"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:QLTV"
+             mc:Ignorable="d" 
+             d:DesignHeight="450" d:DesignWidth="800">
+    <Grid Background="White">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="300*"/>
+            <RowDefinition Height="50*"/>
+            <RowDefinition Height="800*"/>
+        </Grid.RowDefinitions>
+
+        <Grid Grid.Row="0">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="Auto"/>
+            </Grid.RowDefinitions>
+
+            <TextBlock Grid.Row="0" Text="Thông Tin Sách" FontSize="18"
+                       FontWeight="Bold" HorizontalAlignment="Left" Margin="5"/>
+
+            <!--Section hien thi sach duoc chon-->
+            <Grid Grid.Row="1">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="1*"/>
+                    <ColumnDefinition Width="2*"/>
+                    <ColumnDefinition Width="1*"/>
+                    <ColumnDefinition Width="2*"/>
+                    <ColumnDefinition Width="1*"/>
+                    <ColumnDefinition Width="2*"/>
+                </Grid.ColumnDefinitions>
+
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                </Grid.RowDefinitions>
+
+                <TextBlock Text="Mã Sách:" Grid.Row="0" Grid.Column="0" 
+                           VerticalAlignment="Center"/>
+                <TextBox x:Name="tbxMaSach" Grid.Row="0" Grid.Column="1"
+                         VerticalAlignment="Center" IsReadOnly="True"/>
+                <TextBlock Text="Tựa Sách:" Grid.Row="0" Grid.Column="2" 
+                           VerticalAlignment="Center"/>
+                <TextBox x:Name="tbxTuaSach" Grid.Row="0" Grid.Column="3"
+                         VerticalAlignment="Center" IsReadOnly="True"/>
+                <TextBlock Text="Tác Giả:" Grid.Row="0" Grid.Column="4" 
+                           VerticalAlignment="Center"/>
+                <TextBox x:Name="tbxDSTacGia" Grid.Row="0" Grid.Column="5"
+                         VerticalAlignment="Center" IsReadOnly="True"/>
+    
+                <TextBlock Text="Thể Loại:" Grid.Row="1" Grid.Column="0" 
+                           VerticalAlignment="Center"/>
+                <TextBox x:Name="tbxDSTheLoai" Grid.Row="1" Grid.Column="1"
+                         VerticalAlignment="Center" IsReadOnly="True"/>
+                <TextBlock Text="Nhà Xuất Bản:" Grid.Row="1" Grid.Column="2" 
+                           VerticalAlignment="Center"/>
+                <TextBox x:Name="tbxNhaXuatBan" Grid.Row="1" Grid.Column="3"
+                         VerticalAlignment="Center"/>
+                <TextBlock Text="Năm Xuất Bản:" Grid.Row="1" Grid.Column="4" 
+                           VerticalAlignment="Center"/>
+                <TextBox x:Name="tbxNamXuatBan" Grid.Row="1" Grid.Column="5"
+                         VerticalAlignment="Center"/>
+                
+                <TextBlock Text="Ngày Nhập:" Grid.Row="2" Grid.Column="0" 
+                           VerticalAlignment="Center"/>
+                <TextBox x:Name="tbxNgayNhap" Grid.Row="2" Grid.Column="1"
+                         VerticalAlignment="Center"/>
+                <TextBlock Text="Trị Giá:" Grid.Row="2" Grid.Column="2" 
+                           VerticalAlignment="Center"/>
+                <TextBox x:Name="tbxTriGia" Grid.Row="2" Grid.Column="3"
+                         VerticalAlignment="Center"/>
+                <TextBlock Text="Tình Trạng:" Grid.Row="2" Grid.Column="4" 
+                           VerticalAlignment="Center"/>
+                <TextBox x:Name="tbxTinhTrang" Grid.Row="2" Grid.Column="5"
+                         VerticalAlignment="Center" IsReadOnly="True"/>
+
+                <!--Hiển thị thì bên mượn trả mới cần-->
+                <!--<TextBlock Text="Hạn Mượn Tối Đa:" Grid.Row="2" Grid.Column="4" 
+                           VerticalAlignment="Center"/>
+                <TextBox x:Name="tbxHanMuonToiDa" Grid.Row="2" Grid.Column="5"
+                         VerticalAlignment="Center"/>-->
+                <!--Để làm filter-->
+                <!--<TextBlock Text="Có Sẵn:" Grid.Row="3" Grid.Column="2" 
+                           VerticalAlignment="Center"/>
+                <TextBox x:Name="tbxCoSan" Grid.Row="3" Grid.Column="3"
+                         VerticalAlignment="Center"/>-->
+            </Grid>
+
+            <!--CRUD buttons-->
+            <StackPanel Grid.Row="2" Orientation="Horizontal"  
+                        HorizontalAlignment="Left" Margin="5">
+                <Button x:Name="btnThemTuaSach" Content="Thêm" Background="Gray" 
+                        Margin="5, 0, 0, 0" Click="btnThemSach_Click"/>
+                <Button x:Name="btnSuaTuaSach" Content="Sửa" Background="Gray" 
+                        Margin="5, 0, 0, 0" Click="btnSuaSach_Click"/>
+                <Button x:Name="btnXoaTuaSach" Content="Xóa" Background="Gray" 
+                        Margin="5, 0, 0, 0" Click="btnXoaSach_Click"/>
+                <Button x:Name="btnLamMoi" Content="Làm mới" Background="Gray" 
+                        Margin="5, 0, 0, 0" Click="btnLamMoi_Click"/>
+            </StackPanel>
+        </Grid>
+
+        <!--Grid cho title Data Grid va Thanh Search-->
+        <Grid Grid.Row="1">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="1*"/>
+                <ColumnDefinition Width="1*"/>
+            </Grid.ColumnDefinitions>
+
+            <TextBlock Text="Danh Sách Các Cuốn Sách" Grid.Column="0" FontWeight="Bold"
+                       FontSize="26" VerticalAlignment="Center"/>
+            <Grid Grid.Column="1">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="1*"/>
+                    <ColumnDefinition Width="2.5*"/>
+                    <ColumnDefinition Width="1*"/>
+                    <ColumnDefinition Width="0.25*"/>
+                </Grid.ColumnDefinitions>
+
+                <TextBlock Text="Tìm Kiếm:" Grid.Column="0" FontSize="14" VerticalAlignment="Center"/>
+                <TextBox x:Name="tbxThongTinTimKiem" Grid.Column="1" VerticalAlignment="Center"/>
+                <ComboBox x:Name="cbbThuocTinhTimKiem" Grid.Column="2" VerticalAlignment="Center">
+                    <ComboBoxItem Content="Tựa Sách"/>
+                    <ComboBoxItem Content="Tác Giả"/>
+                    <ComboBoxItem Content="Thể Loại"/>
+                    <ComboBoxItem Content="Nhà Xuất Bản"/>
+                    <ComboBoxItem Content="Năm Xuất Bản"/>
+                    <ComboBoxItem Content="Tình Trạng"/>
+                    <!--Thêm tinh năng filter rồi thanh lý các sách quá cũ/ đã mất-->
+                </ComboBox>
+                <Button x:Name="btnTimKiem" Grid.Column="3" Content="T" Click="btnTimKiem_Click"/>
+            </Grid>
+        </Grid>
+
+        <DataGrid x:Name="dgSach" Grid.Row="2" SelectionMode="Single"
+                  SelectionUnit="FullRow" IsReadOnly="true" AutoGenerateColumns="False"
+                  SelectionChanged="dgSach_SelectionChanged">
+            <DataGrid.Columns>
+                <DataGridTextColumn Header="Mã Sách" Width="*" Binding="{Binding MaSach}"/>
+                <DataGridTextColumn Header="Tựa Sách" Width="*" Binding="{Binding TuaSach}"/>
+                <DataGridTextColumn Header="Tác Giả" Width="*" Binding="{Binding DSTacGia}"/>
+                <DataGridTextColumn Header="Thể Loại" Width="*" Binding="{Binding DSTheLoai}"/>
+                <DataGridTextColumn Header="Nhà Xuất Bản" Width="*" Binding="{Binding NhaXuatBan}"/>
+                <DataGridTextColumn Header="Năm Xuất Bản" Width="*" Binding="{Binding NamXuatBan}"/>
+                <DataGridTextColumn Header="Ngày Nhập" Width="*" Binding="{Binding NgayNhap}"/>
+                <DataGridTextColumn Header="Trị Giá" Width="*" Binding="{Binding TriGia}"/>
+                <DataGridTextColumn Header="Tình Trạng" Width="*" Binding="{Binding TinhTrang}"/>
+            </DataGrid.Columns>
+        </DataGrid>
+    </Grid>
+</UserControl>

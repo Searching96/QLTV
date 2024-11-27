@@ -1,0 +1,44 @@
+﻿<Window x:Class="QLTV.AWThemSach"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:QLTV"
+        mc:Ignorable="d"
+        Title="Thêm Sách" Height="400" Width="350"
+        WindowStartupLocation="CenterScreen">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="2*"/>
+            <RowDefinition Height="10*"/>
+            <RowDefinition Height="1.75*"/>
+        </Grid.RowDefinitions>
+
+        <TextBlock Text="Thêm Sách" Grid.Row="0" FontSize="24"
+                   FontWeight="Bold" HorizontalAlignment="Center"
+                   VerticalAlignment="Center"/>
+        <StackPanel Orientation="Vertical" Grid.Row="1">
+            <TextBlock Text="Tựa Sách" Margin="10, 0, 10, 0"/>
+            <ComboBox x:Name="cbbTuaSach" 
+                      IsEditable="True" 
+                      Margin="10, 0, 10, 0"
+                      IsTextSearchEnabled="False"
+                      SelectedValue="{x:Null}"
+                      IsSynchronizedWithCurrentItem="False"/>
+            <TextBlock Text="Nhà Xuất Bản" Margin="10, 0, 10, 0"/>
+            <TextBox x:Name="tbxNhaXuatBan" Margin="10, 0, 10, 0"/>
+            <TextBlock Text="Năm Xuất Bản" Margin="10, 0, 10, 0"/>
+            <TextBox x:Name="tbxNamXuatBan" Margin="10, 0, 10, 0"/>
+            <TextBlock Text="Ngày Nhập" Margin="10, 0, 10, 0"/>
+            <TextBox x:Name="tbxNgayNhap" Margin="10, 0, 10, 0"/>
+            <TextBlock Text="Trị Giá" Margin="10, 0, 10, 0"/>
+            <TextBox x:Name="tbxTriGia" Margin="10, 0, 10, 0"/>
+            <TextBlock Text="Tình Trạng" Margin="10, 0, 10, 0"/>
+            <ComboBox x:Name="cbbTinhTrang" Margin="10, 0, 10, 0"/>
+            <TextBlock Text="Số Lượng" Margin="10, 0, 10, 0"/>
+            <TextBox x:Name="tbxSoLuong" Margin="10, 0, 10, 0" Text="1"/>
+        </StackPanel>
+        <Button x:Name="btnThem" Grid.Row="2" Content="Thêm" Margin="0, 5, 0, 5"
+                HorizontalAlignment="Center" VerticalAlignment="Center" Click="btnThem_Click"/>
+    </Grid>
+</Window>

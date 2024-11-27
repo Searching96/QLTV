@@ -21,7 +21,7 @@ public partial class SACH
 
     public int IDTinhTrang { get; set; }
 
-    public bool IsAvailable { get; set; }
+    public bool? IsAvailable { get; set; }
 
     public bool IsDeleted { get; set; }
 
