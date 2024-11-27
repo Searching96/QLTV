@@ -21,9 +21,9 @@
             </Grid.RowDefinitions>
 
             <TextBlock Grid.Row="0" Text="Thông Tin Tựa Sách" FontSize="18"
-                   FontWeight="Bold" HorizontalAlignment="Left" Margin="5"/>
+               FontWeight="Bold" HorizontalAlignment="Left" Margin="5"/>
 
-            <!--Section hien thi sach duoc chon-->
+            <!-- Section hien thi sach duoc chon -->
             <Grid Grid.Row="1">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="1*"/>
@@ -40,46 +40,43 @@
                     <RowDefinition Height="Auto"/>
                 </Grid.RowDefinitions>
 
-                <TextBlock Text="Mã Tựa Sách:" Grid.Row="0" Grid.Column="0" 
-                       VerticalAlignment="Center"/>
+                <TextBlock Text="Mã Tựa Sách:" Grid.Row="0" Grid.Column="0" VerticalAlignment="Center"/>
                 <TextBox x:Name="tbxMaTuaSach" Grid.Row="0" Grid.Column="1"
-                     VerticalAlignment="Center"/>
-                <TextBlock Text="Tên Tựa Sách:" Grid.Row="0" Grid.Column="2" 
-                       VerticalAlignment="Center"/>
+                 VerticalAlignment="Center" IsReadOnly="True"/>
+
+                <TextBlock Text="Tên Tựa Sách:" Grid.Row="0" Grid.Column="2" VerticalAlignment="Center"/>
                 <TextBox x:Name="tbxTenTuaSach" Grid.Row="0" Grid.Column="3"
-                     VerticalAlignment="Center"/>
-                <TextBlock Text="Tác Giả:" Grid.Row="0" Grid.Column="4" 
-                       VerticalAlignment="Center"/>
+                         VerticalAlignment="Center"/>
+
+                <TextBlock Text="Tác Giả:" Grid.Row="0" Grid.Column="4" VerticalAlignment="Center"/>
                 <Grid x:Name="grTacGia" Grid.Row="0" Grid.Column="5">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="7*"/>
                         <ColumnDefinition Width="1*"/>
                     </Grid.ColumnDefinitions>
-                    <TextBox x:Name="tbxDSTacGia" Grid.Column="0"
-                         VerticalAlignment="Center"/>
+                    <TextBox x:Name="tbxDSTacGia" Grid.Column="0" VerticalAlignment="Center"/>
                     <Button x:Name="btnSuaTacGia" Grid.Column="1" Content="E"
-                        VerticalAlignment="Center" Click="btnSuaTacGia_Click"/>
+                    VerticalAlignment="Center" Click="btnSuaTacGia_Click"/>
                 </Grid>
-                <TextBlock Text="Thể Loại:" Grid.Row="1" Grid.Column="0" 
-                       VerticalAlignment="Center"/>
+
+                <TextBlock Text="Thể Loại:" Grid.Row="1" Grid.Column="0" VerticalAlignment="Center"/>
                 <Grid x:Name="grTheLoai" Grid.Row="1" Grid.Column="1">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="7*"/>
                         <ColumnDefinition Width="1*"/>
                     </Grid.ColumnDefinitions>
-                    <TextBox x:Name="tbxDSTheLoai" Grid.Column="0"
-                         VerticalAlignment="Center"/>
+                    <TextBox x:Name="tbxDSTheLoai" Grid.Column="0" VerticalAlignment="Center" TextChanged="tbxDSTheLoai_TextChanged"/>
                     <Button x:Name="btnSuaTheLoai" Grid.Column="1" Content="E"
-                        VerticalAlignment="Center" Click="btnSuaTheLoai_Click"/>
+                    VerticalAlignment="Center" Click="btnSuaTheLoai_Click"/>
                 </Grid>
-                <TextBlock Text="Số Lượng:" Grid.Row="1" Grid.Column="2" 
-                       VerticalAlignment="Center"/>
-                <TextBox x:Name="tbxSoLuong" Grid.Row="1" Grid.Column="3"
-                     VerticalAlignment="Center"/>
-                <TextBlock Text="Hạn Mượn Tối Đa:" Grid.Row="1" Grid.Column="4" 
-                       VerticalAlignment="Center"/>
-                <TextBox x:Name="tbxHanMuonToiDa" Grid.Row="1" Grid.Column="5"
-                     VerticalAlignment="Center"/>
+                <TextBlock x:Name="tblDSTheLoaiError" Grid.Row="1" Grid.Column="1" Foreground="Red" Visibility="Collapsed"/>
+
+                <TextBlock Text="Số Lượng:" Grid.Row="1" Grid.Column="2" VerticalAlignment="Center"/>
+                <TextBox x:Name="tbxSoLuong" Grid.Row="1" Grid.Column="3" VerticalAlignment="Center" IsReadOnly="True"/>
+
+                <TextBlock Text="Hạn Mượn Tối Đa:" Grid.Row="1" Grid.Column="4" VerticalAlignment="Center"/>
+                <TextBox x:Name="tbxHanMuonToiDa" Grid.Row="1" Grid.Column="5" VerticalAlignment="Center" TextChanged="tbxHanMuonToiDa_TextChanged"/>
+                <TextBlock x:Name="tblHanMuonToiDaError" Grid.Row="1" Grid.Column="5" Foreground="Red" Visibility="Collapsed"/>
             </Grid>
 
             <!--CRUD buttons-->
@@ -93,6 +90,8 @@
                     Margin="5, 0, 0, 0" Click="btnXoaTuaSach_Click"/>
                 <Button x:Name="btnLamMoi" Content="Làm mới" Background="Gray" 
                     Margin="5, 0, 0, 0" Click="btnLamMoi_Click"/>
+                <Button x:Name="btnExportExcel" Content="Xuất Excel" Background="Gray"
+                        Margin="5, 0, 0, 0" Click="btnExportExcel_Click"/>
             </StackPanel>
         </Grid>
 
@@ -133,7 +132,7 @@
                 <DataGridTextColumn Header="Tác Giả" Width="*" Binding="{Binding DSTacGia}"/>
                 <DataGridTextColumn Header="Thể Loại" Width="*" Binding="{Binding DSTheLoai}"/>
                 <DataGridTextColumn Header="Số Lượng" Width="*" Binding="{Binding SoLuong}"/>
-                <DataGridTextColumn Header="Hạn Mượn Tối Đa" Width="*" Binding="{Binding HanMuonToiDa}"/>
+                <DataGridTextColumn Header="Hạn Mượn Tối Đa (Tuần)" Width="*" Binding="{Binding HanMuonToiDa}"/>
             </DataGrid.Columns>
         </DataGrid>
     </Grid>

@@ -1,20 +1,17 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using OfficeOpenXml.Style;
+using OfficeOpenXml;
 using QLTV.Models;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
+using Microsoft.Win32;
 
 namespace QLTV
 {
@@ -28,6 +25,7 @@ namespace QLTV
         {
             InitializeComponent();
             LoadTuaSach();
+            ExcelPackage.LicenseContext = LicenseContext.NonCommercial;
         }
 
         private void LoadTuaSach()
@@ -143,7 +141,7 @@ namespace QLTV
                 tbxDSTacGia.Text = selectedBook.DSTacGia;
                 tbxDSTheLoai.Text = selectedBook.DSTheLoai;
                 tbxSoLuong.Text = selectedBook.SoLuong.ToString();
-                tbxHanMuonToiDa.Text = selectedBook.HanMuonToiDa.ToString() + " tuần";
+                tbxHanMuonToiDa.Text = selectedBook.HanMuonToiDa.ToString();
             }
             else
             {
@@ -331,6 +329,107 @@ namespace QLTV
 
                 // Cập nhật ItemsSource cho DataGrid
                 dgTuaSach.ItemsSource = query;
+            }
+        }
+
+        private void tbxDSTheLoai_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            if (string.IsNullOrWhiteSpace(tbxDSTheLoai.Text))
+            {
+                tblDSTheLoaiError.Text = "Thể loại không được để trống!";
+                tblDSTheLoaiError.Visibility = Visibility.Visible;
+                return;
+            }
+
+            tblDSTheLoaiError.Visibility = Visibility.Collapsed;
+        }
+
+        private void tbxHanMuonToiDa_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            if (string.IsNullOrWhiteSpace(tbxHanMuonToiDa.Text))
+            {
+                tblHanMuonToiDaError.Text = "Hạn mượn không được để trống!";
+                tblHanMuonToiDaError.Visibility = Visibility.Visible;
+                return;
+            }
+
+            if (!int.TryParse(tbxHanMuonToiDa.Text, out _))
+            {
+                tblHanMuonToiDaError.Text = "Hạn mượn phải là số!";
+                tblHanMuonToiDaError.Visibility = Visibility.Visible;
+                return;
+            }
+
+            tblHanMuonToiDaError.Visibility = Visibility.Collapsed;
+        }
+
+        private void btnExportExcel_Click(object sender, RoutedEventArgs e)
+        {
+            ExportDataGridToExcel();
+        }
+
+        private void ExportDataGridToExcel()
+        {
+            // Cấu hình đường dẫn lưu file Excel
+            SaveFileDialog saveFileDialog = new SaveFileDialog
+            {
+                Filter = "Excel Files|*.xlsx",
+                Title = "Lưu file Excel",
+                FileName = "DanhSachTuaSach.xlsx"
+            };
+
+            if (saveFileDialog.ShowDialog() == true)
+            {
+                var filePath = saveFileDialog.FileName;
+
+                // Tạo file Excel mới
+                using (ExcelPackage package = new ExcelPackage())
+                {
+                    // Tạo một sheet mới
+                    ExcelWorksheet worksheet = package.Workbook.Worksheets.Add("Danh Sách Tựa Sách");
+
+                    // Đặt tiêu đề cho các cột trong Excel
+                    worksheet.Cells[1, 1].Value = "Mã Tựa Sách";
+                    worksheet.Cells[1, 2].Value = "Tên Tựa Sách";
+                    worksheet.Cells[1, 3].Value = "Tác Giả";
+                    worksheet.Cells[1, 4].Value = "Thể Loại";
+                    worksheet.Cells[1, 5].Value = "Số Lượng";
+                    worksheet.Cells[1, 6].Value = "Hạn Mượn Tối Đa (Tuần)";
+
+                    // Áp dụng style cho tiêu đề
+                    using (var range = worksheet.Cells[1, 1, 1, 6])
+                    {
+                        range.Style.Font.Bold = true;
+                        range.Style.HorizontalAlignment = ExcelHorizontalAlignment.Center;
+                        range.Style.Fill.PatternType = ExcelFillStyle.Solid;
+                        range.Style.Fill.BackgroundColor.SetColor(System.Drawing.Color.LightGray);
+                    }
+
+                    // Duyệt qua dữ liệu trong DataGrid và ghi vào Excel
+                    var items = dgTuaSach.ItemsSource as System.Collections.IEnumerable;
+                    int rowIndex = 2;
+
+                    foreach (var item in items)
+                    {
+                        dynamic data = item;
+                        worksheet.Cells[rowIndex, 1].Value = data.MaTuaSach;
+                        worksheet.Cells[rowIndex, 2].Value = data.TenTuaSach;
+                        worksheet.Cells[rowIndex, 3].Value = data.DSTacGia;
+                        worksheet.Cells[rowIndex, 4].Value = data.DSTheLoai;
+                        worksheet.Cells[rowIndex, 5].Value = data.SoLuong;
+                        worksheet.Cells[rowIndex, 6].Value = data.HanMuonToiDa;
+                        rowIndex++;
+                    }
+
+                    // Tự động điều chỉnh độ rộng cột
+                    worksheet.Cells.AutoFitColumns();
+
+                    // Lưu file Excel
+                    FileInfo excelFile = new FileInfo(filePath);
+                    package.SaveAs(excelFile);
+                }
+
+                MessageBox.Show("Xuất Excel thành công!", "Thông báo", MessageBoxButton.OK, MessageBoxImage.Information);
             }
         }
     }
