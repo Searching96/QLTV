@@ -18,7 +18,7 @@
                    FontSize="16" Margin="10" HorizontalAlignment="Center"/>
         <StackPanel Grid.Row="1" Orientation="Horizontal">
             <TextBlock Text="Tìm tác giả: "/>
-            <TextBox x:Name="tbxTimTen" Width="200" TextChanged="tbxTimTen_TextChanged"/>
+            <TextBox x:Name="tbxTimKiem" Width="200" TextChanged="tbxTimKiem_TextChanged"/>
         </StackPanel>
         <ListBox x:Name="lbTacGia" SelectionMode="Multiple" Grid.Row="2"
                  Margin="0, 10, 0, 0" SelectionChanged="lbTacGia_SelectionChanged"

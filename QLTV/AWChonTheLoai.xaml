@@ -15,21 +15,30 @@
             <RowDefinition Height="10*"/>
         </Grid.RowDefinitions>
         <TextBlock Text="Chọn Thể Loại" Grid.Row="0" FontWeight="Bold" 
-               FontSize="16" Margin="10" HorizontalAlignment="Center"/>
+                   FontSize="16" Margin="10" HorizontalAlignment="Center"/>
         <StackPanel Grid.Row="1" Orientation="Horizontal">
             <TextBlock Text="Tìm thể loại: "/>
-            <TextBox x:Name="tbxTenTheLoaiTim" Width="200" TextChanged="tbxTenTheLoaiTim_TextChanged"
-                     PreviewTextInput="tbxTenTheLoaiTim_PreviewTextInput"/>
+            <TextBox x:Name="tbxTimKiem" Width="200" TextChanged="tbxTimKiem_TextChanged"/>
         </StackPanel>
         <ListBox x:Name="lbTheLoai" SelectionMode="Multiple" Grid.Row="2"
-             Margin="0, 10, 0, 0" SelectionChanged="lbTheLoai_SelectionChanged">
+                 Margin="0, 10, 0, 0" SelectionChanged="lbTheLoai_SelectionChanged"
+                 ToolTipService.InitialShowDelay="500"
+                 ToolTipService.BetweenShowDelay="0">
             <ListBox.ItemTemplate>
                 <DataTemplate>
-                    <TextBlock Text="{Binding TenTheLoai}"/>
+                    <TextBlock>
+                        <TextBlock.Text>
+                            <Binding Path="TenTheLoai"/>
+                        </TextBlock.Text>
+
+                        <TextBlock.ToolTip>
+                            <Binding Path="MaTheLoai"/>
+                        </TextBlock.ToolTip>
+                    </TextBlock>
                 </DataTemplate>
             </ListBox.ItemTemplate>
         </ListBox>
         <Button x:Name="btnOK" Content="OK" Click="btnOK_Click" Grid.Row="3"
-            Margin="5" Width="100" Height="20" HorizontalAlignment="Center"/>
+                Margin="5" Width="100" Height="20" HorizontalAlignment="Center"/>
     </Grid>
 </Window>

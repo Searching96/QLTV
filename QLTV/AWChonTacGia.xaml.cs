@@ -55,9 +55,9 @@ namespace QLTV
             isUpdatingSelection = false;
         }
 
-        private void tbxTimTen_TextChanged(object sender, TextChangedEventArgs e)
+        private void tbxTimKiem_TextChanged(object sender, TextChangedEventArgs e)
         {
-            string searchText = tbxTimTen.Text.ToLower();
+            string searchText = tbxTimKiem.Text.ToLower();
 
             // Store currently selected authors
             var currentSelectedAuthors = SelectedAuthors.ToList();

@@ -20,94 +20,107 @@ namespace QLTV
     /// </summary>
     public partial class AWChonTheLoai : Window
     {
-        public List<THELOAI> SelectedCategories { get; private set; }
-        private List<THELOAI> generalSelectedCategories = new List<THELOAI>();
-        private List<THELOAI> removedCategories = new List<THELOAI>();
+        public List<THELOAI> AllCategories { get; set; }
+        public List<THELOAI> SelectedCategories { get; set; }
+        private List<THELOAI> DisplayedCategories { get; set; }
+        private bool isUpdatingSelection = false;
 
-        public AWChonTheLoai(List<THELOAI> allCategories, List<THELOAI> selectedCategories)
+        public AWChonTheLoai(List<THELOAI> allCategories, List<THELOAI> selectedCategories = null)
         {
             InitializeComponent();
-            lbTheLoai.ItemsSource = allCategories;
-            SelectedCategories = selectedCategories;
-            // Lưu trữ tác giả ban đầu vào generalSelectedAuthors
-            generalSelectedCategories = new List<THELOAI>(SelectedCategories);
-            UpdateTheLoaiDaChonSan(allCategories, SelectedCategories);
+
+            // Filter out deleted authors
+            AllCategories = allCategories;
+            SelectedCategories = selectedCategories ?? new List<THELOAI>();
+
+            // Include both displayed and selected authors to maintain selection
+            DisplayedCategories = AllCategories
+                .Union(SelectedCategories, new THELOAIComparer())
+                .Distinct(new THELOAIComparer())
+                .ToList();
+
+            lbTheLoai.ItemsSource = DisplayedCategories;
+
+            isUpdatingSelection = true;
+            foreach (var category in SelectedCategories)
+            {
+                var listBoxItem = DisplayedCategories
+                    .FirstOrDefault(c => c.ID == category.ID);
+
+                if (listBoxItem != null)
+                {
+                    lbTheLoai.SelectedItems.Add(listBoxItem);
+                }
+            }
+            isUpdatingSelection = false;
+        }
+
+        private void tbxTimKiem_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            string searchText = tbxTimKiem.Text.ToLower();
+
+            // Store currently selected authors
+            var currentSelectedCategories = SelectedCategories.ToList();
+
+            // Filter authors based on search text
+            var filteredCategories = AllCategories
+                .Where(c => c.TenTheLoai.ToLower().Contains(searchText.ToLower())
+                    || c.MaTheLoai.ToLower().Contains(searchText.ToLower()))
+                .ToList();
+
+            // Combine filtered authors with currently selected authors
+            DisplayedCategories = filteredCategories
+                .Union(currentSelectedCategories, new THELOAIComparer())
+                .Distinct(new THELOAIComparer())
+                .ToList();
+
+            isUpdatingSelection = true;
+
+            // Update ItemsSource
+            lbTheLoai.ItemsSource = DisplayedCategories;
+
+            // Clear and reselect items
+            lbTheLoai.SelectedItems.Clear();
+            foreach (var category in currentSelectedCategories)
+            {
+                var matchingCategory = DisplayedCategories.FirstOrDefault(a => a.ID == category.ID);
+                if (matchingCategory != null)
+                {
+                    lbTheLoai.SelectedItems.Add(matchingCategory);
+                }
+            }
+
+            isUpdatingSelection = false;
         }
 
         private void lbTheLoai_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            // Lưu danh sách tác giả đã chọn trước khi thay đổi
-            var previousSelectedAuthors = new List<THELOAI>(SelectedCategories);
+            // Prevent recursive updates
+            if (isUpdatingSelection) return;
 
-            // Cập nhật lại danh sách SelectedAuthors từ ListBox
+            // Update SelectedAuthors list when selection changes
             SelectedCategories = lbTheLoai.SelectedItems.Cast<THELOAI>().ToList();
-
-            // Xác định các tác giả bị bỏ chọn (tức là có trong previousSelectedAuthors nhưng không có trong SelectedAuthors)
-            var removedAuthorsThisTime = previousSelectedAuthors.Except(SelectedCategories).ToList();
-
-            // Thêm các tác giả bị bỏ chọn vào removedAuthors
-            removedCategories.AddRange(removedAuthorsThisTime);
-
-            // Đồng bộ generalSelectedAuthors với SelectedAuthors sau mỗi lần thay đổi
-            generalSelectedCategories = generalSelectedCategories.Concat(SelectedCategories).Distinct().ToList();
-        }
-
-        private void tbxTenTheLoaiTim_PreviewTextInput(object sender, TextCompositionEventArgs e)
-        {
-            // Trước khi lọc, lưu lại các tác giả đã chọn vào generalSelectedAuthors và loại bỏ các tác giả đã bị bỏ chọn
-            generalSelectedCategories = generalSelectedCategories.Concat(SelectedCategories).Distinct().ToList();
-            generalSelectedCategories = generalSelectedCategories.Except(SelectedCategories).ToList();
-            removedCategories.Clear(); // Xóa các tác giả đã bị bỏ chọn trước đó
-
-            // Tiến hành lọc theo input
-            string searchTerm = tbxTenTheLoaiTim.Text.Trim();
-            using (var context = new QLTVContext())
-            {
-                var filteredCategories = context.THELOAI
-                                                .Where(tl => !tl.IsDeleted && tl.TenTheLoai.Contains(searchTerm))
-                                                .ToList();
-
-                lbTheLoai.ItemsSource = filteredCategories;
-                UpdateTheLoaiDaChonSan(filteredCategories, generalSelectedCategories);
-            }
         }
 
         private void btnOK_Click(object sender, RoutedEventArgs e)
         {
-            if (SelectedCategories == null || SelectedCategories.Count == 0)
-            {
-                MessageBox.Show("Vui lòng chọn ít nhất một tác giả!", "Thông báo", MessageBoxButton.OK, MessageBoxImage.Warning);
-                return;
-            }
-
-            DialogResult = true; // Đóng cửa sổ
+            DialogResult = true;
+            Close();
         }
 
-        private void tbxTenTheLoaiTim_TextChanged(object sender, TextChangedEventArgs e)
+        // Custom comparer to ensure unique authors based on ID
+        private class THELOAIComparer : IEqualityComparer<THELOAI>
         {
-            // Lọc tác giả theo tên từ input
-            string searchTerm = tbxTenTheLoaiTim.Text.Trim();
-            using (var context = new QLTVContext())
+            public bool Equals(THELOAI x, THELOAI y)
             {
-                var filteredCategories = context.THELOAI
-                                                .Where(tl => !tl.IsDeleted && tl.TenTheLoai.Contains(searchTerm))
-                                                .ToList();
-
-                lbTheLoai.ItemsSource = filteredCategories;
-                UpdateTheLoaiDaChonSan(filteredCategories, generalSelectedCategories);
+                if (ReferenceEquals(x, y)) return true;
+                if (x is null || y is null) return false;
+                return x.ID == y.ID;
             }
-        }
 
-        private void UpdateTheLoaiDaChonSan(List<THELOAI> allCategories, List<THELOAI> selectedCategories)
-        {
-            // Cập nhật lại danh sách các thể loại đã được chọn trong ListBox
-            foreach (var selectedCategory in selectedCategories)
+            public int GetHashCode(THELOAI obj)
             {
-                var categoryToSelect = allCategories.FirstOrDefault(c => c.MaTheLoai == selectedCategory.MaTheLoai);
-                if (categoryToSelect != null)
-                {
-                    lbTheLoai.SelectedItems.Add(categoryToSelect);
-                }
+                return obj.ID.GetHashCode();
             }
         }
     }
