@@ -1,0 +1,31 @@
+﻿<Window x:Class="QLTV.AWThemTacGia"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:QLTV"
+        mc:Ignorable="d"
+        Title="AWThemTacGia" Height="200" Width="300"
+        WindowStartupLocation="CenterScreen">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="1*"/>
+            <RowDefinition Height="4*"/>
+            <RowDefinition Height="1*"/>
+        </Grid.RowDefinitions>
+
+        <TextBlock Text="Thêm Tác Giả" Grid.Row="0" FontSize="24"
+                   FontWeight="Bold" HorizontalAlignment="Center"
+                   VerticalAlignment="Center"/>
+        <StackPanel Orientation="Vertical" Grid.Row="1">
+            <TextBlock Text="Tên Tác giả" Margin="10, 0, 10, 0"/>
+            <TextBox x:Name="tbxTenTacGia" Margin="10, 0, 10, 0"/>
+            <TextBlock Text="Năm Sinh" Margin="10, 0, 10, 0"/>
+            <TextBox x:Name="tbxNamSinh" Margin="10, 0, 10, 0"/>
+            <TextBlock Text="Quốc Tịch" Margin="10, 0, 10, 0"/>
+            <TextBox x:Name="tbxQuocTich" Margin="10, 0, 10, 0"/>
+        </StackPanel>
+        <Button x:Name="btnThem" Grid.Row="2" Content="Thêm" Margin="0, 5, 0, 5"
+                HorizontalAlignment="Center" Click="btnThem_Click"/>
+    </Grid>
+</Window>
