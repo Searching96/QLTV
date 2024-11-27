@@ -42,7 +42,7 @@ namespace QLTV
             }
 
             // Mở cửa sổ WDChonTacGia
-            var wdChonTacGia = new ADWDChonTacGia(allAuthors, currentAuthors);
+            var wdChonTacGia = new AWChonTacGia(allAuthors, currentAuthors);
 
             if (wdChonTacGia.ShowDialog() == true)
             {

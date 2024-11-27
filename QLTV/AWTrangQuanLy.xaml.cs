@@ -12,18 +12,18 @@ using System.Windows.Shapes;
 namespace QLTV
 {
     /// <summary>
-    /// Interaction logic for MainWindow.xaml
+    /// Interaction logic for AWTrangQuanLy.xaml
     /// </summary>
-    public partial class ADWDTrangQuanLy : Window
+    public partial class AWTrangQuanLy : Window
     {
-        public ADWDTrangQuanLy()
+        public AWTrangQuanLy()
         {
             InitializeComponent();
         }
 
         private void btnFnQuanLySach_Click(object sender, RoutedEventArgs e)
         {
-            ADUCFnQuanLySach qls = new ADUCFnQuanLySach();
+            AUFnQuanLySach qls = new AUFnQuanLySach();
             ADMainContent.Content = qls;
         }
     }

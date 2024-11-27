@@ -16,18 +16,18 @@ using System.Windows.Shapes;
 namespace QLTV
 {
     /// <summary>
-    /// Interaction logic for ADUCQuanLySach.xaml
+    /// Interaction logic for AUFnQuanLySach.xaml
     /// </summary>
-    public partial class ADUCFnQuanLySach : UserControl
+    public partial class AUFnQuanLySach : UserControl
     {
-        public ADUCFnQuanLySach()
+        public AUFnQuanLySach()
         {
             InitializeComponent();
         }
 
         private void btnQuanLyTuaSach_Click(object sender, RoutedEventArgs e)
         {
-            OpenTab("Quản lý tựa sách", new ADUCQuanLyTuaSach());
+            OpenTab("Quản lý tựa sách", new AUQuanLyTuaSach());
         }
 
         private void btnQuanLyTacGia_Click(object sender, RoutedEventArgs e)

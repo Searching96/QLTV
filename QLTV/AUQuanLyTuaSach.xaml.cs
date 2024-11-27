@@ -21,10 +21,10 @@ namespace QLTV
     /// <summary>
     /// Interaction logic for ADUCQuanLySach.xaml
     /// </summary>
-    public partial class ADUCQuanLyTuaSach : UserControl
+    public partial class AUQuanLyTuaSach : UserControl
     {
 
-        public ADUCQuanLyTuaSach()
+        public AUQuanLyTuaSach()
         {
             InitializeComponent();
             LoadTuaSach();
@@ -171,7 +171,7 @@ namespace QLTV
             }
 
             // Mở cửa sổ WDChonTacGia
-            var wdChonTacGia = new ADWDChonTacGia(allAuthors, currentAuthors);
+            var wdChonTacGia = new AWChonTacGia(allAuthors, currentAuthors);
 
             if (wdChonTacGia.ShowDialog() == true)
             {
@@ -284,12 +284,6 @@ namespace QLTV
         private void btnLamMoi_Click(object sender, RoutedEventArgs e)
         {
             LoadTuaSach();
-            tbxMaTuaSach.Text = "";
-            tbxTenTuaSach.Text = "";
-            tbxDSTacGia.Text = "";
-            tbxDSTheLoai.Text = "";
-            tbxSoLuong.Text = "";
-            tbxHanMuonToiDa.Text = "";
         }
 
         private void btnTimKiem_Click(object sender, RoutedEventArgs e)
