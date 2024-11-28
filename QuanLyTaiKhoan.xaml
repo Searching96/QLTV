@@ -1,0 +1,137 @@
+﻿<UserControl x:Class="QLTV_TranBin.QuanLyTaiKhoan"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+            xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"        
+            xmlns:Icon="http://metro.mahapps.com/winfx/xaml/iconpacks"
+             xmlns:local="clr-namespace:QLTV_TranBin"
+             mc:Ignorable="d" 
+             d:DesignHeight="820" d:DesignWidth="860" >
+    <Grid Background="White">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*"/>
+            <!-- Cho phép TabControl co giãn -->
+        </Grid.RowDefinitions>
+        <TabControl x:Name="tcQLTK" Margin="10">
+            <!-- Tab mặc định: Danh sách tài khoản -->
+            <TabItem Header="Danh sách tài khoản">
+                <Grid Background="White">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="1*"/>
+                        <RowDefinition Height="1*"/>
+                        <RowDefinition Height="8*"/>
+                    </Grid.RowDefinitions>
+
+                    <!-- Tiêu đề -->
+                    <TextBlock x:Name="txtds" Text="Danh sách tài khoản" Margin="10,10"
+                               FontWeight="Bold" FontSize="40"/>
+
+                    <!-- Thanh công cụ -->
+                    <Grid Margin="20,0" Grid.Row="1">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="1*"/>
+                            <ColumnDefinition Width="1*"/>
+                            <ColumnDefinition Width="0.75*"/>
+                            <ColumnDefinition Width="1*"/>
+                            <ColumnDefinition Width="1*"/>
+                        </Grid.ColumnDefinitions>
+
+                        <!-- Ô tìm kiếm -->
+                        <TextBox Grid.Column="0" Grid.ColumnSpan="2" 
+                                 Margin="5,0,0,0" VerticalAlignment="Center"
+                                 materialDesign:HintAssist.Hint="Tìm kiếm"
+                                 Style="{StaticResource MaterialDesignFloatingHintTextBox}" Height="40" />
+
+                        <!-- ComboBox -->
+                        <ComboBox Grid.Column="2" Margin="5,0,5,0"
+                                  materialDesign:ComboBoxAssist.MaxLength="2"
+                                  materialDesign:HintAssist.Hint="Search"
+                                  materialDesign:HintAssist.HintOpacity=".26"
+                                  IsEditable="True" Height="40">
+                            <ComboBoxItem Content="Apple" />
+                            <ComboBoxItem Content="Banana" />
+                            <ComboBoxItem Content="Pear" />
+                            <ComboBoxItem Content="Orange" />
+                        </ComboBox>
+
+                        <!-- Nút thêm tài khoản -->
+                        <Button x:Name="btnTaoTaiKhoan" Grid.Column="3" 
+                                Margin="5,0" Content="Thêm tài khoản" HorizontalAlignment="Stretch" Click="btnTaoTaiKhoan_Click"/>
+
+                        <!-- Nút thêm từ file -->
+                        <Button x:Name="btnThemFile" Grid.Column="4" 
+                                Margin="5,0" Content="Thêm từ File" HorizontalAlignment="Stretch" Click="btnThemFile_Click"/>
+                    </Grid>
+
+                    <!-- Danh sách tài khoản -->
+
+                    <DataGrid Grid.Row="2" Margin="30,0" RowStyle="{DynamicResource DataGridRowStyle1}" 
+                                  ColumnHeaderStyle="{DynamicResource DataGridColumnHeaderStyle1}" 
+                                  CellStyle="{DynamicResource DataGridCellStyle1}" 
+                                  x:Name="dgAccount" 
+                                  Style="{DynamicResource DataGridStyle1}" 
+                                  ItemsSource="{Binding Accounts}" 
+                                  SelectionMode="Extended" 
+                                  SelectionUnit="FullRow"
+                                  PreviewKeyDown="DataGrid_PreviewKeyDown">
+
+                        <DataGrid.Columns>
+                            <DataGridCheckBoxColumn Header="C" CanUserResize="False" Width="auto" 
+                                    Binding="{Binding IsChecked, Mode=TwoWay}">
+                                <DataGridCheckBoxColumn.ElementStyle>
+                                    <Style TargetType="CheckBox">
+                                        <EventSetter Event="Checked" Handler="CheckBox_Checked" />
+                                        <EventSetter Event="Unchecked" Handler="CheckBox_Unchecked" />
+                                    </Style>
+                                </DataGridCheckBoxColumn.ElementStyle>
+                                <DataGridCheckBoxColumn.HeaderTemplate>
+                                    <DataTemplate>
+                                        <CheckBox Style="{StaticResource CheckBoxStyle1}" 
+                                                      Checked="HeaderCheckBox_Checked" 
+                                                      Unchecked="HeaderCheckBox_Unchecked" />
+                                    </DataTemplate>
+                                </DataGridCheckBoxColumn.HeaderTemplate>
+                            </DataGridCheckBoxColumn>
+
+                            <DataGridTextColumn Header="Mã Tài Khoản" IsReadOnly="True" CanUserResize="False" Width="auto" Binding="{Binding MaTaiKhoan}"/>
+                            <DataGridTemplateColumn Header="Tên tài khoản" IsReadOnly="True" Width="*">
+                                <DataGridTemplateColumn.CellTemplate>
+                                    <DataTemplate>
+                                        <StackPanel Orientation="Horizontal">
+                                            <Border Width="25" Height="25" CornerRadius="50" Margin="0 0 10 0" Background="{Binding BgColor}">
+                                                <TextBlock Text="{Binding Character}" VerticalAlignment="Center" HorizontalAlignment="Center" Foreground="White" Margin="0 0 0 1"/>
+                                            </Border>
+                                            <TextBlock Text="{Binding TenTaiKhoan}" VerticalAlignment="Center"/>
+                                        </StackPanel>
+                                    </DataTemplate>
+                                </DataGridTemplateColumn.CellTemplate>
+                            </DataGridTemplateColumn>
+
+                            <DataGridTextColumn Header="Loại tài khoản" Binding="{Binding LoaiTaiKhoan}" IsReadOnly="True" Width="*"/>
+                            <DataGridTextColumn Header="Email" Binding="{Binding Email}" IsReadOnly="True" Width="*"/>
+                            <DataGridTextColumn Header="Số điện thoại" Binding="{Binding SDT}" IsReadOnly="True" Width="*"/>
+                            <DataGridTemplateColumn Header="Cài đặt" IsReadOnly="True" Width="auto">
+                                <DataGridTemplateColumn.CellTemplate>
+                                    <DataTemplate>
+                                        <StackPanel Orientation="Horizontal">
+                                            <Button x:Name="btnDetail" Style="{StaticResource gridEditButton}" Click="btnDetail_Click">
+                                                <Icon:PackIconMaterial Kind="Eye" Style="{StaticResource gridButtonIcon}"/>
+                                            </Button>
+                                            <Button x:Name="btnDelete" Margin="5 0 0 0" Style="{StaticResource gridRemoveButton}" Click="btnDelete_Click">
+                                                <Icon:PackIconMaterial Kind="DeleteOutline" Style="{StaticResource gridButtonIcon}"/>
+                                            </Button>
+                                        </StackPanel>
+                                    </DataTemplate>
+                                </DataGridTemplateColumn.CellTemplate>
+                            </DataGridTemplateColumn>
+                        </DataGrid.Columns>
+                    </DataGrid>
+
+                </Grid>
+            </TabItem>
+        </TabControl>
+    </Grid>
+
+
+</UserControl>
