@@ -19,6 +19,9 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 using Microsoft.Win32;
+using OfficeOpenXml.Drawing.Style.Coloring;
+using Microsoft.EntityFrameworkCore.Diagnostics.Internal;
+using System.Globalization;
 
 namespace QLTV
 {
@@ -267,9 +270,122 @@ namespace QLTV
             }
         }
 
+        private void ImportExcelToDb(string filePath)
+        {
+            var context = new QLTVContext();
+            using (var package = new ExcelPackage(new FileInfo(filePath)))
+            {
+                var worksheet = package.Workbook.Worksheets.FirstOrDefault();
+                if (worksheet == null) return;
+
+                for (int row = 2; row <= worksheet.Dimension.End.Row; row++)
+                {
+                    // Extract data from Excel row
+                    string tenTuaSach = worksheet.Cells[row, 1].Text;
+                    string dsTacGia = worksheet.Cells[row, 2].Text;
+                    string dsTheLoai = worksheet.Cells[row, 3].Text;
+                    string nhaXuatBan = worksheet.Cells[row, 4].Text;
+                    int namXuatBan = int.Parse(worksheet.Cells[row, 5].Text);
+                    DateTime ngayNhap = DateTime.ParseExact(worksheet.Cells[row, 6].Text, "dd/MM/yyyy", CultureInfo.InvariantCulture);
+                    decimal triGia = decimal.Parse(worksheet.Cells[row, 7].Text);
+                    string tenTinhTrang = worksheet.Cells[row, 8].Text;
+
+                    // Find or create TinhTrang
+                    var tinhTrang = context.TINHTRANG
+                        .FirstOrDefault(tt => !tt.IsDeleted && tt.TenTinhTrang == tenTinhTrang);
+                    if (tinhTrang == null) continue;
+
+                    // Prepare dictionaries for existing entities
+                    var existingAuthors = context.TACGIA.ToDictionary(tg => tg.TenTacGia);
+                    var existingCategories = context.THELOAI.ToDictionary(tl => tl.TenTheLoai);
+
+                    // Find existing TuaSach
+                    var existingTuaSach = context.TUASACH
+                        .FirstOrDefault(ts => !ts.IsDeleted && ts.TenTuaSach == tenTuaSach);
+
+                    // Determine if we need to create a new TuaSach
+                    bool createNewTuaSach = existingTuaSach == null;
+                    if (existingTuaSach != null)
+                    {
+                        // Check if authors or categories are different
+                        string existingDSTacGia = string.Join(", ", existingTuaSach.TUASACH_TACGIA
+                            .Select(ts_tg => ts_tg.IDTacGiaNavigation.TenTacGia));
+                        string existingDSTheLoai = string.Join(", ", existingTuaSach.TUASACH_THELOAI
+                            .Select(ts_tl => ts_tl.IDTheLoaiNavigation.TenTheLoai));
+
+                        createNewTuaSach = (dsTacGia != existingDSTacGia || dsTheLoai != existingDSTheLoai);
+                    }
+
+                    // Create new TuaSach if needed
+                    TUASACH tuaSach = existingTuaSach;
+                    if (createNewTuaSach)
+                    {
+                        tuaSach = new TUASACH
+                        {
+                            TenTuaSach = tenTuaSach,
+                        };
+                        context.TUASACH.Add(tuaSach);
+                        context.SaveChanges();
+
+                        // Process authors
+                        var lstTenTacGia = dsTacGia.Split(", ").Select(n => n.Trim()).ToList();
+                        foreach (var tenTacGia in lstTenTacGia)
+                        {
+                            if (!existingAuthors.TryGetValue(tenTacGia, out var tacGia))
+                            {
+                                tacGia = new TACGIA { TenTacGia = tenTacGia, NamSinh = -1, QuocTich = "Chưa Có" };
+                                context.TACGIA.Add(tacGia);
+                                context.SaveChanges();
+                                existingAuthors[tenTacGia] = tacGia;
+                            }
+                            context.TUASACH_TACGIA.Add(new TUASACH_TACGIA { IDTuaSach = tuaSach.ID, IDTacGia = tacGia.ID });
+                        }
+
+                        // Process categories
+                        var lstTenTheLoai = dsTheLoai.Split(", ").Select(n => n.Trim()).ToList();
+                        foreach (var tenTheLoai in lstTenTheLoai)
+                        {
+                            if (!existingCategories.TryGetValue(tenTheLoai, out var theLoai))
+                            {
+                                theLoai = new THELOAI { TenTheLoai = tenTheLoai };
+                                context.THELOAI.Add(theLoai);
+                                context.SaveChanges();
+                                existingCategories[tenTheLoai] = theLoai;
+                            }
+                            context.TUASACH_THELOAI.Add(new TUASACH_THELOAI { IDTuaSach = tuaSach.ID, IDTheLoai = theLoai.ID });
+                        }
+                        context.SaveChanges();
+                    }
+
+                    // Create new Sach
+                    var newSach = new SACH
+                    {
+                        IDTuaSach = tuaSach.ID,
+                        NhaXuatBan = nhaXuatBan,
+                        NamXuatBan = namXuatBan,
+                        NgayNhap = ngayNhap,
+                        TriGia = triGia,
+                        IDTinhTrang = tinhTrang.ID
+                    };
+                    context.SACH.Add(newSach);
+                    context.SaveChanges();
+                }
+            }
+        }
+
         private void btnImportExcel_Click(object sender, RoutedEventArgs e)
         {
+            OpenFileDialog openFileDialog = new OpenFileDialog
+            {
+                Filter = "Excel Files|*.xlsx"
+            };
 
+            if (openFileDialog.ShowDialog() == true)
+            {
+                ImportExcelToDb(openFileDialog.FileName);
+                MessageBox.Show("Nhập Excel thành công!", "Thông báo", MessageBoxButton.OK, MessageBoxImage.Information);
+                LoadSach();
+            }
         }
     }
 }
