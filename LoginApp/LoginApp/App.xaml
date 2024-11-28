@@ -1,8 +1,8 @@
-﻿<Application x:Class="QLTV.App"
+﻿<Application x:Class="LoginApp.App"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:local="clr-namespace:QLTV"
-             StartupUri="UCInterface.xaml">
+             xmlns:local="clr-namespace:LoginApp"
+             StartupUri="WDLogin.xaml">
     <Application.Resources>
          
     </Application.Resources>

@@ -1,0 +1,83 @@
+﻿<Window x:Class="LoginApp.UCThongKe"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+        mc:Ignorable="d" 
+        d:DesignHeight="600" d:DesignWidth="1000">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+        <Border Background="#F0F0F0" Padding="10">
+            <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                <TextBlock Text="Từ ngày:" VerticalAlignment="Center" Margin="0 0 5 0"/>
+                <DatePicker x:Name="StartDatePicker" SelectedDateFormat="Short" Width="120" Margin="0 0 10 0"/>
+                <TextBlock Text="Đến ngày:" VerticalAlignment="Center" Margin="0 0 5 0"/>
+                <DatePicker x:Name="EndDatePicker" SelectedDateFormat="Short" Width="120" Margin="0 0 10 0"/>
+                <TextBlock Text="Tiêu chí:" VerticalAlignment="Center" Margin="0 0 5 0"/>
+                <ComboBox x:Name="CriteriaComboBox" Width="150" Margin="0 0 10 0" SelectionChanged="CriteriaComboBox_SelectionChanged">
+                    <ComboBoxItem Content="Ngày lập thẻ"/>
+                    <ComboBoxItem Content="Loại độc giả"/>
+                </ComboBox>
+                <Button Content="Tạo báo cáo" Click="GenerateReport_Click" Padding="10 5"/>
+            </StackPanel>
+        </Border>
+        <Grid Grid.Row="1" x:Name="ChartsGrid">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+            <!-- Container -->
+            <!-- Biểu đồ đường -->
+            <Border Grid.Column="0" Grid.ColumnSpan="2" Background="White" Margin="10" CornerRadius="5" BorderBrush="#DDDDDD" BorderThickness="1" x:Name="LineChartBorder" Visibility="Collapsed">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="*"/>
+                    </Grid.RowDefinitions>
+                    <TextBlock Text="Biểu đồ đường - Số lượng độc giả theo ngày lập thẻ" FontWeight="Bold" Margin="10" HorizontalAlignment="Center"/>
+                    <Canvas x:Name="LineChartCanvas" Grid.Row="1"/>
+                </Grid>
+            </Border>
+
+            <!-- Biểu đồ tròn -->
+            <Border Grid.Column="0" Background="White" Margin="10" CornerRadius="5" BorderBrush="#DDDDDD" BorderThickness="1" x:Name="PieChartBorder" Visibility="Collapsed">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="*"/>
+                    </Grid.RowDefinitions>
+                    <TextBlock Text="Biểu đồ tròn - Cơ cấu độc giả theo loại" FontWeight="Bold" Margin="10" HorizontalAlignment="Center"/>
+                    <Canvas x:Name="PieChartCanvas" Grid.Row="1"/>
+                </Grid>
+            </Border>
+
+            <!-- Biểu đồ cột -->
+            <Border Grid.Column="1" Background="White" Margin="10" CornerRadius="5" BorderBrush="#DDDDDD" BorderThickness="1" x:Name="ColumnChartBorder" Visibility="Collapsed">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="*"/>
+                        <RowDefinition Height="Auto"/>
+                    </Grid.RowDefinitions>
+                    <TextBlock Text="Biểu đồ cột - Số lượng độc giả theo loại" FontWeight="Bold" Margin="10" HorizontalAlignment="Center"/>
+                    <Canvas x:Name="ColumnChartCanvas" Grid.Row="1"/>
+                    <ItemsControl x:Name="ColumnChartLabels" Grid.Row="2">
+                        <ItemsControl.ItemsPanel>
+                            <ItemsPanelTemplate>
+                                <StackPanel Orientation="Horizontal" HorizontalAlignment="Center"/>
+                            </ItemsPanelTemplate>
+                        </ItemsControl.ItemsPanel>
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate>
+                                <TextBlock Text="{Binding}" Margin="5,0" FontSize="10"/>
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+                    </ItemsControl>
+                </Grid>
+            </Border>
+        </Grid>
+    </Grid>
+</Window>

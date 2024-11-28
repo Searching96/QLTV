@@ -57,7 +57,7 @@ public partial class QLTVContext : DbContext
     public virtual DbSet<TUASACH> TUASACH { get; set; }
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-        => optionsBuilder.UseSqlServer(ConfigurationManager.ConnectionStrings["QLTV"].ConnectionString);
+        => optionsBuilder.UseSqlServer("Server=LAPTOP-6V6QCQ0J;Database=QLTV;User Id=sa;Password=123456;TrustServerCertificate=True;");
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {

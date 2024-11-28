@@ -1,0 +1,35 @@
+﻿<Window x:Class="LoginApp.UCRM_PenaltyReceiptWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+        mc:Ignorable="d"
+        Title="Thông tin phiếu thu" Height="350" Width="350">
+    <Grid>
+        <StackPanel Margin="20">
+            <TextBlock Text="Mã phiếu thu:" FontWeight="Bold" />
+            <TextBlock Text="{Binding MaPhieuThu}" Name="MaPhieuThuTextBlock" />
+
+            <TextBlock Text="Ngày thu:" FontWeight="Bold" />
+            <TextBlock Text="{Binding NgayThu}" Name="NgayThuTextBlock" />
+
+            <TextBlock Text="Mã độc giả:" FontWeight="Bold" />
+            <TextBlock Text="{Binding MaDocGia}" Name="MaDocGiaTextBlock" />
+
+            <TextBlock Text="Tên độc giả:" FontWeight="Bold" />
+            <TextBlock Text="{Binding TenDocGia}" Name="TenDocGiaTextBlock" />
+
+            <TextBlock Text="Số tiền thu:" FontWeight="Bold" />
+            <TextBlock Text="{Binding SoTienThu}" Name="SoTienThuTextBlock" />
+
+            <TextBlock Text="Còn nợ:" FontWeight="Bold" />
+            <TextBlock Text="{Binding ConNo}" Name="ConNoTextBlock" />
+
+            <TextBlock Text="Người thu:" FontWeight="Bold" />
+            <TextBlock Text="{Binding NguoiThu}" Name="NguoiThuTextBlock" />
+
+            <TextBlock Text="Ghi chú:" FontWeight="Bold" />
+            <TextBlock Text="{Binding GhiChu}" Name="GhiChuTextBlock" />
+        </StackPanel>
+    </Grid>
+</Window>
