@@ -12,6 +12,7 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using Microsoft.Win32;
+using System.Globalization;
 
 namespace QLTV
 {
@@ -284,54 +285,6 @@ namespace QLTV
             LoadTuaSach();
         }
 
-        private void btnTimKiem_Click(object sender, RoutedEventArgs e)
-        {
-            string searchTerm = tbxThongTinTimKiem.Text.Trim();
-            string selectedProperty = ((ComboBoxItem)cbbThuocTinhTimKiem.SelectedItem)?.Content.ToString();
-
-            // Kiểm tra nếu không có gì được chọn
-            if (string.IsNullOrEmpty(selectedProperty))
-            {
-                MessageBox.Show("Vui lòng chọn thuộc tính tìm kiếm", "Thông báo", MessageBoxButton.OK, MessageBoxImage.Warning);
-                return;
-            }
-
-            using (var context = new QLTVContext())
-            {
-                // Truy vấn cơ sở dữ liệu để lấy tất cả các tựa sách
-                var query = context.TUASACH
-                    .Where(ts => !ts.IsDeleted)
-                    .Select(ts => new
-                    {
-                        ts.MaTuaSach,
-                        ts.TenTuaSach,
-                        ts.SoLuong,
-                        ts.HanMuonToiDa,
-                        DSTacGia = string.Join(", ", ts.TUASACH_TACGIA.Select(ts_tg => ts_tg.IDTacGiaNavigation.TenTacGia)),
-                        DSTheLoai = string.Join(", ", ts.TUASACH_THELOAI.Select(ts_tl => ts_tl.IDTheLoaiNavigation.TenTheLoai))
-                    })
-                    .AsEnumerable() // Chuyển về IEnumerable để lọc trên máy khách
-                    .ToList();
-
-                // Lọc theo thuộc tính tìm kiếm được chọn
-                if (selectedProperty == "Tên Tựa Sách")
-                {
-                    query = query.Where(ts => ts.TenTuaSach.Contains(searchTerm)).ToList();
-                }
-                else if (selectedProperty == "Tác Giả")
-                {
-                    query = query.Where(ts => ts.DSTacGia.Contains(searchTerm)).ToList();
-                }
-                else if (selectedProperty == "Thể Loại")
-                {
-                    query = query.Where(ts => ts.DSTheLoai.Contains(searchTerm)).ToList();
-                }
-
-                // Cập nhật ItemsSource cho DataGrid
-                dgTuaSach.ItemsSource = query;
-            }
-        }
-
         private void tbxDSTheLoai_TextChanged(object sender, TextChangedEventArgs e)
         {
             if (string.IsNullOrWhiteSpace(tbxDSTheLoai.Text))
@@ -430,6 +383,142 @@ namespace QLTV
                 }
 
                 MessageBox.Show("Xuất Excel thành công!", "Thông báo", MessageBoxButton.OK, MessageBoxImage.Information);
+            }
+        }
+
+        private void ImportExcelToDb(string filePath)
+        {
+            var context = new QLTVContext();
+            using (var package = new ExcelPackage(new FileInfo(filePath)))
+            {
+                var worksheet = package.Workbook.Worksheets.FirstOrDefault();
+                if (worksheet == null) return;
+
+                var existingAuthors = context.TACGIA.ToDictionary(tg => tg.TenTacGia);
+                var existingCategories = context.THELOAI.ToDictionary(tl => tl.TenTheLoai);
+
+                for (int row = 2; row <= worksheet.Dimension.End.Row; row++)
+                {
+                    string tenTuaSach = worksheet.Cells[row, 1].Text;
+                    string hanMuonToiDaText = worksheet.Cells[row, 4].Text;
+                    if (string.IsNullOrWhiteSpace(tenTuaSach) || !int.TryParse(hanMuonToiDaText, out int hanMuonToiDa))
+                        continue;  // Skip invalid rows
+
+                    var newTuaSach = new TUASACH
+                    {
+                        TenTuaSach = tenTuaSach,
+                        HanMuonToiDa = hanMuonToiDa
+                    };
+                    context.TUASACH.Add(newTuaSach);
+                    context.SaveChanges();
+
+                    var lstTenTacGia = worksheet.Cells[row, 2].Text.Split(", ").Select(n => n.Trim()).ToList();
+                    var lstTenTheLoai = worksheet.Cells[row, 3].Text.Split(", ").Select(n => n.Trim()).ToList();
+
+                    // Add authors
+                    foreach (var tenTacGia in lstTenTacGia)
+                    {
+                        if (!existingAuthors.TryGetValue(tenTacGia, out var tacGia))
+                        {
+                            tacGia = new TACGIA { TenTacGia = tenTacGia, NamSinh = -1, QuocTich = "Chưa Có" };
+                            context.TACGIA.Add(tacGia);
+                            context.SaveChanges();
+                            existingAuthors[tenTacGia] = tacGia;
+                        }
+                        context.TUASACH_TACGIA.Add(new TUASACH_TACGIA { IDTuaSach = newTuaSach.ID, IDTacGia = tacGia.ID });
+                    }
+
+                    // Add categories
+                    foreach (var tenTheLoai in lstTenTheLoai)
+                    {
+                        if (!existingCategories.TryGetValue(tenTheLoai, out var theLoai))
+                        {
+                            theLoai = new THELOAI { TenTheLoai = tenTheLoai };
+                            context.THELOAI.Add(theLoai);
+                            context.SaveChanges();
+                            existingCategories[tenTheLoai] = theLoai;
+                        }
+                        context.TUASACH_THELOAI.Add(new TUASACH_THELOAI { IDTuaSach = newTuaSach.ID, IDTheLoai = theLoai.ID });
+                    }
+                }
+
+                // Save all changes at the end for efficiency
+                context.SaveChanges();
+            }
+        }
+
+        private void btnImportExcel_Click(object sender, RoutedEventArgs e)
+        {
+            OpenFileDialog openFileDialog = new OpenFileDialog
+            {
+                Filter = "Excel Files|*.xlsx"
+            };
+
+            if (openFileDialog.ShowDialog() == true)
+            {
+                ImportExcelToDb(openFileDialog.FileName);
+                MessageBox.Show("Nhập Excel thành công!", "Thông báo", MessageBoxButton.OK, MessageBoxImage.Information);
+                LoadTuaSach();
+            }
+        }
+
+        private string NormalizeString(string text)
+        {
+            if (string.IsNullOrEmpty(text))
+                return text;
+
+            return new string(
+                text.Normalize(NormalizationForm.FormD)
+                    .Where(c => CharUnicodeInfo.GetUnicodeCategory(c) != UnicodeCategory.NonSpacingMark)
+                    .ToArray()
+            ).Normalize(NormalizationForm.FormC).ToLower();
+        }
+
+        private void btnTimKiem_Click(object sender, RoutedEventArgs e)
+        {
+            string searchTerm = NormalizeString(tbxThongTinTimKiem.Text.Trim().ToLower());
+            string selectedProperty = ((ComboBoxItem)cbbThuocTinhTimKiem.SelectedItem)?.Content.ToString();
+
+            // Kiểm tra nếu không có gì được chọn
+            if (string.IsNullOrEmpty(selectedProperty))
+            {
+                MessageBox.Show("Vui lòng chọn thuộc tính tìm kiếm", "Thông báo", MessageBoxButton.OK, MessageBoxImage.Warning);
+                return;
+            }
+
+            using (var context = new QLTVContext())
+            {
+                // Truy vấn cơ sở dữ liệu để lấy tất cả các tựa sách
+                var query = context.TUASACH
+                    .Where(ts => !ts.IsDeleted)
+                    .Select(ts => new
+                    {
+                        ts.MaTuaSach,
+                        ts.TenTuaSach,
+                        ts.SoLuong,
+                        ts.HanMuonToiDa,
+                        DSTacGia = string.Join(", ", ts.TUASACH_TACGIA.Select(ts_tg => ts_tg.IDTacGiaNavigation.TenTacGia)),
+                        DSTheLoai = string.Join(", ", ts.TUASACH_THELOAI.Select(ts_tl => ts_tl.IDTheLoaiNavigation.TenTheLoai))
+                    })
+                    .AsEnumerable() // Chuyển về IEnumerable để lọc trên máy khách
+                    .ToList();
+
+                // Lọc theo thuộc tính tìm kiếm được chọn
+                if (selectedProperty == "Tên Tựa Sách")
+                {
+                    query = query.Where(ts => NormalizeString(ts.TenTuaSach).Contains(NormalizeString(searchTerm))).ToList();
+                }
+                else if (selectedProperty == "Tác Giả")
+                {
+                    query = query.Where(ts => NormalizeString(ts.DSTacGia).Contains(NormalizeString(searchTerm))).ToList();
+                }
+                else if (selectedProperty == "Thể Loại")
+                {
+                    query = query.Where(ts => NormalizeString(ts.DSTheLoai).Contains(NormalizeString(searchTerm))).ToList();
+                }
+
+                // Cập nhật ItemsSource cho DataGrid
+                dgTuaSach.ItemsSource = query;
             }
         }
     }

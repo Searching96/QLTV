@@ -102,6 +102,10 @@
                         Margin="5, 0, 0, 0" Click="btnXoaSach_Click"/>
                 <Button x:Name="btnLamMoi" Content="Làm mới" Background="Gray" 
                         Margin="5, 0, 0, 0" Click="btnLamMoi_Click"/>
+                <Button x:Name="btnExportExcel" Content="Xuất Excel" Background="Gray"
+                        Margin="5, 0, 0, 0" Click="btnExportExcel_Click"/>
+                <Button x:Name="btnImportExcel" Content="Nhập Excel" Background="Gray"
+                        Margin="5, 0, 0, 0" Click="btnImportExcel_Click"/>
             </StackPanel>
         </Grid>
 

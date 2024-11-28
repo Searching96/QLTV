@@ -2,6 +2,7 @@
 using QLTV.Models;
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
@@ -160,6 +161,76 @@ namespace QLTV
         private void btnLamMoi_Click(object sender, RoutedEventArgs e)
         {
             LoadTacGia();
+        }
+
+        private string NormalizeString(string text)
+        {
+            if (string.IsNullOrEmpty(text))
+                return text;
+
+            return new string(
+                text.Normalize(NormalizationForm.FormD)
+                    .Where(c => CharUnicodeInfo.GetUnicodeCategory(c) != UnicodeCategory.NonSpacingMark)
+                    .ToArray()
+            ).Normalize(NormalizationForm.FormC).ToLower();
+        }
+
+        private void btnTimKiem_Click(object sender, RoutedEventArgs e)
+        {
+            string searchTerm = NormalizeString(tbxThongTinTimKiem.Text.Trim().ToLower());
+            string selectedProperty = ((ComboBoxItem)cbbThuocTinhTimKiem.SelectedItem)?.Content.ToString();
+
+            // Kiểm tra nếu không có gì được chọn
+            if (string.IsNullOrEmpty(selectedProperty))
+            {
+                MessageBox.Show("Vui lòng chọn thuộc tính tìm kiếm", "Thông báo", MessageBoxButton.OK, MessageBoxImage.Warning);
+                return;
+            }
+
+            using (var context = new QLTVContext())
+            {
+                var query = context.TACGIA
+                    .Where(tg => !tg.IsDeleted)
+                    .Select(tg => new
+                    {
+                        tg.MaTacGia,
+                        tg.TenTacGia,
+                        tg.NamSinh,
+                        tg.QuocTich,
+                    })
+                    .AsEnumerable() // Chuyển về IEnumerable để lọc trên máy khách
+                    .ToList();
+
+                // Lọc theo thuộc tính tìm kiếm được chọn
+                if (selectedProperty == "Tên Tác Giả")
+                {
+                    query = query.Where(tg => NormalizeString(tg.TenTacGia).Contains(NormalizeString(searchTerm))).ToList();
+                }
+                else if (selectedProperty == "Năm Sinh")
+                {
+                    int namSinh;
+                    if (!int.TryParse(searchTerm, out namSinh))
+                        MessageBox.Show("Năm sinh phải là số nguyên", "Lỗi", MessageBoxButton.OK, MessageBoxImage.Warning);
+                    query = query.Where(tg => tg.NamSinh == namSinh).ToList();
+                }
+                else if (selectedProperty == "Quốc Tịch")
+                {
+                    query = query.Where(tg => NormalizeString(tg.QuocTich).Contains(NormalizeString(searchTerm))).ToList();
+                }
+
+                // Cập nhật ItemsSource cho DataGrid
+                dgTacGia.ItemsSource = query;
+            }
+        }
+
+        private void btnExportExcel_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        private void btnImportExcel_Click(object sender, RoutedEventArgs e)
+        {
+
         }
     }
 }

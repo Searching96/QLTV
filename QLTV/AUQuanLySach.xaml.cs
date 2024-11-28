@@ -1,7 +1,10 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using OfficeOpenXml.Style;
+using OfficeOpenXml;
 using QLTV.Models;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Security.Cryptography;
 using System.Text;
@@ -15,6 +18,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using Microsoft.Win32;
 
 namespace QLTV
 {
@@ -27,6 +31,7 @@ namespace QLTV
         {
             InitializeComponent();
             LoadSach();
+            ExcelPackage.LicenseContext = LicenseContext.NonCommercial;
         }
 
         private void LoadSach()
@@ -182,6 +187,87 @@ namespace QLTV
         }
 
         private void btnTimKiem_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        private void btnExportExcel_Click(object sender, RoutedEventArgs e)
+        {
+            ExportDataGridToExcel();
+        }
+
+        private void ExportDataGridToExcel()
+        {
+            // Cấu hình đường dẫn lưu file Excel
+            SaveFileDialog saveFileDialog = new SaveFileDialog
+            {
+                Filter = "Excel Files|*.xlsx",
+                Title = "Lưu file Excel",
+                FileName = "DanhSachSach.xlsx"
+            };
+
+            if (saveFileDialog.ShowDialog() == true)
+            {
+                var filePath = saveFileDialog.FileName;
+
+                // Tạo file Excel mới
+                using (ExcelPackage package = new ExcelPackage())
+                {
+                    // Tạo một sheet mới
+                    ExcelWorksheet worksheet = package.Workbook.Worksheets.Add("Danh Sách Sách");
+
+                    // Đặt tiêu đề cho các cột trong Excel
+                    worksheet.Cells[1, 1].Value = "Mã Sách";
+                    worksheet.Cells[1, 2].Value = "Tựa Sách";
+                    worksheet.Cells[1, 3].Value = "Tác Giả";
+                    worksheet.Cells[1, 4].Value = "Thể Loại";
+                    worksheet.Cells[1, 5].Value = "Nhà Xuất Bản";
+                    worksheet.Cells[1, 6].Value = "Năm Xuất Bản";
+                    worksheet.Cells[1, 7].Value = "Ngày Nhập";
+                    worksheet.Cells[1, 8].Value = "Trị Giá";
+                    worksheet.Cells[1, 9].Value = "Tình Trạng";
+
+                    // Áp dụng style cho tiêu đề
+                    using (var range = worksheet.Cells[1, 1, 1, 9])
+                    {
+                        range.Style.Font.Bold = true;
+                        range.Style.HorizontalAlignment = ExcelHorizontalAlignment.Center;
+                        range.Style.Fill.PatternType = ExcelFillStyle.Solid;
+                        range.Style.Fill.BackgroundColor.SetColor(System.Drawing.Color.LightGray);
+                    }
+
+                    // Duyệt qua dữ liệu trong DataGrid và ghi vào Excel
+                    var items = dgSach.ItemsSource as System.Collections.IEnumerable;
+                    int rowIndex = 2;
+
+                    foreach (var item in items)
+                    {
+                        dynamic data = item;
+                        worksheet.Cells[rowIndex, 1].Value = data.MaSach;
+                        worksheet.Cells[rowIndex, 2].Value = data.TuaSach;
+                        worksheet.Cells[rowIndex, 3].Value = data.DSTacGia;
+                        worksheet.Cells[rowIndex, 4].Value = data.DSTheLoai;
+                        worksheet.Cells[rowIndex, 5].Value = data.NhaXuatBan;
+                        worksheet.Cells[rowIndex, 6].Value = data.NamXuatBan;
+                        worksheet.Cells[rowIndex, 7].Value = data.NgayNhap;
+                        worksheet.Cells[rowIndex, 8].Value = data.TriGia;
+                        worksheet.Cells[rowIndex, 9].Value = data.TinhTrang;
+                        rowIndex++;
+                    }
+
+                    // Tự động điều chỉnh độ rộng cột
+                    worksheet.Cells.AutoFitColumns();
+
+                    // Lưu file Excel
+                    FileInfo excelFile = new FileInfo(filePath);
+                    package.SaveAs(excelFile);
+                }
+
+                MessageBox.Show("Xuất Excel thành công!", "Thông báo", MessageBoxButton.OK, MessageBoxImage.Information);
+            }
+        }
+
+        private void btnImportExcel_Click(object sender, RoutedEventArgs e)
         {
 
         }

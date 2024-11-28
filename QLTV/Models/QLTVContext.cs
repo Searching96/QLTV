@@ -344,6 +344,9 @@ public partial class QLTVContext : DbContext
 
         modelBuilder.Entity<TUASACH>(entity =>
         {
+            entity.Property(e => e.HanMuonToiDa)
+                  .IsRequired()
+                  .HasDefaultValueSql("((2))");
             entity.Property(e => e.BiaSach)
                 .HasMaxLength(500)
                 .IsUnicode(false)

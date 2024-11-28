@@ -81,17 +81,19 @@
 
             <!--CRUD buttons-->
             <StackPanel Grid.Row="2" Orientation="Horizontal"  
-                    HorizontalAlignment="Left" Margin="5">
+                        HorizontalAlignment="Left" Margin="5">
                 <Button x:Name="btnThemTuaSach" Content="Thêm" Background="Gray" 
-                    Margin="5, 0, 0, 0" Click="btnThemTuaSach_Click"/>
+                        Margin="5, 0, 0, 0" Click="btnThemTuaSach_Click"/>
                 <Button x:Name="btnSuaTuaSach" Content="Sửa" Background="Gray" 
-                    Margin="5, 0, 0, 0" Click="btnSuaTuaSach_Click"/>
+                        Margin="5, 0, 0, 0" Click="btnSuaTuaSach_Click"/>
                 <Button x:Name="btnXoaTuaSach" Content="Xóa" Background="Gray" 
-                    Margin="5, 0, 0, 0" Click="btnXoaTuaSach_Click"/>
+                        Margin="5, 0, 0, 0" Click="btnXoaTuaSach_Click"/>
                 <Button x:Name="btnLamMoi" Content="Làm mới" Background="Gray" 
-                    Margin="5, 0, 0, 0" Click="btnLamMoi_Click"/>
+                        Margin="5, 0, 0, 0" Click="btnLamMoi_Click"/>
                 <Button x:Name="btnExportExcel" Content="Xuất Excel" Background="Gray"
                         Margin="5, 0, 0, 0" Click="btnExportExcel_Click"/>
+                <Button x:Name="btnImportExcel" Content="Nhập Excel" Background="Gray"
+                        Margin="5, 0, 0, 0" Click="btnImportExcel_Click"/>
             </StackPanel>
         </Grid>
 

@@ -69,6 +69,10 @@
                         Margin="5, 0, 0, 0" Click="btnXoaTacGia_Click"/>
                 <Button x:Name="btnLamMoi" Content="Làm mới" Background="Gray" 
                         Margin="5, 0, 0, 0" Click="btnLamMoi_Click"/>
+                <Button x:Name="btnExportExcel" Content="Xuất Excel" Background="Gray"
+                        Margin="5, 0, 0, 0" Click="btnExportExcel_Click"/>
+                <Button x:Name="btnImportExcel" Content="Nhập Excel" Background="Gray"
+                        Margin="5, 0, 0, 0" Click="btnImportExcel_Click"/>
             </StackPanel>
         </Grid>
 
@@ -86,11 +90,18 @@
                     <ColumnDefinition Width="1*"/>
                     <ColumnDefinition Width="2.5*"/>
                     <ColumnDefinition Width="1*"/>
+                    <ColumnDefinition Width="0.25*"/>
                 </Grid.ColumnDefinitions>
 
                 <TextBlock Text="Tìm Kiếm:" Grid.Column="0" FontSize="14" VerticalAlignment="Center"/>
                 <TextBox x:Name="tbxThongTinTimKiem" Grid.Column="1" VerticalAlignment="Center"/>
-                <ComboBox x:Name="cbbThuocTinhTimKiem" Grid.Column="2" VerticalAlignment="Center"/>
+                <ComboBox x:Name="cbbThuocTinhTimKiem" Grid.Column="2" VerticalAlignment="Center">
+                    <ComboBoxItem Content="Tên Tác Giả"/>
+                    <ComboBoxItem Content="Năm Sinh"/>
+                    <ComboBoxItem Content="Quốc Tịch"/>
+                </ComboBox>
+                <Button x:Name="btnTimKiem" Grid.Column="3" Content="T" VerticalAlignment="Center"
+                        Click="btnTimKiem_Click"/>
             </Grid>
         </Grid>
 
