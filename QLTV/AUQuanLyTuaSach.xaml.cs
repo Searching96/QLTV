@@ -281,7 +281,7 @@ namespace QLTV
                         context.SaveChanges();
                         MessageBox.Show($"Tựa sách có mã {maTuaSach} đã được xóa.", "Thông báo",
                                         MessageBoxButton.OK, MessageBoxImage.Information);
-                        LoadTuaSach();
+                        LoadTuaSach(); 
                     }
                 }
             }
@@ -292,36 +292,36 @@ namespace QLTV
             LoadTuaSach();
         }
 
-        private void tbxDSTheLoai_TextChanged(object sender, TextChangedEventArgs e)
-        {
-            if (string.IsNullOrWhiteSpace(tbxDSTheLoai.Text))
-            {
-                tblDSTheLoaiError.Text = "Thể loại không được để trống!";
-                tblDSTheLoaiError.Visibility = Visibility.Visible;
-                return;
-            }
+        //private void tbxDSTheLoai_TextChanged(object sender, TextChangedEventArgs e)
+        //{
+        //    if (string.IsNullOrWhiteSpace(tbxDSTheLoai.Text))
+        //    {
+        //        tblDSTheLoaiError.Text = "Thể loại không được để trống!";
+        //        tblDSTheLoaiError.Visibility = Visibility.Visible;
+        //        return;
+        //    }
 
-            tblDSTheLoaiError.Visibility = Visibility.Collapsed;
-        }
+        //    tblDSTheLoaiError.Visibility = Visibility.Collapsed;
+        //}
 
-        private void tbxHanMuonToiDa_TextChanged(object sender, TextChangedEventArgs e)
-        {
-            if (string.IsNullOrWhiteSpace(tbxHanMuonToiDa.Text))
-            {
-                tblHanMuonToiDaError.Text = "Hạn mượn không được để trống!";
-                tblHanMuonToiDaError.Visibility = Visibility.Visible;
-                return;
-            }
+        //private void tbxHanMuonToiDa_TextChanged(object sender, TextChangedEventArgs e)
+        //{
+        //    if (string.IsNullOrWhiteSpace(tbxHanMuonToiDa.Text))
+        //    {
+        //        tblHanMuonToiDaError.Text = "Hạn mượn không được để trống!";
+        //        tblHanMuonToiDaError.Visibility = Visibility.Visible;
+        //        return;
+        //    }
 
-            if (!int.TryParse(tbxHanMuonToiDa.Text, out _))
-            {
-                tblHanMuonToiDaError.Text = "Hạn mượn phải là số!";
-                tblHanMuonToiDaError.Visibility = Visibility.Visible;
-                return;
-            }
+        //    if (!int.TryParse(tbxHanMuonToiDa.Text, out _))
+        //    {
+        //        tblHanMuonToiDaError.Text = "Hạn mượn phải là số!";
+        //        tblHanMuonToiDaError.Visibility = Visibility.Visible;
+        //        return;
+        //    }
 
-            tblHanMuonToiDaError.Visibility = Visibility.Collapsed;
-        }
+        //    tblHanMuonToiDaError.Visibility = Visibility.Collapsed;
+        //}
 
         private void btnExportExcel_Click(object sender, RoutedEventArgs e)
         {

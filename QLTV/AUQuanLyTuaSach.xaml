@@ -1,22 +1,59 @@
 ﻿<UserControl x:Class="QLTV.AUQuanLyTuaSach"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+             xmlns:animation="clr-namespace:System.Windows.Media.Animation;assembly=PresentationCore"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:QLTV"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
+    <UserControl.Resources>
+        <Style x:Key="MenuButtonStyle" TargetType="Button" BasedOn="{StaticResource MaterialDesignFlatButton}">
+            <Setter Property="Height" Value="50"/>
+            <Setter Property="FontSize" Value="14"/>
+            <Setter Property="Foreground" Value="White"/>
+            <Setter Property="materialDesign:ButtonAssist.CornerRadius" Value="25"/>
+            <Setter Property="Margin" Value="16,4"/>
+            <Setter Property="Padding" Value="16,8"/>
+            <Style.Triggers>
+                <Trigger Property="IsMouseOver" Value="True">
+                    <Setter Property="Background" Value="#B6DEE7"/>
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+
+        <Style x:Key="ModernTextBox" TargetType="TextBox" BasedOn="{StaticResource MaterialDesignOutlinedTextBox}">
+            <Setter Property="Width" Value="Auto"/>
+            <Setter Property="Height" Value="Auto"/>
+            <Setter Property="VerticalAlignment" Value="Stretch"/>
+            <Setter Property="HorizontalAlignment" Value="Stretch"/>
+            <Setter Property="MinHeight" Value="5"/>
+            <Setter Property="Margin" Value="1"/>
+            <Setter Property="materialDesign:HintAssist.FloatingScale" Value="0.8"/>
+        </Style>
+
+        <Style x:Key="ModernComboBox" TargetType="ComboBox" BasedOn="{StaticResource MaterialDesignOutlinedComboBox}">
+            <Setter Property="Margin" Value="1"/>
+            <Setter Property="materialDesign:HintAssist.FloatingScale" Value="0.8"/>
+        </Style>
+
+        <Style x:Key="ModernDatePicker" TargetType="DatePicker" BasedOn="{StaticResource MaterialDesignOutlinedDatePicker}">
+            <Setter Property="Margin" Value="1"/>
+            <Setter Property="materialDesign:HintAssist.FloatingScale" Value="0.8"/>
+        </Style>
+    </UserControl.Resources>
     <Grid Background="White">
         <Grid.RowDefinitions>
             <RowDefinition Height="300*"/>
             <RowDefinition Height="50*"/>
-            <RowDefinition Height="800*"/>
+            <RowDefinition Height="300*"/>
         </Grid.RowDefinitions>
 
         <Grid>
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto"/>
-                <RowDefinition Height="*"/>
+                <RowDefinition Height="Auto"/>
                 <RowDefinition Height="Auto"/>
             </Grid.RowDefinitions>
 
@@ -27,72 +64,75 @@
             <Grid Grid.Row="1">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="1*"/>
-                    <ColumnDefinition Width="2*"/>
                     <ColumnDefinition Width="1*"/>
-                    <ColumnDefinition Width="2*"/>
                     <ColumnDefinition Width="1*"/>
-                    <ColumnDefinition Width="2*"/>
                 </Grid.ColumnDefinitions>
 
                 <Grid.RowDefinitions>
                     <RowDefinition Height="Auto"/>
-                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="*"/>
                     <RowDefinition Height="Auto"/>
                 </Grid.RowDefinitions>
+                <TextBox x:Name="tbxMaTuaSach" Grid.Row="0" Grid.Column="0"
+                         Style="{StaticResource ModernTextBox}"
+                         materialDesign:HintAssist.Hint="Mã Tựa Sách"
+                         IsReadOnly="True"/>
 
-                <TextBlock Text="Mã Tựa Sách:" Grid.Row="0" Grid.Column="0" VerticalAlignment="Center"/>
-                <TextBox x:Name="tbxMaTuaSach" Grid.Row="0" Grid.Column="1"
-                 VerticalAlignment="Center" IsReadOnly="True"/>
+                <TextBox x:Name="tbxTenTuaSach" Grid.Row="0" Grid.Column="1"
+                         Style="{StaticResource ModernTextBox}"
+                         materialDesign:HintAssist.Hint="Tên Tựa Sách"/>
 
-                <TextBlock Text="Tên Tựa Sách:" Grid.Row="0" Grid.Column="2" VerticalAlignment="Center"/>
-                <TextBox x:Name="tbxTenTuaSach" Grid.Row="0" Grid.Column="3"
-                         VerticalAlignment="Center"/>
-
-                <TextBlock Text="Tác Giả:" Grid.Row="0" Grid.Column="4" VerticalAlignment="Center"/>
-                <Grid x:Name="grTacGia" Grid.Row="0" Grid.Column="5">
+                <Grid x:Name="grTacGia" Grid.Row="0" Grid.Column="2">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="7*"/>
                         <ColumnDefinition Width="1*"/>
                     </Grid.ColumnDefinitions>
-                    <TextBox x:Name="tbxDSTacGia" Grid.Column="0" VerticalAlignment="Center"/>
-                    <Button x:Name="btnSuaTacGia" Grid.Column="1" Content="E"
-                    VerticalAlignment="Center" Click="btnSuaTacGia_Click"/>
+                    <TextBox x:Name="tbxDSTacGia" Grid.Row="0" Grid.Column="0"
+                         Style="{StaticResource ModernTextBox}"
+                         materialDesign:HintAssist.Hint="Tác Giả"/>
+                    <Button x:Name="btnSuaTacGia" Grid.Column="1"
+                            VerticalAlignment="Center" Click="btnSuaTacGia_Click"/>
+                    <materialDesign:PackIcon Kind="TextBoxEdit" HorizontalAlignment="Center"
+                                             Grid.Column="1" VerticalAlignment="Center"/>
                 </Grid>
 
-                <TextBlock Text="Thể Loại:" Grid.Row="1" Grid.Column="0" VerticalAlignment="Center"/>
-                <Grid x:Name="grTheLoai" Grid.Row="1" Grid.Column="1">
+                <Grid x:Name="grTheLoai" Grid.Row="1" Grid.Column="0">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="7*"/>
                         <ColumnDefinition Width="1*"/>
                     </Grid.ColumnDefinitions>
-                    <TextBox x:Name="tbxDSTheLoai" Grid.Column="0" VerticalAlignment="Center" TextChanged="tbxDSTheLoai_TextChanged"/>
-                    <Button x:Name="btnSuaTheLoai" Grid.Column="1" Content="E"
-                    VerticalAlignment="Center" Click="btnSuaTheLoai_Click"/>
+                    <TextBox x:Name="tbxDSTheLoai" Grid.Row="0" Grid.Column="0"
+                         Style="{StaticResource ModernTextBox}"
+                         materialDesign:HintAssist.Hint="Thể Loại"/>
+
+                    <Button x:Name="btnSuaTheLoai" Grid.Column="1"
+                            VerticalAlignment="Center" Click="btnSuaTheLoai_Click"/>
+                    <materialDesign:PackIcon Kind="TextBoxEdit" HorizontalAlignment="Center"
+                                             Grid.Column="1" VerticalAlignment="Center"/>
                 </Grid>
-                <TextBlock x:Name="tblDSTheLoaiError" Grid.Row="1" Grid.Column="1" Foreground="Red" Visibility="Collapsed"/>
 
-                <TextBlock Text="Số Lượng:" Grid.Row="1" Grid.Column="2" VerticalAlignment="Center"/>
-                <TextBox x:Name="tbxSoLuong" Grid.Row="1" Grid.Column="3" VerticalAlignment="Center" IsReadOnly="True"/>
-
-                <TextBlock Text="Hạn Mượn Tối Đa:" Grid.Row="1" Grid.Column="4" VerticalAlignment="Center"/>
-                <TextBox x:Name="tbxHanMuonToiDa" Grid.Row="1" Grid.Column="5" VerticalAlignment="Center" TextChanged="tbxHanMuonToiDa_TextChanged"/>
-                <TextBlock x:Name="tblHanMuonToiDaError" Grid.Row="1" Grid.Column="5" Foreground="Red" Visibility="Collapsed"/>
+                <TextBox x:Name="tbxSoLuong" Grid.Row="1" Grid.Column="1"
+                         Style="{StaticResource ModernTextBox}"
+                         materialDesign:HintAssist.Hint="Số Lượng"/>
+                <TextBox x:Name="tbxHanMuonToiDa" Grid.Row="1" Grid.Column="2"
+                         Style="{StaticResource ModernTextBox}"
+                         materialDesign:HintAssist.Hint="Hạn Mượn Tối Đa (tuần):"/>            
             </Grid>
 
             <!--CRUD buttons-->
             <StackPanel Grid.Row="2" Orientation="Horizontal"  
                         HorizontalAlignment="Left" Margin="5">
-                <Button x:Name="btnThemTuaSach" Content="Thêm" Background="Gray" 
+                <Button x:Name="btnThemTuaSach" Content="Thêm" 
                         Margin="5, 0, 0, 0" Click="btnThemTuaSach_Click"/>
-                <Button x:Name="btnSuaTuaSach" Content="Sửa" Background="Gray" 
+                <Button x:Name="btnSuaTuaSach" Content="Sửa"  
                         Margin="5, 0, 0, 0" Click="btnSuaTuaSach_Click"/>
-                <Button x:Name="btnXoaTuaSach" Content="Xóa" Background="Gray" 
+                <Button x:Name="btnXoaTuaSach" Content="Xóa" 
                         Margin="5, 0, 0, 0" Click="btnXoaTuaSach_Click"/>
-                <Button x:Name="btnLamMoi" Content="Làm mới" Background="Gray" 
+                <Button x:Name="btnLamMoi" Content="Làm mới"  
                         Margin="5, 0, 0, 0" Click="btnLamMoi_Click"/>
-                <Button x:Name="btnExportExcel" Content="Xuất Excel" Background="Gray"
+                <Button x:Name="btnExportExcel" Content="Xuất Excel" 
                         Margin="5, 0, 0, 0" Click="btnExportExcel_Click"/>
-                <Button x:Name="btnImportExcel" Content="Nhập Excel" Background="Gray"
+                <Button x:Name="btnImportExcel" Content="Nhập Excel" 
                         Margin="5, 0, 0, 0" Click="btnImportExcel_Click"/>
             </StackPanel>
         </Grid>
@@ -115,13 +155,22 @@
                 </Grid.ColumnDefinitions>
 
                 <TextBlock Text="Tìm Kiếm:" Grid.Column="0" FontSize="14" VerticalAlignment="Center"/>
-                <TextBox x:Name="tbxThongTinTimKiem" Grid.Column="1" VerticalAlignment="Center"/>
-                <ComboBox x:Name="cbbThuocTinhTimKiem" Grid.Column="2" VerticalAlignment="Center">
+                <TextBox x:Name="tbxThongTinTimKiem" Grid.Column="1" VerticalAlignment="Center"
+                         Style="{StaticResource MaterialDesignOutlinedTextBox}"/>
+                <ComboBox x:Name="cbbThuocTinhTimKiem" Grid.Column="2" VerticalAlignment="Center"
+                          Style="{StaticResource MaterialDesignOutlinedComboBox}">
                     <ComboBoxItem Content="Tên Tựa Sách"/>
                     <ComboBoxItem Content="Tác Giả"/>
                     <ComboBoxItem Content="Thể Loại"/>
                 </ComboBox>
-                <Button x:Name="btnTimKiem" Grid.Column="3" Content="T" Click="btnTimKiem_Click"/>
+                <Button x:Name="btnTimKiem" Grid.Column="3" Click="btnTimKiem_Click">
+
+                </Button>
+                <materialDesign:PackIcon Kind="Magnify" Grid.Column="3"
+                                         Width=" 20"
+                                         Height="20"
+                                         HorizontalAlignment="Center" 
+                                         VerticalAlignment="Center"/>
             </Grid>
         </Grid>
 

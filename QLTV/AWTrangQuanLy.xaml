@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:QLTV"
         mc:Ignorable="d"
-        Title="MainWindow" Height="650" Width="1000"
+        Title="TRANG QUẢN LÝ" Height="750" Width="1250"
         WindowStartupLocation="CenterScreen">
     <Grid>
         <Grid.RowDefinitions>
@@ -40,7 +40,7 @@
         
         <!--Main Content-->
         <Grid Grid.Row="1" Grid.Column="1" Margin="5, 5, 0, 0">
-            <Frame x:Name="ADMainContent"/>
+            <Frame x:Name="ADMainContent" NavigationUIVisibility="Hidden"/>
         </Grid>
     </Grid>
 </Window>
