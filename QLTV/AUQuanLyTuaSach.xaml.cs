@@ -268,6 +268,13 @@ namespace QLTV
                     // Truong hop bat dong bo?
                     if (tuaSachToDelete != null)
                     {
+                        var lstSachToDelete = context.SACH
+                            .Where(s => s.IDTuaSach == tuaSachToDelete.ID)
+                            .ToList();
+
+                        foreach (var sach in lstSachToDelete)
+                            sach.IsDeleted = true;
+
                         context.TUASACH_TACGIA.RemoveRange(tuaSachToDelete.TUASACH_TACGIA);
                         context.TUASACH_THELOAI.RemoveRange(tuaSachToDelete.TUASACH_THELOAI);
                         tuaSachToDelete.IsDeleted = true;
