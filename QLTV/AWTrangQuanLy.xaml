@@ -6,7 +6,8 @@
         xmlns:local="clr-namespace:QLTV"
         mc:Ignorable="d"
         Title="TRANG QUẢN LÝ" Height="750" Width="1250"
-        WindowStartupLocation="CenterScreen">
+        WindowStartupLocation="CenterScreen"
+        Background="GhostWhite">
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
@@ -23,7 +24,7 @@
         </StackPanel> 
         
         <!--Thanh Menu ben trai-->
-        <DockPanel Grid.Row="1" Grid.Column="0" Background="DodgerBlue" Margin="0, 5, 0, 0">
+        <DockPanel Grid.Row="1" Grid.Column="0" Margin="0, 5, 0, 0" Background="#FF03A9FF">
             <TextBlock Text="Quản Lý Thư Viện" DockPanel.Dock="Top" Foreground="White" HorizontalAlignment="Stretch" 
                        FontSize="14" FontWeight="Bold" Margin="5, 25, 0, 10" TextAlignment="Center"/>
             <TextBlock Text="Admin" DockPanel.Dock="Top" Foreground="White"

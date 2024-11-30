@@ -13,6 +13,10 @@ using System.Windows;
 using System.Windows.Controls;
 using Microsoft.Win32;
 using System.Globalization;
+using MaterialDesignThemes.Wpf;
+using System.Windows.Data;
+using System.Drawing;
+using System.Windows.Input;
 
 namespace QLTV
 {
@@ -21,6 +25,8 @@ namespace QLTV
     /// </summary>
     public partial class AUQuanLyTuaSach : UserControl
     {
+        public static readonly Thickness DisplayElementMargin = new Thickness(0, 0, 0, 10);
+        public static readonly Thickness ErrorIconMargin = new Thickness(0, 0, 5, 10);
 
         public AUQuanLyTuaSach()
         {
@@ -292,17 +298,17 @@ namespace QLTV
             LoadTuaSach();
         }
 
-        //private void tbxDSTheLoai_TextChanged(object sender, TextChangedEventArgs e)
-        //{
-        //    if (string.IsNullOrWhiteSpace(tbxDSTheLoai.Text))
-        //    {
-        //        tblDSTheLoaiError.Text = "Thể loại không được để trống!";
-        //        tblDSTheLoaiError.Visibility = Visibility.Visible;
-        //        return;
-        //    }
+        private void tbxTenTuaSach_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            if (string.IsNullOrWhiteSpace(tbxTenTuaSach.Text))
+            {
+                icTenTuaSachError.ToolTip = "Tên Tựa Sách không được để trống!";
+                icTenTuaSachError.Visibility = Visibility.Visible;
+                return;
+            }
 
-        //    tblDSTheLoaiError.Visibility = Visibility.Collapsed;
-        //}
+            icTenTuaSachError.Visibility = Visibility.Collapsed;
+        }
 
         //private void tbxHanMuonToiDa_TextChanged(object sender, TextChangedEventArgs e)
         //{
@@ -527,6 +533,11 @@ namespace QLTV
                 // Cập nhật ItemsSource cho DataGrid
                 dgTuaSach.ItemsSource = query;
             }
+        }
+
+        private void tbxSoLuong_TextChanged(object sender, TextChangedEventArgs e)
+        {
+
         }
     }
 }
