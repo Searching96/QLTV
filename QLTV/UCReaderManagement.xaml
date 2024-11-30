@@ -12,8 +12,10 @@
 
         <Border Background="#2196F3" Padding="10">
             <StackPanel Orientation="Horizontal">
-                <TextBlock Text="&#xE8D0;" FontFamily="Segoe MDL2 Assets" FontSize="24" VerticalAlignment="Center" Foreground="White"/>
-                <TextBlock Text="Quản Lý Thư Viện" FontSize="20" VerticalAlignment="Center" Margin="10,0,0,0" Foreground="White"/>
+                <TextBlock Text="&#xE8D0;" FontFamily="Segoe MDL2 Assets" FontSize="24" 
+                           VerticalAlignment="Center" Foreground="White"/>
+                <TextBlock Text="Quản Lý Thư Viện" FontSize="20" VerticalAlignment="Center" 
+                           Margin="10,0,0,0" Foreground="White"/>
             </StackPanel>
         </Border>
 
@@ -39,6 +41,89 @@
         </Grid>
 
         <TabControl Grid.Row="2">
+
+            <TabItem Header="Tài Khoản">
+                <Grid Margin="10">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="131*"/>
+                        <ColumnDefinition Width="611*"/>
+                        <ColumnDefinition Width="232*"/>
+                    </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="*"/>
+                    </Grid.RowDefinitions>
+
+                    <Border BorderBrush="#DDDDDD" BorderThickness="1" Padding="20" Margin="0,0,0,10" Grid.ColumnSpan="3">
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto"/>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="Auto"/>
+                                <ColumnDefinition Width="*"/>
+                            </Grid.ColumnDefinitions>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="Auto"/>
+                            </Grid.RowDefinitions>
+
+                            <Label Grid.Row="0" Grid.Column="0" Content="ID Tài Khoản:" VerticalAlignment="Center"/>
+                            <TextBox Grid.Row="0" Grid.Column="1" Margin="0,5,5,0" x:Name="IDTaiKhoanTextBox" />
+                            <Label Grid.Row="0" Grid.Column="2" Content="Tên Tài Khoản:" VerticalAlignment="Center"/>
+                            <TextBox Grid.Row="0" Grid.Column="3" Margin="0,5,0,0" x:Name="TenTaiKhoanTextBox" />
+
+                            <Label Grid.Row="1" Grid.Column="0" Content="Mã Tài Khoản:" VerticalAlignment="Center"/>
+                            <TextBox Grid.Row="1" Grid.Column="1" Margin="0,5,5,0" x:Name="MaTaiKhoanTextBox" />
+                            <Label Grid.Row="1" Grid.Column="2" Content="Mật Khẩu:" VerticalAlignment="Center"/>
+                            <TextBox Grid.Row="1" Grid.Column="3" Margin="0,5,0,0" x:Name="MatKhauTextBox" />
+
+                            <Label Grid.Row="2" Grid.Column="0" Content="Email:" VerticalAlignment="Center"/>
+                            <TextBox Grid.Row="2" Grid.Column="1" Margin="0,5,5,0" x:Name="EmailTaiKhoanTextBox" />
+                            <Label Grid.Row="2" Grid.Column="2" Content="Sinh Nhật:" VerticalAlignment="Center"/>
+                            <DatePicker Grid.Row="2" Grid.Column="3" Margin="0,5,0,0" x:Name="SinhNhatTaiKhoanDatePicker" />
+
+                            <Label Grid.Row="3" Grid.Column="0" Content="Địa Chỉ:" VerticalAlignment="Center"/>
+                            <TextBox Grid.Row="3" Grid.Column="1" Margin="0,5,5,0" x:Name="DiaChiTaiKhoanTextBox" />
+                            <Label Grid.Row="3" Grid.Column="2" Content="Số Điện Thoại:" VerticalAlignment="Center"/>
+                            <TextBox Grid.Row="3" Grid.Column="3" Margin="0,5,0,0" x:Name="SDTTaiKhoanTextBox" />
+
+                            <Label Grid.Row="4" Grid.Column="0" Content="Trạng Thái:" VerticalAlignment="Center"/>
+                            <TextBox Grid.Row="4" Grid.Column="1" Margin="0,5,5,0" x:Name="TrangThaiTaiKhoanTextBox" />
+                            <Label Grid.Row="4" Grid.Column="2" Content="ID Phân Quyền" VerticalAlignment="Center"/>
+                            <TextBox Grid.Row="4" Grid.Column="3" Margin="0,5,0,0" x:Name="IDPhanQuyenTaiKhoanTextBox" />
+
+                            <StackPanel Grid.Row="5" Grid.ColumnSpan="6" Orientation="Horizontal" 
+                HorizontalAlignment="Right" Margin="0,15,0,0">
+                                <Button Content="Thêm" Padding="10,5" Margin="0,0,5,0" Click="AddAccount_Click"/>
+                                <Button Content="Cập nhật" Padding="10,5" Margin="0,0,5,0" Click="UpdateAccount_Click"/>
+                                <Button Content="Xóa" Padding="10,5" Margin="0,0,5,0" Click="DeleteAccount_Click"/>
+                            </StackPanel>
+                        </Grid>
+                    </Border>
+
+                    <DataGrid Grid.Row="1" x:Name="AccountsDataGrid" AutoGenerateColumns="False" Margin="0,10,0,0" 
+      CanUserAddRows="False" CanUserDeleteRows="False" IsReadOnly="True" 
+      SelectionChanged="AccountsDataGrid_SelectionChanged" Grid.ColumnSpan="3">
+                        <DataGrid.Columns>
+                            <DataGridTextColumn Header="ID Tài Khoản" Binding="{Binding ID}"/>
+                            <DataGridTextColumn Header="Tên Tài Khoản" Binding="{Binding TenTaiKhoan}"/>
+                            <DataGridTextColumn Header="Mã Tài Khoản" Binding="{Binding MaTaiKhoan}"/>
+                            <DataGridTextColumn Header="Mật Khẩu" Binding="{Binding MatKhau}"/>
+                            <DataGridTextColumn Header="Email" Binding="{Binding Email}"/>
+                            <DataGridTextColumn Header="Sinh Nhật" Binding="{Binding SinhNhat, StringFormat=\{0:dd/MM/yyyy\}}"/>
+                            <DataGridTextColumn Header="Địa Chỉ" Binding="{Binding DiaChi}"/>
+                            <DataGridTextColumn Header="Số Điện Thoại" Binding="{Binding SDT}"/>
+                            <DataGridTextColumn Header="Trạng Thái" Binding="{Binding TrangThai}"/>
+                            <DataGridTextColumn Header="ID Phân Quyền" Binding="{Binding IDPhanQuyen}"/>
+                        </DataGrid.Columns>
+                    </DataGrid>
+                </Grid>
+            </TabItem>
+
             <TabItem Header="Thông tin độc giả">
                 <Grid Margin="10">
                     <Grid.RowDefinitions>
@@ -62,45 +147,32 @@
                                 <RowDefinition Height="Auto"/>
                                 <RowDefinition Height="Auto"/>
                                 <RowDefinition Height="Auto"/>
-                                <RowDefinition Height="Auto"/>
-                                <RowDefinition Height="Auto"/>
                             </Grid.RowDefinitions>
 
-                            <Label Grid.Row="0" Grid.Column="0" Content="Mã Độc Giả:" VerticalAlignment="Center"/>
-                            <TextBox Grid.Row="0" Grid.Column="1" Margin="0,5,5,0" x:Name="MaDocGia" />
-                            <Label Grid.Row="0" Grid.Column="2" Content="Email:" VerticalAlignment="Center"/>
+                            <Label Grid.Row="0" Grid.Column="0" Content="ID Độc Giả:" VerticalAlignment="Center"/>
+                            <TextBox Grid.Row="0" Grid.Column="1" Margin="0,5,5,0" x:Name="ID" IsEnabled="False"/>
+                            <Label Grid.Row="0" Grid.Column="2" Content="Mã Độc Giả" VerticalAlignment="Center"/>
                             <TextBox Grid.Row="0" Grid.Column="3" Margin="0,5,0,0" x:Name="Email" />
 
-                            <Label Grid.Row="1" Grid.Column="0" Content="Họ Tên:" VerticalAlignment="Center"/>
-                            <TextBox Grid.Row="1" Grid.Column="1" Margin="0,5,5,0" x:Name="HoTen" />
-                            <Label Grid.Row="1" Grid.Column="2" Content="Số Điện Thoại:" VerticalAlignment="Center"/>
-                            <TextBox Grid.Row="1" Grid.Column="3" Margin="0,5,0,0" x:Name="SoDienThoai" />
+                            <Label Grid.Row="1" Grid.Column="0" Content="ID Tài khoản:" VerticalAlignment="Center"/>
+                            <TextBox Grid.Row="1" Grid.Column="1" Margin="0,5,5,0" x:Name="IDTaiKhoan" IsEnabled="False"/>
+                            <Label Grid.Row="1" Grid.Column="2" Content="ID Loại độc giả" VerticalAlignment="Center"/>
+                            <TextBox Grid.Row="1" Grid.Column="3" Margin="0,5,0,0" x:Name="IDLoaiDocGia" />
 
-                            <Label Grid.Row="2" Grid.Column="0" Content="Ngày Sinh:" VerticalAlignment="Center"/>
-                            <DatePicker Grid.Row="2" Grid.Column="1" Margin="0,5,5,0" x:Name="NgaySinh" />
-                            <Label Grid.Row="2" Grid.Column="2" Content="Loại Độc Giả:" VerticalAlignment="Center"/>
-                            <ComboBox Grid.Row="2" Grid.Column="3" Margin="0,5,0,0" x:Name="LoaiDocGiaComboBox">
-                                <ComboBoxItem Content="Học sinh/Sinh viên" />
-                                <ComboBoxItem Content="Giáo viên" />
-                                <ComboBoxItem Content="Khách" />
-                            </ComboBox>
-
-                            <Label Grid.Row="3" Grid.Column="0" Content="Địa Chỉ:" VerticalAlignment="Center"/>
-                            <TextBox Grid.Row="3" Grid.Column="1" Margin="0,5,5,0" x:Name="DiaChi" />
+                            <Label Grid.Row="3" Grid.Column="0" Content="Giới thiệu:" VerticalAlignment="Center"/>
+                            <TextBox Grid.Row="3" Grid.Column="1" Margin="0,5,5,0" x:Name="GioiThieu" />
                             <Label Grid.Row="3" Grid.Column="2" Content="Ngày Lập Thẻ:" VerticalAlignment="Center"/>
                             <DatePicker Grid.Row="3" Grid.Column="3" Margin="0,5,0,0" x:Name="NgayLapTheDatePicker" />
 
                             <Label Grid.Row="4" Grid.Column="0" Content="Tổng Nợ:" VerticalAlignment="Center"/>
-                            <TextBox Grid.Row="4" Grid.Column="1" Margin="0,5,5,0" x:Name="TongNoTextBox" />
+                            <TextBox Grid.Row="4" Grid.Column="1" Margin="0,5,5,0" x:Name="TongNoTextBox" IsEnabled="False"/>
                             <Label Grid.Row="4" Grid.Column="2" Content="Ngày Hết Hạn:" VerticalAlignment="Center"/>
                             <DatePicker Grid.Row="4" Grid.Column="3" Margin="0,5,0,0" x:Name="NgayHetHanDatePicker" />
 
-                            <Label Grid.Row="5" Grid.Column="0" Content="Username" VerticalAlignment="Center"/>
-                            <TextBox Grid.Row="5" Grid.Column="1" Margin="0,5,5,0" x:Name="GioiThieuTextBox" />
-                            <Label Grid.Row="5" Grid.Column="2" Content="Password" VerticalAlignment="Center"/>
-                            <TextBox Grid.Row="5" Grid.Column="3" Margin="0,5,0,43" x:Name="Password" Grid.RowSpan="3" />
 
-                            <StackPanel Grid.Row="7" Grid.ColumnSpan="4" Orientation="Horizontal" HorizontalAlignment="Right" Margin="0,15,0,0">
+
+                            <StackPanel Grid.Row="6" Grid.ColumnSpan="4" Orientation="Horizontal" 
+                                        HorizontalAlignment="Right" Margin="0,15,0,0">
                                 <Button Content="Thêm" Padding="10,5" Margin="0,0,5,0" Click="AddReader_Click"/>
                                 <Button Content="Cập nhật" Padding="10,5" Margin="0,0,5,0" Click="UpdateReader_Click"/>
                                 <Button Content="Xóa" Padding="10,5" Margin="0,0,5,0" Click="DeleteReader_Click"/>
@@ -111,24 +183,24 @@
                         </Grid>
                     </Border>
 
-                    <DataGrid Grid.Row="1" x:Name="ReadersDataGrid" AutoGenerateColumns="False" Margin="0,10,0,0" CanUserAddRows="False" CanUserDeleteRows="False" IsReadOnly="True" SelectionChanged="ReadersDataGrid_SelectionChanged">
+                    <DataGrid Grid.Row="1" x:Name="ReadersDataGrid" AutoGenerateColumns="False" Margin="0,10,0,0" 
+                              CanUserAddRows="False" CanUserDeleteRows="False" IsReadOnly="True" 
+                              SelectionChanged="ReadersDataGrid_SelectionChanged">
                         <DataGrid.Columns>
+                            <DataGridTextColumn Header="ID Độc Giả" Binding="{Binding IDTaiKhoanNavigation.ID}"/>
                             <DataGridTextColumn Header="Mã Độc Giả" Binding="{Binding MaDocGia}"/>
-                            <DataGridTextColumn Header="Họ Tên" Binding="{Binding HoTen}"/>
-                            <DataGridTextColumn Header="Ngày Sinh" Binding="{Binding NgaySinh, StringFormat=\{0:dd/MM/yyyy\}}"/>
-                            <DataGridTextColumn Header="Địa Chỉ" Binding="{Binding DiaChi}"/>
-                            <DataGridTextColumn Header="Email" Binding="{Binding Email}"/>
-                            <DataGridTextColumn Header="Số Điện Thoại" Binding="{Binding SoDienThoai}"/>
-                            <DataGridTextColumn Header="Loại Độc Giả" Binding="{Binding LoaiDocGia}"/>
+                            <DataGridTextColumn Header="ID Tài Khoản" Binding="{Binding IDTaiKhoanNavigation.IDTaiKhoan}"/>
+                            <DataGridTextColumn Header="ID Loại Độc Giả" Binding="{Binding IDTaiKhoanNavigation.IDLoaiDocGia}"/>
                             <DataGridTextColumn Header="Ngày Lập Thẻ" Binding="{Binding NgayLapThe, StringFormat=\{0:dd/MM/yyyy\}}"/>
                             <DataGridTextColumn Header="Ngày Hết Hạn" Binding="{Binding NgayHetHan, StringFormat=\{0:dd/MM/yyyy\}}"/>
                             <DataGridTextColumn Header="Tổng nợ" Binding="{Binding TongNo}"/>
+                            <DataGridTextColumn Header="Giới thiệu" Binding="{Binding GioiThieu}"/>
                         </DataGrid.Columns>
                     </DataGrid>
                 </Grid>
             </TabItem>
 
-            <TabItem Header="Quản lý thu tiền phạt">
+            <TabItem Header="Loại Độc Giả">
                 <Grid Margin="10">
                     <Grid.RowDefinitions>
                         <RowDefinition Height="Auto"/>
@@ -150,43 +222,109 @@
                                 <RowDefinition Height="Auto"/>
                             </Grid.RowDefinitions>
 
-                            <Label Grid.Row="0" Grid.Column="0" Content="Mã Phiếu Thu:" VerticalAlignment="Center"/>
-                            <TextBox Grid.Row="0" Grid.Column="1" Margin="0,5,5,0" x:Name="MaPhieuThu" IsEnabled="False"/>
-                            <Label Grid.Row="0" Grid.Column="2" Content="Ngày Thu:" VerticalAlignment="Center"/>
-                            <DatePicker Grid.Row="0" Grid.Column="3" Margin="0,5,0,0" x:Name="NgayThuPhat"/>
+                            <Label Grid.Row="0" Grid.Column="0" Content="ID Loại Độc Giả:" VerticalAlignment="Center"/>
+                            <TextBox Grid.Row="0" Grid.Column="1" Margin="0,5,5,0" x:Name="IDLoaiDocGiaTextBox" />
+                            <Label Grid.Row="0" Grid.Column="2" Content="Tên Loại Độc Giả:" VerticalAlignment="Center"/>
+                            <TextBox Grid.Row="0" Grid.Column="3" Margin="0,5,0,0" x:Name="TenLoaiDocGiaTextBox" />
 
-                            <Label Grid.Row="1" Grid.Column="0" Content="Mã Độc Giả:" VerticalAlignment="Center"/>
-                            <TextBox Grid.Row="1" Grid.Column="1" Margin="0,5,5,0" x:Name="MaDocGiaPhat" TextChanged="MaDocGiaPhat_TextChanged"/>
-                            <Label Grid.Row="1" Grid.Column="2" Content="Tên Độc Giả:" VerticalAlignment="Center"/>
-                            <TextBox Grid.Row="1" Grid.Column="3" Margin="0,5,0,0" x:Name="TenDocGiaPhat" IsEnabled="False"/>
+                            <Label Grid.Row="1" Grid.Column="0" Content="Mã Loại Độc Giả:" VerticalAlignment="Center"/>
+                            <TextBox Grid.Row="1" Grid.Column="1" Margin="0,5,5,0" x:Name="MaLoaiDocGiaTextBox" />
+                            <Label Grid.Row="1" Grid.Column="2" Content="Số sách mượn tối đa:" VerticalAlignment="Center"/>
+                            <TextBox Grid.Row="1" Grid.Column="3" Margin="0,5,0,0" x:Name="SoSachMuonToiDaTextBox" />
+
+                            <StackPanel Grid.Row="3" Grid.ColumnSpan="4" Orientation="Horizontal" 
+                HorizontalAlignment="Right" Margin="0,15,0,0">
+                                <Button Content="Thêm" Padding="10,5" Margin="0,0,5,0" Click="AddReaderType_Click"/>
+                                <Button Content="Cập nhật" Padding="10,5" Margin="0,0,5,0" Click="UpdateReaderType_Click"/>
+                                <Button Content="Xóa" Padding="10,5" Margin="0,0,5,0" Click="DeleteReaderType_Click"/>
+                            </StackPanel>
+                        </Grid>
+                    </Border>
+
+                    <DataGrid Grid.Row="1" x:Name="ReaderTypesDataGrid" AutoGenerateColumns="False" Margin="0,10,0,0" 
+      CanUserAddRows="False" CanUserDeleteRows="False" IsReadOnly="True" 
+      SelectionChanged="ReaderTypesDataGrid_SelectionChanged">
+                        <DataGrid.Columns>
+                            <DataGridTextColumn Header="ID" Binding="{Binding ID}"/>
+                            <DataGridTextColumn Header="Tên Loại Độc Giả" Binding="{Binding TenLoaiDocGia}"/>
+                            <DataGridTextColumn Header="Mã Loại Độc Giả" Binding="{Binding MaLoaiDocGia}"/>
+                            <DataGridTextColumn Header="Số Sách Mượn Tối Đa" Binding="{Binding SoSachMuonToiDa}"/>
+                        </DataGrid.Columns>
+                    </DataGrid>
+                </Grid>
+            </TabItem>
+
+            <TabItem Header="Quản lý thu tiền phạt">
+                <Grid Margin="10">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="197*"/>
+                        <ColumnDefinition Width="777*"/>
+                    </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="*"/>
+                    </Grid.RowDefinitions>
+
+                    <Border BorderBrush="#DDDDDD" BorderThickness="1" Padding="20" Margin="0,0,0,10" Grid.ColumnSpan="2">
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto"/>
+                                <ColumnDefinition/>
+                                <ColumnDefinition Width="Auto"/>
+                                <ColumnDefinition/>
+                            </Grid.ColumnDefinitions>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="Auto"/>
+                            </Grid.RowDefinitions>
+
+                            <Label Grid.Row="0" Grid.Column="0" Content="ID Phiếu Thu:" VerticalAlignment="Center"/>
+                            <TextBox Grid.Row="0" Grid.Column="1" Margin="0,5,5,0" x:Name="MaPhieuThu" IsEnabled="False"/>
+                            <Label Grid.Row="0" Grid.Column="2" Content="Mã PTTP:" VerticalAlignment="Center"/>
+                            <TextBox Grid.Row="0" Grid.Column="3" Margin="0,5,0,0" x:Name="MaPTTP" IsEnabled="False"/>
+
+                            <Label Grid.Row="1" Grid.Column="0" Content="ID Độc Giả:" VerticalAlignment="Center"/>
+                            <TextBox Grid.Row="1" Grid.Column="1" Margin="0,5,5,0" x:Name="MaDocGiaPhat" 
+                                     TextChanged="MaDocGiaPhat_TextChanged"/>
+                            <Label Grid.Row="1" Grid.Column="2" Content="Ngày Thu:" VerticalAlignment="Center"/>
+                            <DatePicker Grid.Row="1" Grid.Column="3" Margin="0,5,0,0" x:Name="NgayThuPhat"/>
 
                             <Label Grid.Row="2" Grid.Column="0" Content="Tổng Nợ:" VerticalAlignment="Center"/>
                             <TextBox Grid.Row="2" Grid.Column="1" Margin="0,5,5,0" x:Name="TongNoPhat" IsEnabled="False"/>
                             <Label Grid.Row="2" Grid.Column="2" Content="Số Tiền Thu:" VerticalAlignment="Center"/>
                             <TextBox Grid.Row="2" Grid.Column="3" Margin="0,5,0,0" x:Name="SoTienThu"/>
 
-                            <StackPanel Grid.Row="3" Grid.ColumnSpan="4" Orientation="Horizontal" HorizontalAlignment="Right" Margin="0,15,0,0">
-                                <Button Content="Tạo Phiếu Thu" Padding="10,5" Margin="0,0,5,0" Click="CreatePenaltyReceipt_Click"/>
+                            <Label Grid.Row="3" Grid.Column="0" Content="Còn Lại:" VerticalAlignment="Center"/>
+                            <TextBox Grid.Row="3" Grid.Column="1" Margin="0,5,5,0" x:Name="ConLai" IsEnabled="False"/>
+
+
+                            <StackPanel Grid.Row="4" Grid.ColumnSpan="5" Orientation="Horizontal" 
+                                        HorizontalAlignment="Right" Margin="0,15,0,0">
+                                <Button Content="Tạo Phiếu Thu" Padding="10,5" Margin="0,0,5,0" 
+                                        Click="CreatePenaltyReceipt_Click"/>
                                 <Button Content="Xóa" Padding="10,5" Margin="0,0,5,0" Click="DeletePenalty_Click"/>
                                 <Button Content="Sửa" Padding="10,5" Margin="0,0,5,0" Click="EditPenalty_Click"/>
                                 <Button Content="Clear" Padding="10,5" Margin="0,0,5,0" Click="ClearPenalty_Click"/>
-                                <Button Content="In Phiếu Thu" Padding="10,5" Margin="0,0,5,0" Click="PrintPenaltyReceipt_Click"/>
+                                <Button Content="In Phiếu Thu" Padding="10,5" Margin="0,0,5,0" 
+                                        Click="PrintPenaltyReceipt_Click"/>
                             </StackPanel>
                         </Grid>
                     </Border>
 
-                    <DataGrid Grid.Row="1" x:Name="PenaltyReceiptsDataGrid" AutoGenerateColumns="False" Margin="0,10,0,0" 
-                      CanUserAddRows="False" CanUserDeleteRows="False" IsReadOnly="True" 
-                      SelectionChanged="PenaltyReceiptsDataGrid_SelectionChanged">
+                    <DataGrid Grid.Row="1" x:Name="PenaltyReceiptsDataGrid" AutoGenerateColumns="False" 
+                              Margin="0,10,0,0" CanUserAddRows="False" CanUserDeleteRows="False" 
+                              IsReadOnly="True" SelectionChanged="PenaltyReceiptsDataGrid_SelectionChanged" Grid.ColumnSpan="2">
                         <DataGrid.Columns>
-                            <DataGridTextColumn Header="Mã Phiếu Thu" Binding="{Binding MaPhieuThu}"/>
+                            <DataGridTextColumn Header="ID Phiếu Thu" Binding="{Binding ID}"/>
+                            <DataGridTextColumn Header="Mã Phiếu Thu" Binding="{Binding MaPTTP}"/>
+                            <DataGridTextColumn Header="ID Độc Giả" Binding="{Binding IDDocGiaNavigation.MaDocGia}"/>
                             <DataGridTextColumn Header="Ngày Thu" Binding="{Binding NgayThu, StringFormat=\{0:dd/MM/yyyy\}}"/>
-                            <DataGridTextColumn Header="Mã Độc Giả" Binding="{Binding MaDocGia}"/>
-                            <DataGridTextColumn Header="Tên Độc Giả" Binding="{Binding TenDocGia}"/>
+                            <DataGridTextColumn Header="Tổng Nợ" Binding="{Binding IDDocGiaNavigation.TongNo}"/>
                             <DataGridTextColumn Header="Số Tiền Thu" Binding="{Binding SoTienThu, StringFormat=\{0:N0\}}"/>
-                            <DataGridTextColumn Header="Còn Nợ" Binding="{Binding ConNo, StringFormat=\{0:N0\}}"/>
-                            <DataGridTextColumn Header="Người Thu" Binding="{Binding NguoiThu}"/>
-                            <DataGridTextColumn Header="Ghi Chú" Binding="{Binding GhiChu}"/>
+                            <DataGridTextColumn Header="Còn Lại" Binding="{Binding ConLai, StringFormat=\{0:N0\}}"/>
                         </DataGrid.Columns>
                     </DataGrid>
                 </Grid>
