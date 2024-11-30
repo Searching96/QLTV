@@ -18,7 +18,7 @@ namespace QLTV
 
         private void LoadPenaltyReceipt(PHIEUTHUTIENPHAT receipt)
         {
-            // Lấy thông tin độc giả 
+            // Lấy thông tin độc giả
             var docGia = _context.DOCGIA.Include(d => d.IDTaiKhoanNavigation)
                                          .FirstOrDefault(d => d.ID == receipt.IDDocGia);
 
