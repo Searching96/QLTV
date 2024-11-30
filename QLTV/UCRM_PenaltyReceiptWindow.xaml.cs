@@ -18,11 +18,10 @@ namespace QLTV
 
         private void LoadPenaltyReceipt(PHIEUTHUTIENPHAT receipt)
         {
-            // Lấy thông tin độc giả từ database dựa trên IDDocGia của phiếu thu
+            // Lấy thông tin độc giả 
             var docGia = _context.DOCGIA.Include(d => d.IDTaiKhoanNavigation)
                                          .FirstOrDefault(d => d.ID == receipt.IDDocGia);
 
-            // Kiểm tra xem độc giả có tồn tại không
             if (docGia == null)
             {
                 MessageBox.Show("Không tìm thấy độc giả!", "Lỗi", MessageBoxButton.OK, MessageBoxImage.Error);
@@ -30,13 +29,12 @@ namespace QLTV
             }
 
             // Gán dữ liệu vào controls
-            MaPhieuThuTextBlock.Text = receipt.MaPTTP; // Sử dụng MaPTTP thay vì MaPhieuThu
+            MaPhieuThuTextBlock.Text = receipt.MaPTTP; 
             NgayThuTextBlock.Text = receipt.NgayThu.ToString("dd/MM/yyyy");
             MaDocGiaTextBlock.Text = docGia.MaDocGia;
-            TenDocGiaTextBlock.Text = docGia.IDTaiKhoanNavigation.TenTaiKhoan; // Lấy tên từ bảng TAIKHOAN
+            TenDocGiaTextBlock.Text = docGia.IDTaiKhoanNavigation.TenTaiKhoan; 
             SoTienThuTextBlock.Text = receipt.SoTienThu.ToString("N2");
-            ConNoTextBlock.Text = receipt.ConLai.ToString("N2");  // Sử dụng ConLai thay vì ConNo
-                                                                  // NguoiThuTextBlock.Text = receipt.NguoiThu; // Loại bỏ vì không có thuộc tính này
+            ConNoTextBlock.Text = receipt.ConLai.ToString("N2");  
         }
     }
 }

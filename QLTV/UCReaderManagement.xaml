@@ -42,88 +42,6 @@
 
         <TabControl Grid.Row="2">
 
-            <TabItem Header="Tài Khoản">
-                <Grid Margin="10">
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="131*"/>
-                        <ColumnDefinition Width="611*"/>
-                        <ColumnDefinition Width="232*"/>
-                    </Grid.ColumnDefinitions>
-                    <Grid.RowDefinitions>
-                        <RowDefinition Height="Auto"/>
-                        <RowDefinition Height="*"/>
-                    </Grid.RowDefinitions>
-
-                    <Border BorderBrush="#DDDDDD" BorderThickness="1" Padding="20" Margin="0,0,0,10" Grid.ColumnSpan="3">
-                        <Grid>
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="Auto"/>
-                                <ColumnDefinition Width="*"/>
-                                <ColumnDefinition Width="Auto"/>
-                                <ColumnDefinition Width="*"/>
-                            </Grid.ColumnDefinitions>
-                            <Grid.RowDefinitions>
-                                <RowDefinition Height="Auto"/>
-                                <RowDefinition Height="Auto"/>
-                                <RowDefinition Height="Auto"/>
-                                <RowDefinition Height="Auto"/>
-                                <RowDefinition Height="Auto"/>
-                                <RowDefinition Height="Auto"/>
-                            </Grid.RowDefinitions>
-
-                            <Label Grid.Row="0" Grid.Column="0" Content="ID Tài Khoản:" VerticalAlignment="Center"/>
-                            <TextBox Grid.Row="0" Grid.Column="1" Margin="0,5,5,0" x:Name="IDTaiKhoanTextBox" />
-                            <Label Grid.Row="0" Grid.Column="2" Content="Tên Tài Khoản:" VerticalAlignment="Center"/>
-                            <TextBox Grid.Row="0" Grid.Column="3" Margin="0,5,0,0" x:Name="TenTaiKhoanTextBox" />
-
-                            <Label Grid.Row="1" Grid.Column="0" Content="Mã Tài Khoản:" VerticalAlignment="Center"/>
-                            <TextBox Grid.Row="1" Grid.Column="1" Margin="0,5,5,0" x:Name="MaTaiKhoanTextBox" />
-                            <Label Grid.Row="1" Grid.Column="2" Content="Mật Khẩu:" VerticalAlignment="Center"/>
-                            <TextBox Grid.Row="1" Grid.Column="3" Margin="0,5,0,0" x:Name="MatKhauTextBox" />
-
-                            <Label Grid.Row="2" Grid.Column="0" Content="Email:" VerticalAlignment="Center"/>
-                            <TextBox Grid.Row="2" Grid.Column="1" Margin="0,5,5,0" x:Name="EmailTaiKhoanTextBox" />
-                            <Label Grid.Row="2" Grid.Column="2" Content="Sinh Nhật:" VerticalAlignment="Center"/>
-                            <DatePicker Grid.Row="2" Grid.Column="3" Margin="0,5,0,0" x:Name="SinhNhatTaiKhoanDatePicker" />
-
-                            <Label Grid.Row="3" Grid.Column="0" Content="Địa Chỉ:" VerticalAlignment="Center"/>
-                            <TextBox Grid.Row="3" Grid.Column="1" Margin="0,5,5,0" x:Name="DiaChiTaiKhoanTextBox" />
-                            <Label Grid.Row="3" Grid.Column="2" Content="Số Điện Thoại:" VerticalAlignment="Center"/>
-                            <TextBox Grid.Row="3" Grid.Column="3" Margin="0,5,0,0" x:Name="SDTTaiKhoanTextBox" />
-
-                            <Label Grid.Row="4" Grid.Column="0" Content="Trạng Thái:" VerticalAlignment="Center"/>
-                            <TextBox Grid.Row="4" Grid.Column="1" Margin="0,5,5,0" x:Name="TrangThaiTaiKhoanTextBox" />
-                            <Label Grid.Row="4" Grid.Column="2" Content="ID Phân Quyền" VerticalAlignment="Center"/>
-                            <TextBox Grid.Row="4" Grid.Column="3" Margin="0,5,0,0" x:Name="IDPhanQuyenTaiKhoanTextBox" />
-
-                            <StackPanel Grid.Row="5" Grid.ColumnSpan="6" Orientation="Horizontal" 
-                HorizontalAlignment="Right" Margin="0,15,0,0">
-                                <Button Content="Thêm" Padding="10,5" Margin="0,0,5,0" Click="AddAccount_Click"/>
-                                <Button Content="Cập nhật" Padding="10,5" Margin="0,0,5,0" Click="UpdateAccount_Click"/>
-                                <Button Content="Xóa" Padding="10,5" Margin="0,0,5,0" Click="DeleteAccount_Click"/>
-                            </StackPanel>
-                        </Grid>
-                    </Border>
-
-                    <DataGrid Grid.Row="1" x:Name="AccountsDataGrid" AutoGenerateColumns="False" Margin="0,10,0,0" 
-      CanUserAddRows="False" CanUserDeleteRows="False" IsReadOnly="True" 
-      SelectionChanged="AccountsDataGrid_SelectionChanged" Grid.ColumnSpan="3">
-                        <DataGrid.Columns>
-                            <DataGridTextColumn Header="ID Tài Khoản" Binding="{Binding ID}"/>
-                            <DataGridTextColumn Header="Tên Tài Khoản" Binding="{Binding TenTaiKhoan}"/>
-                            <DataGridTextColumn Header="Mã Tài Khoản" Binding="{Binding MaTaiKhoan}"/>
-                            <DataGridTextColumn Header="Mật Khẩu" Binding="{Binding MatKhau}"/>
-                            <DataGridTextColumn Header="Email" Binding="{Binding Email}"/>
-                            <DataGridTextColumn Header="Sinh Nhật" Binding="{Binding SinhNhat, StringFormat=\{0:dd/MM/yyyy\}}"/>
-                            <DataGridTextColumn Header="Địa Chỉ" Binding="{Binding DiaChi}"/>
-                            <DataGridTextColumn Header="Số Điện Thoại" Binding="{Binding SDT}"/>
-                            <DataGridTextColumn Header="Trạng Thái" Binding="{Binding TrangThai}"/>
-                            <DataGridTextColumn Header="ID Phân Quyền" Binding="{Binding IDPhanQuyen}"/>
-                        </DataGrid.Columns>
-                    </DataGrid>
-                </Grid>
-            </TabItem>
-
             <TabItem Header="Thông tin độc giả">
                 <Grid Margin="10">
                     <Grid.RowDefinitions>
@@ -152,10 +70,10 @@
                             <Label Grid.Row="0" Grid.Column="0" Content="ID Độc Giả:" VerticalAlignment="Center"/>
                             <TextBox Grid.Row="0" Grid.Column="1" Margin="0,5,5,0" x:Name="ID" IsEnabled="False"/>
                             <Label Grid.Row="0" Grid.Column="2" Content="Mã Độc Giả" VerticalAlignment="Center"/>
-                            <TextBox Grid.Row="0" Grid.Column="3" Margin="0,5,0,0" x:Name="Email" />
+                            <TextBox Grid.Row="0" Grid.Column="3" Margin="0,5,0,0" x:Name="Email" IsEnabled="False"/>
 
                             <Label Grid.Row="1" Grid.Column="0" Content="ID Tài khoản:" VerticalAlignment="Center"/>
-                            <TextBox Grid.Row="1" Grid.Column="1" Margin="0,5,5,0" x:Name="IDTaiKhoan" IsEnabled="False"/>
+                            <TextBox Grid.Row="1" Grid.Column="1" Margin="0,5,5,0" x:Name="IDTaiKhoan" />
                             <Label Grid.Row="1" Grid.Column="2" Content="ID Loại độc giả" VerticalAlignment="Center"/>
                             <TextBox Grid.Row="1" Grid.Column="3" Margin="0,5,0,0" x:Name="IDLoaiDocGia" />
 
@@ -165,7 +83,7 @@
                             <DatePicker Grid.Row="3" Grid.Column="3" Margin="0,5,0,0" x:Name="NgayLapTheDatePicker" />
 
                             <Label Grid.Row="4" Grid.Column="0" Content="Tổng Nợ:" VerticalAlignment="Center"/>
-                            <TextBox Grid.Row="4" Grid.Column="1" Margin="0,5,5,0" x:Name="TongNoTextBox" IsEnabled="False"/>
+                            <TextBox Grid.Row="4" Grid.Column="1" Margin="0,5,5,0" x:Name="TongNoTextBox" />
                             <Label Grid.Row="4" Grid.Column="2" Content="Ngày Hết Hạn:" VerticalAlignment="Center"/>
                             <DatePicker Grid.Row="4" Grid.Column="3" Margin="0,5,0,0" x:Name="NgayHetHanDatePicker" />
 
@@ -187,10 +105,10 @@
                               CanUserAddRows="False" CanUserDeleteRows="False" IsReadOnly="True" 
                               SelectionChanged="ReadersDataGrid_SelectionChanged">
                         <DataGrid.Columns>
-                            <DataGridTextColumn Header="ID Độc Giả" Binding="{Binding IDTaiKhoanNavigation.ID}"/>
+                            <DataGridTextColumn Header="ID Độc Giả" Binding="{Binding ID}"/>
                             <DataGridTextColumn Header="Mã Độc Giả" Binding="{Binding MaDocGia}"/>
-                            <DataGridTextColumn Header="ID Tài Khoản" Binding="{Binding IDTaiKhoanNavigation.IDTaiKhoan}"/>
-                            <DataGridTextColumn Header="ID Loại Độc Giả" Binding="{Binding IDTaiKhoanNavigation.IDLoaiDocGia}"/>
+                            <DataGridTextColumn Header="ID Tài Khoản" Binding="{Binding IDTaiKhoan}"/>
+                            <DataGridTextColumn Header="ID Loại Độc Giả" Binding="{Binding IDLoaiDocGia}"/>
                             <DataGridTextColumn Header="Ngày Lập Thẻ" Binding="{Binding NgayLapThe, StringFormat=\{0:dd/MM/yyyy\}}"/>
                             <DataGridTextColumn Header="Ngày Hết Hạn" Binding="{Binding NgayHetHan, StringFormat=\{0:dd/MM/yyyy\}}"/>
                             <DataGridTextColumn Header="Tổng nợ" Binding="{Binding TongNo}"/>
@@ -223,12 +141,12 @@
                             </Grid.RowDefinitions>
 
                             <Label Grid.Row="0" Grid.Column="0" Content="ID Loại Độc Giả:" VerticalAlignment="Center"/>
-                            <TextBox Grid.Row="0" Grid.Column="1" Margin="0,5,5,0" x:Name="IDLoaiDocGiaTextBox" />
+                            <TextBox Grid.Row="0" Grid.Column="1" Margin="0,5,5,0" x:Name="IDLoaiDocGiaTextBox" IsEnabled="False"/>
                             <Label Grid.Row="0" Grid.Column="2" Content="Tên Loại Độc Giả:" VerticalAlignment="Center"/>
                             <TextBox Grid.Row="0" Grid.Column="3" Margin="0,5,0,0" x:Name="TenLoaiDocGiaTextBox" />
 
                             <Label Grid.Row="1" Grid.Column="0" Content="Mã Loại Độc Giả:" VerticalAlignment="Center"/>
-                            <TextBox Grid.Row="1" Grid.Column="1" Margin="0,5,5,0" x:Name="MaLoaiDocGiaTextBox" />
+                            <TextBox Grid.Row="1" Grid.Column="1" Margin="0,5,5,0" x:Name="MaLoaiDocGiaTextBox" IsEnabled="False"/>
                             <Label Grid.Row="1" Grid.Column="2" Content="Số sách mượn tối đa:" VerticalAlignment="Center"/>
                             <TextBox Grid.Row="1" Grid.Column="3" Margin="0,5,0,0" x:Name="SoSachMuonToiDaTextBox" />
 
