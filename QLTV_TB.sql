@@ -52,7 +52,7 @@ create table [TAIKHOAN]
 	[NgayDong] datetime not null
 )
 
-
+    
 create table [ADMIN] 
 (
 	[ID] int identity(1, 1) constraint [PK_ADMIN] primary key,
@@ -60,8 +60,7 @@ create table [ADMIN]
 	[TenAdmin] nvarchar(100),
 	[GioiTinh] nvarchar(10),
 	[IDTaiKhoan] int not null, -- FK 
-	[NgayVaoLam] date not null,
-	[NgayKetThuc] date not null, -- Tai khoan admin het han giong nhu The doc gia het han
+	
 )
 
 create table [DOCGIA]
@@ -72,8 +71,7 @@ create table [DOCGIA]
 	[GioiTinh] nvarchar(10),
     [IDTaiKhoan] int not null, -- FK
     [IDLoaiDocGia] int not null, -- FK
-    [NgayLapThe] date not null,
-    [NgayHetHan] date not null,
+    
     [TongNo] decimal(18, 0) not null,
 )
 
