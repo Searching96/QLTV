@@ -1,6 +1,6 @@
-﻿﻿create database [QLTV]
+﻿﻿create database [QLTV2]
 go
-use [QLTV]
+use [QLTV2]
 go
 create table [ACTIVE_SESSION]
 (
@@ -48,7 +48,10 @@ create table [TAIKHOAN]
 	[TrangThai] bit not null, -- co dang dang nhap hay ko
 	[IDPhanQuyen] int not null, -- FK
 	[IsDeleted] bit not null,
+	[NgayMo] datetime not null,
+	[NgayDong] datetime not null
 )
+
 
 create table [ADMIN] 
 (
