@@ -151,5 +151,10 @@ namespace QLTV
         {
             LoadTheLoai();
         }
+
+        private void btnTimKiem_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
     }
 }

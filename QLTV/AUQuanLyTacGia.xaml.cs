@@ -1,4 +1,6 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using MaterialDesignThemes.Wpf;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using QLTV.Models;
 using System;
 using System.Collections.Generic;
@@ -57,12 +59,51 @@ namespace QLTV
                 LoadTacGia();
         }
 
+        public bool HasError()
+        {
+            // Tìm tất cả các PackIcon trong UserControl
+            foreach (var icon in FindVisualChildren<PackIcon>(this))
+            {
+                if (icon.Style == FindResource("ErrorIcon") && icon.Visibility == Visibility.Visible)
+                {
+                    return true;
+                }
+            }
+            return false;
+        }
+
+        private static IEnumerable<T> FindVisualChildren<T>(DependencyObject depObj) where T : DependencyObject
+        {
+            if (depObj != null)
+            {
+                for (int i = 0; i < VisualTreeHelper.GetChildrenCount(depObj); i++)
+                {
+                    DependencyObject child = VisualTreeHelper.GetChild(depObj, i);
+                    if (child is T t)
+                    {
+                        yield return t;
+                    }
+                    foreach (T childOfChild in FindVisualChildren<T>(child))
+                    {
+                        yield return childOfChild;
+                    }
+                }
+            }
+        }
+
         private void btnSuaTacGia_Click(object sender, RoutedEventArgs e)
         {
             if (dgTacGia.SelectedItem == null)
             {
                 // Kiểm tra xem có dòng nào được chọn không
                 MessageBox.Show("Vui lòng chọn tác giả cần sửa!", "Thông báo",
+                    MessageBoxButton.OK, MessageBoxImage.Warning);
+                return;
+            }
+
+            if (HasError())
+            {
+                MessageBox.Show("Tất cả thuộc tính phải hợp lệ trước khi sửa!", "Thông báo",
                     MessageBoxButton.OK, MessageBoxImage.Warning);
                 return;
             }
@@ -230,7 +271,79 @@ namespace QLTV
 
         private void btnImportExcel_Click(object sender, RoutedEventArgs e)
         {
+            
+        }
 
+        private void tbxTenTacGia_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            if (dgTacGia.SelectedItem == null)
+                return;
+
+            if (string.IsNullOrWhiteSpace(tbxTenTacGia.Text))
+            {
+                icTenTacGiaError.ToolTip = "Tên Tác Giả không được để trống";
+                icTenTacGiaError.Visibility = Visibility.Visible;
+                return;
+            }
+
+            foreach (char c in tbxTenTacGia.Text)
+            {
+                if (!char.IsLetter(c) && !char.IsWhiteSpace(c))
+                {
+                    icTenTacGiaError.ToolTip = "Tên Tác Giả không được có số hay kí tự đặc biệt";
+                    icTenTacGiaError.Visibility = Visibility.Visible;
+                    return;
+                }
+            }
+
+            icTenTacGiaError.Visibility = Visibility.Collapsed;
+        }
+
+        private void tbxNamSinh_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            if (dgTacGia.SelectedItem == null)
+                return;
+
+            if (string.IsNullOrWhiteSpace(tbxNamSinh.Text))
+            {
+                icNamSinhError.ToolTip = "Năm Sinh không được để trống";
+                icNamSinhError.Visibility = Visibility.Visible;
+                return;
+            }
+
+            if (!int.TryParse(tbxNamSinh.Text, out int ns) || ns <= 0)
+            {
+                icNamSinhError.ToolTip = "Năm Sinh phải là số nguyên dương";
+                icNamSinhError.Visibility = Visibility.Visible;
+                return;
+            }
+
+            icNamSinhError.Visibility = Visibility.Collapsed;
+        }
+
+        private void tbxQuocTich_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            if (dgTacGia.SelectedItem == null)
+                return;
+
+            if (string.IsNullOrWhiteSpace(tbxQuocTich.Text))
+            {
+                icQuocTichError.ToolTip = "Quốc Tịch không được để trống";
+                icQuocTichError.Visibility = Visibility.Visible;
+                return;
+            }
+
+            foreach (char c in tbxQuocTich.Text)
+            {
+                if (!char.IsLetter(c) && !char.IsWhiteSpace(c))
+                {
+                    icQuocTichError.ToolTip = "Quốc Tịch không được có số hay kí tự đặc biệt";
+                    icQuocTichError.Visibility = Visibility.Visible;
+                    return;
+                }
+            }
+
+            icQuocTichError.Visibility = Visibility.Collapsed;
         }
     }
 }

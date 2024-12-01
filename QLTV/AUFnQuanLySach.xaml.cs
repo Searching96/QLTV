@@ -20,7 +20,7 @@ namespace QLTV
     /// </summary>
     public partial class AUFnQuanLySach : UserControl
     {
-        List<UserControl> OpeningUC;
+        private List<UserControl> OpeningUC;
 
         public AUFnQuanLySach()
         {

@@ -9,19 +9,35 @@
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
     <UserControl.Resources>
-        <Style x:Key="DataDisplayTextBox" TargetType="TextBox" BasedOn="{StaticResource MaterialDesignOutlinedTextBox}">
+        <Style x:Key="DataDisplayTextBox" TargetType="TextBox" 
+               BasedOn="{StaticResource MaterialDesignOutlinedTextBox}">
             <Setter Property="Padding" Value="5.5"/>
             <Setter Property="Height" Value="Auto"/>
             <Setter Property="materialDesign:HintAssist.FloatingScale" Value="0.8"/>
         </Style>
 
-        <Style x:Key="ModernComboBox" TargetType="ComboBox" BasedOn="{StaticResource MaterialDesignOutlinedComboBox}">
+        <Style x:Key="ErrorIcon" TargetType="materialDesign:PackIcon">
+            <Setter Property="Kind" Value="AlertCircleOutline"/>
+            <Setter Property="Width" Value="20"/>
+            <Setter Property="Height" Value="20"/>
+            <Setter Property="HorizontalAlignment" Value="Right"/>
+            <Setter Property="VerticalAlignment" Value="Center"/>
+            <Setter Property="Foreground" Value="Red"/>
+            <Setter Property="Background" Value="White"/>
+            <Setter Property="Visibility" Value="Collapsed"/>
+            <Setter Property="ToolTipService.InitialShowDelay" Value="0"/>
+            <Setter Property="Margin" Value="{x:Static local:AUQuanLyTuaSach.ErrorIconMargin}"/>
+        </Style>
+
+        <Style x:Key="ModernComboBox" TargetType="ComboBox" 
+               BasedOn="{StaticResource MaterialDesignOutlinedComboBox}">
             <Setter Property="Margin" Value="1"/>
             <Setter Property="materialDesign:HintAssist.FloatingScale" Value="0.8"/>
             <Setter Property="Padding" Value="8"/>
         </Style>
 
-        <Style x:Key="ModernDatePicker" TargetType="DatePicker" BasedOn="{StaticResource MaterialDesignOutlinedDatePicker}">
+        <Style x:Key="ModernDatePicker" TargetType="DatePicker" 
+               BasedOn="{StaticResource MaterialDesignOutlinedDatePicker}">
             <Setter Property="Margin" Value="1"/>
             <Setter Property="materialDesign:HintAssist.FloatingScale" Value="0.8"/>
             <Setter Property="Padding" Value="7.5"/>
@@ -75,23 +91,26 @@
                          Margin="{x:Static local:AUQuanLyTuaSach.DisplayElementMargin}"
                          TextChanged="tbxTenTuaSach_TextChanged"/>
 
-                <materialDesign:PackIcon Kind="AlertCircleOutline" Grid.Row="0" Grid.Column="2"
-                                         x:Name="icTenTuaSachError"
-                                         HorizontalAlignment="Right" VerticalAlignment="Center"
-                                         Foreground="Red" Background="White" Width="20" Height="20"
-                                         Visibility="Collapsed" ToolTipService.InitialShowDelay="0"
+                <!--<materialDesign:PackIcon Kind="AlertCircleOutline" Grid.Row="0" Grid.Column="2"
+                         x:Name="icTenTuaSachError"
+                         HorizontalAlignment="Right" VerticalAlignment="Center"
+                         Foreground="Red" Background="White" Width="20" Height="20"
+                         Visibility="Collapsed" ToolTipService.InitialShowDelay="0"
+                         Margin="{x:Static local:AUQuanLyTuaSach.ErrorIconMargin}"/>-->
+                
+                <materialDesign:PackIcon x:Name="icTenTuaSachError" Grid.Row="0" Grid.Column="2"
+                                         Style="{StaticResource ErrorIcon}"
                                          Margin="{x:Static local:AUQuanLyTuaSach.ErrorIconMargin}"/>
 
                 <TextBox x:Name="tbxSoLuong" Grid.Row="0" Grid.Column="4"
                          Style="{StaticResource DataDisplayTextBox}"
-                         materialDesign:HintAssist.Hint="Số Lượng"
+                         materialDesign:HintAssist.Hint="Số Lượng (Quyển)"
                          materialDesign:TextFieldAssist.HasLeadingIcon="True"
                          materialDesign:TextFieldAssist.LeadingIcon="AlphaNBox"
                          Margin="{x:Static local:AUQuanLyTuaSach.DisplayElementMargin}"
-                         TextChanged="tbxSoLuong_TextChanged"/>
+                         IsReadOnly="True"/>
 
-                <Grid x:Name="grTacGia" Grid.Row="1" Grid.Column="0" 
-                      Margin="{x:Static local:AUQuanLyTuaSach.DisplayElementMargin}">
+                <Grid x:Name="grTacGia" Grid.Row="1" Grid.Column="0">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="7*"/>
                         <ColumnDefinition Width="1*"/>
@@ -101,39 +120,63 @@
                              Style="{StaticResource DataDisplayTextBox}"
                              materialDesign:HintAssist.Hint="Tác Giả"
                              materialDesign:TextFieldAssist.HasLeadingIcon="True"
-                             materialDesign:TextFieldAssist.LeadingIcon="AccountGroup"/>
-                    
+                             materialDesign:TextFieldAssist.LeadingIcon="AccountGroup"
+                             TextChanged="tbxDSTacGia_TextChanged"
+                             Margin="{x:Static local:AUQuanLyTuaSach.DisplayElementMargin}"
+                             IsReadOnly="True"/>
+
+                    <materialDesign:PackIcon x:Name="icDSTacGiaError" Grid.Row="1" Grid.Column="0"
+                                             Style="{StaticResource ErrorIcon}"
+                                             Margin="{x:Static local:AUQuanLyTuaSach.ErrorIconMargin}"/>
+
                     <Button x:Name="btnSuaTacGia" Grid.Column="1"
+                            Margin="{x:Static local:AUQuanLyTuaSach.DisplayElementMargin}"
                             VerticalAlignment="Center" Click="btnSuaTacGia_Click"/>
                     
                     <materialDesign:PackIcon Kind="TextBoxEdit" HorizontalAlignment="Center"
-                                             Grid.Column="1" VerticalAlignment="Center"/>
+                                             Grid.Column="1" VerticalAlignment="Center"
+                                             Margin="{x:Static local:AUQuanLyTuaSach.DisplayElementMargin}"/>
                 </Grid>
 
-                <Grid x:Name="grTheLoai" Grid.Row="1" Grid.Column="2" 
-                      Margin="{x:Static local:AUQuanLyTuaSach.DisplayElementMargin}">
+                <Grid x:Name="grTheLoai" Grid.Row="1" Grid.Column="2">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="7*"/>
                         <ColumnDefinition Width="1*"/>
                     </Grid.ColumnDefinitions>
+                    
                     <TextBox x:Name="tbxDSTheLoai" Grid.Column="0"
                              Style="{StaticResource DataDisplayTextBox}"
                              materialDesign:HintAssist.Hint="Thể Loại"
                              materialDesign:TextFieldAssist.HasLeadingIcon="True"
-                             materialDesign:TextFieldAssist.LeadingIcon="Shape"/>
+                             materialDesign:TextFieldAssist.LeadingIcon="Shape"
+                             TextChanged="tbxDSTheLoai_TextChanged"
+                             Margin="{x:Static local:AUQuanLyTuaSach.DisplayElementMargin}"
+                             IsReadOnly="True"/>
+
+                    <materialDesign:PackIcon x:Name="icDSTheLoaiError" Grid.Row="1" Grid.Column="0"
+                                             Style="{StaticResource ErrorIcon}"
+                                             Margin="{x:Static local:AUQuanLyTuaSach.ErrorIconMargin}"/>
 
                     <Button x:Name="btnSuaTheLoai" Grid.Column="1"
+                            Margin="{x:Static local:AUQuanLyTuaSach.DisplayElementMargin}"
                             VerticalAlignment="Center" Click="btnSuaTheLoai_Click"/>
+                    
                     <materialDesign:PackIcon Kind="TextBoxEdit" HorizontalAlignment="Center"
-                                             Grid.Column="2" VerticalAlignment="Center"/>
+                                             Grid.Column="2" VerticalAlignment="Center"
+                                             Margin="{x:Static local:AUQuanLyTuaSach.DisplayElementMargin}"/>
                 </Grid>
 
                 <TextBox x:Name="tbxHanMuonToiDa" Grid.Row="1" Grid.Column="4"
                          Style="{StaticResource DataDisplayTextBox}"
-                         materialDesign:HintAssist.Hint="Hạn Mượn Tối Đa (tuần):"
+                         materialDesign:HintAssist.Hint="Hạn Mượn Tối Đa (Tuần)"
                          materialDesign:TextFieldAssist.HasLeadingIcon="True"
                          materialDesign:TextFieldAssist.LeadingIcon="TimerSand"
-                         Margin="{x:Static local:AUQuanLyTuaSach.DisplayElementMargin}"/>
+                         Margin="{x:Static local:AUQuanLyTuaSach.DisplayElementMargin}"
+                         TextChanged="tbxHanMuonToiDa_TextChanged"/>
+
+                <materialDesign:PackIcon x:Name="icHanMuonToiDaError" Grid.Row="1" Grid.Column="4"
+                                         Style="{StaticResource ErrorIcon}"
+                                         Margin="{x:Static local:AUQuanLyTuaSach.ErrorIconMargin}"/>
             </Grid>
 
             <!--CRUD buttons-->
@@ -172,11 +215,13 @@
                 </Grid.ColumnDefinitions>
 
                 <TextBlock Text="Tìm Kiếm:" Grid.Column="0" FontSize="14" VerticalAlignment="Center"/>
+                
                 <TextBox x:Name="tbxThongTinTimKiem" Grid.Column="1" VerticalAlignment="Center"
                          Style="{StaticResource DataDisplayTextBox}"
                          Padding="8"
                          materialDesign:HintAssist.Hint="Từ Khóa"
                          materialDesign:HintAssist.FloatingScale="0.8"/>
+                
                 <ComboBox x:Name="cbbThuocTinhTimKiem" Grid.Column="2" 
                           VerticalAlignment="Center"
                           Style="{StaticResource ModernComboBox}"
@@ -186,8 +231,8 @@
                     <ComboBoxItem Content="Tác Giả"/>
                     <ComboBoxItem Content="Thể Loại"/>
                 </ComboBox>
-                <Button x:Name="btnTimKiem" Grid.Column="3" Click="btnTimKiem_Click"/>
 
+                <Button x:Name="btnTimKiem" Grid.Column="3" Click="btnTimKiem_Click"/>
                 <materialDesign:PackIcon Kind="Magnify" Grid.Column="3"
                                          Width=" 20"
                                          Height="20"

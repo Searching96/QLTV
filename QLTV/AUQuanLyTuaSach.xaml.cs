@@ -17,6 +17,8 @@ using MaterialDesignThemes.Wpf;
 using System.Windows.Data;
 using System.Drawing;
 using System.Windows.Input;
+using System.Windows.Media;
+using Azure.Core;
 
 namespace QLTV
 {
@@ -65,12 +67,51 @@ namespace QLTV
                 LoadTuaSach();
         }
 
+        public bool HasError()
+        {
+            // Tìm tất cả các PackIcon trong UserControl
+            foreach (var icon in FindVisualChildren<PackIcon>(this))
+            {
+                if (icon.Style == FindResource("ErrorIcon") && icon.Visibility == Visibility.Visible)
+                {
+                    return true;
+                }
+            }
+            return false;
+        }
+
+        private static IEnumerable<T> FindVisualChildren<T>(DependencyObject depObj) where T : DependencyObject
+        {
+            if (depObj != null)
+            {
+                for (int i = 0; i < VisualTreeHelper.GetChildrenCount(depObj); i++)
+                {
+                    DependencyObject child = VisualTreeHelper.GetChild(depObj, i);
+                    if (child is T t)
+                    {
+                        yield return t;
+                    }
+                    foreach (T childOfChild in FindVisualChildren<T>(child))
+                    {
+                        yield return childOfChild;
+                    }
+                }
+            }
+        }
+
         private void btnSuaTuaSach_Click(object sender, RoutedEventArgs e)
         {
             if (dgTuaSach.SelectedItem == null)
             {
                 // Kiểm tra xem có dòng nào được chọn không
                 MessageBox.Show("Vui lòng chọn tựa sách cần sửa!", "Thông báo",
+                    MessageBoxButton.OK, MessageBoxImage.Warning);
+                return;
+            }
+
+            if (HasError())
+            {
+                MessageBox.Show("Tất cả thuộc tính phải hợp lệ trước khi sửa!", "Thông báo",
                     MessageBoxButton.OK, MessageBoxImage.Warning);
                 return;
             }
@@ -298,37 +339,6 @@ namespace QLTV
             LoadTuaSach();
         }
 
-        private void tbxTenTuaSach_TextChanged(object sender, TextChangedEventArgs e)
-        {
-            if (string.IsNullOrWhiteSpace(tbxTenTuaSach.Text))
-            {
-                icTenTuaSachError.ToolTip = "Tên Tựa Sách không được để trống!";
-                icTenTuaSachError.Visibility = Visibility.Visible;
-                return;
-            }
-
-            icTenTuaSachError.Visibility = Visibility.Collapsed;
-        }
-
-        //private void tbxHanMuonToiDa_TextChanged(object sender, TextChangedEventArgs e)
-        //{
-        //    if (string.IsNullOrWhiteSpace(tbxHanMuonToiDa.Text))
-        //    {
-        //        tblHanMuonToiDaError.Text = "Hạn mượn không được để trống!";
-        //        tblHanMuonToiDaError.Visibility = Visibility.Visible;
-        //        return;
-        //    }
-
-        //    if (!int.TryParse(tbxHanMuonToiDa.Text, out _))
-        //    {
-        //        tblHanMuonToiDaError.Text = "Hạn mượn phải là số!";
-        //        tblHanMuonToiDaError.Visibility = Visibility.Visible;
-        //        return;
-        //    }
-
-        //    tblHanMuonToiDaError.Visibility = Visibility.Collapsed;
-        //}
-
         private void btnExportExcel_Click(object sender, RoutedEventArgs e)
         {
             ExportDataGridToExcel();
@@ -535,9 +545,71 @@ namespace QLTV
             }
         }
 
-        private void tbxSoLuong_TextChanged(object sender, TextChangedEventArgs e)
+        private void tbxTenTuaSach_TextChanged(object sender, TextChangedEventArgs e)
         {
+            if (dgTuaSach.SelectedItem == null)
+                return;
 
+            if (string.IsNullOrWhiteSpace(tbxTenTuaSach.Text))
+            {
+                icTenTuaSachError.ToolTip = "Tên Tựa Sách không được để trống!";
+                icTenTuaSachError.Visibility = Visibility.Visible;
+                return;
+            }
+
+            icTenTuaSachError.Visibility = Visibility.Collapsed;
+        }
+
+        private void tbxHanMuonToiDa_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            if (dgTuaSach.SelectedItem == null)
+                return;
+
+            if (string.IsNullOrWhiteSpace(tbxHanMuonToiDa.Text))
+            {
+                icHanMuonToiDaError.ToolTip = "Hạn Mượn Tối Đa không được để trống";
+                icHanMuonToiDaError.Visibility = Visibility.Visible;
+                return;
+            }
+
+            if (!int.TryParse(tbxHanMuonToiDa.Text, out int hmtd) || hmtd <= 0 || hmtd > 16)
+            {
+                icHanMuonToiDaError.ToolTip = "Hạn Mượn Tối Đa phải là số nguyên dương không quá 16";
+                icHanMuonToiDaError.Visibility = Visibility.Visible;
+                return;
+            }
+
+            icHanMuonToiDaError.Visibility = Visibility.Collapsed;
+        }
+
+        private void tbxDSTheLoai_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            if (dgTuaSach.SelectedItem == null)
+                return;
+
+            if (string.IsNullOrWhiteSpace(tbxDSTheLoai.Text))
+            {
+                icDSTheLoaiError.ToolTip = "Thể Loại không được để trống";
+                icDSTheLoaiError.Visibility = Visibility.Visible;
+                return;
+            }
+
+            icDSTheLoaiError.Visibility = Visibility.Collapsed;
+        }
+
+        private void tbxDSTacGia_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            if (dgTuaSach.SelectedItem == null)
+                return;
+
+            if (string.IsNullOrWhiteSpace(tbxDSTacGia.Text))
+            {
+                icDSTacGiaError.ToolTip = "Tác Giả không được để trống";
+                icDSTacGiaError.Visibility = Visibility.Visible;
+                return;
+            }
+
+            icDSTacGiaError.Visibility = Visibility.Collapsed;
         }
     }
 }

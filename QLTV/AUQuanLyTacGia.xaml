@@ -1,15 +1,49 @@
 ﻿<UserControl x:Class="QLTV.AUQuanLyTacGia"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:QLTV"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
+    <UserControl.Resources>
+        <Style x:Key="DataDisplayTextBox" TargetType="TextBox" BasedOn="{StaticResource MaterialDesignOutlinedTextBox}">
+            <Setter Property="Padding" Value="5.5"/>
+            <Setter Property="Height" Value="Auto"/>
+            <Setter Property="materialDesign:HintAssist.FloatingScale" Value="0.8"/>
+        </Style>
+
+        <Style x:Key="ErrorIcon" TargetType="materialDesign:PackIcon">
+            <Setter Property="Kind" Value="AlertCircleOutline"/>
+            <Setter Property="Width" Value="20"/>
+            <Setter Property="Height" Value="20"/>
+            <Setter Property="HorizontalAlignment" Value="Right"/>
+            <Setter Property="VerticalAlignment" Value="Center"/>
+            <Setter Property="Foreground" Value="Red"/>
+            <Setter Property="Background" Value="White"/>
+            <Setter Property="Visibility" Value="Collapsed"/>
+            <Setter Property="ToolTipService.InitialShowDelay" Value="0"/>
+            <Setter Property="Margin" Value="{x:Static local:AUQuanLyTuaSach.ErrorIconMargin}"/>
+        </Style>
+
+        <Style x:Key="ModernComboBox" TargetType="ComboBox" BasedOn="{StaticResource MaterialDesignOutlinedComboBox}">
+            <Setter Property="Margin" Value="1"/>
+            <Setter Property="materialDesign:HintAssist.FloatingScale" Value="0.8"/>
+            <Setter Property="Padding" Value="8"/>
+        </Style>
+
+        <Style x:Key="ModernDatePicker" TargetType="DatePicker" BasedOn="{StaticResource MaterialDesignOutlinedDatePicker}">
+            <Setter Property="Margin" Value="1"/>
+            <Setter Property="materialDesign:HintAssist.FloatingScale" Value="0.8"/>
+            <Setter Property="Padding" Value="7.5"/>
+        </Style>
+    </UserControl.Resources>
+
     <Grid Background="White">
         <Grid.RowDefinitions>
             <RowDefinition Height="300*"/>
-            <RowDefinition Height="50*"/>
+            <RowDefinition Height="100*"/>
             <RowDefinition Height="800*"/>
         </Grid.RowDefinitions>
 
@@ -26,12 +60,10 @@
             <!--Section hien thi sach duoc chon-->
             <Grid Grid.Row="1">
                 <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="5*"/>
                     <ColumnDefinition Width="1*"/>
-                    <ColumnDefinition Width="2*"/>
+                    <ColumnDefinition Width="5*"/>
                     <ColumnDefinition Width="1*"/>
-                    <ColumnDefinition Width="2*"/>
-                    <ColumnDefinition Width="1*"/>
-                    <ColumnDefinition Width="2*"/>
                 </Grid.ColumnDefinitions>
 
                 <Grid.RowDefinitions>
@@ -40,22 +72,49 @@
                     <RowDefinition Height="Auto"/>
                 </Grid.RowDefinitions>
 
-                <TextBlock Text="Mã Tác Giả:" Grid.Row="0" Grid.Column="0" 
-                           VerticalAlignment="Center"/>
-                <TextBox x:Name="tbxMaTacGia" Grid.Row="0" Grid.Column="1"
-                         VerticalAlignment="Center"/>
-                <TextBlock Text="Tên Tác Giả:" Grid.Row="0" Grid.Column="2" 
-                           VerticalAlignment="Center"/>
-                <TextBox x:Name="tbxTenTacGia" Grid.Row="0" Grid.Column="3"
-                         VerticalAlignment="Center"/>
-                <TextBlock Text="Năm sinh:" Grid.Row="0" Grid.Column="4" 
-                           VerticalAlignment="Center"/>
-                <TextBox x:Name="tbxNamSinh" Grid.Row="0" Grid.Column="5"
-                         VerticalAlignment="Center"/>
-                <TextBlock Text="Quốc Tịch:" Grid.Row="1" Grid.Column="0" 
-                           VerticalAlignment="Center"/>
-                <TextBox x:Name="tbxQuocTich" Grid.Row="1" Grid.Column="1"
-                         VerticalAlignment="Center"/>
+                <TextBox x:Name="tbxMaTacGia" Grid.Row="0" Grid.Column="0"
+                         Style="{StaticResource DataDisplayTextBox}"
+                         materialDesign:HintAssist.Hint="Mã Tác Giả"
+                         materialDesign:TextFieldAssist.HasLeadingIcon="True"
+                         materialDesign:TextFieldAssist.LeadingIcon="PoundBoxOutline"
+                         Margin="{x:Static local:AUQuanLyTuaSach.DisplayElementMargin}" 
+                         IsReadOnly="True"/>
+
+                <TextBox x:Name="tbxTenTacGia" Grid.Row="0" Grid.Column="2"
+                         Style="{StaticResource DataDisplayTextBox}"
+                         materialDesign:HintAssist.Hint="Tên Tác Giả"
+                         materialDesign:TextFieldAssist.HasLeadingIcon="True"
+                         materialDesign:TextFieldAssist.LeadingIcon="PoundBoxOutline"
+                         Margin="{x:Static local:AUQuanLyTuaSach.DisplayElementMargin}"
+                         TextChanged="tbxTenTacGia_TextChanged"/>
+
+                <materialDesign:PackIcon x:Name="icTenTacGiaError" Grid.Row="0" Grid.Column="2"
+                                         Style="{StaticResource ErrorIcon}"
+                                         Margin="{x:Static local:AUQuanLyTuaSach.ErrorIconMargin}"/>
+
+                <TextBox x:Name="tbxNamSinh" Grid.Row="1" Grid.Column="0"
+                         Style="{StaticResource DataDisplayTextBox}"
+                         materialDesign:HintAssist.Hint="Năm Sinh"
+                         materialDesign:TextFieldAssist.HasLeadingIcon="True"
+                         materialDesign:TextFieldAssist.LeadingIcon="PoundBoxOutline"
+                         Margin="{x:Static local:AUQuanLyTuaSach.DisplayElementMargin}"
+                         TextChanged="tbxNamSinh_TextChanged"/>
+
+                <materialDesign:PackIcon x:Name="icNamSinhError" Grid.Row="1" Grid.Column="0"
+                                         Style="{StaticResource ErrorIcon}"
+                                         Margin="{x:Static local:AUQuanLyTuaSach.ErrorIconMargin}"/>
+
+                <TextBox x:Name="tbxQuocTich" Grid.Row="1" Grid.Column="2"
+                         Style="{StaticResource DataDisplayTextBox}"
+                         materialDesign:HintAssist.Hint="Quốc Tịch"
+                         materialDesign:TextFieldAssist.HasLeadingIcon="True"
+                         materialDesign:TextFieldAssist.LeadingIcon="PoundBoxOutline"
+                         Margin="{x:Static local:AUQuanLyTuaSach.DisplayElementMargin}"
+                         TextChanged="tbxQuocTich_TextChanged"/>
+
+                <materialDesign:PackIcon x:Name="icQuocTichError" Grid.Row="1" Grid.Column="2"
+                                         Style="{StaticResource ErrorIcon}"
+                                         Margin="{x:Static local:AUQuanLyTuaSach.ErrorIconMargin}"/>
             </Grid>
 
             <!--CRUD buttons-->
@@ -94,14 +153,29 @@
                 </Grid.ColumnDefinitions>
 
                 <TextBlock Text="Tìm Kiếm:" Grid.Column="0" FontSize="14" VerticalAlignment="Center"/>
-                <TextBox x:Name="tbxThongTinTimKiem" Grid.Column="1" VerticalAlignment="Center"/>
-                <ComboBox x:Name="cbbThuocTinhTimKiem" Grid.Column="2" VerticalAlignment="Center">
+
+                <TextBox x:Name="tbxThongTinTimKiem" Grid.Column="1" VerticalAlignment="Center"
+                         Style="{StaticResource DataDisplayTextBox}"
+                         Padding="8"
+                         materialDesign:HintAssist.Hint="Từ Khóa"
+                         materialDesign:HintAssist.FloatingScale="0.8"/>
+
+                <ComboBox x:Name="cbbThuocTinhTimKiem" Grid.Column="2" 
+                          VerticalAlignment="Center"
+                          Style="{StaticResource ModernComboBox}"
+                          materialDesign:HintAssist.Hint="Thuộc Tính"
+                          materialDesign:HintAssist.FloatingScale="0.8">
                     <ComboBoxItem Content="Tên Tác Giả"/>
                     <ComboBoxItem Content="Năm Sinh"/>
                     <ComboBoxItem Content="Quốc Tịch"/>
                 </ComboBox>
-                <Button x:Name="btnTimKiem" Grid.Column="3" Content="T" VerticalAlignment="Center"
-                        Click="btnTimKiem_Click"/>
+
+                <Button x:Name="btnTimKiem" Grid.Column="3" Click="btnTimKiem_Click"/>
+                <materialDesign:PackIcon Kind="Magnify" Grid.Column="3"
+                                         Width=" 20"
+                                         Height="20"
+                                         HorizontalAlignment="Center" 
+                                         VerticalAlignment="Center"/>
             </Grid>
         </Grid>
 
