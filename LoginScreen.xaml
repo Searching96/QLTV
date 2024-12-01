@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:QLTV_TranBin"
         mc:Ignorable="d"
-        Title="LoginScreen" Height="480" Width="720">
+        Title="LoginScreen" Height="500" Width="500">
     <Grid>
         <Frame x:Name="LoginMain" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" NavigationUIVisibility="Hidden"/>
     </Grid>

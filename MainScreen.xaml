@@ -32,46 +32,20 @@
 
                 <!--Menu Buttons-->
                 <StackPanel DockPanel.Dock="Top" >
-                    <Button x:Name ="btn_DashBoard"  Style="{StaticResource menuButton}" Click="btn_DashBoard_Click">
-                        <StackPanel Orientation="Horizontal">
-                            <Icon:PackIconMaterial Kind="HomeVariant" Style="{StaticResource menuButtonIcon}"/>
-                            <TextBlock Text="Trang chủ"/>
-                        </StackPanel>
-                    </Button>
+                    <Button x:Name="btnQLTK" Click="btnQLTK_Click"
+                          Width="150" Margin="0,5"
+                          Content="Quản lý tài khoản"
+                          IsEnabled="{Binding DataContext.ControlsEnabled, RelativeSource={RelativeSource FindAncestor, AncestorType=Window}}"
+                          Style="{StaticResource MaterialDesignRaisedLightButton}"
+                          ToolTip="Resource name: MaterialDesignRaisedLightButton" />
 
-                    <Button x:Name ="btn_QLMT" Style="{StaticResource menuButton}" Click="btn_QLMT_Click" >
-                        <StackPanel Orientation="Horizontal">
-                            <Icon:PackIconMaterial Kind="Book" Style="{StaticResource menuButtonIcon}"/>
-                            <TextBlock Text="Quản lí mượn trả"/>
-                        </StackPanel>
-                    </Button>
-
-                    <Button x:Name ="btn_BookManage" Style="{StaticResource menuButton}"  Foreground="White" Click="btn_BookManage_Click">
-                        <StackPanel Orientation="Horizontal">
-                            <Icon:PackIconMaterial Kind="AccountMultipleOutline" Style="{StaticResource menuButtonIcon}"/>
-                            <TextBlock Text="Quản lí Sách"/>
-                        </StackPanel>
-                    </Button>
-
-                    <Button x:Name="btnQLTK" Style="{StaticResource menuButton}" Click="btnQLTK_Click">
-                        <StackPanel Orientation="Horizontal">
-                            <Icon:PackIconMaterial Kind="Account" Style="{StaticResource menuButtonIcon}"/>
-                            <TextBlock Text="Quản lí tài khoản"/>
-                        </StackPanel>
-                    </Button>
-
-                    <Button x:Name="btnQLDG" Style="{StaticResource menuButton}" Click="btnQLDG_Click">
-                        <StackPanel Orientation="Horizontal">
-                            <Icon:PackIconMaterial Kind="ForumOutline" Style="{StaticResource menuButtonIcon}"/>
-                            <TextBlock Text="Quản Lí Độc Giả"/>
-                        </StackPanel>
-                    </Button>
+                    
 
                 </StackPanel>
 
-                <Button Style="{StaticResource menuButton}" VerticalAlignment="Bottom" DockPanel.Dock="Bottom" Margin="15 0 15 20" Click="Button_Click_LogOut">
+                <Button VerticalAlignment="Bottom" DockPanel.Dock="Bottom" Margin="15 0 15 20" Click="Button_Click_LogOut">
                     <StackPanel Orientation="Horizontal">
-                        <Icon:PackIconMaterial Kind="Logout" Style="{StaticResource menuButtonIcon}"/>
+                        <Icon:PackIconMaterial Kind="Logout" />
                         <TextBlock Text="Logout"/>
                     </StackPanel>
                 </Button>

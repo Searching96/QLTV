@@ -301,9 +301,6 @@ public partial class QLTVContext : DbContext
 
             entity.HasIndex(e => e.TenTaiKhoan, "UQ__TAIKHOAN__B106EAF8AB25C1BB").IsUnique();
 
-            entity.Property(e => e.Avatar)
-                .HasMaxLength(500)
-                .IsUnicode(false);
             entity.Property(e => e.DiaChi).HasMaxLength(200);
             entity.Property(e => e.Email)
                 .HasMaxLength(100)
@@ -320,7 +317,7 @@ public partial class QLTVContext : DbContext
             entity.Property(e => e.SDT)
                 .HasMaxLength(20)
                 .IsUnicode(false);
-            entity.Property(e => e.SinhNhat).HasColumnType("datetime");
+            entity.Property(e => e.SinhNhat).HasColumnType("date");
             entity.Property(e => e.TenTaiKhoan).HasMaxLength(100);
 
             entity.HasOne(d => d.IDPhanQuyenNavigation).WithMany(p => p.TAIKHOAN)

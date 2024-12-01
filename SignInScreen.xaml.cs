@@ -40,28 +40,13 @@ namespace QLTV_TranBin
             Application.Current.Shutdown();
         }
 
-        private void PasswordBox_PasswordChanged(object sender, RoutedEventArgs e)
-        {
-            if (!string.IsNullOrEmpty(txtPassword.Password) && txtPassword.Password.Length > 0)
-                textPassword.Visibility = Visibility.Collapsed;
-            else
-                textPassword.Visibility = Visibility.Visible;
-        }
-
-        private void textPassword_MouseDown(object sender, MouseButtonEventArgs e)
-        {
-            txtPassword.Focus();
-        }
+        
 
         
 
-        private void txtEmail_TextChanged(object sender, System.Windows.Controls.TextChangedEventArgs e)
-        {
-            if (!string.IsNullOrEmpty(txtUsername.Text) && txtUsername.Text.Length > 0)
-                textUsername.Visibility = Visibility.Collapsed;
-            else
-                textUsername.Visibility = Visibility.Visible;
-        }
+        
+
+        
 
         private void textEmail_MouseDown(object sender, MouseButtonEventArgs e)
         {
@@ -81,7 +66,7 @@ namespace QLTV_TranBin
         private void btnSignIn_Click(object sender, RoutedEventArgs e)
         {
             string username = txtUsername.Text;
-            string password = txtPassword.Password;
+            string password = pbPassword.Password;
 
             // Xác thực người dùng
             var user = ValidateUser(username, password);

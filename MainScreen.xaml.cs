@@ -27,7 +27,7 @@ namespace QLTV_TranBin
         public MainScreen()
         {
             InitializeComponent();
-            ConfigureButtonsVisibility();
+            //ConfigureButtonsVisibility();
             _context = new QLTVContext();
             RequireAccess();// Khởi tạo context của bạn
 
@@ -41,7 +41,8 @@ namespace QLTV_TranBin
             {
                 // Lấy đối tượng DOCGIA theo ID tài khoản
                 var userAdmin = context.ADMIN.FirstOrDefault(u => u.IDTaiKhoan == currentUserID);
-
+                
+                
                 // Kiểm tra nếu không tìm thấy hoặc thông tin còn thiếu
                 if (userAdmin == null ||
                     string.IsNullOrEmpty(userAdmin.TenAdmin) ||
@@ -79,40 +80,40 @@ namespace QLTV_TranBin
             }
 
         }
-        private void ConfigureButtonsVisibility()
-        {
-            // Lấy role hiện tại từ Settings
-            int currentRole = Settings.Default.CurrentUserPhanQuyen;
+        //private void ConfigureButtonsVisibility()
+        //{
+        //    // Lấy role hiện tại từ Settings
+        //    int currentRole = Settings.Default.CurrentUserPhanQuyen;
 
-            // Role: Superadmin
-            if (currentRole == 1)
-            {
-                btn_BookManage.Visibility = Visibility.Visible;  // Hiện Quản lý sách
-                btnQLDG.Visibility = Visibility.Visible;        // Hiện Quản lý độc giả
-                btnQLTK.Visibility = Visibility.Visible;        // Hiện Quản lý tài khoản
-            }
-            // Role: Quản lý nhân sự
-            else if (currentRole == 2)
-            {
-                btn_BookManage.Visibility = Visibility.Collapsed; // Ẩn Quản lý sách
-                btnQLDG.Visibility = Visibility.Collapsed;       // Ẩn Quản lý độc giả
-                btnQLTK.Visibility = Visibility.Visible;         // Hiện Quản lý tài khoản
-            }
-            // Role: Thủ thư
-            else if (currentRole == 3)
-            {
-                btn_BookManage.Visibility = Visibility.Visible;  // Hiện Quản lý sách
-                btnQLDG.Visibility = Visibility.Visible;        // Hiện Quản lý độc giả
-                btnQLTK.Visibility = Visibility.Collapsed;      // Ẩn Quản lý tài khoản
-            }
-            // Các role khác (nếu có)
-            else
-            {
-                btn_BookManage.Visibility = Visibility.Collapsed;
-                btnQLDG.Visibility = Visibility.Collapsed;
-                btnQLTK.Visibility = Visibility.Collapsed;
-            }
-        }
+        //    // Role: Superadmin
+        //    if (currentRole == 1)
+        //    {
+        //        btn_BookManage.Visibility = Visibility.Visible;  // Hiện Quản lý sách
+        //        btnQLDG.Visibility = Visibility.Visible;        // Hiện Quản lý độc giả
+        //        btnQLTK.Visibility = Visibility.Visible;        // Hiện Quản lý tài khoản
+        //    }
+        //    // Role: Quản lý nhân sự
+        //    else if (currentRole == 2)
+        //    {
+        //        btn_BookManage.Visibility = Visibility.Collapsed; // Ẩn Quản lý sách
+        //        btnQLDG.Visibility = Visibility.Collapsed;       // Ẩn Quản lý độc giả
+        //        btnQLTK.Visibility = Visibility.Visible;         // Hiện Quản lý tài khoản
+        //    }
+        //    // Role: Thủ thư
+        //    else if (currentRole == 3)
+        //    {
+        //        btn_BookManage.Visibility = Visibility.Visible;  // Hiện Quản lý sách
+        //        btnQLDG.Visibility = Visibility.Visible;        // Hiện Quản lý độc giả
+        //        btnQLTK.Visibility = Visibility.Collapsed;      // Ẩn Quản lý tài khoản
+        //    }
+        //    // Các role khác (nếu có)
+        //    else
+        //    {
+        //        btn_BookManage.Visibility = Visibility.Collapsed;
+        //        btnQLDG.Visibility = Visibility.Collapsed;
+        //        btnQLTK.Visibility = Visibility.Collapsed;
+        //    }
+        //}
         private void btnQLTK_Click(object sender, RoutedEventArgs e)
         {
             FrameMain.Content = new QuanLyTaiKhoan();

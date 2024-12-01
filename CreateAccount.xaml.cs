@@ -183,6 +183,7 @@ namespace QLTV_TranBin
             {
                 using (var context = new QLTVContext())
                 {
+
                     // Kiểm tra email đã tồn tại chưa
                     var existingAccount = context.TAIKHOAN.FirstOrDefault(tk => tk.Email == email);
                     if (existingAccount != null)
@@ -231,15 +232,16 @@ namespace QLTV_TranBin
                         SinhNhat = birthday.HasValue ? birthday.Value : default(DateTime),
                         MatKhau = password, // Lưu ý: Bạn nên mã hóa mật khẩu trước khi lưu
                         IsDeleted = false, // Cờ đánh dấu tài khoản còn hoạt động
-                        Avatar = "hehe", // Ví dụ: avatar mặc định
+                        
                         TrangThai = false, // Ví dụ: trạng thái tài khoản
                         IDPhanQuyen = phanQuyen, // Cập nhật phân quyền
                         NgayMo = ngaymo.HasValue ? ngaymo.Value : default(DateTime),
                         NgayDong = ngaydong.HasValue ? ngaydong.Value : default(DateTime),
                     };
-
+                    
                     // Thêm tài khoản mới vào cơ sở dữ liệu
                     context.TAIKHOAN.Add(newAccount);
+                    
                     context.SaveChanges();
                     if(phanQuyen != 4)
                     {
@@ -257,7 +259,8 @@ namespace QLTV_TranBin
                             IDLoaiDocGia = idLoaiDocGia ?? 0  // Gán IDLoaiDocGia từ phân quyền
                         };
                         context.DOCGIA.Add(newDocGia);
-                    }    
+                    }
+                    MessageBox.Show("Check");
                     context.SaveChanges();
                     // Thông báo đăng ký thành công
                     MessageBox.Show("Sign up successful!", "Success", MessageBoxButton.OK, MessageBoxImage.Information);
@@ -324,6 +327,54 @@ namespace QLTV_TranBin
                 dpNgayMo.SetValue(MaterialDesignThemes.Wpf.HintAssist.HintProperty, "Ngày mở");
                 dpNgayDong.SetValue(MaterialDesignThemes.Wpf.HintAssist.HintProperty, "Ngày đóng");
             }
+        }
+
+        private void txtUsername_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            if (string.IsNullOrWhiteSpace(txtUsername.Text))
+            {
+                icUsernameError.ToolTip = "Tên tài khoản không được để trống!";
+                icUsernameError.Visibility = Visibility.Visible;
+                return;
+            }
+
+            icUsernameError.Visibility = Visibility.Collapsed;
+        }
+
+        private void txtEmail_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            if (string.IsNullOrWhiteSpace(txtEmail.Text))
+            {
+                icEmailError.ToolTip = "Email không được để trống!";
+                icEmailError.Visibility = Visibility.Visible;
+                return;
+            }
+
+            icEmailError.Visibility = Visibility.Collapsed;
+        }
+
+        private void txtAddress_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            if (string.IsNullOrWhiteSpace(txtAddress.Text))
+            {
+                icAddressError.ToolTip = "Địa chỉ không được để trống!";
+                icAddressError.Visibility = Visibility.Visible;
+                return;
+            }
+
+            icAddressError.Visibility = Visibility.Collapsed;
+        }
+
+        private void txtPhoneNumber_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            if (string.IsNullOrWhiteSpace(txtUsername.Text))
+            {
+                icPhoneNumberError.ToolTip = "Số điện thoại không được để trống!";
+                icPhoneNumberError.Visibility = Visibility.Visible;
+                return;
+            }
+
+            icPhoneNumberError.Visibility = Visibility.Collapsed;
         }
     }
 }

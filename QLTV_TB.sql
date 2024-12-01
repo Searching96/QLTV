@@ -41,18 +41,24 @@ create table [TAIKHOAN]
 	[TenTaiKhoan] nvarchar(100) constraint [UQ_TenTaiKhoan] unique not null,
 	[MatKhau] varchar(50) not null,
 	[Email] varchar(100) constraint [UQ_Email] unique not null,
-	[SinhNhat] datetime not null,
+	[SinhNhat] date not null,
 	[DiaChi] nvarchar(200) not null,
 	[SDT] varchar(20) not null,
 	[Avatar] varchar(500) not null,
 	[TrangThai] bit not null, -- co dang dang nhap hay ko
 	[IDPhanQuyen] int not null, -- FK
 	[IsDeleted] bit not null,
-	[NgayMo] datetime not null,
-	[NgayDong] datetime not null
+	[NgayMo] date not null,
+	[NgayDong] date not null
 )
 
-    
+
+
+
+
+
+alter table TAIKHOAN
+drop column Avatar
 create table [ADMIN] 
 (
 	[ID] int identity(1, 1) constraint [PK_ADMIN] primary key,

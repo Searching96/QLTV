@@ -15,13 +15,9 @@ public partial class TAIKHOAN
 
     public string Email { get; set; } = null!;
 
-    public DateTime SinhNhat { get; set; }
-
     public string DiaChi { get; set; } = null!;
 
     public string SDT { get; set; } = null!;
-
-    public string Avatar { get; set; } = null!;
 
     public bool TrangThai { get; set; }
 
@@ -29,9 +25,11 @@ public partial class TAIKHOAN
 
     public bool IsDeleted { get; set; }
 
-    public DateTime? NgayMo { get; set; }
+    public DateTime SinhNhat { get; set; }
 
-    public DateTime? NgayDong { get; set; }
+    public DateTime NgayMo { get; set; }
+
+    public DateTime NgayDong { get; set; }
 
     public virtual ICollection<ACTIVE_SESSION> ACTIVE_SESSION { get; } = new List<ACTIVE_SESSION>();
 

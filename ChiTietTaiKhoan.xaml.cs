@@ -153,8 +153,8 @@ namespace QLTV_TranBin
                     taiKhoan.SinhNhat = dpNgaySinh.SelectedDate.HasValue ? dpNgaySinh.SelectedDate.Value : throw new Exception("Ngày sinh không hợp lệ!");
                     taiKhoan.Email = txtEmail.Text;
                     taiKhoan.SDT = txtSDT.Text;
-                    taiKhoan.NgayMo = dpNgayDangKy.SelectedDate;
-                    taiKhoan.NgayDong = dpNgayHetHan.SelectedDate;
+                    taiKhoan.NgayMo = dpNgayDangKy.SelectedDate ?? DateTime.Now; // Nếu null thì dùng ngày hiện tại
+                    taiKhoan.NgayDong = dpNgayHetHan.SelectedDate ?? DateTime.Now.AddYears(1); // Dùng ngày hiện tại + 1 năm nếu null
                     MessageBox.Show(taiKhoan.ID.ToString());
                     // Xử lý cập nhật thông tin TenNguoiDung và GioiTinh
                     if (txtLoaiTaiKhoan.Text == "Độc Giả")

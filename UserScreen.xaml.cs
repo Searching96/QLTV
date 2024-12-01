@@ -225,8 +225,8 @@ namespace QLTV_TranBin
                     SDT = taiKhoan.SDT,
                     DiaChi = taiKhoan.DiaChi,
                     NgaySinh = taiKhoan.SinhNhat,
-                    NgayDangKy = taiKhoan?.NgayMo,
-                    NgayHetHan = taiKhoan?.NgayDong,
+                    NgayDangKy = taiKhoan.NgayMo,
+                    NgayHetHan = taiKhoan.NgayDong,
                     IDPhanQuyen = taiKhoan.IDPhanQuyen,
                     LoaiTaiKhoan = taiKhoan.IDPhanQuyenNavigation.MoTa,
                     TenNguoiDung = docGia?.TenDocGia, // Lấy từ bảng DOCGIA

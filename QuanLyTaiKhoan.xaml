@@ -24,44 +24,92 @@
                     </Grid.RowDefinitions>
 
                     <!-- Tiêu đề -->
-                    <TextBlock x:Name="txtds" Text="Danh sách tài khoản" Margin="10,10"
-                               FontWeight="Bold" FontSize="40"/>
+                    <Grid Grid.Row="0" Margin="0,0,30,0">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="2*"/>
+                            <ColumnDefinition Width="1.25*"/>
+                            <ColumnDefinition Width="0.75*"/>
+                        </Grid.ColumnDefinitions>
+                        
+                        <TextBlock x:Name="txtds" Text="Danh sách tài khoản" Margin="10,10"
+                        FontWeight="Bold" FontSize="40"/>
+                        <Grid Grid.Column="2">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition/>
+                                <ColumnDefinition/>
+                            </Grid.ColumnDefinitions>
+                            <Button x:Name="btnThemFile"
+                                Grid.Column="0" Margin="5,0"
+                                IsEnabled="{Binding DataContext.ControlsEnabled, RelativeSource={RelativeSource FindAncestor, AncestorType=Window}}"
+                                Style="{StaticResource MaterialDesignRaisedLightButton}"
+                                ToolTip="Thêm từ Excel" Click="btnThemFile_Click">
+                                <materialDesign:PackIcon Kind="MicrosoftExcel" />
+                            </Button>
+                            <Button x:Name="btnXuatFile"
+                                Grid.Column="1" Margin="5,0"
+                                IsEnabled="{Binding DataContext.ControlsEnabled, RelativeSource={RelativeSource FindAncestor, AncestorType=Window}}"
+                                Style="{StaticResource MaterialDesignRaisedLightButton}"
+                                ToolTip="Xuất ra Excel" Click="btnXuatFile_Click">
+                                <materialDesign:PackIcon Kind="FileExcelOutline" />
+                            </Button>
+                        </Grid>
+                    </Grid>
+                    
 
                     <!-- Thanh công cụ -->
                     <Grid Margin="20,0" Grid.Row="1">
                         <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="2*"/>
                             <ColumnDefinition Width="1*"/>
                             <ColumnDefinition Width="1*"/>
-                            <ColumnDefinition Width="0.75*"/>
                             <ColumnDefinition Width="1*"/>
                             <ColumnDefinition Width="1*"/>
                         </Grid.ColumnDefinitions>
 
                         <!-- Ô tìm kiếm -->
-                        <TextBox Grid.Column="0" Grid.ColumnSpan="2" 
+                        <TextBox x:Name="txtSearch" Grid.Column="0"
                                  Margin="5,0,0,0" VerticalAlignment="Center"
                                  materialDesign:HintAssist.Hint="Tìm kiếm"
-                                 Style="{StaticResource MaterialDesignFloatingHintTextBox}" Height="40" />
+                                 Style="{StaticResource MaterialDesignFloatingHintTextBox}" Height="40"
+                                 TextChanged="txtSearch_TextChanged"/>
 
                         <!-- ComboBox -->
-                        <ComboBox Grid.Column="2" Margin="5,0,5,0"
-                                  materialDesign:ComboBoxAssist.MaxLength="2"
+                        <ComboBox x:Name="cbSearchType" Grid.Column="1" Margin="5,0,5,0" 
                                   materialDesign:HintAssist.Hint="Search"
-                                  materialDesign:HintAssist.HintOpacity=".26"
-                                  IsEditable="True" Height="40">
-                            <ComboBoxItem Content="Apple" />
-                            <ComboBoxItem Content="Banana" />
-                            <ComboBoxItem Content="Pear" />
-                            <ComboBoxItem Content="Orange" />
+                                  Height="40">
+
+                            <ComboBoxItem Tag="TenTaiKhoan" Content="Tên tài khoản" />
+                            <ComboBoxItem Tag="IDPhanQuyen" Content="Loại tài khoản" />
+
                         </ComboBox>
 
                         <!-- Nút thêm tài khoản -->
-                        <Button x:Name="btnTaoTaiKhoan" Grid.Column="3" 
-                                Margin="5,0" Content="Thêm tài khoản" HorizontalAlignment="Stretch" Click="btnTaoTaiKhoan_Click"/>
+                        <!--<Button
+  
+                          Content="_LIGHT"
+                          IsEnabled="{Binding DataContext.ControlsEnabled, RelativeSource={RelativeSource FindAncestor, AncestorType=Window}}"
+                          Style="{StaticResource MaterialDesignRaisedLightButton}"
+                          ToolTip="Resource name: MaterialDesignRaisedLightButton" />-->
+                        <Button x:Name="btnTaoTaiKhoan"
+                                Grid.Column="2" Margin="5,0" Content="Thêm" HorizontalAlignment="Stretch" Click="btnTaoTaiKhoan_Click"     
+                                IsEnabled="{Binding DataContext.ControlsEnabled, RelativeSource={RelativeSource FindAncestor, AncestorType=Window}}"
+                                Style="{StaticResource MaterialDesignRaisedLightButton}"
+                                ToolTip="Resource name: MaterialDesignRaisedLightButton" />
+                        <Button x:Name="btnXoa"
+                                Grid.Column="3" Margin="5,0" Content="Xóa" HorizontalAlignment="Stretch"      
+                                IsEnabled="{Binding DataContext.ControlsEnabled, RelativeSource={RelativeSource FindAncestor, AncestorType=Window}}"
+                                Style="{StaticResource MaterialDesignRaisedLightButton}"
+                                ToolTip="Resource name: MaterialDesignRaisedLightButton" Click="btnXoa_Click" />
+                        <Button x:Name="btnLamMoi"
+                                Grid.Column="4" Margin="5,0" Content="Làm mới" HorizontalAlignment="Stretch"    
+                                IsEnabled="{Binding DataContext.ControlsEnabled, RelativeSource={RelativeSource FindAncestor, AncestorType=Window}}"
+                                Style="{StaticResource MaterialDesignRaisedLightButton}"
+                                ToolTip="Resource name: MaterialDesignRaisedLightButton" Click="btnLamMoi_Click" />
+                        
 
                         <!-- Nút thêm từ file -->
-                        <Button x:Name="btnThemFile" Grid.Column="4" 
-                                Margin="5,0" Content="Thêm từ File" HorizontalAlignment="Stretch" Click="btnThemFile_Click"/>
+                        <!--<Button x:Name="btnThemFile" Grid.Column="3" 
+                                Margin="5,0" Content="Thêm từ File" HorizontalAlignment="Stretch" Click="btnThemFile_Click"/>-->
                     </Grid>
 
                     <!-- Danh sách tài khoản -->
@@ -73,8 +121,8 @@
                                   Style="{DynamicResource DataGridStyle1}" 
                                   ItemsSource="{Binding Accounts}" 
                                   SelectionMode="Extended" 
-                                  SelectionUnit="FullRow"
-                                  PreviewKeyDown="DataGrid_PreviewKeyDown">
+                                  SelectionUnit="FullRow">
+
 
                         <DataGrid.Columns>
                             <DataGridCheckBoxColumn Header="C" CanUserResize="False" Width="auto" 
@@ -118,9 +166,7 @@
                                             <Button x:Name="btnDetail" Style="{StaticResource gridEditButton}" Click="btnDetail_Click">
                                                 <Icon:PackIconMaterial Kind="Eye" Style="{StaticResource gridButtonIcon}"/>
                                             </Button>
-                                            <Button x:Name="btnDelete" Margin="5 0 0 0" Style="{StaticResource gridRemoveButton}" Click="btnDelete_Click">
-                                                <Icon:PackIconMaterial Kind="DeleteOutline" Style="{StaticResource gridButtonIcon}"/>
-                                            </Button>
+                                            
                                         </StackPanel>
                                     </DataTemplate>
                                 </DataGridTemplateColumn.CellTemplate>

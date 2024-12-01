@@ -17,8 +17,8 @@ namespace QLTV_TranBin.GridViewModels
         public string Email { get; set; } = null!;
         public string SDT { get; set; } = null!;
         public DateTime NgaySinh { get; set; }
-        public DateTime? NgayDangKy { get; set; }
-        public DateTime? NgayHetHan { get; set; }
+        public DateTime NgayDangKy { get; set; }
+        public DateTime NgayHetHan { get; set; }
         public int IDPhanQuyen { get; set; }
         public string? LoaiTaiKhoan { get; set; }
         public string BgColor { get; set; } = null!;

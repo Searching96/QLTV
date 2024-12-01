@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore.Metadata.Conventions;
+﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata.Conventions;
 using QLTV_TranBin.GridViewModels;
 using QLTV_TranBin.Models;
 using QLTV_TranBin.Properties;
@@ -6,6 +7,7 @@ using QLTV_TranBin.ViewModels;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -19,6 +21,12 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 using static Org.BouncyCastle.Asn1.Cmp.Challenge;
+using OfficeOpenXml;
+using System.IO;
+using MimeKit;
+using MailKit.Net.Smtp;
+using System.Globalization;
+
 
 namespace QLTV_TranBin
 {
@@ -189,92 +197,115 @@ namespace QLTV_TranBin
                 }
             }
         }
-        private void DataGrid_PreviewKeyDown(object sender, KeyEventArgs e)
+        
+        private void txtSearch_TextChanged(object sender, TextChangedEventArgs e)
         {
-            // Kiểm tra nếu phím bấm là Delete
-            if (e.Key == Key.Delete)
+            try
             {
-                DeleteSelectedItems();
-            }
-        }
-
-        private void DeleteSelectedItems()
-        {
-            // Lấy danh sách các dòng đang được chọn
-            var selectedAccounts = new List<AccountViewModel>();
-            foreach (var selectedItem in dgAccount.SelectedItems)
-            {
-                
-                if (selectedItem is AccountViewModel account)
+                using (var context = new QLTVContext())
                 {
-                    
-                    selectedAccounts.Add(account);
-                    // Thêm mục vào danh sách xóa
-                }
-            }
+                    // Lấy giá trị nhập từ TextBox
+                    string searchValue = txtSearch.Text.Trim();
 
-            if (selectedAccounts.Any())
-            {
-                try
-                {
-                    using (var context = new QLTVContext())
+                    // Lấy loại tìm kiếm từ ComboBox
+                    var selectedSearchType = (cbSearchType.SelectedItem as ComboBoxItem)?.Tag?.ToString();
+
+                    // Nếu chưa chọn loại tìm kiếm hoặc ô tìm kiếm trống
+                    if (string.IsNullOrEmpty(selectedSearchType) || string.IsNullOrEmpty(searchValue))
                     {
-                        // Dùng Transaction để đảm bảo tính toàn vẹn khi thao tác với cơ sở dữ liệu
-                        using (var transaction = context.Database.BeginTransaction())
+                        LoadData(); // Hiển thị toàn bộ dữ liệu
+                        return;
+                    }
+
+                    // Lọc dữ liệu theo loại tìm kiếm
+                    var query = context.TAIKHOAN
+                        .Where(tk => !tk.IsDeleted)
+                        .Select(tk => new AccountViewModel
                         {
-                            try
-                            {
-                                // Lặp qua danh sách các tài khoản được chọn
-                                foreach (var account in selectedAccounts)
-                                {
-                                    
-                                    // Tìm tài khoản trong cơ sở dữ liệu
-                                    var accountToDelete = context.TAIKHOAN.FirstOrDefault(a => a.MaTaiKhoan == account.MaTaiKhoan);
+                            MaTaiKhoan = tk.MaTaiKhoan,
+                            TenTaiKhoan = tk.TenTaiKhoan,
+                            Email = tk.Email,
+                            SDT = tk.SDT,
+                            DiaChi = tk.DiaChi,
+                            NgaySinh = tk.SinhNhat,
+                            IDPhanQuyen = tk.IDPhanQuyen,
+                            LoaiTaiKhoan = tk.IDPhanQuyenNavigation.MoTa,
+                            BgColor = GenerateRandomColor(),
+                        });
+                    
+                    if (selectedSearchType == "TenTaiKhoan")
+                    {
+                        query = query.Where(tk => tk.TenTaiKhoan.Contains(searchValue));
+                        
+                    }
+                    else if (selectedSearchType == "IDPhanQuyen")
+                    {
+                        query = query.Where(tk => tk.LoaiTaiKhoan.Contains(searchValue));
+                    }
 
-                                    if (accountToDelete != null)
-                                    {
-                                        // Đánh dấu tài khoản là đã xóa
-                                        accountToDelete.IsDeleted = true;
-                                    }
-                                }
+                    // Cập nhật ObservableCollection
+                    var filteredAccounts = query.ToList();
+                    Debug.WriteLine($"Số lượng tài khoản tìm được: {filteredAccounts.Count}");
 
-                                // Lưu thay đổi vào cơ sở dữ liệu
-                                context.SaveChanges();
-
-                                // Commit Transaction
-                                transaction.Commit();
-
-                                // Xóa các dòng khỏi ObservableCollection để cập nhật giao diện
-                                foreach (var account in selectedAccounts)
-                                {
-                                    Accounts.Remove(account);
-                                }
-
-                                MessageBox.Show("Đã xóa các tài khoản được chọn thành công.", "Thông báo", MessageBoxButton.OK, MessageBoxImage.Information);
-                            }
-                            catch (Exception ex)
-                            {
-                                // Nếu có lỗi trong quá trình xóa, rollback transaction
-                                transaction.Rollback();
-                                MessageBox.Show($"Đã xảy ra lỗi khi xóa dữ liệu: {ex.Message}", "Lỗi", MessageBoxButton.OK, MessageBoxImage.Error);
-                            }
-                        }
+                    Accounts.Clear();
+                    foreach (var account in filteredAccounts)
+                    {
+                        Accounts.Add(account);
                     }
                 }
-                catch (Exception ex)
-                {
-                    MessageBox.Show($"Đã xảy ra lỗi khi kết nối với cơ sở dữ liệu: {ex.Message}", "Lỗi", MessageBoxButton.OK, MessageBoxImage.Error);
-                }
             }
-            else
+            catch (Exception ex)
             {
-                MessageBox.Show("Vui lòng chọn ít nhất một tài khoản để xóa.", "Thông báo", MessageBoxButton.OK, MessageBoxImage.Information);
+                MessageBox.Show($"Đã xảy ra lỗi khi tìm kiếm: {ex.Message}", "Lỗi", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
+        }
+        
+        private void btnDetail_Click(object sender, RoutedEventArgs e)
+        {
+            // Lấy tài khoản hiện tại từ DataContext
+            var button = sender as Button;
+            if (button?.DataContext is AccountViewModel selectedAccount)
+            {
+                // Truy cập TabControl trong UserControl
+                if (tcQLTK != null)
+                {
+                    // Kiểm tra xem Tab với tài khoản này đã tồn tại chưa
+                    var existingTab = tcQLTK.Items
+                                        .OfType<TabItem>()
+                                        .FirstOrDefault(tab => tab.Header?.ToString() == $"Profile - {selectedAccount.TenTaiKhoan}");
+
+                    if (existingTab != null)
+                    {
+                        // Nếu Tab đã tồn tại, chuyển sang Tab đó
+                        tcQLTK.SelectedItem = existingTab;
+                    }
+                    else
+                    {
+                        // Tạo UI mới từ UserControl
+                        var profileTab = new TabItem
+                        {
+                            Header = $"Profile - {selectedAccount.TenTaiKhoan}", // Đặt tiêu đề tab
+                            Content = new ChiTietTaiKhoan
+                            {
+                                DataContext = selectedAccount // Truyền dữ liệu vào DataContext
+                            }
+                        };
+
+                        // Thêm Tab vào TabControl
+                        tcQLTK.Items.Add(profileTab);
+
+                        // Chuyển sang Tab vừa tạo
+                        tcQLTK.SelectedItem = profileTab;
+                    }
+                }
+                else
+                {
+                    MessageBox.Show("TabControl không được tìm thấy trong UserControl!", "Lỗi", MessageBoxButton.OK, MessageBoxImage.Error);
+                }
             }
         }
 
-        
-
-        private void btnDelete_Click(object sender, RoutedEventArgs e)
+        private void btnXoa_Click(object sender, RoutedEventArgs e)
         {
             // Lấy danh sách các dòng đang được chọn
             var selectedAccounts = new List<AccountViewModel>();
@@ -303,7 +334,7 @@ namespace QLTV_TranBin
                                 // Lặp qua danh sách các tài khoản được chọn
                                 foreach (var account in selectedAccounts)
                                 {
-                                    
+
                                     // Tìm tài khoản trong cơ sở dữ liệu
                                     var accountToDelete = context.TAIKHOAN.FirstOrDefault(a => a.MaTaiKhoan == account.MaTaiKhoan);
 
@@ -347,51 +378,209 @@ namespace QLTV_TranBin
                 MessageBox.Show("Vui lòng chọn ít nhất một tài khoản để xóa.", "Thông báo", MessageBoxButton.OK, MessageBoxImage.Information);
             }
         }
+        public bool SendEmailUsingMailKit(string recipientEmail, string code)
+        {
+            try
+            {
+                var message = new MimeMessage();
+                message.From.Add(new MailboxAddress("QLTV TranBin", "thunderstar848@gmail.com")); // Địa chỉ Gmail của bạn
+                message.To.Add(new MailboxAddress("", recipientEmail));
+                message.Subject = "Password for your account";
+
+                message.Body = new TextPart("plain")
+                {
+                    Text = $"Your password is: {code}"
+                };
+
+                using (var client = new SmtpClient())
+                {
+                    // Kết nối tới máy chủ Gmail
+                    client.Connect("smtp.gmail.com", 587, MailKit.Security.SecureSocketOptions.StartTls);
+
+                    // Sử dụng App Password thay vì mật khẩu thông thường
+                    client.Authenticate("thunderstar848@gmail.com", "arqd unir cttu vhgi");
+
+                    client.Send(message);
+                    client.Disconnect(true);
+                }
+
+                return true;
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Error: {ex.Message}");
+                return false;
+            }
+        }
         private void btnThemFile_Click(object sender, RoutedEventArgs e)
         {
+            ExcelPackage.LicenseContext = LicenseContext.NonCommercial;
+            Random random = new Random();
+           
+            string password = random.Next(100000, 999999).ToString(); // Tạo mật khẩu tạm thời
 
-        }
-        private void btnDetail_Click(object sender, RoutedEventArgs e)
-        {
-            // Lấy tài khoản hiện tại từ DataContext
-            var button = sender as Button;
-            if (button?.DataContext is AccountViewModel selectedAccount)
+            // Hiển thị hộp thoại chọn file
+            var openFileDialog = new Microsoft.Win32.OpenFileDialog
             {
-                // Truy cập TabControl trong UserControl
-                if (tcQLTK != null)
+                Filter = "Excel Files (*.xlsx)|*.xlsx|All Files (*.*)|*.*",
+                Title = "Chọn file Excel"
+            };
+
+            if (openFileDialog.ShowDialog() == true)
+            {
+                try
                 {
-                    // Kiểm tra xem Tab với tài khoản này đã tồn tại chưa
-                    var existingTab = tcQLTK.Items
-                                        .OfType<TabItem>()
-                                        .FirstOrDefault(tab => tab.Header?.ToString() == $"Profile - {selectedAccount.TenTaiKhoan}");
+                    // Đọc file Excel
+                    using (var package = new ExcelPackage(new FileInfo(openFileDialog.FileName)))
+                    {
+                        var worksheet = package.Workbook.Worksheets[0]; // Lấy sheet đầu tiên
+                        var rowCount = worksheet.Dimension.Rows;       // Số hàng dữ liệu
 
-                    if (existingTab != null)
-                    {
-                        // Nếu Tab đã tồn tại, chuyển sang Tab đó
-                        tcQLTK.SelectedItem = existingTab;
-                    }
-                    else
-                    {
-                        // Tạo UI mới từ UserControl
-                        var profileTab = new TabItem
+                        int soDongThanhCong = 0;
+                        int soDongBiLoi = 0;
+                        List<string> danhSachLoi = new List<string>(); // Ghi nhận dòng lỗi
+                        
+                        using (var context = new QLTVContext())
                         {
-                            Header = $"Profile - {selectedAccount.TenTaiKhoan}", // Đặt tiêu đề tab
-                            Content = new ChiTietTaiKhoan
+                            for (int row = 2; row <= rowCount; row++) // Bỏ qua hàng tiêu đề
                             {
-                                DataContext = selectedAccount // Truyền dữ liệu vào DataContext
+                                try
+                                {
+                                    
+                                    var account = new TAIKHOAN
+                                    {
+                                        TenTaiKhoan = worksheet.Cells[row, 1].Text, // Cột 1: Tên tài khoản
+                                        Email = worksheet.Cells[row, 2].Text,       // Cột 2: Email
+                                        SDT = worksheet.Cells[row, 3].Text,         // Cột 3: Số điện thoại
+                                        DiaChi = worksheet.Cells[row, 4].Text,      // Cột 4: Địa chỉ
+                                        SinhNhat = worksheet.Cells[row, 5].Value is DateTime dateValue
+                                                ? dateValue
+                                                : throw new Exception($"Ngày sinh không hợp lệ: {worksheet.Cells[row, 5].Value}"),
+                                        IDPhanQuyen = int.TryParse(worksheet.Cells[row, 6].Text, out var idPhanQuyen) ? idPhanQuyen : throw new Exception("ID phân quyền không hợp lệ"),
+                                        NgayMo = worksheet.Cells[row, 7].Value is DateTime dateNgayMo
+                                                ? dateNgayMo.Date
+                                                : throw new Exception($"Ngày mở không hợp lệ: {worksheet.Cells[row, 7].Value}"),
+
+                                                                                    NgayDong = worksheet.Cells[row, 8].Value is DateTime dateNgayDong
+                                                ? dateNgayDong.Date
+                                                : throw new Exception($"Ngày đóng không hợp lệ: {worksheet.Cells[row, 8].Value}"),
+                                        IsDeleted = false, // Đảm bảo không bị đánh dấu đã xóa
+                                        MatKhau = password,
+                                        TrangThai = false
+
+                                    };
+                                    SendEmailUsingMailKit(account.Email, password);
+                                    // Thêm tài khoản mới vào cơ sở dữ liệu
+                                    context.TAIKHOAN.Add(account);
+                                    soDongThanhCong++;
+                                }
+                                catch (Exception ex)
+                                {
+                                    soDongBiLoi++;
+                                    danhSachLoi.Add($"Dòng {row}: {ex.Message}");
+                                }
                             }
-                        };
 
-                        // Thêm Tab vào TabControl
-                        tcQLTK.Items.Add(profileTab);
+                            // Lưu tất cả thay đổi vào cơ sở dữ liệu
+                            context.SaveChanges();
+                        }
 
-                        // Chuyển sang Tab vừa tạo
-                        tcQLTK.SelectedItem = profileTab;
+                        // Hiển thị kết quả
+                        string ketQua = $"Thêm dữ liệu từ file Excel hoàn tất!\n" +
+                                        $"Số dòng thêm thành công: {soDongThanhCong}\n" +
+                                        $"Số dòng bị lỗi: {soDongBiLoi}";
+
+                        if (soDongBiLoi > 0)
+                        {
+                            // Ghi danh sách lỗi ra file hoặc hiển thị
+                            string fileLog = "LogLoiImport.txt";
+                            File.WriteAllLines(fileLog, danhSachLoi);
+                            ketQua += $"\nChi tiết lỗi được ghi tại: {fileLog}";
+                            System.Diagnostics.Process.Start("notepad.exe", fileLog);
+                        }
+
+                        MessageBox.Show(ketQua, "Thông báo", MessageBoxButton.OK, MessageBoxImage.Information);
                     }
                 }
-                else
+                catch (Exception ex)
                 {
-                    MessageBox.Show("TabControl không được tìm thấy trong UserControl!", "Lỗi", MessageBoxButton.OK, MessageBoxImage.Error);
+                    MessageBox.Show($"Đã xảy ra lỗi khi thêm dữ liệu từ file Excel: {ex.Message}", "Lỗi", MessageBoxButton.OK, MessageBoxImage.Error);
+                }
+            }
+        }
+
+
+
+        private void btnXuatFile_Click(object sender, RoutedEventArgs e)
+        {
+            ExcelPackage.LicenseContext = LicenseContext.NonCommercial;
+
+            // Hiển thị hộp thoại lưu file
+            var saveFileDialog = new Microsoft.Win32.SaveFileDialog
+            {
+                Filter = "Excel Files (*.xlsx)|*.xlsx|All Files (*.*)|*.*",
+                Title = "Lưu file Excel",
+                FileName = "DanhSachTaiKhoan.xlsx"
+            };
+
+            if (saveFileDialog.ShowDialog() == true)
+            {
+                try
+                {
+                    // Tạo file Excel
+                    using (var package = new ExcelPackage())
+                    {
+                        var worksheet = package.Workbook.Worksheets.Add("Danh sách tài khoản");
+
+                        // Thêm tiêu đề cột
+                        worksheet.Cells[1, 1].Value = "Mã Tài Khoản";
+                        worksheet.Cells[1, 2].Value = "Tên Tài Khoản";
+                        worksheet.Cells[1, 3].Value = "Email";
+                        worksheet.Cells[1, 4].Value = "SĐT";
+                        worksheet.Cells[1, 5].Value = "Địa Chỉ";
+                        worksheet.Cells[1, 6].Value = "Ngày Sinh";
+                        worksheet.Cells[1, 7].Value = "Loại Tài Khoản";
+                        worksheet.Cells[1, 8].Value = "Ngày Đăng Ký";
+                        worksheet.Cells[1, 9].Value = "Ngày Hết Hạn";
+
+                        // Định dạng tiêu đề
+                        using (var range = worksheet.Cells[1, 1, 1, 9])
+                        {
+                            range.Style.Font.Bold = true;
+                            range.Style.HorizontalAlignment = OfficeOpenXml.Style.ExcelHorizontalAlignment.Center;
+                            range.Style.Fill.PatternType = OfficeOpenXml.Style.ExcelFillStyle.Solid;
+                            range.Style.Fill.BackgroundColor.SetColor(System.Drawing.Color.LightGray);
+                        }
+
+                        // Thêm dữ liệu từ ObservableCollection
+                        int row = 2;
+                        foreach (var account in Accounts)
+                        {
+                            worksheet.Cells[row, 1].Value = account.MaTaiKhoan;
+                            worksheet.Cells[row, 2].Value = account.TenTaiKhoan;
+                            worksheet.Cells[row, 3].Value = account.Email;
+                            worksheet.Cells[row, 4].Value = account.SDT;
+                            worksheet.Cells[row, 5].Value = account.DiaChi;
+                            worksheet.Cells[row, 6].Value = account.NgaySinh.ToString("dd/MM/yyyy");
+                            worksheet.Cells[row, 7].Value = account.LoaiTaiKhoan;
+                            worksheet.Cells[row, 8].Value = account.NgayDangKy.ToString("dd/MM/yyyy");
+                            worksheet.Cells[row, 9].Value = account.NgayHetHan.ToString("dd/MM/yyyy");
+                            row++;
+                        }
+
+                        // Tự động điều chỉnh kích thước cột
+                        worksheet.Cells[worksheet.Dimension.Address].AutoFitColumns();
+
+                        // Lưu file
+                        var filePath = saveFileDialog.FileName;
+                        package.SaveAs(new FileInfo(filePath));
+
+                        MessageBox.Show("Xuất file Excel thành công!", "Thông báo", MessageBoxButton.OK, MessageBoxImage.Information);
+                    }
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show($"Đã xảy ra lỗi khi xuất file Excel: {ex.Message}", "Lỗi", MessageBoxButton.OK, MessageBoxImage.Error);
                 }
             }
         }
