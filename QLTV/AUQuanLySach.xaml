@@ -86,7 +86,7 @@
                          Style="{StaticResource DataDisplayTextBox}"
                          materialDesign:HintAssist.Hint="Tựa Sách"
                          materialDesign:TextFieldAssist.HasLeadingIcon="True"
-                         materialDesign:TextFieldAssist.LeadingIcon="PoundBoxOutline"
+                         materialDesign:TextFieldAssist.LeadingIcon="NotebookOutline"
                          Margin="{x:Static local:AUQuanLyTuaSach.DisplayElementMargin}"
                          IsReadOnly="True"/>
 
@@ -94,7 +94,7 @@
                             Style="{StaticResource ModernDatePicker}"
                             materialDesign:HintAssist.Hint="Ngày Nhập"
                             materialDesign:TextFieldAssist.HasLeadingIcon="True"
-                            materialDesign:TextFieldAssist.LeadingIcon="PoundBoxOutline"
+                            materialDesign:TextFieldAssist.LeadingIcon="HomeImportOutline"
                             Margin="{x:Static local:AUQuanLyTuaSach.DisplayElementMargin}"
                             IsEnabled="True"
                             Loaded="dpNgayNhap_Loaded"
@@ -109,7 +109,7 @@
                          Style="{StaticResource DataDisplayTextBox}"
                          materialDesign:HintAssist.Hint="Tác Giả"
                          materialDesign:TextFieldAssist.HasLeadingIcon="True"
-                         materialDesign:TextFieldAssist.LeadingIcon="PoundBoxOutline"
+                         materialDesign:TextFieldAssist.LeadingIcon="AccountGroup"
                          Margin="{x:Static local:AUQuanLyTuaSach.DisplayElementMargin}"
                          IsReadOnly="True"/>
 
@@ -117,7 +117,7 @@
                          Style="{StaticResource DataDisplayTextBox}"
                          materialDesign:HintAssist.Hint="Thể Loại"
                          materialDesign:TextFieldAssist.HasLeadingIcon="True"
-                         materialDesign:TextFieldAssist.LeadingIcon="PoundBoxOutline"
+                         materialDesign:TextFieldAssist.LeadingIcon="Shape"
                          Margin="{x:Static local:AUQuanLyTuaSach.DisplayElementMargin}"
                          IsReadOnly="True"/>
 
@@ -125,7 +125,7 @@
                          Style="{StaticResource DataDisplayTextBox}"
                          materialDesign:HintAssist.Hint="Nhà Xuất Bản"
                          materialDesign:TextFieldAssist.HasLeadingIcon="True"
-                         materialDesign:TextFieldAssist.LeadingIcon="PoundBoxOutline"
+                         materialDesign:TextFieldAssist.LeadingIcon="Publish"
                          Margin="{x:Static local:AUQuanLyTuaSach.DisplayElementMargin}"/>
 
                 <materialDesign:PackIcon x:Name="icNhaXuatBanError" Grid.Row="1" Grid.Column="4"
@@ -136,7 +136,7 @@
                          Style="{StaticResource DataDisplayTextBox}"
                          materialDesign:HintAssist.Hint="Năm Xuất Bản"
                          materialDesign:TextFieldAssist.HasLeadingIcon="True"
-                         materialDesign:TextFieldAssist.LeadingIcon="PoundBoxOutline"
+                         materialDesign:TextFieldAssist.LeadingIcon="StoreClock"
                          Margin="{x:Static local:AUQuanLyTuaSach.DisplayElementMargin}"/>
 
                 <materialDesign:PackIcon x:Name="icNamXuatBanError" Grid.Row="2" Grid.Column="0"
@@ -147,7 +147,7 @@
                          Style="{StaticResource DataDisplayTextBox}"
                          materialDesign:HintAssist.Hint="Trị Giá"
                          materialDesign:TextFieldAssist.HasLeadingIcon="True"
-                         materialDesign:TextFieldAssist.LeadingIcon="PoundBoxOutline"
+                         materialDesign:TextFieldAssist.LeadingIcon="Cash"
                          Margin="{x:Static local:AUQuanLyTuaSach.DisplayElementMargin}"/>
 
                 <materialDesign:PackIcon x:Name="icTriGiaError" Grid.Row="2" Grid.Column="2"
@@ -158,7 +158,7 @@
                          Style="{StaticResource ModernComboBox}"
                          materialDesign:HintAssist.Hint="Tình Trạng"
                          materialDesign:TextFieldAssist.HasLeadingIcon="True"
-                         materialDesign:TextFieldAssist.LeadingIcon="PoundBoxOutline"
+                         materialDesign:TextFieldAssist.LeadingIcon="ListStatus"
                          Margin="{x:Static local:AUQuanLyTuaSach.DisplayElementMargin}"
                          IsEditable="True"/>
 

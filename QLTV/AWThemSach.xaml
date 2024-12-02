@@ -1,12 +1,49 @@
 ﻿<Window x:Class="QLTV.AWThemSach"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:QLTV"
         mc:Ignorable="d"
         Title="Thêm Sách" Height="500" Width="350"
         WindowStartupLocation="CenterScreen">
+    <Window.Resources>
+        <Style x:Key="DataDisplayTextBox" TargetType="TextBox" 
+           BasedOn="{StaticResource MaterialDesignOutlinedTextBox}">
+            <Setter Property="Padding" Value="5.5"/>
+            <Setter Property="Height" Value="Auto"/>
+            <Setter Property="materialDesign:HintAssist.FloatingScale" Value="0.8"/>
+        </Style>
+
+        <Style x:Key="ErrorIcon" TargetType="materialDesign:PackIcon">
+            <Setter Property="Kind" Value="AlertCircleOutline"/>
+            <Setter Property="Width" Value="20"/>
+            <Setter Property="Height" Value="20"/>
+            <Setter Property="HorizontalAlignment" Value="Right"/>
+            <Setter Property="VerticalAlignment" Value="Center"/>
+            <Setter Property="Foreground" Value="Red"/>
+            <Setter Property="Background" Value="White"/>
+            <Setter Property="Visibility" Value="Collapsed"/>
+            <Setter Property="ToolTipService.InitialShowDelay" Value="0"/>
+            <Setter Property="Margin" Value="{x:Static local:AUQuanLyTuaSach.ErrorIconMargin}"/>
+        </Style>
+
+        <Style x:Key="ModernComboBox" TargetType="ComboBox" 
+           BasedOn="{StaticResource MaterialDesignOutlinedComboBox}">
+            <Setter Property="Margin" Value="1"/>
+            <Setter Property="materialDesign:HintAssist.FloatingScale" Value="0.8"/>
+            <Setter Property="Padding" Value="8"/>
+        </Style>
+
+        <Style x:Key="ModernDatePicker" TargetType="DatePicker" 
+           BasedOn="{StaticResource MaterialDesignOutlinedDatePicker}">
+            <Setter Property="Margin" Value="1"/>
+            <Setter Property="materialDesign:HintAssist.FloatingScale" Value="0.8"/>
+            <Setter Property="Padding" Value="7.5"/>
+        </Style>
+    </Window.Resources>
+    
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="2*"/>
@@ -17,27 +54,66 @@
         <TextBlock Text="Thêm Sách" Grid.Row="0" FontSize="24"
                    FontWeight="Bold" HorizontalAlignment="Center"
                    VerticalAlignment="Center"/>
+        
         <StackPanel Orientation="Vertical" Grid.Row="1">
-            <TextBlock Text="Tựa Sách" Margin="10, 0, 10, 0"/>
             <ComboBox x:Name="cbbTuaSach" 
+                      Style="{StaticResource ModernComboBox}"
+                      materialDesign:HintAssist.Hint="Tựa Sách"
+                      materialDesign:TextFieldAssist.HasLeadingIcon="True"
+                      materialDesign:TextFieldAssist.LeadingIcon="NotebookOutline"
                       IsEditable="True" 
-                      Margin="10, 0, 10, 0"
+                      Margin="{x:Static local:AWThemTuaSach.DisplayElementMargin}"
                       IsTextSearchEnabled="False"
                       SelectedValue="{x:Null}"
-                      IsSynchronizedWithCurrentItem="False"/>
-            <TextBlock Text="Nhà Xuất Bản" Margin="10, 0, 10, 0"/>
-            <TextBox x:Name="tbxNhaXuatBan" Margin="10, 0, 10, 0"/>
-            <TextBlock Text="Năm Xuất Bản" Margin="10, 0, 10, 0"/>
-            <TextBox x:Name="tbxNamXuatBan" Margin="10, 0, 10, 0"/>
-            <TextBlock Text="Ngày Nhập" Margin="10, 0, 10, 0"/>
-            <DatePicker x:Name="dpNgayNhap" Margin="10, 0, 10, 0"
+                      IsSynchronizedWithCurrentItem="False"
+                      materialDesign:TextFieldAssist.HasClearButton="True"/>
+
+            <TextBox x:Name="tbxNhaXuatBan"
+                     Style="{StaticResource DataDisplayTextBox}"
+                     materialDesign:HintAssist.Hint="Nhà Xuất Bản"
+                     materialDesign:TextFieldAssist.HasLeadingIcon="True"
+                     materialDesign:TextFieldAssist.LeadingIcon="Publish"
+                     Margin="{x:Static local:AWThemTuaSach.DisplayElementMargin}"/>
+
+            <TextBox x:Name="tbxNamXuatBan"
+                     Style="{StaticResource DataDisplayTextBox}"
+                     materialDesign:HintAssist.Hint="Năm Xuất Bản"
+                     materialDesign:TextFieldAssist.HasLeadingIcon="True"
+                     materialDesign:TextFieldAssist.LeadingIcon="StoreClock"
+                     Margin="{x:Static local:AWThemTuaSach.DisplayElementMargin}"/>
+
+            <DatePicker x:Name="dpNgayNhap"
+                        Style="{StaticResource ModernDatePicker}"
+                        materialDesign:HintAssist.Hint="Ngày Nhập"
+                        materialDesign:TextFieldAssist.HasLeadingIcon="True"
+                        materialDesign:TextFieldAssist.LeadingIcon="HomeImportOutline"
+                        Margin="{x:Static local:AWThemTuaSach.DisplayElementMargin}"
+                        IsEnabled="True"
+                        Loaded="dpNgayNhap_Loaded"
+                        FirstDayOfWeek="Monday"
                         Language="vi-VN"/>
-            <TextBlock Text="Trị Giá" Margin="10, 0, 10, 0"/>
-            <TextBox x:Name="tbxTriGia" Margin="10, 0, 10, 0"/>
-            <TextBlock Text="Tình Trạng" Margin="10, 0, 10, 0"/>
-            <ComboBox x:Name="cbbTinhTrang" Margin="10, 0, 10, 0"/>
-            <TextBlock Text="Số Lượng" Margin="10, 0, 10, 0"/>
-            <TextBox x:Name="tbxSoLuong" Margin="10, 0, 10, 0" Text="1"/>
+
+            <TextBox x:Name="tbxTriGia"
+                     Style="{StaticResource DataDisplayTextBox}"
+                     materialDesign:HintAssist.Hint="Trị Giá"
+                     materialDesign:TextFieldAssist.HasLeadingIcon="True"
+                     materialDesign:TextFieldAssist.LeadingIcon="Cash"
+                     Margin="{x:Static local:AWThemTuaSach.DisplayElementMargin}"/>
+
+            <ComboBox x:Name="cbbTinhTrang"
+                      Style="{StaticResource ModernComboBox}"
+                      materialDesign:HintAssist.Hint="Tình Trạng"
+                      materialDesign:TextFieldAssist.HasLeadingIcon="True"
+                      materialDesign:TextFieldAssist.LeadingIcon="ListStatus"
+                      Margin="{x:Static local:AWThemTuaSach.DisplayElementMargin}"
+                      IsEditable="True"/>
+
+            <TextBox x:Name="tbxSoLuong"
+                     Style="{StaticResource DataDisplayTextBox}"
+                     materialDesign:HintAssist.Hint="Số Lượng"
+                     materialDesign:TextFieldAssist.HasLeadingIcon="True"
+                     materialDesign:TextFieldAssist.LeadingIcon="AlphaNBox"
+                     Margin="{x:Static local:AWThemTuaSach.DisplayElementMargin}"/>
         </StackPanel>
         <Button x:Name="btnThem" Grid.Row="2" Content="Thêm" Margin="0, 5, 0, 5"
                 HorizontalAlignment="Center" VerticalAlignment="Center" Click="btnThem_Click"/>

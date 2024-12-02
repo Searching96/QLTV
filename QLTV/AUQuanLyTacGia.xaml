@@ -84,7 +84,7 @@
                          Style="{StaticResource DataDisplayTextBox}"
                          materialDesign:HintAssist.Hint="Tên Tác Giả"
                          materialDesign:TextFieldAssist.HasLeadingIcon="True"
-                         materialDesign:TextFieldAssist.LeadingIcon="PoundBoxOutline"
+                         materialDesign:TextFieldAssist.LeadingIcon="AccountEdit"
                          Margin="{x:Static local:AUQuanLyTuaSach.DisplayElementMargin}"
                          TextChanged="tbxTenTacGia_TextChanged"/>
 
@@ -96,7 +96,7 @@
                          Style="{StaticResource DataDisplayTextBox}"
                          materialDesign:HintAssist.Hint="Năm Sinh"
                          materialDesign:TextFieldAssist.HasLeadingIcon="True"
-                         materialDesign:TextFieldAssist.LeadingIcon="PoundBoxOutline"
+                         materialDesign:TextFieldAssist.LeadingIcon="Cake"
                          Margin="{x:Static local:AUQuanLyTuaSach.DisplayElementMargin}"
                          TextChanged="tbxNamSinh_TextChanged"/>
 
@@ -108,7 +108,7 @@
                          Style="{StaticResource DataDisplayTextBox}"
                          materialDesign:HintAssist.Hint="Quốc Tịch"
                          materialDesign:TextFieldAssist.HasLeadingIcon="True"
-                         materialDesign:TextFieldAssist.LeadingIcon="PoundBoxOutline"
+                         materialDesign:TextFieldAssist.LeadingIcon="Earth"
                          Margin="{x:Static local:AUQuanLyTuaSach.DisplayElementMargin}"
                          TextChanged="tbxQuocTich_TextChanged"/>
 

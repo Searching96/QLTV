@@ -20,6 +20,9 @@ namespace QLTV
     /// </summary>
     public partial class AWThemTuaSach : Window
     {
+        public static readonly Thickness DisplayElementMargin = new Thickness(10, 0, 10, 10);
+        public static readonly Thickness ErrorIconMargin = new Thickness(10, 0, 15, 10);
+
         public AWThemTuaSach()
         {
             InitializeComponent();

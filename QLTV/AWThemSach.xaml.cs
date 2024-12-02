@@ -147,5 +147,10 @@ namespace QLTV
             this.DialogResult = true;
             this.Close();
         }
+
+        private void dpNgayNhap_Loaded(object sender, RoutedEventArgs e)
+        {
+
+        }
     }
 }

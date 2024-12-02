@@ -1,27 +1,43 @@
 ﻿<Window x:Class="QLTV.AWChonTacGia"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:QLTV"
         mc:Ignorable="d"
-        Title="ADWDChonTacGia" Height="450" Width="400"
+        Title="ADWDChonTacGia" Height="500" Width="400"
         WindowStartupLocation="CenterScreen">
+    <Window.Resources>
+        <Style x:Key="DataDisplayTextBox" TargetType="TextBox" 
+           BasedOn="{StaticResource MaterialDesignOutlinedTextBox}">
+            <Setter Property="Padding" Value="5.5"/>
+            <Setter Property="Height" Value="Auto"/>
+            <Setter Property="materialDesign:HintAssist.FloatingScale" Value="0.8"/>
+        </Style>
+    </Window.Resources>
+    
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="10*"/>
-            <RowDefinition Height="5*"/>
-            <RowDefinition Height="70*"/>
             <RowDefinition Height="10*"/>
+            <RowDefinition Height="70*"/>
+            <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
         <TextBlock Text="Chọn Tác Giả" Grid.Row="0" FontWeight="Bold" 
                    FontSize="16" Margin="10" HorizontalAlignment="Center"/>
-        <StackPanel Grid.Row="1" Orientation="Horizontal">
-            <TextBlock Text="Tìm tác giả: "/>
-            <TextBox x:Name="tbxTimKiem" Width="200" TextChanged="tbxTimKiem_TextChanged"/>
-        </StackPanel>
+
+        <TextBox x:Name="tbxTimKiem" Grid.Row="1"
+                 Style="{StaticResource DataDisplayTextBox}"
+                 materialDesign:HintAssist.Hint="Tên Tác Giả"
+                 materialDesign:TextFieldAssist.HasLeadingIcon="True"
+                 materialDesign:TextFieldAssist.LeadingIcon="Magnify"
+                 Margin="10, 0, 150, 0"
+                 TextChanged="tbxTimKiem_TextChanged"
+                 VerticalAlignment="Center"/>
+        
         <ListBox x:Name="lbTacGia" SelectionMode="Multiple" Grid.Row="2"
-                 Margin="0, 10, 0, 0" SelectionChanged="lbTacGia_SelectionChanged"
+                 Margin="10, 10, 10, 0" SelectionChanged="lbTacGia_SelectionChanged"
                  ToolTipService.InitialShowDelay="500"
                  ToolTipService.BetweenShowDelay="0">
             <ListBox.ItemTemplate>
@@ -42,6 +58,6 @@
             </ListBox.ItemTemplate>
         </ListBox>
         <Button x:Name="btnOK" Content="OK" Click="btnOK_Click" Grid.Row="3"
-                Margin="5" Width="100" Height="20" HorizontalAlignment="Center"/>
+                Margin="5" Width="85" HorizontalAlignment="Center"/>
     </Grid>
 </Window>

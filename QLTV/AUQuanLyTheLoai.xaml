@@ -86,7 +86,7 @@
                          Style="{StaticResource DataDisplayTextBox}"
                          materialDesign:HintAssist.Hint="Tên Thể Loại"
                          materialDesign:TextFieldAssist.HasLeadingIcon="True"
-                         materialDesign:TextFieldAssist.LeadingIcon="PoundBoxOutline"
+                         materialDesign:TextFieldAssist.LeadingIcon="Shape"
                          Margin="{x:Static local:AUQuanLyTuaSach.DisplayElementMargin}"
                          TextChanged="tbxTenTheLoai_TextChanged"/>
 
@@ -98,7 +98,7 @@
                          Style="{StaticResource DataDisplayTextBox}"
                          materialDesign:HintAssist.Hint="Mô Tả"
                          materialDesign:TextFieldAssist.HasLeadingIcon="True"
-                         materialDesign:TextFieldAssist.LeadingIcon="PoundBoxOutline"
+                         materialDesign:TextFieldAssist.LeadingIcon="InvoiceTextOutline"
                          Margin="{x:Static local:AUQuanLyTuaSach.DisplayElementMargin}"
                          TextChanged="tbxMoTa_TextChanged"/>
 
