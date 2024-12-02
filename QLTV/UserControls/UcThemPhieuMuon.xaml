@@ -34,13 +34,22 @@
                       SelectedValuePath="DocGia.ID"
                       IsEditable="True"
                       Style="{StaticResource ModernComboBox}"
-                      IsTextSearchEnabled="False"
+                      IsTextSearchEnabled="True"
                       VerticalAlignment="Center"
-                      SelectedValue="{x:Null}"
                       IsSynchronizedWithCurrentItem="False"
                       Width="300" HorizontalAlignment="Left"
                       materialDesign:HintAssist.Hint="Chọn độc giả"
-                      materialDesign:HintAssist.FloatingScale="0.8"/>
+                      materialDesign:HintAssist.FloatingScale="0.8">
+                <!--<ComboBox.SelectedValue>
+                    <Binding Path="SelectedDocGia" 
+                         UpdateSourceTrigger="PropertyChanged" 
+                         ValidatesOnDataErrors="True">
+                    <Binding.ValidationRules>
+                        <ExceptionValidationRule />
+                    </Binding.ValidationRules>
+                </Binding>
+                </ComboBox.SelectedValue>-->
+            </ComboBox>
             <materialDesign:PackIcon Kind="AlertCircleOutline"
                         Style="{StaticResource Warning}"
                         Grid.Column="1"
@@ -65,7 +74,8 @@
                          Margin="0,0,10,0"/>
                 
                 <ComboBox Grid.Column="1" x:Name="cboSearchType" Width="120" 
-                          SelectedIndex="0">
+                          SelectedIndex="0"
+                          Style="{StaticResource MaterialDesignOutlinedComboBox}">
                     <ComboBoxItem Content="Tất cả"/>
                     <ComboBoxItem Content="Mã sách"/>
                     <ComboBoxItem Content="Tên sách"/>
@@ -89,6 +99,11 @@
                       IsReadOnly="True"
                       VerticalContentAlignment="Center"
                       HorizontalContentAlignment="Center">
+                <DataGrid.CellStyle>
+                    <Style TargetType="DataGridCell">
+                        <Setter Property="VerticalContentAlignment" Value="Center" />
+                    </Style>
+                </DataGrid.CellStyle>
                 <DataGrid.Columns>
                     <DataGridTextColumn Header="Mã sách" Binding="{Binding MaSach}" Width="2*"/>
                     <DataGridTextColumn Header="Tên sách" Binding="{Binding TuaSach}" Width="5*"/>
@@ -118,6 +133,11 @@
                   VerticalContentAlignment="Center"
                   HorizontalContentAlignment="Center"
                   CanUserAddRows="False">
+            <DataGrid.CellStyle>
+                <Style TargetType="DataGridCell">
+                    <Setter Property="VerticalContentAlignment" Value="Center" />
+                </Style>
+            </DataGrid.CellStyle>
             <DataGrid.Columns>
                 <DataGridTextColumn Header="Mã sách" Binding="{Binding MaSach}" IsReadOnly="True" Width="2*"/>
                 <DataGridTextColumn Header="Tên sách" 

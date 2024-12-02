@@ -33,7 +33,8 @@
 
                     <!-- Borrowing DataGrid -->
                     <DataGrid x:Name="dgBorrowings" Grid.Row="1" AutoGenerateColumns="False" 
-                              IsReadOnly="True" SelectionMode="Single" Grid.ColumnSpan="2">
+                              IsReadOnly="True" SelectionMode="Single" Grid.ColumnSpan="2"
+                              SelectionUnit="FullRow">
                         <DataGrid.Columns>
                             <materialDesign:DataGridTextColumn Header="Mã phiếu" Binding="{Binding phieuMuon.MaPhieuMuon}"/>
                             <materialDesign:DataGridTextColumn Header="Độc giả" Binding="{Binding phieuMuon.IDDocGiaNavigation.IDTaiKhoanNavigation.TenTaiKhoan}"/>
@@ -96,7 +97,8 @@
 
                     <!-- Returning DataGrid -->
                     <DataGrid x:Name="dgReturns" Grid.Row="1" AutoGenerateColumns="False" 
-                              IsReadOnly="True" SelectionMode="Single">
+                              IsReadOnly="True" SelectionMode="Single"
+                              SelectionUnit="FullRow">
                         <DataGrid.Columns>
                             <DataGridTextColumn Header="Mã phiếu" Binding="{Binding phieuTra.MaPhieuTra}"/>
                             <DataGridTextColumn Header="Độc giả" Binding="{Binding DocGia}"/>

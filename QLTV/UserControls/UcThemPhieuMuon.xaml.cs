@@ -262,6 +262,7 @@ namespace QLTV.UserControls
 
                 var docGia = new ObservableCollection<ReaderDisplayItem>(await _context.DOCGIA
                     .Include(d => d.IDTaiKhoanNavigation)
+                    .Include(d => d.IDLoaiDocGiaNavigation)
                     .Select(s => new ReaderDisplayItem
                     {
                         DocGia = s,
@@ -295,7 +296,6 @@ namespace QLTV.UserControls
                         cboDocGia.IsDropDownOpen = true;
                     };
                 };
-
             }
             catch (Exception ex)
             {
