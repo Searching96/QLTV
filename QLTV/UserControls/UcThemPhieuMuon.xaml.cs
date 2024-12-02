@@ -11,14 +11,46 @@ using System.Text.RegularExpressions;
 using System.Windows.Data;
 using System.Globalization;
 using System.Text;
+using System.Windows.Media;
 
 namespace QLTV.UserControls
 {
-    public partial class UcThemPhieuMuon : UserControl
+    public class MaxBorrowDaysValidationRule : ValidationRule
+    {
+        public override ValidationResult Validate(object value, CultureInfo cultureInfo)
+        {
+            // Explicitly get the text from the TextBox
+            string textValue = value.Target is TextBox textBox
+                ? textBox.Text
+                : value?.ToString();
+
+            if (int.TryParse(textValue, out int customBorrowDays))
+            {
+                DependencyObject currentObj = value as DependencyObject;
+                while (currentObj != null)
+                {
+                    if (currentObj is DataGridRow parent)
+                    {
+                        var book = (SACH)parent.Item;
+                        if (customBorrowDays > book.IDTuaSachNavigation.HanMuonToiDa * 7)
+                        {
+                            return new ValidationResult(false, $"Số ngày mượn không được vượt quá {book.IDTuaSachNavigation.HanMuonToiDa * 7}.");
+                        }
+                        break;
+                    }
+                    currentObj = VisualTreeHelper.GetParent(currentObj);
+                }
+            }
+            return ValidationResult.ValidResult;
+        }
+    }
+
+        public partial class UcThemPhieuMuon : UserControl
     {
         private readonly QLTVContext _context;
         private ObservableCollection<SACH> _allBooks;
         private ObservableCollection<BookDisplayItem> dsSach;
+        private IEnumerable<BookDisplayItem> filteredBooks;
         private ObservableCollection<BookWithCustomDate> _selectedBooks;
         private CollectionViewSource viewSource;
 
@@ -118,6 +150,7 @@ namespace QLTV.UserControls
             public string TuaSach { get; set; }
             public string DSTacGia { get; set; }
             public string DSTheLoai { get; set; }
+            public int HanMuonToiDa { get; set; }
         }
 
         public UcThemPhieuMuon()
@@ -163,7 +196,8 @@ namespace QLTV.UserControls
                     DSTacGia = string.Join(", ", s.IDTuaSachNavigation.TUASACH_TACGIA
                         .Select(ts_tg => ts_tg.IDTacGiaNavigation.TenTacGia)),
                     DSTheLoai = string.Join(", ", s.IDTuaSachNavigation.TUASACH_THELOAI
-                        .Select(ts_tl => ts_tl.IDTheLoaiNavigation.TenTheLoai))
+                        .Select(ts_tl => ts_tl.IDTheLoaiNavigation.TenTheLoai)),
+                    HanMuonToiDa = s.IDTuaSachNavigation.HanMuonToiDa
                 }).ToList());
 
                 var docGia = await _context.DOCGIA
@@ -202,51 +236,51 @@ namespace QLTV.UserControls
             }
         }
 
-        private void txtSearchBook_TextChanged(object sender, TextChangedEventArgs e)
+        private void BookSearch(string search)
         {
             if (_allBooks == null) return;
 
-            var searchText = txtSearchBook.Text.Trim().ToLower();
+            var searchText = search.Trim().ToLower();
             var searchType = ((ComboBoxItem)cboSearchType.SelectedItem).Content.ToString();
 
-            IEnumerable<SACH> filteredBooks = _allBooks;
+            filteredBooks = dsSach;
 
             if (!string.IsNullOrEmpty(searchText))
             {
                 switch (searchType)
                 {
                     case "Mã sách":
-                        filteredBooks = filteredBooks.Where(s => 
-                            s.MaSach.ToLower().Contains(searchText));
+                        filteredBooks = filteredBooks.Where(s =>
+                            s.Book.MaSach.ToLower().Contains(searchText));
                         break;
 
                     case "Tên sách":
-                        filteredBooks = filteredBooks.Where(s => 
-                            s.IDTuaSachNavigation.TenTuaSach.ToLower().Contains(searchText));
+                        filteredBooks = filteredBooks.Where(s =>
+                            s.Book.IDTuaSachNavigation.TenTuaSach.ToLower().Contains(searchText));
                         break;
 
                     case "Thể loại":
                         filteredBooks = filteredBooks.Where(s =>
-                            s.IDTuaSachNavigation.TUASACH_THELOAI
+                            s.Book.IDTuaSachNavigation.TUASACH_THELOAI
                                 .Select(ts_tl => ts_tl.IDTheLoaiNavigation.TenTheLoai.ToLower())
                                 .Any(tenTheLoai => tenTheLoai.Contains(searchText)));
                         break;
 
                     case "Tác giả":
                         filteredBooks = filteredBooks.Where(s =>
-                            s.IDTuaSachNavigation.TUASACH_TACGIA
+                            s.Book.IDTuaSachNavigation.TUASACH_TACGIA
                                 .Select(ts_tg => ts_tg.IDTacGiaNavigation.TenTacGia.ToLower())
                                 .Any(tenTacGia => tenTacGia.Contains(searchText)));
                         break;
 
                     default: // "Tất cả"
                         filteredBooks = filteredBooks.Where(s =>
-                            s.MaSach.ToLower().Contains(searchText) ||
-                            s.IDTuaSachNavigation.TenTuaSach.ToLower().Contains(searchText) ||
-                            s.IDTuaSachNavigation.TUASACH_THELOAI
+                            s.Book.MaSach.ToLower().Contains(searchText) ||
+                            s.Book.IDTuaSachNavigation.TenTuaSach.ToLower().Contains(searchText) ||
+                            s.Book.IDTuaSachNavigation.TUASACH_THELOAI
                                 .Select(ts_tl => ts_tl.IDTheLoaiNavigation.TenTheLoai.ToLower())
                                 .Any(tenTheLoai => tenTheLoai.Contains(searchText)) ||
-                            s.IDTuaSachNavigation.TUASACH_TACGIA
+                            s.Book.IDTuaSachNavigation.TUASACH_TACGIA
                                 .Select(ts_tg => ts_tg.IDTacGiaNavigation.TenTacGia.ToLower())
                                 .Any(tenTacGia => tenTacGia.Contains(searchText)));
                         break;
@@ -254,16 +288,13 @@ namespace QLTV.UserControls
             }
 
             // Convert filtered books to display format using the concrete type
-            var displayBooks = filteredBooks.Select(s => new BookDisplayItem
-            {
-                Book = s,
-                MaSach = s.MaSach,
-                TuaSach = s.IDTuaSachNavigation.TenTuaSach,
-                DSTheLoai = string.Join(", ", s.IDTuaSachNavigation.TUASACH_THELOAI
-                    .Select(ts_tl => ts_tl.IDTheLoaiNavigation.TenTheLoai))
-            }).ToList();
 
-            dgAvailableBooks.ItemsSource = displayBooks;
+            dgAvailableBooks.ItemsSource = filteredBooks;
+        }
+
+        private void txtSearchBook_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            BookSearch(txtSearchBook.Text);
         }
 
         private void btnSelectBook_Click(object sender, RoutedEventArgs e)
@@ -279,6 +310,8 @@ namespace QLTV.UserControls
                     CustomBorrowDays = book.Book.IDTuaSachNavigation.HanMuonToiDa
                 };
                 dsSach.Remove(book);
+                _allBooks.Remove(book.Book);
+                BookSearch(txtSearchBook.Text);
                 _selectedBooks.Add(bookWithDate);
             }
         }
@@ -286,10 +319,12 @@ namespace QLTV.UserControls
         private void btnRemoveBook_Click(object sender, RoutedEventArgs e)
         {
             var bookWithDate = ((Button)sender).DataContext as BookWithCustomDate;
-            if (bookWithDate != null)
+            if (bookWithDate != null && bookWithDate.Book != null)
             {
                 _selectedBooks.Remove(bookWithDate);
                 dsSach.Add(bookWithDate.BookItem);
+                BookSearch(txtSearchBook.Text);
+                _allBooks.Add(bookWithDate.BookItem.Book);
             }
         }
 

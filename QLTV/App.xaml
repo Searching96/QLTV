@@ -7,37 +7,10 @@
     <Application.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
-            <materialDesign:BundledTheme BaseTheme="Light" PrimaryColor="LightBlue" SecondaryColor="Indigo" />
+                <materialDesign:BundledTheme BaseTheme="Light" PrimaryColor="LightBlue" SecondaryColor="Indigo" />
 
-            <ResourceDictionary Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesign2.Defaults.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesign2.Defaults.xaml" />
             </ResourceDictionary.MergedDictionaries>
-        
-
-        <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter"/>
-        
-        <Style x:Key="TextBoxWithPlaceholder" TargetType="{x:Type TextBox}">
-            <Setter Property="Template">
-                <Setter.Value>
-                    <ControlTemplate TargetType="{x:Type TextBox}">
-                        <Grid>
-                            <TextBox Text="{Binding Path=Text, 
-                                 RelativeSource={RelativeSource TemplatedParent}, 
-                                 Mode=TwoWay,
-                                 UpdateSourceTrigger=PropertyChanged}"
-                                 Background="Transparent"
-                                 Panel.ZIndex="2"/>
-                            <TextBlock Text="{TemplateBinding Tag}" 
-                                     Foreground="Gray"
-                                     Margin="5,2,0,0"
-                                     Visibility="{Binding Path=Text.IsEmpty, 
-                                                 RelativeSource={RelativeSource TemplatedParent}, 
-                                                 Converter={StaticResource BooleanToVisibilityConverter}}">
-                            </TextBlock>
-                        </Grid>
-                    </ControlTemplate>
-                </Setter.Value>
-            </Setter>
-        </Style>
         </ResourceDictionary>
     </Application.Resources>
 </Application>

@@ -24,8 +24,9 @@
                     <!-- Search and Add Section -->
                     <StackPanel Grid.Row="0" Orientation="Horizontal" Margin="0,0,0,10" Grid.ColumnSpan="2">
                         <TextBox x:Name="txtSearchBorrow" Width="200" Margin="0,0,10,0" 
-                                 Style="{StaticResource TextBoxWithPlaceholder}"
-                                 Tag="Tìm kiếm phiếu mượn"
+                                 Style="{StaticResource MaterialDesignOutlinedTextBox}"
+                                 materialDesign:HintAssist.Hint="Tìm kiếm phiếu mượn"
+                                 materialDesign:HintAssist.FloatingScale="1"
                                  TextChanged="txtSearchBorrow_TextChanged"/>
                         <Button x:Name="btnAddBorrow" Content="Thêm phiếu mượn" Click="btnAddBorrow_Click"/>
                     </StackPanel>
@@ -86,9 +87,10 @@
                     <!-- Search and Add Section -->
                     <StackPanel Grid.Row="0" Orientation="Horizontal" Margin="0,0,0,10">
                         <TextBox x:Name="txtSearchReturn" Width="200" Margin="0,0,10,0" 
-                                 Style="{StaticResource TextBoxWithPlaceholder}"
-                                 Tag="Tìm kiếm phiếu trả..."
-                                 TextChanged="txtSearchReturn_TextChanged"/>
+                                 Style="{StaticResource MaterialDesignOutlinedTextBox}"
+                                 materialDesign:HintAssist.Hint="Tìm kiếm phiếu trả..."
+                                 TextChanged="txtSearchReturn_TextChanged"
+                                 materialDesign:HintAssist.FloatingScale="1"/>
                         <Button x:Name="btnAddReturn" Content="Thêm phiếu trả" Click="btnAddReturn_Click"/>
                     </StackPanel>
 

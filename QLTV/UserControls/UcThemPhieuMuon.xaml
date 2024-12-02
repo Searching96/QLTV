@@ -44,8 +44,8 @@
                 </Grid.ColumnDefinitions>
                 
                 <TextBox x:Name="txtSearchBook" 
-                         Style="{StaticResource TextBoxWithPlaceholder}"
-                         Tag="Nhập nội dung cần tìm..."
+                         Style="{StaticResource MaterialDesignOutlinedTextBox}"
+                         materialDesign:HintAssist.Hint="Nhập thông tin sách"
                          TextChanged="txtSearchBook_TextChanged"
                          Margin="0,0,10,0"/>
                 
@@ -71,12 +71,15 @@
             <DataGrid Grid.Row="1" x:Name="dgAvailableBooks" 
                       AutoGenerateColumns="False" 
                       SelectionMode="Extended"
-                      IsReadOnly="True">
+                      IsReadOnly="True"
+                      VerticalContentAlignment="Center"
+                      HorizontalContentAlignment="Center">
                 <DataGrid.Columns>
                     <DataGridTextColumn Header="Mã sách" Binding="{Binding MaSach}" Width="2*"/>
                     <DataGridTextColumn Header="Tên sách" Binding="{Binding TuaSach}" Width="5*"/>
                     <DataGridTextColumn Header="Tác giả" Binding="{Binding DSTacGia}" Width="4*"/>
                     <DataGridTextColumn Header="Thể loại" Binding="{Binding DSTheLoai}" Width="4*"/>
+                    <DataGridTextColumn Header="Hạn mượn tối đa (tuần)" Binding="{Binding HanMuonToiDa}" Width="4*"/>
                     <DataGridTemplateColumn Width="2*">
                         <DataGridTemplateColumn.CellTemplate>
                             <DataTemplate>
@@ -96,28 +99,56 @@
         <!-- Selected Books -->
         <DataGrid Grid.Row="5" x:Name="dgSelectedBooks" 
                   AutoGenerateColumns="False" 
-                  Margin="0,0,0,10">
+                  Margin="0,0,0,10"
+                  VerticalContentAlignment="Center"
+                  HorizontalContentAlignment="Center">
             <DataGrid.Columns>
                 <DataGridTextColumn Header="Mã sách" Binding="{Binding MaSach}" IsReadOnly="True" Width="2*"/>
                 <DataGridTextColumn Header="Tên sách" 
                                     Binding="{Binding IDTuaSachNavigation.TenTuaSach}" 
                                     IsReadOnly="True"
-                                    Width="5*"/>
+                                    Width="4*"/>
                 <DataGridTextColumn Header="Tác giả" 
                                     Binding="{Binding DSTacGia}" 
-                                    Width="4*"
+                                    Width="3*"
                                     IsReadOnly="True"/>
                 <DataGridTextColumn Header="Thể loại" 
                                     Binding="{Binding DSTheLoai}" 
                                     IsReadOnly="True"
                                     Width="3*"/>
-                <DataGridTextColumn Header="Số ngày mượn" 
-                                    Binding="{Binding CustomBorrowDays}"
-                                    Width="2*"/>
                 <DataGridTextColumn Header="Hạn trả" 
                                     Binding="{Binding CustomReturnDate, StringFormat=dd/MM/yyyy}" 
                                     IsReadOnly="True"
-                                    Width="2*"/>
+                                    Width="3*"/>
+                <DataGridTemplateColumn Header="Số ngày mượn" Width="2*">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <TextBlock
+                                Text="{Binding CustomBorrowDays}" />
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                    <DataGridTemplateColumn.CellEditingTemplate>
+                        <DataTemplate>
+                            <TextBox
+                                AcceptsReturn="False"
+                                Style="{StaticResource MaterialDesignOutlinedTextBox}"
+                                Foreground="{DynamicResource SecondaryHueMidBrush}"
+                                materialDesign:ValidationAssist.HorizontalAlignment="Right"
+                                Padding="0"
+                                Width="Auto">
+                                <TextBox.Text>
+                                    <Binding Path="CustomBorrowDays" UpdateSourceTrigger="PropertyChanged">
+                                        <Binding.ValidationRules>
+                                            <local:MaxBorrowDaysValidationRule ValidatesOnTargetUpdated="True"
+                                                                               ValidatesOnDataErrors="True"
+                                                                               ValidationStep="UpdatedValue" />
+                                        </Binding.ValidationRules>
+                                    </Binding>
+                                </TextBox.Text>
+                            </TextBox>
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellEditingTemplate>
+                </DataGridTemplateColumn>
                 <DataGridTemplateColumn Width="2*">
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate>
