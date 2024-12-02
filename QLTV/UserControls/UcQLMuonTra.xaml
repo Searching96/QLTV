@@ -126,6 +126,17 @@
                                 </DataGrid>
                             </DataTemplate>
                         </DataGrid.RowDetailsTemplate>
+
+                        <DataGrid.Resources>
+                            <Style TargetType="DataGridRow">
+                                <Setter Property="DetailsVisibility" Value="Collapsed" />
+                                <Style.Triggers>
+                                    <DataTrigger Binding="{Binding IsExpanded, RelativeSource={RelativeSource Self}}" Value="True">
+                                        <Setter Property="DetailsVisibility" Value="Visible" />
+                                    </DataTrigger>
+                                </Style.Triggers>
+                            </Style>
+                        </DataGrid.Resources>
                     </DataGrid>
                 </Grid>
             </TabItem>

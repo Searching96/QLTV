@@ -16,15 +16,22 @@
         </Grid.RowDefinitions>
         <!-- Header -->
         <TextBlock Text="Thêm phiếu trả" FontSize="20" FontWeight="Bold" Margin="0,0,0,10"/>
-        <!-- Borrow Ticket Selection -->
-        <StackPanel Grid.Row="1" Margin="0,0,0,10">
-            <TextBlock Text="Độc giả:" Margin="0,0,0,5"/>
-            <ComboBox x:Name="cboDocGia" 
+        <!-- Reader Selection -->
+        <Grid Grid.Row="1">
+            <ComboBox x:Name="cboDocGia"
                       DisplayMemberPath="IDTaiKhoanNavigation.TenTaiKhoan"
                       SelectedValuePath="ID"
+                      IsEditable="True"
+                      Style="{StaticResource ModernComboBox}"
+                      IsTextSearchEnabled="False"
+                      VerticalAlignment="Center"
+                      SelectedValue="{x:Null}"
+                      IsSynchronizedWithCurrentItem="False"
+                      Width="300" HorizontalAlignment="Left"
                       SelectionChanged="cboDocGia_SelectionChanged"
-                      Width="300" HorizontalAlignment="Left"/>
-        </StackPanel>
+                      materialDesign:HintAssist.Hint="Chọn độc giả"
+                      materialDesign:HintAssist.FloatingScale="0.8" />
+        </Grid>
         <!-- Books List -->
         <Grid Grid.Row="2">
             <Grid.RowDefinitions>

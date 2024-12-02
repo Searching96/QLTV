@@ -22,18 +22,33 @@
         <TextBlock Grid.Row="0" Text="Thêm phiếu mượn" FontSize="20" FontWeight="Bold" Margin="0,0,0,10"/>
 
         <!-- Reader Selection -->
-        <StackPanel Grid.Row="1" Margin="0,0,0,10">
-            <TextBlock Text="Độc giả:" Margin="0,0,0,5"/>
+        <Grid Grid.Row="1" HorizontalAlignment="Left" VerticalAlignment="Center">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="Auto"/>
+            </Grid.ColumnDefinitions>
             <ComboBox x:Name="cboDocGia" 
-                      DisplayMemberPath="IDTaiKhoanNavigation.TenTaiKhoan"
-                      SelectedValuePath="ID"
+                      Grid.Column="0"
+                      Margin="0,0,15,0"
+                      DisplayMemberPath="DocGia.IDTaiKhoanNavigation.TenTaiKhoan"
+                      SelectedValuePath="DocGia.ID"
                       IsEditable="True"
-                      IsTextSearchEnabled="True"
+                      Style="{StaticResource ModernComboBox}"
+                      IsTextSearchEnabled="False"
+                      VerticalAlignment="Center"
                       SelectedValue="{x:Null}"
                       IsSynchronizedWithCurrentItem="False"
-                      Width="300" HorizontalAlignment="Left"/>
-        </StackPanel>
-
+                      Width="300" HorizontalAlignment="Left"
+                      materialDesign:HintAssist.Hint="Chọn độc giả"
+                      materialDesign:HintAssist.FloatingScale="0.8"/>
+            <materialDesign:PackIcon Kind="AlertCircleOutline"
+                        Style="{StaticResource Warning}"
+                        Grid.Column="1"
+                        HorizontalAlignment="Left" VerticalAlignment="Center"
+                        Visibility="Collapsed"
+                        Foreground="Red" Background="Transparent" Width="20" Height="20"
+                        ToolTipService.InitialShowDelay="0" />
+        </Grid>
         <!-- Search Section -->
         <StackPanel Grid.Row="2" Margin="0,0,0,10">
             <TextBlock Text="Tìm kiếm sách:" Margin="0,0,0,5"/>
@@ -101,7 +116,8 @@
                   AutoGenerateColumns="False" 
                   Margin="0,0,0,10"
                   VerticalContentAlignment="Center"
-                  HorizontalContentAlignment="Center">
+                  HorizontalContentAlignment="Center"
+                  CanUserAddRows="False">
             <DataGrid.Columns>
                 <DataGridTextColumn Header="Mã sách" Binding="{Binding MaSach}" IsReadOnly="True" Width="2*"/>
                 <DataGridTextColumn Header="Tên sách" 
@@ -123,29 +139,38 @@
                 <DataGridTemplateColumn Header="Số ngày mượn" Width="2*">
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate>
-                            <TextBlock
+                            <Grid>
+                                <TextBlock
                                 Text="{Binding CustomBorrowDays}" />
+                                <materialDesign:PackIcon Kind="AlertCircleOutline" Grid.Row="0" Grid.Column="2"
+                                    Style="{StaticResource Warning}"
+                                    HorizontalAlignment="Right" VerticalAlignment="Center"
+                                    Foreground="Red" Background="White" Width="20" Height="20"
+                                    ToolTipService.InitialShowDelay="0"
+                            />
+                            </Grid>
                         </DataTemplate>
                     </DataGridTemplateColumn.CellTemplate>
                     <DataGridTemplateColumn.CellEditingTemplate>
                         <DataTemplate>
-                            <TextBox
-                                AcceptsReturn="False"
-                                Style="{StaticResource MaterialDesignOutlinedTextBox}"
-                                Foreground="{DynamicResource SecondaryHueMidBrush}"
-                                materialDesign:ValidationAssist.HorizontalAlignment="Right"
-                                Padding="0"
-                                Width="Auto">
-                                <TextBox.Text>
-                                    <Binding Path="CustomBorrowDays" UpdateSourceTrigger="PropertyChanged">
-                                        <Binding.ValidationRules>
-                                            <local:MaxBorrowDaysValidationRule ValidatesOnTargetUpdated="True"
-                                                                               ValidatesOnDataErrors="True"
-                                                                               ValidationStep="UpdatedValue" />
-                                        </Binding.ValidationRules>
-                                    </Binding>
-                                </TextBox.Text>
-                            </TextBox>
+
+                            <Grid>
+                                <TextBox
+                                    AcceptsReturn="False"
+                                    Style="{StaticResource MaterialDesignOutlinedTextBox}"
+                                    Foreground="{DynamicResource SecondaryHueMidBrush}"
+                                    materialDesign:ValidationAssist.HorizontalAlignment="Right"
+                                    Padding="0"
+                                    Width="Auto"
+                                    Text = "{Binding CustomBorrowDays, UpdateSourceTrigger=PropertyChanged, ValidatesOnDataErrors=True}"
+                                />
+                                <materialDesign:PackIcon Kind="AlertCircleOutline"
+                                    Style="{StaticResource Warning}"
+                                    HorizontalAlignment="Right" VerticalAlignment="Center"
+                                    Foreground="Red" Background="White" Width="20" Height="20"
+                                    ToolTipService.InitialShowDelay="0"
+                            />
+                            </Grid>
                         </DataTemplate>
                     </DataGridTemplateColumn.CellEditingTemplate>
                 </DataGridTemplateColumn>

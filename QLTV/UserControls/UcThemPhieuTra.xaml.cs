@@ -6,6 +6,9 @@ using System.Windows;
 using System.Windows.Controls;
 using Microsoft.EntityFrameworkCore;
 using System.Dynamic;
+using System.Windows.Data;
+using System.Globalization;
+using System.Text;
 
 namespace QLTV.UserControls
 {
@@ -27,27 +30,22 @@ namespace QLTV.UserControls
             LoadData();
         }
 
+        private string ConvertToUnsigned(string text)
+        {
+            if (string.IsNullOrEmpty(text))
+                return text;
+
+            return new string(
+                text.Normalize(NormalizationForm.FormD)
+                    .Where(c => CharUnicodeInfo.GetUnicodeCategory(c) != UnicodeCategory.NonSpacingMark)
+                    .ToArray()
+            ).Normalize(NormalizationForm.FormC);
+        }
+
         private async void LoadData()
         {
             try
             {
-                //var pendingBorrows = await _context.PHIEUMUON
-                //    .Include(p => p.IDDocGiaNavigation)
-                //        .ThenInclude(d => d.IDTaiKhoanNavigation)
-                //    .Include(p => p.CTPHIEUMUON)
-                //        .ThenInclude(ct => ct.IDSachNavigation)
-                //            .ThenInclude(s => s.IDTuaSachNavigation)
-                //                .ThenInclude(ts => ts.TUASACH_THELOAI)
-                //                    .ThenInclude(ts_tl => ts_tl.IDTheLoaiNavigation)
-                //    .Include(p => p.CTPHIEUTRA)
-                //    .Where(p => !p.IsDeleted && p.IsPending)
-
-                //    .ToListAsync();
-
-                //var availableBorrows = pendingBorrows
-                //    .Where(p => p.CTPHIEUMUON.Any(ct => !p.CTPHIEUTRA.Any(ptr => ptr.IDSach == ct.IDSach)))
-                //    .ToList();
-
                 //Load tất cả độc giả và các phiếu mượn của độc giả đó
 
                 var pendingBorrows = await _context.DOCGIA
@@ -66,7 +64,31 @@ namespace QLTV.UserControls
                     .Where(p => p.PHIEUMUON.Any(p => p.CTPHIEUMUON.Any(ct => !p.CTPHIEUTRA.Any(ptr => ct.IDPhieuMuon == ptr.IDPhieuMuon && ptr.IDSach == ct.IDSach))))
                     .ToList();
 
-                cboDocGia.ItemsSource = availableBorrows;
+                var viewSource = new CollectionViewSource();
+                viewSource.Source = availableBorrows;
+                cboDocGia.ItemsSource = viewSource.View;
+
+                var textBox = cboDocGia.Template.FindName("PART_EditableTextBox", cboDocGia) as TextBox;
+                if (textBox != null)
+                {
+                    textBox.TextChanged += (sender, args) =>
+                    {
+                        var searchText = ConvertToUnsigned(textBox.Text);
+                        viewSource.View.Filter = item =>
+                        {
+                            if (string.IsNullOrEmpty(searchText))
+                                return true;
+                            var docGia = item as DOCGIA;
+                            if (docGia != null)
+                            {
+                                var itemText = ConvertToUnsigned(docGia.IDTaiKhoanNavigation.TenTaiKhoan.ToString());
+                                return itemText.Contains(searchText, StringComparison.OrdinalIgnoreCase);
+                            }
+                            return false;
+                        };
+                        cboDocGia.IsDropDownOpen = true;
+                    };
+                };
             }
             catch (Exception ex)
             {

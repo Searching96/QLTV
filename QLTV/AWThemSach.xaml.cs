@@ -45,40 +45,40 @@ namespace QLTV
             ).Normalize(NormalizationForm.FormC);
         }
 
-        private void LoadTuaSach()
-        {
-            using (var context = new QLTVContext())
+            private void LoadTuaSach()
             {
-                var dsTuaSach = context.TUASACH
-                    .Where(ts => !ts.IsDeleted)
-                    .Select(ts => ts.TenTuaSach)
-                    .ToList();
-
-                viewSource = new CollectionViewSource();
-                viewSource.Source = dsTuaSach;
-                cbbTuaSach.ItemsSource = viewSource.View;
-
-                cbbTuaSach.Loaded += (s, e) =>
+                using (var context = new QLTVContext())
                 {
-                    var textBox = cbbTuaSach.Template.FindName("PART_EditableTextBox", cbbTuaSach) as TextBox;
-                    if (textBox != null)
+                    var dsTuaSach = context.TUASACH
+                        .Where(ts => !ts.IsDeleted)
+                        .Select(ts => ts.TenTuaSach)
+                        .ToList();
+
+                    viewSource = new CollectionViewSource();
+                    viewSource.Source = dsTuaSach;
+                    cbbTuaSach.ItemsSource = viewSource.View;
+
+                    cbbTuaSach.Loaded += (s, e) =>
                     {
-                        textBox.TextChanged += (sender, args) =>
+                        var textBox = cbbTuaSach.Template.FindName("PART_EditableTextBox", cbbTuaSach) as TextBox;
+                        if (textBox != null)
                         {
-                            var searchText = ConvertToUnsigned(textBox.Text);
-                            viewSource.View.Filter = item =>
+                            textBox.TextChanged += (sender, args) =>
                             {
-                                if (string.IsNullOrEmpty(searchText))
-                                    return true;
-                                var itemText = ConvertToUnsigned(item.ToString());
-                                return itemText.IndexOf(searchText, StringComparison.OrdinalIgnoreCase) >= 0;
+                                var searchText = ConvertToUnsigned(textBox.Text);
+                                viewSource.View.Filter = item =>
+                                {
+                                    if (string.IsNullOrEmpty(searchText))
+                                        return true;
+                                    var itemText = ConvertToUnsigned(item.ToString());
+                                    return itemText.Contains(searchText, StringComparison.OrdinalIgnoreCase);
+                                };
+                                cbbTuaSach.IsDropDownOpen = true;
                             };
-                            cbbTuaSach.IsDropDownOpen = true;
-                        };
-                    }
-                };
+                        }
+                    };
+                }
             }
-        }
 
         private void LoadTinhTrang()
         {
