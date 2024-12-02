@@ -1,109 +1,238 @@
 ﻿<Window x:Class="QLTV.UCReaderManagement"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+        xmlns:animation="clr-namespace:System.Windows.Media.Animation;assembly=PresentationCore"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         Title="Quản Lý Thư Viện" Height="700" Width="1000">
 
+    <Window.Resources>
+
+        <ContextMenu x:Key="ExportMenu">
+            <MenuItem Header="Import Excel" Click="ImportExcel_Click"/>
+            <MenuItem Header="Export Excel" Click="ExportExcel_Click"/>
+            <MenuItem Header="Export PDF" Click="ExportPDF_Click"/>
+        </ContextMenu>
+
+        <Style x:Key="MenuButtonStyle" TargetType="Button" BasedOn="{StaticResource MaterialDesignFlatButton}">
+            <Setter Property="Height" Value="50"/>
+            <Setter Property="FontSize" Value="14"/>
+            <Setter Property="Foreground" Value="White"/>
+            <Setter Property="materialDesign:ButtonAssist.CornerRadius" Value="25"/>
+            <Setter Property="Margin" Value="16,4"/>
+            <Setter Property="Padding" Value="16,8"/>
+            <Style.Triggers>
+                <Trigger Property="IsMouseOver" Value="True">
+                    <Setter Property="Background" Value="#B6DEE7"/>
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+
+        <Style x:Key="ModernTextBox" TargetType="TextBox" BasedOn="{StaticResource MaterialDesignOutlinedTextBox}">
+            <Setter Property="Padding" Value="5.5"/>
+            <Setter Property="Height" Value="Auto"/>
+            <Setter Property="materialDesign:HintAssist.FloatingScale" Value="0.8"/>
+            <Setter Property="materialDesign:TextFieldAssist.HasClearButton" Value="True"/>
+        </Style>
+
+        <Style x:Key="ModernComboBox" TargetType="ComboBox" BasedOn="{StaticResource MaterialDesignOutlinedComboBox}">
+            <Setter Property="Padding" Value="5.5"/>
+            <Setter Property="Height" Value="Auto"/>
+            <Setter Property="materialDesign:HintAssist.FloatingScale" Value="0.8"/>
+        </Style>
+
+        <Style x:Key="ModernDatePicker" TargetType="DatePicker" BasedOn="{StaticResource MaterialDesignOutlinedDatePicker}">
+            <Setter Property="Padding" Value="5.5"/>
+            <Setter Property="Height" Value="Auto"/>
+            <Setter Property="materialDesign:HintAssist.FloatingScale" Value="0.8"/>
+        </Style>
+
+    </Window.Resources>
+
+
     <Grid>
+
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
 
-        <Border Background="#2196F3" Padding="10">
-            <StackPanel Orientation="Horizontal">
-                <TextBlock Text="&#xE8D0;" FontFamily="Segoe MDL2 Assets" FontSize="24" 
-                           VerticalAlignment="Center" Foreground="White"/>
-                <TextBlock Text="Quản Lý Thư Viện" FontSize="20" VerticalAlignment="Center" 
-                           Margin="10,0,0,0" Foreground="White"/>
-            </StackPanel>
-        </Border>
+        <!-- Top Bar -->
+        <Grid Background="White" Grid.Row="0">
+            <Grid.Effect>
+                <DropShadowEffect BlurRadius="10" 
+                        ShadowDepth="1" 
+                        Direction="270" 
+                        Color="#DDDDDD"/>
+            </Grid.Effect>
 
-        <Grid Grid.Row="1" Margin="10">
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="Auto"/>
-                <ColumnDefinition Width="*"/>
-                <ColumnDefinition Width="Auto"/>
-                <ColumnDefinition Width="2*"/>
-                <ColumnDefinition Width="Auto"/>
-            </Grid.ColumnDefinitions>
-            <TextBlock Text="Tìm kiếm theo:" VerticalAlignment="Center" Margin="0,0,10,0"/>
-            <ComboBox Grid.Column="1" x:Name="SearchCriteriaComboBox" Margin="0,0,10,0">
-                <ComboBoxItem Content="Mã Độc Giả"/>
-                <ComboBoxItem Content="Họ Tên"/>
-                <ComboBoxItem Content="Email"/>
-                <ComboBoxItem Content="Số Điện Thoại"/>
-                <ComboBoxItem Content="Loại Độc Giả"/>
-            </ComboBox>
-            <TextBlock Grid.Column="2" Text="Nội dung:" VerticalAlignment="Center" Margin="0,0,10,0"/>
-            <TextBox Grid.Column="3" x:Name="SearchTextBox" Margin="0,0,10,0"/>
-            <Button Grid.Column="4" Content="Tìm" Click="SearchButton_Click" Padding="10,5"/>
+            <DockPanel Margin="16,0">
+                <Button Style="{StaticResource MaterialDesignIconButton}" 
+                HorizontalAlignment="Left"
+                Click="ToggleSidebar_Click">
+                    <materialDesign:PackIcon Kind="Menu"/>
+                </Button>
+
+                <TextBlock Text="QUẢN LÝ ĐỘC GIẢ" 
+                   FontSize="24" 
+                   VerticalAlignment="Center"/>
+
+                <StackPanel DockPanel.Dock="Right" 
+                    Orientation="Horizontal" 
+                    HorizontalAlignment="Right">
+                    <Button Style="{StaticResource MaterialDesignIconButton}">
+                        <materialDesign:PackIcon Kind="Bell"/>
+                    </Button>
+                    <Button Style="{StaticResource MaterialDesignIconButton}">
+                        <materialDesign:PackIcon Kind="Settings"/>
+                    </Button>
+                    <Button Style="{StaticResource MaterialDesignIconButton}" 
+        ContextMenu="{StaticResource ExportMenu}" 
+        Click="OpenExportMenu_Click">
+                        <materialDesign:PackIcon Kind="ImportExport"/>
+                    </Button>
+
+                </StackPanel>
+            </DockPanel>
         </Grid>
 
-        <TabControl Grid.Row="2">
+        <TabControl Grid.Row="1" Style="{StaticResource MaterialDesignTabControl}" >
 
-            <TabItem Header="Thông tin độc giả">
-                <Grid Margin="10">
+            <TabItem>
+                <TabItem.Header>
+                    <StackPanel Orientation="Horizontal">
+                        <materialDesign:PackIcon Kind="AccountDetails" 
+                Width="24" 
+                Height="24" 
+                VerticalAlignment="Center"
+                Opacity="0.7"
+                Margin="0,0,8,0"/>
+                        <TextBlock Text="Quản Lý Thông Tin Độc Giả" 
+                FontFamily="Segoe UI"  
+                FontSize="14" 
+                FontWeight="Bold"
+                Opacity="0.7"
+                VerticalAlignment="Center"/>
+                    </StackPanel>
+                </TabItem.Header>
+
+                <Grid>
                     <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
                         <RowDefinition Height="Auto"/>
                         <RowDefinition Height="*"/>
                     </Grid.RowDefinitions>
 
-                    <Border BorderBrush="#DDDDDD" BorderThickness="1" Padding="20" Margin="0,0,0,10">
+                    <!-- Phần Nhập Liệu -->
+                    <Border BorderBrush="#DDDDDD" BorderThickness="1" Padding="20" Margin="0,0,0,10" Grid.Row="0">
                         <Grid>
                             <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="Auto"/>
-                                <ColumnDefinition Width="*"/>
-                                <ColumnDefinition Width="Auto"/>
-                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="3*"/>
+                                <ColumnDefinition Width="3*"/>
+                                <ColumnDefinition Width="3*"/>
                             </Grid.ColumnDefinitions>
                             <Grid.RowDefinitions>
                                 <RowDefinition Height="Auto"/>
                                 <RowDefinition Height="Auto"/>
                                 <RowDefinition Height="Auto"/>
-                                <RowDefinition Height="Auto"/>
-                                <RowDefinition Height="Auto"/>
-                                <RowDefinition Height="Auto"/>
-                                <RowDefinition Height="Auto"/>
                             </Grid.RowDefinitions>
 
-                            <Label Grid.Row="0" Grid.Column="0" Content="ID Độc Giả:" VerticalAlignment="Center"/>
-                            <TextBox Grid.Row="0" Grid.Column="1" Margin="0,5,5,0" x:Name="ID" IsEnabled="False"/>
-                            <Label Grid.Row="0" Grid.Column="2" Content="Mã Độc Giả" VerticalAlignment="Center"/>
-                            <TextBox Grid.Row="0" Grid.Column="3" Margin="0,5,0,0" x:Name="Email" IsEnabled="False"/>
+                            <TextBox Grid.Row="0" Grid.Column="0" Margin="0,5,5,0"
+                            x:Name="IDTaiKhoan"
+                            Style="{StaticResource ModernTextBox}"
+                            materialDesign:HintAssist.Hint="Nhập ID Tài Khoản"
+                            materialDesign:TextFieldAssist.HasLeadingIcon="True"
+                            materialDesign:TextFieldAssist.LeadingIcon="Account"/>
 
-                            <Label Grid.Row="1" Grid.Column="0" Content="ID Tài khoản:" VerticalAlignment="Center"/>
-                            <TextBox Grid.Row="1" Grid.Column="1" Margin="0,5,5,0" x:Name="IDTaiKhoan" />
-                            <Label Grid.Row="1" Grid.Column="2" Content="ID Loại độc giả" VerticalAlignment="Center"/>
-                            <TextBox Grid.Row="1" Grid.Column="3" Margin="0,5,0,0" x:Name="IDLoaiDocGia" />
+                            <TextBox Grid.Row="0" Grid.Column="1" Margin="0,5,5,0"
+                 x:Name="IDLoaiDocGia"
+                 Style="{StaticResource ModernTextBox}"
+                 materialDesign:HintAssist.Hint="Nhập ID Loại Độc Giả"
+                     materialDesign:TextFieldAssist.HasLeadingIcon="True"
+                     materialDesign:TextFieldAssist.LeadingIcon="AccountGroup"/>
 
-                            <Label Grid.Row="3" Grid.Column="0" Content="Giới thiệu:" VerticalAlignment="Center"/>
-                            <TextBox Grid.Row="3" Grid.Column="1" Margin="0,5,5,0" x:Name="GioiThieu" />
-                            <Label Grid.Row="3" Grid.Column="2" Content="Ngày Lập Thẻ:" VerticalAlignment="Center"/>
-                            <DatePicker Grid.Row="3" Grid.Column="3" Margin="0,5,0,0" x:Name="NgayLapTheDatePicker" />
+                            <DatePicker Grid.Row="0" Grid.Column="2" Margin="0,5,0,0"
+                    x:Name="NgayLapTheDatePicker"
+                    Style="{StaticResource ModernDatePicker}"
+                    materialDesign:HintAssist.Hint="Chọn Ngày Lập Thẻ"/>
 
-                            <Label Grid.Row="4" Grid.Column="0" Content="Tổng Nợ:" VerticalAlignment="Center"/>
-                            <TextBox Grid.Row="4" Grid.Column="1" Margin="0,5,5,0" x:Name="TongNoTextBox" />
-                            <Label Grid.Row="4" Grid.Column="2" Content="Ngày Hết Hạn:" VerticalAlignment="Center"/>
-                            <DatePicker Grid.Row="4" Grid.Column="3" Margin="0,5,0,0" x:Name="NgayHetHanDatePicker" />
+                            <TextBox Grid.Row="1" Grid.Column="0" Margin="0,5,5,0"
+                 x:Name="GioiThieu"
+                 Style="{StaticResource ModernTextBox}"
+                 materialDesign:HintAssist.Hint="Nhập Thông Tin Giới Thiệu"
+                     materialDesign:TextFieldAssist.HasLeadingIcon="True"
+                     materialDesign:TextFieldAssist.LeadingIcon="Information"/>
 
+                            <TextBox Grid.Row="1" Grid.Column="1" Margin="0,5,5,0"
+                 x:Name="TongNoTextBox" 
+                 Style="{StaticResource ModernTextBox}"
+                 materialDesign:HintAssist.Hint="Nhập Tổng Nợ"
+                     materialDesign:TextFieldAssist.HasLeadingIcon="True"
+                     materialDesign:TextFieldAssist.LeadingIcon="Cash"/>
 
+                            <DatePicker Grid.Row="1" Grid.Column="2" Margin="0,5,0,0"
+                    x:Name="NgayHetHanDatePicker"
+                    Style="{StaticResource ModernDatePicker}"
+                    materialDesign:HintAssist.Hint="Chọn Ngày Hết Hạn"/>
 
-                            <StackPanel Grid.Row="6" Grid.ColumnSpan="4" Orientation="Horizontal" 
-                                        HorizontalAlignment="Right" Margin="0,15,0,0">
+                            <StackPanel Grid.Row="2" Grid.ColumnSpan="3" 
+                    Orientation="Horizontal" 
+                    HorizontalAlignment="Right" 
+                    Margin="0,15,0,0">
                                 <Button Content="Thêm" Padding="10,5" Margin="0,0,5,0" Click="AddReader_Click"/>
                                 <Button Content="Cập nhật" Padding="10,5" Margin="0,0,5,0" Click="UpdateReader_Click"/>
                                 <Button Content="Xóa" Padding="10,5" Margin="0,0,5,0" Click="DeleteReader_Click"/>
-                                <Button Content="Import Excel" Padding="10,5" Margin="0,0,5,0" Click="ImportExcel_Click"/>
+                                <!--<Button Content="Import Excel" Padding="10,5" Margin="0,0,5,0" Click="ImportExcel_Click"/>
                                 <Button Content="Export Excel" Padding="10,5" Margin="0,0,5,0" Click="ExportExcel_Click"/>
-                                <Button Content="Export PDF" Padding="10,5" Click="ExportPDF_Click"/>
+                                <Button Content="Export PDF" Padding="10,5" Click="ExportPDF_Click"/>-->
                             </StackPanel>
                         </Grid>
                     </Border>
 
-                    <DataGrid Grid.Row="1" x:Name="ReadersDataGrid" AutoGenerateColumns="False" Margin="0,10,0,0" 
-                              CanUserAddRows="False" CanUserDeleteRows="False" IsReadOnly="True" 
-                              SelectionChanged="ReadersDataGrid_SelectionChanged">
+                    <!-- Thanh Tìm Kiếm -->
+                    <Grid Grid.Row="1">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="459"/>
+                            <ColumnDefinition Width="114.493"/>
+                            <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition Width="Auto"/>
+                        </Grid.ColumnDefinitions>
+
+                        <TextBlock Text="Danh Sách Các Độc Giả" 
+                            FontFamily="Segoe UI"  
+                            FontSize="24" 
+                            FontWeight="Bold"
+                            Opacity="0.7"
+                            VerticalAlignment="Center"
+                            Margin="15,0,186,0"/>
+                        <TextBlock Text="Tìm Kiếm:" Grid.Column="1" FontSize="14" VerticalAlignment="Center" Margin="114,0,10,0" Grid.ColumnSpan="2"/>
+
+                        <TextBox x:Name="SearchTextBox" Grid.Column="2" VerticalAlignment="Center" Style="{StaticResource ModernTextBox}" materialDesign:HintAssist.Hint="Từ Khóa" materialDesign:HintAssist.FloatingScale="0.8" Margin="10,0,3,0" Grid.ColumnSpan="2"/>
+
+                        <ComboBox x:Name="SearchCriteriaComboBox" Grid.Column="4" Style="{StaticResource ModernComboBox}" materialDesign:HintAssist.Hint="Thuộc Tính" materialDesign:HintAssist.FloatingScale="0.8">
+                            <ComboBoxItem Content="Mã Độc Giả"/>
+                            <ComboBoxItem Content="ID Tài Khoản"/>
+                            <ComboBoxItem Content="ID Loại Độc Giả"/>
+                        </ComboBox>
+
+                        <Button x:Name="SearchButton" Grid.Column="5" Click="SearchButton_Click" Style="{StaticResource MaterialDesignFlatButton}">
+                            <materialDesign:PackIcon Kind="Magnify" Width="20" Height="20"/>
+                        </Button>
+                    </Grid>
+
+                    <!-- DataGrid Danh Sách Độc Giả -->
+                    <DataGrid Grid.Row="2" 
+                  x:Name="ReadersDataGrid" 
+                  AutoGenerateColumns="False" 
+                  Margin="0,10,0,0" 
+                  CanUserAddRows="False" 
+                  CanUserDeleteRows="False" 
+                  IsReadOnly="True" 
+                  SelectionChanged="ReadersDataGrid_SelectionChanged">
                         <DataGrid.Columns>
                             <DataGridTextColumn Header="ID Độc Giả" Binding="{Binding ID}"/>
                             <DataGridTextColumn Header="Mã Độc Giả" Binding="{Binding MaDocGia}"/>
@@ -118,14 +247,35 @@
                 </Grid>
             </TabItem>
 
-            <TabItem Header="Loại Độc Giả">
+            <TabItem>
+                <TabItem.Header>
+                    <StackPanel Orientation="Horizontal">
+                        <materialDesign:PackIcon Kind="AccountCheck" 
+                        Width="24" 
+                        Height="24" 
+                        VerticalAlignment="Center"
+                        Opacity="0.7"
+                        Margin="0,0,8,0"/>
+                        <TextBlock Text="Quản Lý Loại Độc Giả" 
+                        FontFamily="Segoe UI"  
+                        FontSize="14" 
+                        FontWeight="Bold"
+                        Opacity="0.7"
+                        VerticalAlignment="Center"/>
+                    </StackPanel>
+                </TabItem.Header>
+
                 <Grid Margin="10">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="170"/>
+                        <ColumnDefinition/>
+                    </Grid.ColumnDefinitions>
                     <Grid.RowDefinitions>
                         <RowDefinition Height="Auto"/>
                         <RowDefinition Height="*"/>
                     </Grid.RowDefinitions>
 
-                    <Border BorderBrush="#DDDDDD" BorderThickness="1" Padding="20" Margin="0,0,0,10">
+                    <Border BorderBrush="#DDDDDD" BorderThickness="1" Padding="20" Margin="0,0,0,10" Grid.ColumnSpan="2">
                         <Grid>
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="Auto"/>
@@ -137,18 +287,12 @@
                                 <RowDefinition Height="Auto"/>
                                 <RowDefinition Height="Auto"/>
                                 <RowDefinition Height="Auto"/>
-                                <RowDefinition Height="Auto"/>
                             </Grid.RowDefinitions>
 
-                            <Label Grid.Row="0" Grid.Column="0" Content="ID Loại Độc Giả:" VerticalAlignment="Center"/>
-                            <TextBox Grid.Row="0" Grid.Column="1" Margin="0,5,5,0" x:Name="IDLoaiDocGiaTextBox" IsEnabled="False"/>
-                            <Label Grid.Row="0" Grid.Column="2" Content="Tên Loại Độc Giả:" VerticalAlignment="Center"/>
-                            <TextBox Grid.Row="0" Grid.Column="3" Margin="0,5,0,0" x:Name="TenLoaiDocGiaTextBox" />
-
-                            <Label Grid.Row="1" Grid.Column="0" Content="Mã Loại Độc Giả:" VerticalAlignment="Center"/>
-                            <TextBox Grid.Row="1" Grid.Column="1" Margin="0,5,5,0" x:Name="MaLoaiDocGiaTextBox" IsEnabled="False"/>
-                            <Label Grid.Row="1" Grid.Column="2" Content="Số sách mượn tối đa:" VerticalAlignment="Center"/>
-                            <TextBox Grid.Row="1" Grid.Column="3" Margin="0,5,0,0" x:Name="SoSachMuonToiDaTextBox" />
+                            <Label Grid.Row="0" Grid.Column="0" Content="Tên Loại Độc Giả:" VerticalAlignment="Center"/>
+                            <TextBox Grid.Row="0" Grid.Column="1" Margin="0,5,5,0" x:Name="TenLoaiDocGiaTextBox" />
+                            <Label Grid.Row="0" Grid.Column="2" Content="Số sách mượn tối đa:" VerticalAlignment="Center"/>
+                            <TextBox Grid.Row="0" Grid.Column="3" Margin="0,5,0,0" x:Name="SoSachMuonToiDaTextBox" />
 
                             <StackPanel Grid.Row="3" Grid.ColumnSpan="4" Orientation="Horizontal" 
                 HorizontalAlignment="Right" Margin="0,15,0,0">
@@ -161,7 +305,7 @@
 
                     <DataGrid Grid.Row="1" x:Name="ReaderTypesDataGrid" AutoGenerateColumns="False" Margin="0,10,0,0" 
       CanUserAddRows="False" CanUserDeleteRows="False" IsReadOnly="True" 
-      SelectionChanged="ReaderTypesDataGrid_SelectionChanged">
+      SelectionChanged="ReaderTypesDataGrid_SelectionChanged" Grid.ColumnSpan="2">
                         <DataGrid.Columns>
                             <DataGridTextColumn Header="ID" Binding="{Binding ID}"/>
                             <DataGridTextColumn Header="Tên Loại Độc Giả" Binding="{Binding TenLoaiDocGia}"/>
@@ -172,7 +316,25 @@
                 </Grid>
             </TabItem>
 
-            <TabItem Header="Quản lý thu tiền phạt">
+            <TabItem>
+
+                <TabItem.Header>
+                    <StackPanel Orientation="Horizontal">
+                        <materialDesign:PackIcon Kind="Money" 
+                        Width="24" 
+                        Height="24" 
+                        VerticalAlignment="Center"
+                        Opacity="0.7"
+                        Margin="0,0,8,0"/>
+                        <TextBlock Text="Quản Lý Thu Tiền Phạt" 
+                        FontFamily="Segoe UI"  
+                        FontSize="14" 
+                        FontWeight="Bold"
+                        Opacity="0.7"
+                        VerticalAlignment="Center"/>
+                    </StackPanel>
+                </TabItem.Header>
+
                 <Grid Margin="10">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="197*"/>
@@ -196,30 +358,24 @@
                                 <RowDefinition Height="Auto"/>
                                 <RowDefinition Height="Auto"/>
                                 <RowDefinition Height="Auto"/>
-                                <RowDefinition Height="Auto"/>
                             </Grid.RowDefinitions>
 
-                            <Label Grid.Row="0" Grid.Column="0" Content="ID Phiếu Thu:" VerticalAlignment="Center"/>
-                            <TextBox Grid.Row="0" Grid.Column="1" Margin="0,5,5,0" x:Name="MaPhieuThu" IsEnabled="False"/>
-                            <Label Grid.Row="0" Grid.Column="2" Content="Mã PTTP:" VerticalAlignment="Center"/>
-                            <TextBox Grid.Row="0" Grid.Column="3" Margin="0,5,0,0" x:Name="MaPTTP" IsEnabled="False"/>
-
-                            <Label Grid.Row="1" Grid.Column="0" Content="ID Độc Giả:" VerticalAlignment="Center"/>
-                            <TextBox Grid.Row="1" Grid.Column="1" Margin="0,5,5,0" x:Name="MaDocGiaPhat" 
+                            <Label Grid.Row="0" Grid.Column="0" Content="ID Độc Giả:" VerticalAlignment="Center"/>
+                            <TextBox Grid.Row="0" Grid.Column="1" Margin="0,5,5,0" x:Name="MaDocGiaPhat" 
                                      TextChanged="MaDocGiaPhat_TextChanged"/>
-                            <Label Grid.Row="1" Grid.Column="2" Content="Ngày Thu:" VerticalAlignment="Center"/>
-                            <DatePicker Grid.Row="1" Grid.Column="3" Margin="0,5,0,0" x:Name="NgayThuPhat"/>
+                            <Label Grid.Row="0" Grid.Column="2" Content="Ngày Thu:" VerticalAlignment="Center"/>
+                            <DatePicker Grid.Row="0" Grid.Column="3" Margin="0,5,0,0" x:Name="NgayThuPhat"/>
 
-                            <Label Grid.Row="2" Grid.Column="0" Content="Tổng Nợ:" VerticalAlignment="Center"/>
-                            <TextBox Grid.Row="2" Grid.Column="1" Margin="0,5,5,0" x:Name="TongNoPhat" IsEnabled="False"/>
-                            <Label Grid.Row="2" Grid.Column="2" Content="Số Tiền Thu:" VerticalAlignment="Center"/>
-                            <TextBox Grid.Row="2" Grid.Column="3" Margin="0,5,0,0" x:Name="SoTienThu"/>
+                            <Label Grid.Row="1" Grid.Column="0" Content="Tổng Nợ:" VerticalAlignment="Center"/>
+                            <TextBox Grid.Row="1" Grid.Column="1" Margin="0,5,5,0" x:Name="TongNoPhat" IsEnabled="False"/>
+                            <Label Grid.Row="1" Grid.Column="2" Content="Số Tiền Thu:" VerticalAlignment="Center"/>
+                            <TextBox Grid.Row="1" Grid.Column="3" Margin="0,5,0,0" x:Name="SoTienThu"/>
 
-                            <Label Grid.Row="3" Grid.Column="0" Content="Còn Lại:" VerticalAlignment="Center"/>
-                            <TextBox Grid.Row="3" Grid.Column="1" Margin="0,5,5,0" x:Name="ConLai" IsEnabled="False"/>
+                            <Label Grid.Row="2" Grid.Column="0" Content="Còn Lại:" VerticalAlignment="Center"/>
+                            <TextBox Grid.Row="2" Grid.Column="1" Margin="0,5,5,0" x:Name="ConLai" IsEnabled="False"/>
 
 
-                            <StackPanel Grid.Row="4" Grid.ColumnSpan="5" Orientation="Horizontal" 
+                            <StackPanel Grid.Row="3" Grid.ColumnSpan="5" Orientation="Horizontal" 
                                         HorizontalAlignment="Right" Margin="0,15,0,0">
                                 <Button Content="Tạo Phiếu Thu" Padding="10,5" Margin="0,0,5,0" 
                                         Click="CreatePenaltyReceipt_Click"/>
@@ -231,6 +387,8 @@
                             </StackPanel>
                         </Grid>
                     </Border>
+
+
 
                     <DataGrid Grid.Row="1" x:Name="PenaltyReceiptsDataGrid" AutoGenerateColumns="False" 
                               Margin="0,10,0,0" CanUserAddRows="False" CanUserDeleteRows="False" 
@@ -248,5 +406,99 @@
                 </Grid>
             </TabItem>
         </TabControl>
+
+        <Grid x:Name="SidebarOverlay" 
+      Visibility="Collapsed"
+              Grid.RowSpan="3">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="280"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+
+            <!-- Semi-transparent background -->
+            <Rectangle Grid.ColumnSpan="2" 
+             Fill="Black" 
+             Opacity="0.5"
+             MouseDown="CloseSidebar_Click"/>
+
+            <!-- Sidebar -->
+            <Grid x:Name="Sidebar" 
+          Background="#1976D2"
+          HorizontalAlignment="Left"
+      Grid.Column="0">
+                <DockPanel>
+                    <StackPanel DockPanel.Dock="Top" Margin="0,32,0,32">
+                        <materialDesign:PackIcon Kind="Library" 
+                                           Width="48" 
+                                           Height="48" 
+                                           Foreground="White"
+                                           HorizontalAlignment="Center"/>
+                        <TextBlock Text="LIBRARY MANAGEMENT" 
+                             FontSize="20" 
+                             Foreground="White" 
+                             FontWeight="Bold" 
+                             TextAlignment="Center"
+                             Margin="0,16,0,32"/>
+                    </StackPanel>
+
+                    <StackPanel>
+                        <Button Style="{StaticResource MenuButtonStyle}"
+                            Click="Dashboard_Click">
+                            <StackPanel Orientation="Horizontal">
+                                <materialDesign:PackIcon Kind="ViewDashboard" 
+                                                   Width="24" 
+                                                   Height="24" 
+                                                   Margin="0,0,12,0"/>
+                                <TextBlock Text="Dashboard"/>
+                            </StackPanel>
+                        </Button>
+
+                        <Button Style="{StaticResource MenuButtonStyle}"
+                            Click="ReaderManagement_Click">
+                            <StackPanel Orientation="Horizontal">
+                                <materialDesign:PackIcon Kind="AccountMultiple" 
+                                                   Width="24" 
+                                                   Height="24" 
+                                                   Margin="0,0,12,0"/>
+                                <TextBlock Text="Reader Management"/>
+                            </StackPanel>
+                        </Button>
+
+                        <Button Style="{StaticResource MenuButtonStyle}"
+                            Click="BookManagement_Click">
+                            <StackPanel Orientation="Horizontal">
+                                <materialDesign:PackIcon Kind="BookMultiple" 
+                                                   Width="24" 
+                                                   Height="24" 
+                                                   Margin="0,0,12,0"/>
+                                <TextBlock Text="Book Management"/>
+                            </StackPanel>
+                        </Button>
+
+                        <Button Style="{StaticResource MenuButtonStyle}"
+                            Click="LoanManagement_Click">
+                            <StackPanel Orientation="Horizontal">
+                                <materialDesign:PackIcon Kind="SwapHorizontal" 
+                                                   Width="24" 
+                                                   Height="24" 
+                                                   Margin="0,0,12,0"/>
+                                <TextBlock Text="Loan Management"/>
+                            </StackPanel>
+                        </Button>
+
+                        <Button Style="{StaticResource MenuButtonStyle}"
+                            Click="Report_Click">
+                            <StackPanel Orientation="Horizontal">
+                                <materialDesign:PackIcon Kind="ChartBar" 
+                                                   Width="24" 
+                                                   Height="24" 
+                                                   Margin="0,0,12,0"/>
+                                <TextBlock Text="Reports"/>
+                            </StackPanel>
+                        </Button>
+                    </StackPanel>
+                </DockPanel>
+            </Grid>
+        </Grid>
     </Grid>
 </Window>

@@ -8,11 +8,11 @@ namespace QLTV
 {
     public partial class UCInterface : Window
     {
-        private readonly DBContext _context;
+        private readonly QLTVContext _context;
         public UCInterface()
         {
             InitializeComponent();
-            _context = new DBContext();
+            _context = new QLTVContext();
         }
 
         private void Dashboard_Click(object sender, RoutedEventArgs e)

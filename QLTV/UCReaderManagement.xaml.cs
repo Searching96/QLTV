@@ -15,6 +15,8 @@ using Microsoft.EntityFrameworkCore;
 using OfficeOpenXml.FormulaParsing.LexicalAnalysis;
 using System.Windows.Documents;
 using System.Text.RegularExpressions;
+using System.Windows.Input;
+using System.Windows.Media.Animation;
 
 namespace QLTV
 {
@@ -35,6 +37,82 @@ namespace QLTV
 
             LoadReadersData();
             LoadReaderTypesData();
+        }
+
+        private void OpenExportMenu_Click(object sender, RoutedEventArgs e)
+        {
+            // Tham chiếu đến nút
+            Button button = sender as Button;
+
+            // Mở ContextMenu
+            if (button.ContextMenu != null)
+            {
+                button.ContextMenu.IsOpen = true;
+            }
+        }
+
+        private void ToggleSidebar_Click(object sender, RoutedEventArgs e)
+        {
+            bool isCollapsed = SidebarOverlay.Visibility == Visibility.Collapsed;
+
+            SidebarOverlay.Visibility = isCollapsed ? Visibility.Visible : Visibility.Collapsed;
+
+            var animation = new DoubleAnimation
+            {
+                From = isCollapsed ? -250 : 0,
+                To = isCollapsed ? 0 : -250,
+                Duration = TimeSpan.FromMilliseconds(250),
+                EasingFunction = new QuadraticEase { EasingMode = isCollapsed ? EasingMode.EaseOut : EasingMode.EaseIn }
+            };
+
+            if (!isCollapsed)
+            {
+                animation.Completed += (s, _) => SidebarOverlay.Visibility = Visibility.Collapsed;
+            }
+
+            Sidebar.RenderTransform = new TranslateTransform(-250, 0);
+            Sidebar.RenderTransform.BeginAnimation(TranslateTransform.XProperty, animation);
+        }
+
+        private void CloseSidebar_Click(object sender, MouseButtonEventArgs e)
+        {
+            // Ẩn sidebar 
+            DoubleAnimation animation = new DoubleAnimation
+            {
+                From = 0,
+                To = -250,
+                Duration = TimeSpan.FromMilliseconds(250),
+                EasingFunction = new QuadraticEase { EasingMode = EasingMode.EaseIn }
+            };
+            animation.Completed += (s, _) => SidebarOverlay.Visibility = Visibility.Collapsed;
+            Sidebar.RenderTransform.BeginAnimation(TranslateTransform.XProperty, animation);
+        }
+
+        private void Dashboard_Click(object sender, RoutedEventArgs e)
+        {
+            MessageBox.Show("Dashboard");
+        }
+
+        private void ReaderManagement_Click(object sender, RoutedEventArgs e)
+        {
+            UCReaderManagement uC_QLDG = new UCReaderManagement();
+            uC_QLDG.Show();
+            Close();
+        }
+
+        private void BookManagement_Click(object sender, RoutedEventArgs e)
+        {
+            MessageBox.Show("BookManagement");
+        }
+
+        private void LoanManagement_Click(object sender, RoutedEventArgs e)
+        {
+            MessageBox.Show("LoanManagement");
+        }
+
+        private void Report_Click(object sender, RoutedEventArgs e)
+        {
+            MessageBox.Show("BCTK");
         }
 
         // Readers 
@@ -173,7 +251,6 @@ namespace QLTV
                 }
                 return new DOCGIA
                 {
-                    MaDocGia = Email.Text,
                     IDTaiKhoan = int.Parse(IDTaiKhoan.Text),
                     IDLoaiDocGia = int.Parse(IDLoaiDocGia.Text),
                     NgayLapThe = NgayLapTheDatePicker.SelectedDate ?? DateTime.Now,
@@ -232,8 +309,6 @@ namespace QLTV
         }
         private void ClearInputs()
         {
-            ID.Text = string.Empty;
-            Email.Text = string.Empty;
             IDTaiKhoan.Text = string.Empty;
             IDLoaiDocGia.Text = string.Empty;
             NgayLapTheDatePicker.SelectedDate = null;
@@ -246,8 +321,6 @@ namespace QLTV
         {
             if (ReadersDataGrid.SelectedItem is DOCGIA selectedReader)
             {
-                ID.Text = selectedReader.ID.ToString();
-                Email.Text = selectedReader.MaDocGia;
                 IDTaiKhoan.Text = selectedReader.IDTaiKhoan.ToString();
                 IDLoaiDocGia.Text = selectedReader.IDLoaiDocGia.ToString();
                 NgayLapTheDatePicker.SelectedDate = selectedReader.NgayLapThe;
@@ -304,8 +377,7 @@ namespace QLTV
                 try
                 {
                     // Validate 
-                    if (string.IsNullOrWhiteSpace(MaLoaiDocGiaTextBox.Text) ||
-                        string.IsNullOrWhiteSpace(TenLoaiDocGiaTextBox.Text) ||
+                    if (string.IsNullOrWhiteSpace(TenLoaiDocGiaTextBox.Text) ||
                         !int.TryParse(SoSachMuonToiDaTextBox.Text, out int soSachMuonToiDa))
                     {
                         MessageBox.Show("Vui lòng điền đầy đủ và chính xác thông tin.", "Lỗi", MessageBoxButton.OK, MessageBoxImage.Error);
@@ -396,15 +468,12 @@ namespace QLTV
         {
             if (ReaderTypesDataGrid.SelectedItem is LOAIDOCGIA selectedReaderType)
             {
-                IDLoaiDocGiaTextBox.Text = selectedReaderType.ID.ToString();
-                MaLoaiDocGiaTextBox.Text = selectedReaderType.MaLoaiDocGia;
                 TenLoaiDocGiaTextBox.Text = selectedReaderType.TenLoaiDocGia;
                 SoSachMuonToiDaTextBox.Text = selectedReaderType.SoSachMuonToiDa.ToString();
             }
         }
         private void ClearReaderTypeInputs()
         {
-            MaLoaiDocGiaTextBox.Text = string.Empty;
             TenLoaiDocGiaTextBox.Text = string.Empty;
             SoSachMuonToiDaTextBox.Text = string.Empty;
         }
