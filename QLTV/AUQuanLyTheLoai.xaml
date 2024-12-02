@@ -64,6 +64,8 @@
                     <ColumnDefinition Width="1*"/>
                     <ColumnDefinition Width="5*"/>
                     <ColumnDefinition Width="1*"/>
+                    <ColumnDefinition Width="5*"/>
+                    <ColumnDefinition Width="1*"/>
                 </Grid.ColumnDefinitions>
 
                 <Grid.RowDefinitions>
@@ -85,7 +87,24 @@
                          materialDesign:HintAssist.Hint="Tên Thể Loại"
                          materialDesign:TextFieldAssist.HasLeadingIcon="True"
                          materialDesign:TextFieldAssist.LeadingIcon="PoundBoxOutline"
-                         Margin="{x:Static local:AUQuanLyTuaSach.DisplayElementMargin}"/>
+                         Margin="{x:Static local:AUQuanLyTuaSach.DisplayElementMargin}"
+                         TextChanged="tbxTenTheLoai_TextChanged"/>
+
+                <materialDesign:PackIcon x:Name="icTenTheLoai" Grid.Row="0" Grid.Column="2"
+                                         Style="{StaticResource ErrorIcon}"
+                                         Margin="{x:Static local:AUQuanLyTuaSach.ErrorIconMargin}"/>
+
+                <TextBox x:Name="tbxMoTa" Grid.Row="0" Grid.Column="4"
+                         Style="{StaticResource DataDisplayTextBox}"
+                         materialDesign:HintAssist.Hint="Mô Tả"
+                         materialDesign:TextFieldAssist.HasLeadingIcon="True"
+                         materialDesign:TextFieldAssist.LeadingIcon="PoundBoxOutline"
+                         Margin="{x:Static local:AUQuanLyTuaSach.DisplayElementMargin}"
+                         TextChanged="tbxMoTa_TextChanged"/>
+
+                <materialDesign:PackIcon x:Name="icMoTa" Grid.Row="0" Grid.Column="4"
+                                         Style="{StaticResource ErrorIcon}"
+                                         Margin="{x:Static local:AUQuanLyTuaSach.ErrorIconMargin}"/>
             </Grid>
 
             <!--CRUD buttons-->
@@ -141,6 +160,7 @@
             <DataGrid.Columns>
                 <DataGridTextColumn Header="Mã Thể Loại:" Width="*" Binding="{Binding MaTheLoai}"/>
                 <DataGridTextColumn Header="Tên Thể Loại:" Width="*" Binding="{Binding TenTheLoai}"/>
+                <DataGridTextColumn Header="Mô Tả:" Width="*" Binding="{Binding MoTa}"/>
             </DataGrid.Columns>
         </DataGrid>
     </Grid>

@@ -11,6 +11,8 @@ public partial class THELOAI
 
     public string TenTheLoai { get; set; } = null!;
 
+    public string MoTa { get; set; } = null;
+
     public bool IsDeleted { get; set; }
 
     public virtual ICollection<CTBCMUONSACH> CTBCMUONSACH { get; set; } = new List<CTBCMUONSACH>();

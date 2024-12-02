@@ -30,6 +30,8 @@ namespace QLTV
     /// </summary>
     public partial class AUQuanLySach : UserControl
     {
+        private bool isUpdatingText = false;
+
         public AUQuanLySach()
         {
             InitializeComponent();
@@ -76,9 +78,69 @@ namespace QLTV
                 tbxDSTheLoai.Text = selectedBook.DSTheLoai;
                 tbxNhaXuatBan.Text = selectedBook.NhaXuatBan;
                 tbxNamXuatBan.Text = selectedBook.NamXuatBan.ToString();
-                tbxNgayNhap.Text = selectedBook.NgayNhap;
+
+                DateTime parsedDate;
+                bool isDateParsed = DateTime.TryParseExact(
+                    selectedBook.NgayNhap,
+                    "dd/MM/yyyy",  // Định dạng dmy mong muốn
+                    System.Globalization.CultureInfo.InvariantCulture,
+                    System.Globalization.DateTimeStyles.None,
+                    out parsedDate
+                );
+
+                if (isDateParsed)
+                {
+                    dpNgayNhap.SelectedDate = parsedDate;  // Đồng bộ ngày đã chọn
+                    dpNgayNhap.DisplayDate = parsedDate;   // Đặt DisplayDate chính xác
+                    dpNgayNhap.Text = parsedDate.ToString("dd/MM/yyyy");  // Đảm bảo Text theo định dạng mong muốn
+                }
+
                 tbxTriGia.Text = selectedBook.TriGia.ToString();
-                tbxTinhTrang.Text = selectedBook.TinhTrang;
+                cbbTinhTrang.Text = selectedBook.TinhTrang;
+
+                using (var context = new QLTVContext())
+                {
+                    // Truyền giá trị TinhTrang vào dưới dạng string
+                    string tenTinhTrang = selectedBook.TinhTrang;
+
+                    // Kiểm tra nếu TinhTrang không phải là null hoặc rỗng
+                    if (!string.IsNullOrEmpty(tenTinhTrang))
+                    {
+                        var idTinhTrang = context.TINHTRANG
+                            .Where(tt => tt.TenTinhTrang == tenTinhTrang)
+                            .Select(tt => tt.ID)
+                            .FirstOrDefault();
+
+                        if (idTinhTrang > 0)
+                        {
+                            // Lưu lại giá trị đã chọn trước khi thay đổi ItemsSource
+                            var selectedTinhTrang = cbbTinhTrang.SelectedItem;
+
+                            // Gán ItemsSource cho ComboBox với các tình trạng có ID >= idTinhTrang
+                            var lstTinhTrang = context.TINHTRANG
+                                .Where(tt => tt.ID >= idTinhTrang)
+                                .ToList();
+
+                            cbbTinhTrang.ItemsSource = lstTinhTrang;
+                            cbbTinhTrang.DisplayMemberPath = "TenTinhTrang"; // Thiết lập thuộc tính cần hiển thị
+
+                            // Cập nhật lại SelectedItem sau khi thay đổi ItemsSource
+                            if (selectedTinhTrang != null)
+                            {
+                                // Tìm kiếm item đã chọn trong danh sách mới và gán lại
+                                var selectedItemInList = lstTinhTrang
+                                    .FirstOrDefault(tt => tt.TenTinhTrang == ((TINHTRANG)selectedTinhTrang).TenTinhTrang);
+
+                                cbbTinhTrang.SelectedItem = selectedItemInList;
+                            }
+                            else
+                            {
+                                // Nếu không có item đã chọn, chọn mặc định (ví dụ, giá trị đầu tiên)
+                                cbbTinhTrang.SelectedIndex = 0;
+                            }
+                        }
+                    }
+                }
             }
             else
             {
@@ -88,9 +150,9 @@ namespace QLTV
                 tbxDSTheLoai.Text = "";
                 tbxNhaXuatBan.Text = "";
                 tbxNamXuatBan.Text = "";
-                tbxNgayNhap.Text = "";
+                dpNgayNhap.Text = "";
                 tbxTriGia.Text = "";
-                tbxTinhTrang.Text = "";
+                cbbTinhTrang.Text = "";
             }
         }
 
@@ -126,7 +188,11 @@ namespace QLTV
                     // Cập nhật thông tin cơ bản
                     sachToUpdate.NhaXuatBan = tbxNhaXuatBan.Text;
                     sachToUpdate.NamXuatBan = int.Parse(tbxNamXuatBan.Text);
-                    sachToUpdate.NgayNhap = DateTime.Parse(tbxNgayNhap.Text);
+                    sachToUpdate.NgayNhap = DateTime.ParseExact(
+                        dpNgayNhap.Text,
+                        "dd/MM/yyyy",  // Định dạng ngày dmy
+                        System.Globalization.CultureInfo.InvariantCulture
+                    ); 
                     sachToUpdate.TriGia = decimal.Parse(tbxTriGia.Text);
 
                     // Lưu tất cả thay đổi
@@ -387,5 +453,73 @@ namespace QLTV
                 LoadSach();
             }
         }
+
+        private void dpNgayNhap_Loaded(object sender, RoutedEventArgs e)
+        {
+            // Tìm TextBox bên trong DatePicker
+            var textBox = (dpNgayNhap.Template.FindName("PART_TextBox", dpNgayNhap) as TextBox);
+            if (textBox != null)
+            {
+                textBox.TextChanged += TextBox_TextChanged;
+            }
+        }
+
+        private void TextBox_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            if (dgSach.SelectedItem == null)
+                return;
+
+            var textBox = sender as TextBox;
+
+            // Danh sách định dạng hỗ trợ nhiều cách nhập ngày
+            string[] formats = { "dd/MM/yyyy", "d/M/yyyy", "dd/M/yyyy", "d/MM/yyyy" };
+            if (!DateTime.TryParseExact(textBox.Text, formats, null, System.Globalization.DateTimeStyles.AllowWhiteSpaces, out DateTime ngayNhap))
+            {
+                icNgayNhapError.ToolTip = "Ngày Nhập không hợp lệ (định dạng đúng: dd/MM/yyyy)";
+                icNgayNhapError.Visibility = Visibility.Visible;
+                return;
+            }
+
+            // Kiểm tra giới hạn ngày từ 1/1/2000 đến hiện tại
+            DateTime minDate = new DateTime(2000, 1, 1);
+            if (ngayNhap < minDate)
+            {
+                icNgayNhapError.ToolTip = "Ngày Nhập không được trước ngày 1/1/2000";
+                icNgayNhapError.Visibility = Visibility.Visible;
+                return;
+            }
+
+            if (ngayNhap > DateTime.Now)
+            {
+                icNgayNhapError.ToolTip = "Ngày Nhập không được sau ngày hiện tại";
+                icNgayNhapError.Visibility = Visibility.Visible;
+                return;
+            }
+
+            // Nếu hợp lệ, ẩn thông báo lỗi
+            icNgayNhapError.Visibility = Visibility.Collapsed;
+        }
+
+        //private void dpNgayNhap_SelectedDateChanged(object sender, SelectionChangedEventArgs e)
+        //{
+        //    if (isUpdatingText) return;
+
+        //    if (dpNgayNhap.SelectedDate.HasValue)
+        //    {
+        //        isUpdatingText = true;  // Đánh dấu là đang cập nhật text
+        //        dpNgayNhap.Text = dpNgayNhap.SelectedDate.Value.ToString("dd/MM/yyyy");
+        //        isUpdatingText = false; // Đặt lại flag sau khi cập nhật
+        //    }
+        //}
+
+        //private void dpNgayNhap_CalendarOpened(object sender, RoutedEventArgs e)
+        //{
+        //    var datePicker = sender as DatePicker;
+
+        //    if (datePicker != null && DateTime.TryParseExact(datePicker.Text, "dd/MM/yyyy", null, System.Globalization.DateTimeStyles.None, out DateTime parsedDate))
+        //    {
+        //        datePicker.DisplayDate = parsedDate; // Đặt DisplayDate thành ngày đã phân tích
+        //    }
+        //}
     }
 }

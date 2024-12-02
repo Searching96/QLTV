@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:QLTV"
         mc:Ignorable="d"
-        Title="Thêm Sách" Height="400" Width="350"
+        Title="Thêm Sách" Height="500" Width="350"
         WindowStartupLocation="CenterScreen">
     <Grid>
         <Grid.RowDefinitions>
