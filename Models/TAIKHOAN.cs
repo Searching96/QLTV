@@ -9,11 +9,13 @@ public partial class TAIKHOAN
 
     public string? MaTaiKhoan { get; set; }
 
-    public string MatKhau { get; set; } = null!;
-
     public string TenTaiKhoan { get; set; } = null!;
 
+    public string MatKhau { get; set; } = null!;
+
     public string Email { get; set; } = null!;
+
+    public DateTime SinhNhat { get; set; }
 
     public string DiaChi { get; set; } = null!;
 
@@ -25,11 +27,13 @@ public partial class TAIKHOAN
 
     public bool IsDeleted { get; set; }
 
-    public DateTime SinhNhat { get; set; }
-
     public DateTime NgayMo { get; set; }
 
     public DateTime NgayDong { get; set; }
+
+    public string HoTen { get; set; } = null!;
+
+    public string GioiTinh { get; set; } = null!;
 
     public virtual ICollection<ACTIVE_SESSION> ACTIVE_SESSION { get; } = new List<ACTIVE_SESSION>();
 

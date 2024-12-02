@@ -41,7 +41,7 @@ namespace QLTV_TranBin
 
         private void LoadDataForGrid(int gridIndex)
         {
-            using (var context = new QLTVContext())
+            using (var context = new QLTV2Context())
             {
                 var randomTheLoai = context.THELOAI
                     .Where(t => !t.IsDeleted && !usedTheLoaiIds.Contains(t.ID))

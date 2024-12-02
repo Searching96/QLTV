@@ -10,9 +10,9 @@ namespace QLTV_TranBin.Chart.CaculateCharts
 {
     public class TinhTheLoaiMuon
     {
-        private readonly QLTVContext _context;
+        private readonly QLTV2Context _context;
 
-        public TinhTheLoaiMuon(QLTVContext context)
+        public TinhTheLoaiMuon(QLTV2Context context)
         {
             _context = context;
         }

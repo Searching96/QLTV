@@ -22,64 +22,64 @@ namespace QLTV_TranBin
     /// </summary>
     public partial class MainScreen : Window
     {
-        private readonly QLTVContext _context;
+        private readonly QLTV2Context _context;
 
         public MainScreen()
         {
             InitializeComponent();
             //ConfigureButtonsVisibility();
-            _context = new QLTVContext();
-            RequireAccess();// Khởi tạo context của bạn
+            _context = new QLTV2Context();
+            //RequireAccess();// Khởi tạo context của bạn
 
         }
-        public void RequireAccess()
-        {
-            // Lấy ID của người dùng hiện tại
-            int currentUserID = Settings.Default.CurrentUserID;
+        //public void RequireAccess()
+        //{
+        //    // Lấy ID của người dùng hiện tại
+        //    int currentUserID = Settings.Default.CurrentUserID;
 
-            using (var context = new QLTVContext())
-            {
-                // Lấy đối tượng DOCGIA theo ID tài khoản
-                var userAdmin = context.ADMIN.FirstOrDefault(u => u.IDTaiKhoan == currentUserID);
+        //    using (var context = new QLTVContext())
+        //    {
+        //        // Lấy đối tượng DOCGIA theo ID tài khoản
+        //        var userAdmin = context.ADMIN.FirstOrDefault(u => u.IDTaiKhoan == currentUserID);
                 
                 
-                // Kiểm tra nếu không tìm thấy hoặc thông tin còn thiếu
-                if (userAdmin == null ||
-                    string.IsNullOrEmpty(userAdmin.TenAdmin) ||
-                    string.IsNullOrEmpty(userAdmin.GioiTinh))
+        //        // Kiểm tra nếu không tìm thấy hoặc thông tin còn thiếu
+        //        if (userAdmin == null ||
+        //            string.IsNullOrEmpty(userAdmin.TenAdmin) ||
+        //            string.IsNullOrEmpty(userAdmin.GioiTinh))
                     
-                {
-                    // Hiển thị cửa sổ yêu cầu điền thông tin
-                    MessageBox.Show(
-                        "Thông tin của bạn chưa đầy đủ. Vui lòng cập nhật thông tin trước khi tiếp tục!",
-                        "Thông báo",
-                        MessageBoxButton.OK,
-                        MessageBoxImage.Warning
-                    );
+        //        {
+        //            // Hiển thị cửa sổ yêu cầu điền thông tin
+        //            MessageBox.Show(
+        //                "Thông tin của bạn chưa đầy đủ. Vui lòng cập nhật thông tin trước khi tiếp tục!",
+        //                "Thông báo",
+        //                MessageBoxButton.OK,
+        //                MessageBoxImage.Warning
+        //            );
 
-                    // Mở cửa sổ để điền thông tin
-                    var updateInfoWindow = new UpdateTTAD(userAdmin); // Cửa sổ cập nhật thông tin
-                    updateInfoWindow.ShowDialog(); // Hiển thị và chờ người dùng hoàn tất việc điền thông tin
+        //            // Mở cửa sổ để điền thông tin
+        //            var updateInfoWindow = new UpdateTTAD(userAdmin); // Cửa sổ cập nhật thông tin
+        //            updateInfoWindow.ShowDialog(); // Hiển thị và chờ người dùng hoàn tất việc điền thông tin
 
-                    // Sau khi cửa sổ cập nhật đóng lại, kiểm tra lại thông tin
-                    if (string.IsNullOrEmpty(userAdmin.TenAdmin) ||
-                        string.IsNullOrEmpty(userAdmin.GioiTinh))
-                    {
-                        // Nếu vẫn thiếu, thông báo và không cho phép truy cập
-                        MessageBox.Show(
-                            "Bạn chưa hoàn tất cập nhật thông tin. Không thể tiếp tục!",
-                            "Thông báo",
-                            MessageBoxButton.OK,
-                            MessageBoxImage.Error
-                        );
+        //            // Sau khi cửa sổ cập nhật đóng lại, kiểm tra lại thông tin
+        //            if (string.IsNullOrEmpty(userAdmin.TenAdmin) ||
+        //                string.IsNullOrEmpty(userAdmin.GioiTinh))
+        //            {
+        //                // Nếu vẫn thiếu, thông báo và không cho phép truy cập
+        //                MessageBox.Show(
+        //                    "Bạn chưa hoàn tất cập nhật thông tin. Không thể tiếp tục!",
+        //                    "Thông báo",
+        //                    MessageBoxButton.OK,
+        //                    MessageBoxImage.Error
+        //                );
 
-                        // Đóng cửa sổ hiện tại (nếu cần)
-                        Application.Current.Shutdown();
-                    }
-                }
-            }
+        //                // Đóng cửa sổ hiện tại (nếu cần)
+        //                Application.Current.Shutdown();
+        //            }
+        //        }
+        //    }
 
-        }
+        //}
         //private void ConfigureButtonsVisibility()
         //{
         //    // Lấy role hiện tại từ Settings

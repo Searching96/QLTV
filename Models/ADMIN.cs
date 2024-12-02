@@ -11,9 +11,5 @@ public partial class ADMIN
 
     public int IDTaiKhoan { get; set; }
 
-    public string? TenAdmin { get; set; }
-
-    public string? GioiTinh { get; set; }
-
     public virtual TAIKHOAN IDTaiKhoanNavigation { get; set; } = null!;
 }

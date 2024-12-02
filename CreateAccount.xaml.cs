@@ -59,6 +59,28 @@ namespace QLTV_TranBin
             // Tái tải lại các quyền khi checkbox "Admin" bị bỏ chọn
             LoadRoles();
         }
+        private void cbNam_Checked(object sender, RoutedEventArgs e)
+        {
+            // Tái tải lại các quyền khi checkbox "Độc giả" được chọn
+            
+            cbNu.IsChecked = false;
+        }
+
+        private void cbNam_Unchecked(object sender, RoutedEventArgs e)
+        {
+
+        }
+        private void cbNu_Checked(object sender, RoutedEventArgs e)
+        {
+            // Tái tải lại các quyền khi checkbox "Admin" được chọn
+            
+            cbNam.IsChecked = false;
+        }
+
+        private void cbNu_Unchecked(object sender, RoutedEventArgs e)
+        {
+            
+        }
 
         public bool SendEmailUsingMailKit(string recipientEmail, string code)
         {
@@ -96,7 +118,7 @@ namespace QLTV_TranBin
         }
         private void LoadRoles()
         {
-            using (var context = new QLTVContext())
+            using (var context = new QLTV2Context())
             {
                 // Lấy quyền hiện tại của người dùng
                 int currentRoleID = Settings.Default.CurrentUserPhanQuyen;
@@ -161,6 +183,7 @@ namespace QLTV_TranBin
         private void btnSignUp_Click(object sender, RoutedEventArgs e)
         {
             // Lấy dữ liệu từ các TextBox và PasswordBox
+            string hoten = txtFullName.Text;
             string username = txtUsername.Text.Trim();
             string email = txtEmail.Text.Trim();
             string address = txtAddress.Text.Trim();
@@ -181,7 +204,7 @@ namespace QLTV_TranBin
 
             try
             {
-                using (var context = new QLTVContext())
+                using (var context = new QLTV2Context())
                 {
 
                     // Kiểm tra email đã tồn tại chưa
@@ -195,6 +218,16 @@ namespace QLTV_TranBin
                     // Kiểm tra nếu là "Độc giả"
                     int phanQuyen = 0;
                     int? idLoaiDocGia = null;
+                    string gioitinh = "";
+                    if (cbNam.IsChecked == true)
+                    {
+                        gioitinh = "Nam";
+                    }
+                    else
+                    {
+                        gioitinh = "Nữ";
+                    }
+
                     if (cbDocGia.IsChecked == true) // Nếu chọn "Độc giả"
                     {
                         phanQuyen = 4; // ID phân quyền Độc giả
@@ -225,6 +258,7 @@ namespace QLTV_TranBin
                     // Tạo đối tượng tài khoản mới
                     var newAccount = new TAIKHOAN
                     {
+                        HoTen= hoten,
                         TenTaiKhoan = username,
                         Email = email,
                         DiaChi = address,
@@ -232,7 +266,7 @@ namespace QLTV_TranBin
                         SinhNhat = birthday.HasValue ? birthday.Value : default(DateTime),
                         MatKhau = password, // Lưu ý: Bạn nên mã hóa mật khẩu trước khi lưu
                         IsDeleted = false, // Cờ đánh dấu tài khoản còn hoạt động
-                        
+                        GioiTinh = gioitinh,
                         TrangThai = false, // Ví dụ: trạng thái tài khoản
                         IDPhanQuyen = phanQuyen, // Cập nhật phân quyền
                         NgayMo = ngaymo.HasValue ? ngaymo.Value : default(DateTime),
@@ -281,6 +315,9 @@ namespace QLTV_TranBin
         // Hàm reset các trường nhập liệu
         private void ClearFields()
         {
+            txtFullName.Text = string.Empty;
+            cbNam.IsChecked = false;
+            cbNu.IsChecked = false;
             txtUsername.Text = string.Empty;
             txtEmail.Text = string.Empty;
             txtAddress.Text = string.Empty;
@@ -340,6 +377,18 @@ namespace QLTV_TranBin
 
             icUsernameError.Visibility = Visibility.Collapsed;
         }
+        private void txtFullName_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            if (string.IsNullOrWhiteSpace(txtUsername.Text))
+            {
+                icFullNameError.ToolTip = "Họ và tên không được để trống!";
+                icFullNameError.Visibility = Visibility.Visible;
+                return;
+            }
+
+            icUsernameError.Visibility = Visibility.Collapsed;
+        }
+
 
         private void txtEmail_TextChanged(object sender, TextChangedEventArgs e)
         {
@@ -376,5 +425,7 @@ namespace QLTV_TranBin
 
             icPhoneNumberError.Visibility = Visibility.Collapsed;
         }
+
+        
     }
 }

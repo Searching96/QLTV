@@ -113,7 +113,7 @@ namespace QLTV_TranBin
 
                 try
                 {
-                    using (var context = new QLTVContext())
+                    using (var context = new QLTV2Context())
                     {
                         // Tìm tài khoản theo email
                         var account = context.TAIKHOAN.FirstOrDefault(tk => tk.Email == txtEmail.Text);

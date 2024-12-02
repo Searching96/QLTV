@@ -22,12 +22,12 @@ namespace QLTV_TranBin
     /// </summary>
     public partial class LoginScreen : Window
     {
-        private readonly QLTVContext _context;
+        private readonly QLTV2Context _context;
 
         public LoginScreen()
         {
             InitializeComponent();
-            _context = new QLTVContext();
+            _context = new QLTV2Context();
             CheckSession();
             LoginMain.Content = new SignInScreen();
         }

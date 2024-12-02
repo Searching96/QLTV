@@ -13,13 +13,7 @@ public partial class DOCGIA
 
     public int IDLoaiDocGia { get; set; }
 
-    public decimal? TongNo { get; set; }
-
-    public string? GioiThieu { get; set; }
-
-    public string? TenDocGia { get; set; }
-
-    public string? GioiTinh { get; set; }
+    public decimal TongNo { get; set; }
 
     public virtual LOAIDOCGIA IDLoaiDocGiaNavigation { get; set; } = null!;
 

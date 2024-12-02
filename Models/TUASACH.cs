@@ -19,8 +19,6 @@ public partial class TUASACH
 
     public bool IsDeleted { get; set; }
 
-    public string? MoTa { get; set; }
-
     public virtual ICollection<SACH> SACH { get; } = new List<SACH>();
 
     public virtual ICollection<TACGIA> IDTacGia { get; } = new List<TACGIA>();

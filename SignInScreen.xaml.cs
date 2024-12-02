@@ -25,12 +25,12 @@ namespace QLTV_TranBin
     /// </summary>
     public partial class SignInScreen : UserControl
     {
-        private readonly QLTVContext _context;
+        private readonly QLTV2Context _context;
 
         public SignInScreen()
         {
             InitializeComponent();
-            _context = new QLTVContext();
+            _context = new QLTV2Context();
             
         }
 

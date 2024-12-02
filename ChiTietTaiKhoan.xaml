@@ -35,23 +35,29 @@
             </Grid>
 
             <!-- Content Section -->
+
             <StackPanel Background="White" Margin="20">
 
                 <!-- Title -->
-                <TextBlock Text="Basic Info" FontSize="24" FontWeight="Bold" Margin="0,20"/>
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="3*"/>
+                        <ColumnDefinition Width="2*"/>
+                    </Grid.ColumnDefinitions>
+
+                    <TextBlock Text="Basic Info" FontSize="24" FontWeight="Bold" Margin="0,20" Grid.Column="0" VerticalAlignment="Center"/>
+                    <Button x:Name="btnEditBasicInfo" Content="Edit" Width="70" Margin="5" Grid.Column="1" HorizontalAlignment="Right" Click="btnEditBasicInfo_Click"/>
+                </Grid>
 
                 <!-- Grid for Basic Info -->
                 <Grid>
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="3*"/>
                         <ColumnDefinition Width="2*"/>
-                        <ColumnDefinition Width="1*"/>
                     </Grid.ColumnDefinitions>
 
                     <!-- Rows -->
                     <Grid.RowDefinitions>
-                        <RowDefinition Height="1*"/>
-                        <RowDefinition Height="1*"/>
                         <RowDefinition Height="1*"/>
                         <RowDefinition Height="1*"/>
                         <RowDefinition Height="1*"/>
@@ -81,25 +87,20 @@
                     <DatePicker x:Name="dpNgaySinh" Text="{Binding NgaySinh}" Grid.Row="3" Grid.Column="1" VerticalAlignment="Center" IsEnabled="False"/>
                     <TextBox x:Name="txtEmail" Text="{Binding Email}" Grid.Row="4" Grid.Column="1" VerticalAlignment="Center" IsReadOnly="True"/>
                     <TextBox x:Name="txtSDT" Text="{Binding SDT}" Grid.Row="5" Grid.Column="1" VerticalAlignment="Center" IsReadOnly="True"/>
-                    <TextBox x:Name="txtLoaiTaiKhoan" Text="{Binding LoaiTaiKhoan}" Grid.Row="6" Grid.Column="1" VerticalAlignment="Center" TextWrapping="Wrap" IsReadOnly="True"/>
+                    <ComboBox x:Name="cbLoaiTaiKhoan" Grid.Row="6" Grid.Column="1" 
+                              VerticalAlignment="Center" 
+                              ItemsSource="{Binding LoaiTaiKhoanItems}" 
+                              SelectedItem="{Binding SelectedLoaiTaiKhoan}" 
+                              IsEnabled="False"/>
                     <DatePicker x:Name="dpNgayDangKy" Text="{Binding NgayDangKy}" Grid.Row="7" Grid.Column="1" VerticalAlignment="Center" IsEnabled="False"/>
-                    <DatePicker x:Name="dpNgayHetHan" Text="{Binding NgayHetHan}" Grid.Row="8" Grid.Column="1" VerticalAlignment="Center" IsEnabled="False" />
-
-                    <!-- Edit Buttons -->
-                    <Button x:Name ="btnEdit0" Content="Edit" Grid.Row="0" Grid.Column="2" HorizontalAlignment="Center" Width="70" Margin="5" Click="btnEdit0_Click"/>
-                    <Button x:Name ="btnEdit1" Content="Edit" Grid.Row="1" Grid.Column="2" HorizontalAlignment="Center" Width="70" Margin="5" Click="btnEdit1_Click"/>
-                    <Button x:Name ="btnEdit2" Content="Edit" Grid.Row="2" Grid.Column="2" HorizontalAlignment="Center" Width="70" Margin="5" Click="btnEdit2_Click"/>
-                    <Button x:Name ="btnEdit3" Content="Edit" Grid.Row="3" Grid.Column="2" HorizontalAlignment="Center" Width="70" Margin="5" Click="btnEdit3_Click"/>
-                    <Button x:Name ="btnEdit4" Content="Edit" Grid.Row="4" Grid.Column="2" HorizontalAlignment="Center" Width="70" Margin="5" Click="btnEdit4_Click"/>
-                    <Button x:Name ="btnEdit5" Content="Edit" Grid.Row="5" Grid.Column="2" HorizontalAlignment="Center" Width="70" Margin="5" Click="btnEdit5_Click"/>
-                    <Button x:Name ="btnEdit6" Content="Edit" Grid.Row="6" Grid.Column="2" HorizontalAlignment="Center" Width="70" Margin="5" Click="btnEdit6_Click"/>
-                    <Button x:Name ="btnEdit7" Content="Edit" Grid.Row="7" Grid.Column="2" HorizontalAlignment="Center" Width="70" Margin="5" Click="btnEdit7_Click"/>
-                    <Button x:Name ="btnEdit8" Content="Edit" Grid.Row="8" Grid.Column="2" HorizontalAlignment="Center" Width="70" Margin="5" Click="btnEdit8_Click"/>
+                    <DatePicker x:Name="dpNgayHetHan" Text="{Binding NgayHetHan}" Grid.Row="8" Grid.Column="1" VerticalAlignment="Center" IsEnabled="False"/>
                 </Grid>
             </StackPanel>
+
             <Button x:Name ="btnSignUp" Margin="0,20" Content="Save" Foreground="#ffffff" 
                     FontSize="18" materialDesign:ButtonAssist.CornerRadius="22" Height="45" Width="120" 
                     Click="btnSave_Click"/>
         </StackPanel>
+        
     </ScrollViewer>
 </UserControl>

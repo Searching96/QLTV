@@ -36,7 +36,7 @@ namespace QLTV_TranBin
         public BaoCaoThongKe()
         {
             InitializeComponent();
-            var theLoaiMuon = new TinhTheLoaiMuon(new QLTVContext()).GetTheLoaiMuon();
+            var theLoaiMuon = new TinhTheLoaiMuon(new QLTV2Context()).GetTheLoaiMuon();
             theLoaiMuon = CalculatePercentage(theLoaiMuon);
 
             PieSeriesCollection = new SeriesCollection();

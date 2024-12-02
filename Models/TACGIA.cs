@@ -9,6 +9,8 @@ public partial class TACGIA
 
     public string? MaTacGia { get; set; }
 
+    public string TenTacGia { get; set; } = null!;
+
     public int NamSinh { get; set; }
 
     public string QuocTich { get; set; } = null!;

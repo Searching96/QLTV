@@ -39,6 +39,8 @@ create table [TAIKHOAN]
 	[ID] int identity(1, 1) constraint [PK_TAIKHOAN] primary key,
 	[MaTaiKhoan] as ('TK' + right('00000' + cast([ID] as varchar(5)), 5)) persisted,
 	[TenTaiKhoan] nvarchar(100) constraint [UQ_TenTaiKhoan] unique not null,
+	[Hoten] nvarchar(100) not null,
+	[GioiTinh] nvarchar(5) not null,
 	[MatKhau] varchar(50) not null,
 	[Email] varchar(100) constraint [UQ_Email] unique not null,
 	[SinhNhat] date not null,
@@ -63,8 +65,7 @@ create table [ADMIN]
 (
 	[ID] int identity(1, 1) constraint [PK_ADMIN] primary key,
 	[MaAdmin] as ('AD' + right('00000' + cast([ID] as varchar(5)), 5)) persisted,
-	[TenAdmin] nvarchar(100),
-	[GioiTinh] nvarchar(10),
+	
 	[IDTaiKhoan] int not null, -- FK 
 	
 )
@@ -73,8 +74,7 @@ create table [DOCGIA]
 (
     [ID] int identity(1, 1) constraint [PK_DOCGIA] primary key,
     [MaDocGia] as ('DG' + right('00000' + cast([ID] as varchar(5)), 5)) persisted,
-	[TenDocGia] nvarchar(100),
-	[GioiTinh] nvarchar(10),
+	
     [IDTaiKhoan] int not null, -- FK
     [IDLoaiDocGia] int not null, -- FK
     

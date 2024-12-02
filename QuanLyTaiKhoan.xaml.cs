@@ -49,7 +49,7 @@ namespace QLTV_TranBin
         {
             try
             {
-                using (var context = new QLTVContext())
+                using (var context = new QLTV2Context())
                 {
                     // Tải dữ liệu từ TAIKHOAN và liên kết với DOCGIA hoặc ADMIN dựa trên IDPhanQuyen
                     var accounts = context.TAIKHOAN
@@ -67,15 +67,10 @@ namespace QLTV_TranBin
                             NgayDangKy = tk.NgayMo,
                             NgayHetHan = tk.NgayDong,
                             BgColor = GenerateRandomColor(),
+                            TenNguoiDung = tk.HoTen,
+                            GioiTinh = tk.GioiTinh,
 
-                            // Lấy dữ liệu từ DOCGIA nếu IDPhanQuyen == 4, nếu không thì lấy từ ADMIN
-                            TenNguoiDung = tk.IDPhanQuyen == 4
-                                ? tk.DOCGIA.FirstOrDefault(dg => dg.IDTaiKhoan == tk.ID).TenDocGia
-                                : tk.ADMIN.FirstOrDefault(ad => ad.IDTaiKhoan == tk.ID).TenAdmin,
-
-                            GioiTinh = tk.IDPhanQuyen == 4
-                                ? tk.DOCGIA.FirstOrDefault(dg => dg.IDTaiKhoan == tk.ID).GioiTinh
-                                : tk.ADMIN.FirstOrDefault(ad => ad.IDTaiKhoan == tk.ID).GioiTinh,
+                            
 
                             
                         })
@@ -202,7 +197,7 @@ namespace QLTV_TranBin
         {
             try
             {
-                using (var context = new QLTVContext())
+                using (var context = new QLTV2Context())
                 {
                     // Lấy giá trị nhập từ TextBox
                     string searchValue = txtSearch.Text.Trim();
@@ -324,7 +319,7 @@ namespace QLTV_TranBin
             {
                 try
                 {
-                    using (var context = new QLTVContext())
+                    using (var context = new QLTV2Context())
                     {
                         // Dùng Transaction để đảm bảo tính toàn vẹn khi thao tác với cơ sở dữ liệu
                         using (var transaction = context.Database.BeginTransaction())
@@ -440,13 +435,22 @@ namespace QLTV_TranBin
                         int soDongBiLoi = 0;
                         List<string> danhSachLoi = new List<string>(); // Ghi nhận dòng lỗi
                         
-                        using (var context = new QLTVContext())
+                        using (var context = new QLTV2Context())
                         {
                             for (int row = 2; row <= rowCount; row++) // Bỏ qua hàng tiêu đề
                             {
                                 try
                                 {
-                                    
+                                    var tenTaiKhoan = worksheet.Cells[row, 1].Text; // Cột 1: Tên tài khoản
+                                    var email = worksheet.Cells[row, 2].Text;       // Cột 2: Email
+
+                                    // Kiểm tra xem TenTaiKhoan hoặc Email đã tồn tại trong cơ sở dữ liệu chưa
+                                    var accountExists = context.TAIKHOAN.Any(a => a.TenTaiKhoan == tenTaiKhoan || a.Email == email);
+                                    if (accountExists)
+                                    {
+                                        throw new Exception($"Tên tài khoản hoặc Email đã tồn tại: TenTaiKhoan='{tenTaiKhoan}', Email='{email}'");
+                                    }
+
                                     var account = new TAIKHOAN
                                     {
                                         TenTaiKhoan = worksheet.Cells[row, 1].Text, // Cột 1: Tên tài khoản

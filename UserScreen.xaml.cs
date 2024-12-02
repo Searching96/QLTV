@@ -25,65 +25,65 @@ namespace QLTV_TranBin
     public partial class UserScreen : Window
     {
         public ICommand CloseTabCommand { get; }
-        private readonly QLTVContext _context;
+        private readonly QLTV2Context _context;
 
         public UserScreen()
         {
             InitializeComponent();
-            _context = new QLTVContext();
+            _context = new QLTV2Context();
             CloseTabCommand = new RelayCommand(CloseTab);
             DataContext = this; // Đặt DataContext cho Window
-            RequireAccess();
+            //RequireAccess();
         }
         
-        public void RequireAccess()
-        {
-            // Lấy ID của người dùng hiện tại
-            int currentUserID = Settings.Default.CurrentUserID;
+        //public void RequireAccess()
+        //{
+        //    // Lấy ID của người dùng hiện tại
+        //    int currentUserID = Settings.Default.CurrentUserID;
 
-            using (var context = new QLTVContext())
-            {
-                // Lấy đối tượng DOCGIA theo ID tài khoản
-                var userDocGia = context.DOCGIA.FirstOrDefault(u => u.IDTaiKhoan == currentUserID);
+        //    using (var context = new QLTVContext())
+        //    {
+        //        // Lấy đối tượng DOCGIA theo ID tài khoản
+        //        var userDocGia = context.DOCGIA.FirstOrDefault(u => u.IDTaiKhoan == currentUserID);
 
-                // Kiểm tra nếu không tìm thấy hoặc thông tin còn thiếu
-                if (userDocGia == null ||
-                    string.IsNullOrEmpty(userDocGia.TenDocGia) ||
-                    string.IsNullOrEmpty(userDocGia.GioiTinh) ||
-                    string.IsNullOrEmpty(userDocGia.GioiThieu))
-                {
-                    // Hiển thị cửa sổ yêu cầu điền thông tin
-                    MessageBox.Show(
-                        "Thông tin của bạn chưa đầy đủ. Vui lòng cập nhật thông tin trước khi tiếp tục!",
-                        "Thông báo",
-                        MessageBoxButton.OK,
-                        MessageBoxImage.Warning
-                    );
+        //        // Kiểm tra nếu không tìm thấy hoặc thông tin còn thiếu
+        //        if (userDocGia == null ||
+        //            string.IsNullOrEmpty(userDocGia.TenDocGia) ||
+        //            string.IsNullOrEmpty(userDocGia.GioiTinh) ||
+        //            string.IsNullOrEmpty(userDocGia.GioiThieu))
+        //        {
+        //            // Hiển thị cửa sổ yêu cầu điền thông tin
+        //            MessageBox.Show(
+        //                "Thông tin của bạn chưa đầy đủ. Vui lòng cập nhật thông tin trước khi tiếp tục!",
+        //                "Thông báo",
+        //                MessageBoxButton.OK,
+        //                MessageBoxImage.Warning
+        //            );
 
-                    // Mở cửa sổ để điền thông tin
-                    var updateInfoWindow = new UpdateTTDG(userDocGia); // Cửa sổ cập nhật thông tin
-                    updateInfoWindow.ShowDialog(); // Hiển thị và chờ người dùng hoàn tất việc điền thông tin
+        //            // Mở cửa sổ để điền thông tin
+        //            var updateInfoWindow = new UpdateTTDG(userDocGia); // Cửa sổ cập nhật thông tin
+        //            updateInfoWindow.ShowDialog(); // Hiển thị và chờ người dùng hoàn tất việc điền thông tin
 
-                    // Sau khi cửa sổ cập nhật đóng lại, kiểm tra lại thông tin
-                    if (string.IsNullOrEmpty(userDocGia.TenDocGia) ||
-                        string.IsNullOrEmpty(userDocGia.GioiTinh) ||
-                        string.IsNullOrEmpty(userDocGia.GioiThieu))
-                    {
-                        // Nếu vẫn thiếu, thông báo và không cho phép truy cập
-                        MessageBox.Show(
-                            "Bạn chưa hoàn tất cập nhật thông tin. Không thể tiếp tục!",
-                            "Thông báo",
-                            MessageBoxButton.OK,
-                            MessageBoxImage.Error
-                        );
+        //            // Sau khi cửa sổ cập nhật đóng lại, kiểm tra lại thông tin
+        //            if (string.IsNullOrEmpty(userDocGia.TenDocGia) ||
+        //                string.IsNullOrEmpty(userDocGia.GioiTinh) ||
+        //                string.IsNullOrEmpty(userDocGia.GioiThieu))
+        //            {
+        //                // Nếu vẫn thiếu, thông báo và không cho phép truy cập
+        //                MessageBox.Show(
+        //                    "Bạn chưa hoàn tất cập nhật thông tin. Không thể tiếp tục!",
+        //                    "Thông báo",
+        //                    MessageBoxButton.OK,
+        //                    MessageBoxImage.Error
+        //                );
 
-                        // Đóng cửa sổ hiện tại (nếu cần)
-                        Application.Current.Shutdown();
-                    }
-                }
-            }
+        //                // Đóng cửa sổ hiện tại (nếu cần)
+        //                Application.Current.Shutdown();
+        //            }
+        //        }
+        //    }
 
-        }
+        //}
         private void CloseTab(object parameter)
         {
             if (parameter is TabItem tabItem && tcUser.Items.Contains(tabItem))
@@ -202,7 +202,7 @@ namespace QLTV_TranBin
         }
         private AccountViewModel? GetAccountViewModelByUserID(int currentUserID)
         {
-            using (var context = new QLTVContext())
+            using (var context = new QLTV2Context())
             {
                 // Truy xuất tài khoản từ bảng TAIKHOAN
                 var taiKhoan = context.TAIKHOAN
@@ -229,8 +229,8 @@ namespace QLTV_TranBin
                     NgayHetHan = taiKhoan.NgayDong,
                     IDPhanQuyen = taiKhoan.IDPhanQuyen,
                     LoaiTaiKhoan = taiKhoan.IDPhanQuyenNavigation.MoTa,
-                    TenNguoiDung = docGia?.TenDocGia, // Lấy từ bảng DOCGIA
-                    GioiTinh = docGia?.GioiTinh,     // Lấy từ bảng DOCGIA
+                    TenNguoiDung = taiKhoan.HoTen, // Lấy từ bảng DOCGIA
+                    GioiTinh = taiKhoan.GioiTinh,     // Lấy từ bảng DOCGIA
                          
                 };
                 

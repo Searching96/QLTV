@@ -4,13 +4,13 @@ using Microsoft.EntityFrameworkCore;
 
 namespace QLTV_TranBin.Models;
 
-public partial class QLTVContext : DbContext
+public partial class QLTV2Context : DbContext
 {
-    public QLTVContext()
+    public QLTV2Context()
     {
     }
 
-    public QLTVContext(DbContextOptions<QLTVContext> options)
+    public QLTV2Context(DbContextOptions<QLTV2Context> options)
         : base(options)
     {
     }
@@ -59,30 +59,29 @@ public partial class QLTVContext : DbContext
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
 #warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see http://go.microsoft.com/fwlink/?LinkId=723263.
-        => optionsBuilder.UseSqlServer("Data Source=BJNB0\\SQLEXPRESS;Initial Catalog=QLTV;Integrated Security=True;Encrypt=True;Trust Server Certificate=True");
+        => optionsBuilder.UseSqlServer("Data Source=BJNB0\\SQLEXPRESS;Initial Catalog=QLTV2;Integrated Security=True;Encrypt=True;Trust Server Certificate=True");
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder.Entity<ACTIVE_SESSION>(entity =>
         {
-            entity.HasKey(e => e.ID).HasName("PK__ACTIVE_S__3214EC2769334631");
+            entity.HasKey(e => e.ID).HasName("PK_ACTIVESESSION");
 
             entity.Property(e => e.ExpiryTime).HasColumnType("datetime");
             entity.Property(e => e.SessionToken).HasMaxLength(255);
 
             entity.HasOne(d => d.IDTaiKhoanNavigation).WithMany(p => p.ACTIVE_SESSION)
                 .HasForeignKey(d => d.IDTaiKhoan)
-                .HasConstraintName("FK__ACTIVE_SE__IDTai__1BC821DD");
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK_ACTIVESESSION_TAIKHOAN");
         });
 
         modelBuilder.Entity<ADMIN>(entity =>
         {
-            entity.Property(e => e.GioiTinh).HasMaxLength(1000);
             entity.Property(e => e.MaAdmin)
                 .HasMaxLength(7)
                 .IsUnicode(false)
                 .HasComputedColumnSql("('AD'+right('00000'+CONVERT([varchar](5),[ID]),(5)))", true);
-            entity.Property(e => e.TenAdmin).HasMaxLength(1000);
 
             entity.HasOne(d => d.IDTaiKhoanNavigation).WithMany(p => p.ADMIN)
                 .HasForeignKey(d => d.IDTaiKhoan)
@@ -182,16 +181,11 @@ public partial class QLTVContext : DbContext
 
         modelBuilder.Entity<DOCGIA>(entity =>
         {
-            entity.Property(e => e.GioiThieu).HasMaxLength(500);
-            entity.Property(e => e.GioiTinh).HasMaxLength(1000);
             entity.Property(e => e.MaDocGia)
                 .HasMaxLength(7)
                 .IsUnicode(false)
                 .HasComputedColumnSql("('DG'+right('00000'+CONVERT([varchar](5),[ID]),(5)))", true);
-            entity.Property(e => e.TenDocGia).HasMaxLength(1000);
-            entity.Property(e => e.TongNo)
-                .HasDefaultValueSql("((0))")
-                .HasColumnType("decimal(18, 0)");
+            entity.Property(e => e.TongNo).HasColumnType("decimal(18, 0)");
 
             entity.HasOne(d => d.IDLoaiDocGiaNavigation).WithMany(p => p.DOCGIA)
                 .HasForeignKey(d => d.IDLoaiDocGia)
@@ -293,18 +287,21 @@ public partial class QLTVContext : DbContext
                 .IsUnicode(false)
                 .HasComputedColumnSql("('TG'+right('00000'+CONVERT([varchar](5),[ID]),(5)))", true);
             entity.Property(e => e.QuocTich).HasMaxLength(100);
+            entity.Property(e => e.TenTacGia).HasMaxLength(100);
         });
 
         modelBuilder.Entity<TAIKHOAN>(entity =>
         {
-            entity.HasIndex(e => e.Email, "UQ__TAIKHOAN__A9D105342895B847").IsUnique();
+            entity.HasIndex(e => e.Email, "UQ_Email").IsUnique();
 
-            entity.HasIndex(e => e.TenTaiKhoan, "UQ__TAIKHOAN__B106EAF8AB25C1BB").IsUnique();
+            entity.HasIndex(e => e.TenTaiKhoan, "UQ_TenTaiKhoan").IsUnique();
 
             entity.Property(e => e.DiaChi).HasMaxLength(200);
             entity.Property(e => e.Email)
                 .HasMaxLength(100)
                 .IsUnicode(false);
+            entity.Property(e => e.GioiTinh).HasMaxLength(5);
+            entity.Property(e => e.HoTen).HasMaxLength(100);
             entity.Property(e => e.MaTaiKhoan)
                 .HasMaxLength(7)
                 .IsUnicode(false)
@@ -359,7 +356,6 @@ public partial class QLTVContext : DbContext
                 .HasMaxLength(7)
                 .IsUnicode(false)
                 .HasComputedColumnSql("('TS'+right('00000'+CONVERT([varchar](5),[ID]),(5)))", true);
-            entity.Property(e => e.MoTa).HasMaxLength(1000);
             entity.Property(e => e.TenTuaSach).HasMaxLength(100);
 
             entity.HasMany(d => d.IDTacGia).WithMany(p => p.IDTuaSach)
