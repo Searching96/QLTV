@@ -98,9 +98,11 @@ namespace QLTV
             string tuaSach = cbbTuaSach.SelectedItem?.ToString() ?? string.Empty;
             string nhaXuatBan = tbxNhaXuatBan.Text;
             int namXuatBan = int.Parse(tbxNamXuatBan.Text);
-            DateTime ngayNhap;
-            bool isValidDate = DateTime.TryParseExact(tbxNgayNhap.Text, "dd/MM/yyyy",
-                CultureInfo.InvariantCulture, DateTimeStyles.None, out ngayNhap);
+            DateTime ngayNhap = DateTime.ParseExact(
+                dpNgayNhap.Text,
+                "dd/MM/yyyy",  // Định dạng ngày dmy
+                System.Globalization.CultureInfo.InvariantCulture
+            );
             decimal triGia = decimal.Parse(tbxTriGia.Text);
             string tinhTrang = cbbTinhTrang.SelectedItem?.ToString() ?? string.Empty;
             int soLuong = int.Parse(tbxSoLuong.Text);

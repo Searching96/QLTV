@@ -30,7 +30,8 @@
             <TextBlock Text="Năm Xuất Bản" Margin="10, 0, 10, 0"/>
             <TextBox x:Name="tbxNamXuatBan" Margin="10, 0, 10, 0"/>
             <TextBlock Text="Ngày Nhập" Margin="10, 0, 10, 0"/>
-            <TextBox x:Name="tbxNgayNhap" Margin="10, 0, 10, 0"/>
+            <DatePicker x:Name="dpNgayNhap" Margin="10, 0, 10, 0"
+                        Language="vi-VN"/>
             <TextBlock Text="Trị Giá" Margin="10, 0, 10, 0"/>
             <TextBox x:Name="tbxTriGia" Margin="10, 0, 10, 0"/>
             <TextBlock Text="Tình Trạng" Margin="10, 0, 10, 0"/>
