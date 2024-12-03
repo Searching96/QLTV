@@ -62,30 +62,6 @@ namespace QLTV
                 dgTuaSach.ItemsSource = dsTuaSach;
             }
         }
-        
-        public async Task<string> GetBookCoverUrlAsync(string tuaSach)
-        {
-            string apiKey = "AIzaSyDRuxWjyIOb0Vy2JVEaJEQxXNc70ijJJUg"; 
-            string url = $"https://www.googleapis.com/books/v1/volumes?q=intitle:{Uri.EscapeDataString(tuaSach)}&key={apiKey}";
-
-            using HttpClient client = new HttpClient();
-            var response = await client.GetStringAsync(url);
-            using JsonDocument document = JsonDocument.Parse(response);
-            var root = document.RootElement;
-
-            if (root.TryGetProperty("items", out JsonElement items) && items.GetArrayLength() > 0)
-            {
-                var volumeInfo = items[0].GetProperty("volumeInfo");
-                if (volumeInfo.TryGetProperty("imageLinks", out JsonElement imageLinks) &&
-                    imageLinks.TryGetProperty("thumbnail", out JsonElement thumbnail))
-                {
-                    return thumbnail.GetString() ?? "No cover available";
-                }
-            }
-
-            return "No cover available";
-        }
-
 
         private void btnThemTuaSach_Click(object sender, RoutedEventArgs e)
         {
@@ -659,6 +635,12 @@ namespace QLTV
         private async void btnTimBiaSach_Click(object sender, RoutedEventArgs e)
         {
             dynamic tuaSach = dgTuaSach.SelectedItem;
+            if (tuaSach == null)
+            {
+                MessageBox.Show("Hãy chọn tựa sách muốn sửa bìa.", "Thông báo", 
+                    MessageBoxButton.OK, MessageBoxImage.Error);
+                return;
+            }
 
             string maTuaSach = string.Empty;
             if (tuaSach != null) 
@@ -670,13 +652,18 @@ namespace QLTV
                     .Where(ts => ts.MaTuaSach == maTuaSach)
                     .FirstOrDefault();
 
-                string biaSach = await GetBookCoverUrlAsync(TuaSach.TenTuaSach);
-                if (biaSach != "No cover available")
-                    TuaSach.BiaSach = biaSach;
-                context.SaveChanges();
-            }
+                AWSuaBiaSach awSuaBiaSach = new AWSuaBiaSach(TuaSach);
+                if (awSuaBiaSach.ShowDialog() == true)
+                {
+                    LoadTuaSach();
 
-            LoadTuaSach();
+                    BitmapImage bitmap = new BitmapImage();
+                    bitmap.BeginInit();
+                    bitmap.UriSource = new Uri(awSuaBiaSach.TuaSach.BiaSach, UriKind.Absolute);
+                    bitmap.EndInit();
+                    imgBiaSach.Source = bitmap;
+                }
+            }
         }
     }
 }

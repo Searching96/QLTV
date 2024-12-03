@@ -131,6 +131,7 @@
                      materialDesign:TextFieldAssist.HasLeadingIcon="True"
                      materialDesign:TextFieldAssist.LeadingIcon="TimerSand"
                      Margin="{x:Static local:AWThemTuaSach.DisplayElementMargin}"
+                     Text="2"
                      TextChanged="tbxHanMuonToiDa_TextChanged"/>
 
             <materialDesign:PackIcon x:Name="icHanMuonToiDaError" Grid.Row="3"

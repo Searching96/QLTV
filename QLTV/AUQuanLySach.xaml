@@ -75,12 +75,14 @@
                     <RowDefinition Height="Auto"/>
                 </Grid.RowDefinitions>
 
-                <Grid Grid.Column="0" Grid.Row="0" Grid.RowSpan="3">
+                <Border x:Name="bdBiaSach" Visibility="Visible"
+                        Grid.Row="0" Grid.Column="0" Grid.RowSpan="3"
+                        Width="75" Height="117.5"
+                        BorderBrush="Black" BorderThickness="1"
+                        VerticalAlignment="Top" HorizontalAlignment="Center">
                     <Image x:Name="imgBiaSach"
-                           Grid.Column="0" Grid.Row="0" Grid.RowSpan="3"
-                           VerticalAlignment="Center" HorizontalAlignment="Center"
-                           Stretch="Uniform" Margin="5"/>
-                </Grid>
+                           Stretch="Fill"/>
+                </Border>
 
                 <TextBox x:Name="tbxMaSach" Grid.Row="0" Grid.Column="1"
                          Style="{StaticResource DataDisplayTextBox}"

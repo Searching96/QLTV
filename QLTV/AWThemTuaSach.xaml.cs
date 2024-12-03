@@ -260,7 +260,8 @@ namespace QLTV
                 return;
             }
 
-            icHanMuonToiDaError.Visibility = Visibility.Collapsed;
+            if (icHanMuonToiDaError != null) 
+                icHanMuonToiDaError.Visibility = Visibility.Collapsed;
         }
 
         private void tbxDSTheLoai_TextChanged(object sender, TextChangedEventArgs e)

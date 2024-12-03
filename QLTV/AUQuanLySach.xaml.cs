@@ -141,6 +141,20 @@ namespace QLTV
                             }
                         }
                     }
+
+                    // Xử lý truyền book cover image
+                    string tenTuaSach = selectedBook.TuaSach;
+                    var tuaSach = context.TUASACH
+                        .Where(ts => ts.TenTuaSach == tenTuaSach)
+                        .FirstOrDefault();
+
+                    BitmapImage bitmap = new BitmapImage();
+                    bitmap.BeginInit();
+                    bitmap.UriSource = new Uri(tuaSach.BiaSach, UriKind.Absolute);
+                    bitmap.EndInit();
+
+                    imgBiaSach.Source = bitmap;
+                    bdBiaSach.Visibility = Visibility.Visible;
                 }
             }
             else
