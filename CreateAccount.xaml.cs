@@ -301,9 +301,10 @@ namespace QLTV_TranBin
 
                     // Gửi email cho người dùng (sử dụng MailKit hoặc phương thức khác)
                     SendEmailUsingMailKit(email, password);
+                    ClearFields();
                     // Reset các trường nhập liệu
                     ReloadRequested?.Invoke();
-                    ClearFields();
+                    
                 }
             }
             catch (Exception ex)

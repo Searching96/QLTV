@@ -1,10 +1,15 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿
+using HandyControl.Tools.Extension;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Identity.Client;
 using QLTV_TranBin.GridViewModels;
 using QLTV_TranBin.Models;
 using QLTV_TranBin.Properties;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.ComponentModel;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -16,7 +21,9 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
-using System.Windows.Shapes;
+
+using System.IO;
+
 
 namespace QLTV_TranBin
 {
@@ -29,24 +36,44 @@ namespace QLTV_TranBin
     {
         private AccountViewModel? _currentAccount; // Thuộc tính lưu DataContext
         public ObservableCollection<string> LoaiTaiKhoanItems { get; set; }
-        public string SelectedLoaiTaiKhoan { get; set; }
+        private string _selectedLoaiTaiKhoan;
+        public string SelectedLoaiTaiKhoan
+        {
+            get => _selectedLoaiTaiKhoan;
+            set
+            {
+                if (_selectedLoaiTaiKhoan != value)
+                {
+                    _selectedLoaiTaiKhoan = value;
+                    OnPropertyChanged(nameof(SelectedLoaiTaiKhoan));
+                }
+            }
+        }
+        public event PropertyChangedEventHandler PropertyChanged;
+        protected void OnPropertyChanged(string propertyName)
+        {
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+        }
         public ChiTietTaiKhoan()
         {
             InitializeComponent();
             DataContextChanged += ChiTietTaiKhoan_DataContextChanged; // Gắn sự kiện DataContextChanged
             
         }
-        private void LoadLoaiTaiKhoanData()
+
+        
+
+        private void LoadLoaiTaiKhoanData(AccountViewModel _currentAccount )
         {
-           
             // Khởi tạo danh sách
             LoaiTaiKhoanItems = new ObservableCollection<string>();
+            string temp = "";
 
             using (var db = new QLTV2Context())
             {
-                if (_currentAccount?.IDPhanQuyen == 4)
+                if (_currentAccount?.IDPhanQuyen == 4) // Trường hợp độc giả
                 {
-                    // Lấy TenLoaiDocGia từ bảng LOAIDOCGIA
+                    // Lấy danh sách TenLoaiDocGia từ bảng LOAIDOCGIA
                     var loaiDocGiaList = db.LOAIDOCGIA
                                            .Where(ldg => !ldg.IsDeleted)
                                            .Select(ldg => ldg.TenLoaiDocGia)
@@ -56,10 +83,24 @@ namespace QLTV_TranBin
                     {
                         LoaiTaiKhoanItems.Add(item!);
                     }
+
+                    // Tìm loại độc giả hiện tại của tài khoản này từ bảng DOCGIA
+                    
+                    var tk = db.TAIKHOAN.FirstOrDefault(t => t.MaTaiKhoan == _currentAccount.MaTaiKhoan && !t.IsDeleted);
+                    
+                    var currentLoaiDocGia = db.DOCGIA
+                                              .Where(dg => dg.IDTaiKhoan == tk.ID)
+                                              .Select(dg => dg.IDLoaiDocGiaNavigation.TenLoaiDocGia)
+                                              .FirstOrDefault();
+                    
+                    if (currentLoaiDocGia != null)
+                    {
+                        temp = currentLoaiDocGia;
+                    }
                 }
-                else
+                else // Trường hợp không phải độc giả (Admin hoặc các quyền khác)
                 {
-                    // Lấy MaHanhDong từ bảng PHANQUYEN
+                    // Lấy danh sách MoTa từ bảng PHANQUYEN, loại trừ ID = 4 (DOCGIA)
                     var phanQuyenList = db.PHANQUYEN
                                           .Where(pq => !pq.IsDeleted && pq.ID != 4)
                                           .Select(pq => pq.MoTa)
@@ -69,19 +110,29 @@ namespace QLTV_TranBin
                     {
                         LoaiTaiKhoanItems.Add(item);
                     }
+
+                    // Tìm quyền hiện tại của tài khoản từ bảng PHANQUYEN
+                    
+                    var currentMoTa = db.PHANQUYEN
+                                        .Where(pq => !pq.IsDeleted && pq.ID == _currentAccount.IDPhanQuyen)
+                                        .Select(pq => pq.MoTa)
+                                        .FirstOrDefault();
+
+                    if (currentMoTa != null)
+                    {
+                        temp = currentMoTa;
+                        
+                    }
                 }
             }
 
             // Gán danh sách vào ComboBox
             cbLoaiTaiKhoan.ItemsSource = LoaiTaiKhoanItems;
-
-            // Đặt giá trị mặc định
-            if (LoaiTaiKhoanItems.Any())
-            {
-                cbLoaiTaiKhoan.SelectedIndex = 0;
-                SelectedLoaiTaiKhoan = LoaiTaiKhoanItems[0];
-            }
+            SelectedLoaiTaiKhoan = temp;
+            cbLoaiTaiKhoan.Text = SelectedLoaiTaiKhoan;
+            
         }
+
         public void LoadData()
         {
             
@@ -102,12 +153,15 @@ namespace QLTV_TranBin
 
         private void ChiTietTaiKhoan_DataContextChanged(object sender, DependencyPropertyChangedEventArgs e)
         {
-            // Lấy DataContext mới khi nó thay đổi
+            // Gán DataContext mới vào _currentAccount
             _currentAccount = DataContext as AccountViewModel;
+            
             if (_currentAccount != null)
             {
+                
+                AccountViewModel temp  = _currentAccount;
                 LoadData();
-                LoadLoaiTaiKhoanData();
+                LoadLoaiTaiKhoanData(temp);
             }
         }
 
@@ -226,16 +280,58 @@ namespace QLTV_TranBin
             else
             {
                 // Không cho phép chỉnh sửa nếu không đủ quyền
-                txtTenNguoiDung.IsReadOnly = true;
-                txtGioiTinh.IsReadOnly = true;
-                txtDiaChi.IsReadOnly = true;
-                dpNgaySinh.IsEnabled = true;
+                txtTenNguoiDung.IsReadOnly = false;
+                txtGioiTinh.IsReadOnly = false;
+                txtDiaChi.IsReadOnly = false;
+                dpNgaySinh.IsEnabled = false;
                 txtEmail.IsReadOnly = true;
-                txtSDT.IsReadOnly = true;
+                txtSDT.IsReadOnly = false;
                 cbLoaiTaiKhoan.IsEnabled = true;
                 dpNgayDangKy.IsEnabled = true;
                 dpNgayHetHan.IsEnabled = true;
             }
         }
+
+        private void ChangeAvatarButton_Click(object sender, RoutedEventArgs e)
+        {
+            // Tạo OpenFileDialog để người dùng chọn file
+            var openFileDialog = new Microsoft.Win32.OpenFileDialog();
+            openFileDialog.Filter = "Image Files|*.jpg;*.jpeg;*.png;*.bmp;*.gif"; // Định dạng ảnh
+            if (openFileDialog.ShowDialog() == true)
+            {
+                // Lấy đường dẫn mới của hình ảnh từ OpenFileDialog
+                string newImagePath = openFileDialog.FileName;
+
+                // Lấy đường dẫn tới thư mục Images trong thư mục gốc của dự án
+                string projectDirectory = AppDomain.CurrentDomain.BaseDirectory;
+                string imagesDirectory = Path.Combine(projectDirectory, @"..\..\..\Images"); // Đi tới thư mục Images từ thư mục bin
+
+                // Kiểm tra nếu thư mục Images không tồn tại, tạo mới
+                if (!Directory.Exists(imagesDirectory))
+                {
+                    Directory.CreateDirectory(imagesDirectory);
+                }
+
+                // Đặt tên cho ảnh mới và đường dẫn tới file DefaultAvatar.jpg
+                string newFileName = Path.Combine(imagesDirectory, "DefaultAvatar.jpg");
+
+                // Nếu file DefaultAvatar.jpg đã tồn tại, xóa nó đi trước khi thay thế
+                if (File.Exists(newFileName))
+                {
+                    File.Delete(newFileName);
+                }
+
+                // Copy ảnh mới vào thư mục Images và thay thế file DefaultAvatar.jpg
+                File.Copy(newImagePath, newFileName);
+
+                // Cập nhật ảnh mới vào Image trên giao diện
+                AvatarImage.ImageSource = new BitmapImage(new Uri(newFileName, UriKind.Absolute));
+
+                // Hiển thị thông báo
+                MessageBox.Show("Avatar đã được thay đổi thành: " + newFileName);
+            }
+        }
+
+
     }
 }

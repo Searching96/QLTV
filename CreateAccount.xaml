@@ -3,12 +3,30 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
          xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
-        FontSize="18" FontFamily="{DynamicResource MaterialDesignFont}" 
+        
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:QLTV_TranBin"
         mc:Ignorable="d"
-        Title="CreateAccount" Height="480" Width="720" WindowStartupLocation="CenterScreen">
-    <Grid>
+        Title="CreateAccount" Height="520" Width="720" WindowStartupLocation="CenterScreen">
+    <Window.Resources>
+        <Style x:Key="DataDisplayTextBox" TargetType="TextBox" BasedOn="{StaticResource MaterialDesignOutlinedTextBox}">
+            <Setter Property="Padding" Value="5.5"/>
+            <Setter Property="Height" Value="Auto"/>
+            <Setter Property="materialDesign:HintAssist.FloatingScale" Value="0.8"/>
+        </Style>
+        <Style x:Key="ModernDatePicker" TargetType="DatePicker" BasedOn="{StaticResource MaterialDesignOutlinedDatePicker}">
+            <Setter Property="materialDesign:HintAssist.FloatingScale" Value="0.8"/>
+            <Setter Property="Height" Value="Auto"/>
+            <Setter Property="Padding" Value="5.5"/>
+        </Style>
+        <Style x:Key="ModernComboBox" TargetType="ComboBox" BasedOn="{StaticResource MaterialDesignOutlinedComboBox}">
+            <Setter Property="materialDesign:HintAssist.FloatingScale" Value="0.8"/>
+            <Setter Property="Height" Value="Auto"/>
+            <Setter Property="Padding" Value="5.5"/>
+        </Style>
+    </Window.Resources>
+        <Grid>
+        
         <Grid.Effect>
             <DropShadowEffect BlurRadius="30" ShadowDepth="1" Opacity="0.4"/>
         </Grid.Effect>
@@ -27,6 +45,7 @@
                     <RowDefinition Height="*" />
                     <RowDefinition Height="*" />
                     <RowDefinition Height="*" />
+                    <RowDefinition Height="*" />
                     
                 </Grid.RowDefinitions>
 
@@ -34,7 +53,7 @@
                 <TextBox Grid.Row="0" x:Name="txtFullName" BorderThickness="0 0 0 1.5" Margin="10,10"
                         BorderBrush="#C5C8CC" materialDesign:HintAssist.FloatingOffset="0,-20" materialDesign:HintAssist.Hint="Full Name"
                         materialDesign:TextFieldAssist.HasLeadingIcon="True" materialDesign:TextFieldAssist.LeadingIcon="User"
-                        Style="{StaticResource MaterialDesignFloatingHintTextBox}" TextChanged="txtFullName_TextChanged" />
+                        Style="{StaticResource DataDisplayTextBox}" TextChanged="txtFullName_TextChanged" />
                         <materialDesign:PackIcon x:Name="icFullNameError" Grid.Row="0"
                         Style="{StaticResource ErrorIcon}"/>
                 <Grid Grid.Row="1" Margin="10,10">
@@ -49,7 +68,7 @@
                 <TextBox Grid.Row="2" x:Name="txtUsername" BorderThickness="0 0 0 1.5" Margin="10,10"
              BorderBrush="#C5C8CC" materialDesign:HintAssist.FloatingOffset="0,-20" materialDesign:HintAssist.Hint="Username"
              materialDesign:TextFieldAssist.HasLeadingIcon="True" materialDesign:TextFieldAssist.LeadingIcon="User"
-             Style="{StaticResource MaterialDesignFloatingHintTextBox}" TextChanged="txtUsername_TextChanged" />
+             Style="{StaticResource DataDisplayTextBox}" TextChanged="txtUsername_TextChanged" />
                 <materialDesign:PackIcon x:Name="icUsernameError" Grid.Row="0"
                                         Style="{StaticResource ErrorIcon}"/>
 
@@ -57,7 +76,7 @@
                 <TextBox Grid.Row="3" x:Name="txtEmail" BorderThickness="0 0 0 1.5" Margin="10,10"
              BorderBrush="#C5C8CC" materialDesign:HintAssist.FloatingOffset="0,-20" materialDesign:HintAssist.Hint="Email"
              materialDesign:TextFieldAssist.HasLeadingIcon="True" materialDesign:TextFieldAssist.LeadingIcon="Email"
-             Style="{StaticResource MaterialDesignFloatingHintTextBox}" TextChanged="txtEmail_TextChanged" />
+             Style="{StaticResource DataDisplayTextBox}" TextChanged="txtEmail_TextChanged" />
                 <materialDesign:PackIcon x:Name="icEmailError" Grid.Row="1"
                         Style="{StaticResource ErrorIcon}"/>
 
@@ -65,7 +84,7 @@
                 <TextBox Grid.Row="4" x:Name="txtAddress" BorderThickness="0 0 0 1.5" Margin="10,10"
              BorderBrush="#C5C8CC" materialDesign:HintAssist.FloatingOffset="0,-20" materialDesign:HintAssist.Hint="Địa chỉ"
              materialDesign:TextFieldAssist.HasLeadingIcon="True" materialDesign:TextFieldAssist.LeadingIcon="Location"
-             Style="{StaticResource MaterialDesignFloatingHintTextBox}" TextChanged="txtAddress_TextChanged" />
+             Style="{StaticResource DataDisplayTextBox}" TextChanged="txtAddress_TextChanged" />
                 <materialDesign:PackIcon x:Name="icAddressError" Grid.Row="2"
                         Style="{StaticResource ErrorIcon}"/>
 
@@ -73,13 +92,13 @@
                 <TextBox Grid.Row="5" x:Name="txtPhoneNumber" BorderThickness="0 0 0 1.5" Margin="10,10"
              BorderBrush="#C5C8CC" materialDesign:HintAssist.FloatingOffset="0,-20" materialDesign:HintAssist.Hint="Số điện thoại"
              materialDesign:TextFieldAssist.HasLeadingIcon="True" materialDesign:TextFieldAssist.LeadingIcon="Phone"
-             Style="{StaticResource MaterialDesignFloatingHintTextBox}" TextChanged="txtPhoneNumber_TextChanged" />
+             Style="{StaticResource DataDisplayTextBox}" TextChanged="txtPhoneNumber_TextChanged" />
                 <materialDesign:PackIcon x:Name="icPhoneNumberError" Grid.Row="3"
                         Style="{StaticResource ErrorIcon}"/>
 
                 <!-- Birthday -->
                 <DatePicker Grid.Row="0" Grid.Column="1" x:Name="dpBirthday" Margin="10,10,10,10" materialDesign:HintAssist.Hint="Birthday"
-                Style="{StaticResource MaterialDesignFloatingHintDatePicker}" materialDesign:TextFieldAssist.HasLeadingIcon="True"
+                Style="{StaticResource ModernDatePicker}" materialDesign:TextFieldAssist.HasLeadingIcon="True"
                 materialDesign:TextFieldAssist.LeadingIcon="Cake" >
                     <DatePicker.CalendarStyle>
                         <Style TargetType="Calendar" BasedOn="{StaticResource MaterialDesignCalendarPortrait}">
@@ -102,23 +121,23 @@
                 </Grid>
 
                 <!-- ComboBox -->
-                <ComboBox Grid.Row="2" Grid.Column="1" x:Name="cbPhanQuyen" Margin="10,0,10,0" Style="{DynamicResource MaterialDesignComboBox}"
+                <ComboBox Grid.Row="2" Grid.Column="1" x:Name="cbPhanQuyen" Margin="10,0,10,0" Style="{StaticResource ModernComboBox}"
               ItemsSource="{Binding AvailableRoles}"
               DisplayMemberPath="MoTa" SelectedValuePath="ID" SelectedValue="{Binding SelectedRoleID, Mode=TwoWay}"
-              SelectionChanged="cbPhanQuyen_SelectionChanged" Height="47" />
+              SelectionChanged="cbPhanQuyen_SelectionChanged" Height="50" />
 
                 <!-- Ngày Mở -->
                 <DatePicker Grid.Row="3" Grid.Column="1" x:Name="dpNgayMo" IsEnabled="False" Margin="10,10"
                 materialDesign:HintAssist.Hint="Pick Date" materialDesign:TextFieldAssist.HasClearButton="True"
-                Style="{StaticResource MaterialDesignFloatingHintDatePicker}"  />
+               Style="{StaticResource ModernDatePicker}"  />
 
                 <!-- Ngày Đóng -->
                 <DatePicker Grid.Row="4" Grid.Column="1" x:Name="dpNgayDong" IsEnabled="False" Margin="10,10,10,10"
                 materialDesign:HintAssist.Hint="Pick Date" materialDesign:TextFieldAssist.HasClearButton="True"
-                Style="{StaticResource MaterialDesignFloatingHintDatePicker}" />
+                Style="{StaticResource ModernDatePicker}" />
 
                 <!-- Button -->
-                <Button Grid.Row="5" Grid.Column="1" x:Name="btnSignUp" Margin="10,10" Content="Create" Foreground="#ffffff" FontSize="18"
+                <Button Grid.Row="6" Grid.Column="0" Grid.ColumnSpan="2" x:Name="btnSignUp" Margin="10,10" Content="Create" Foreground="#ffffff" FontSize="18"
             materialDesign:ButtonAssist.CornerRadius="22" Height="45" Width="120" Click="btnSignUp_Click" />
             </Grid>
 

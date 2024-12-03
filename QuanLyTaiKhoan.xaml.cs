@@ -26,6 +26,7 @@ using System.IO;
 using MimeKit;
 using MailKit.Net.Smtp;
 using System.Globalization;
+using MaterialDesignThemes.Wpf;
 
 
 namespace QLTV_TranBin
@@ -37,11 +38,14 @@ namespace QLTV_TranBin
     {
         public ObservableCollection<AccountViewModel> Accounts { get; set; } = new ObservableCollection<AccountViewModel>();
         private static Random random = new Random(); // Khởi tạo Random duy nhất
+        
+
 
         public QuanLyTaiKhoan()
         {
             InitializeComponent();
             DataContext = this; // Gán DataContext để binding
+            
             LoadData();
         }
         
@@ -68,11 +72,7 @@ namespace QLTV_TranBin
                             NgayHetHan = tk.NgayDong,
                             BgColor = GenerateRandomColor(),
                             TenNguoiDung = tk.HoTen,
-                            GioiTinh = tk.GioiTinh,
-
-                            
-
-                            
+                            GioiTinh = tk.GioiTinh,                           
                         })
                         .ToList();
 
@@ -254,17 +254,18 @@ namespace QLTV_TranBin
                 MessageBox.Show($"Đã xảy ra lỗi khi tìm kiếm: {ex.Message}", "Lỗi", MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
-        
+
+
         private void btnDetail_Click(object sender, RoutedEventArgs e)
         {
             // Lấy tài khoản hiện tại từ DataContext
             var button = sender as Button;
             if (button?.DataContext is AccountViewModel selectedAccount)
             {
-                // Truy cập TabControl trong UserControl
+                // Kiểm tra nếu TabControl không null
                 if (tcQLTK != null)
                 {
-                    // Kiểm tra xem Tab với tài khoản này đã tồn tại chưa
+                    // Kiểm tra nếu Tab với tài khoản đã tồn tại
                     var existingTab = tcQLTK.Items
                                         .OfType<TabItem>()
                                         .FirstOrDefault(tab => tab.Header?.ToString() == $"Profile - {selectedAccount.TenTaiKhoan}");
@@ -276,10 +277,10 @@ namespace QLTV_TranBin
                     }
                     else
                     {
-                        // Tạo UI mới từ UserControl
+                        // Tạo Tab mới
                         var profileTab = new TabItem
                         {
-                            Header = $"Profile - {selectedAccount.TenTaiKhoan}", // Đặt tiêu đề tab
+                            Header = $"Profile - {selectedAccount.TenTaiKhoan}", // Tiêu đề tab
                             Content = new ChiTietTaiKhoan
                             {
                                 DataContext = selectedAccount // Truyền dữ liệu vào DataContext
@@ -295,13 +296,26 @@ namespace QLTV_TranBin
                 }
                 else
                 {
-                    MessageBox.Show("TabControl không được tìm thấy trong UserControl!", "Lỗi", MessageBoxButton.OK, MessageBoxImage.Error);
+                    MessageBox.Show("TabControl không được tìm thấy!", "Lỗi", MessageBoxButton.OK, MessageBoxImage.Error);
+                }
+            }
+        }
+        private void CloseTab_Click(object sender, RoutedEventArgs e)
+        {
+            var button = sender as Button;
+            var tabItem = button?.DataContext as TabItem;
+            if (tabItem != null)
+            {
+                var tabControl = tabItem.Parent as TabControl;
+                if (tabControl != null)
+                {
+                    tabControl.Items.Remove(tabItem); // Loại bỏ tab khỏi TabControl
                 }
             }
         }
 
         private void btnXoa_Click(object sender, RoutedEventArgs e)
-        {
+            {
             // Lấy danh sách các dòng đang được chọn
             var selectedAccounts = new List<AccountViewModel>();
             foreach (var selectedItem in dgAccount.SelectedItems)

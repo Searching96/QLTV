@@ -20,7 +20,7 @@
                 </ResourceDictionary>
 
             </ResourceDictionary.MergedDictionaries>
-
+            
             <Style x:Key="ErrorIcon" TargetType="materialDesign:PackIcon">
                 <Setter Property="Kind" Value="AlertCircleOutline"/>
                 <Setter Property="Width" Value="20"/>

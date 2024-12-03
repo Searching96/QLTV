@@ -8,12 +8,28 @@
              xmlns:local="clr-namespace:QLTV_TranBin"
              mc:Ignorable="d" 
              d:DesignHeight="820" d:DesignWidth="860" >
+    
     <Grid Background="White">
         <Grid.RowDefinitions>
             <RowDefinition Height="*"/>
             <!-- Cho phép TabControl co giãn -->
         </Grid.RowDefinitions>
         <TabControl x:Name="tcQLTK" Margin="10">
+            <TabControl.ItemTemplate>
+                <DataTemplate>
+                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Stretch">
+                        <TextBlock Text="{Binding Header}" VerticalAlignment="Center" />
+                        <Button Click="CloseTab_Click"
+                        Background="Transparent" BorderBrush="Transparent">
+                            <TextBlock Text="X" Foreground="Red" FontWeight="Bold" />
+                        </Button>
+                    </StackPanel>
+                </DataTemplate>
+            </TabControl.ItemTemplate>
+
+
+
+
             <!-- Tab mặc định: Danh sách tài khoản -->
             <TabItem Header="Danh sách tài khoản">
                 <Grid Background="White">
@@ -30,7 +46,7 @@
                             <ColumnDefinition Width="1.25*"/>
                             <ColumnDefinition Width="0.75*"/>
                         </Grid.ColumnDefinitions>
-                        
+
                         <TextBlock x:Name="txtds" Text="Danh sách tài khoản" Margin="10,10"
                         FontWeight="Bold" FontSize="40"/>
                         <Grid Grid.Column="2">
@@ -54,7 +70,7 @@
                             </Button>
                         </Grid>
                     </Grid>
-                    
+
 
                     <!-- Thanh công cụ -->
                     <Grid Margin="20,0" Grid.Row="1">
@@ -67,16 +83,16 @@
                         </Grid.ColumnDefinitions>
 
                         <!-- Ô tìm kiếm -->
-                        <TextBox x:Name="txtSearch" Grid.Column="0"
+                        <TextBox x:Name="txtSearch" Grid.Column="0" Padding="5,5"
                                  Margin="5,0,0,0" VerticalAlignment="Center"
                                  materialDesign:HintAssist.Hint="Tìm kiếm"
-                                 Style="{StaticResource MaterialDesignFloatingHintTextBox}" Height="40"
+                                 Style="{StaticResource MaterialDesignOutlinedTextBox}" Height="40"
                                  TextChanged="txtSearch_TextChanged"/>
 
                         <!-- ComboBox -->
                         <ComboBox x:Name="cbSearchType" Grid.Column="1" Margin="5,0,5,0" 
                                   materialDesign:HintAssist.Hint="Search"
-                                  Height="40">
+                                  Height="40" Style="{StaticResource MaterialDesignOutlinedComboBox}" Padding="5,5">
 
                             <ComboBoxItem Tag="TenTaiKhoan" Content="Tên tài khoản" />
                             <ComboBoxItem Tag="IDPhanQuyen" Content="Loại tài khoản" />
@@ -91,7 +107,7 @@
                           Style="{StaticResource MaterialDesignRaisedLightButton}"
                           ToolTip="Resource name: MaterialDesignRaisedLightButton" />-->
                         <Button x:Name="btnTaoTaiKhoan"
-                                Grid.Column="2" Margin="5,0" Content="Thêm" HorizontalAlignment="Stretch" Click="btnTaoTaiKhoan_Click"     
+                                Grid.Column="2" Margin="5,0" Content="Thêm" Click="btnTaoTaiKhoan_Click"     
                                 IsEnabled="{Binding DataContext.ControlsEnabled, RelativeSource={RelativeSource FindAncestor, AncestorType=Window}}"
                                 Style="{StaticResource MaterialDesignRaisedLightButton}"
                                 ToolTip="Resource name: MaterialDesignRaisedLightButton" />
@@ -105,7 +121,7 @@
                                 IsEnabled="{Binding DataContext.ControlsEnabled, RelativeSource={RelativeSource FindAncestor, AncestorType=Window}}"
                                 Style="{StaticResource MaterialDesignRaisedLightButton}"
                                 ToolTip="Resource name: MaterialDesignRaisedLightButton" Click="btnLamMoi_Click" />
-                        
+
 
                         <!-- Nút thêm từ file -->
                         <!--<Button x:Name="btnThemFile" Grid.Column="3" 
@@ -166,7 +182,7 @@
                                             <Button x:Name="btnDetail" Style="{StaticResource gridEditButton}" Click="btnDetail_Click">
                                                 <Icon:PackIconMaterial Kind="Eye" Style="{StaticResource gridButtonIcon}"/>
                                             </Button>
-                                            
+
                                         </StackPanel>
                                     </DataTemplate>
                                 </DataGridTemplateColumn.CellTemplate>

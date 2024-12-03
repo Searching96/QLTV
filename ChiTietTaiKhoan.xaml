@@ -20,24 +20,49 @@
                     <!-- Info -->
                 </Grid.ColumnDefinitions>
 
-                <!-- Avatar -->
-                <Border Background="Red" Grid.Column="0" HorizontalAlignment="Center" VerticalAlignment="Center" Width="120" Height="120" 
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="3*"/>
+                        <RowDefinition Height="1*"/>
+                    </Grid.RowDefinitions>
+                    <Border Background="Red" Grid.Column="0" HorizontalAlignment="Center" VerticalAlignment="Center" Width="120" Height="120"
                         BorderBrush="White" BorderThickness="2" CornerRadius="70">
-                    <!--<Image Source="YourAvatarImage.jpg" Stretch="UniformToFill"/>-->
-                </Border>
+
+                        <Ellipse Grid.Row="0">
+                            <Ellipse.Fill>
+                                <ImageBrush x:Name="AvatarImage" ImageSource="/Images/DefaultAvatar.jpg"
+                                    Stretch="UniformToFill"/>
+                            </Ellipse.Fill>
+                        </Ellipse>
+                        <!-- Avatar Image -->
+
+
+                        <!-- Button to change avatar -->
+
+                    </Border>
+                    <Button  Grid.Row="1" Click="ChangeAvatarButton_Click"  Margin="40,4,40,14" materialDesign:ButtonAssist.CornerRadius="10"
+                      Content="Đổi ảnh"
+                      IsEnabled="{Binding DataContext.ControlsEnabled, RelativeSource={RelativeSource FindAncestor, AncestorType=Window}}"
+                      Style="{StaticResource MaterialDesignRaisedLightButton}"
+                      ToolTip="Resource name: MaterialDesignRaisedLightButton" />
+
+                </Grid>
 
                 <!-- User Info -->
                 <StackPanel Grid.Column="1" VerticalAlignment="Center">
                     <TextBlock Text="{Binding TenTaiKhoan}" FontSize="22" FontWeight="Bold" Foreground="White"/>
                     <TextBlock Text="{Binding MaTaiKhoan, StringFormat='Mã Tài Khoản: {0}'}" 
-           FontSize="14" Foreground="#CCCCCC"/>
+                        FontSize="14" Foreground="#CCCCCC"/>
                 </StackPanel>
             </Grid>
 
             <!-- Content Section -->
 
-            <StackPanel Background="White" Margin="20">
-
+            <Grid Margin="20">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="1*"/>
+                    <RowDefinition Height="3*"/>
+                </Grid.RowDefinitions>
                 <!-- Title -->
                 <Grid>
                     <Grid.ColumnDefinitions>
@@ -50,7 +75,7 @@
                 </Grid>
 
                 <!-- Grid for Basic Info -->
-                <Grid>
+                <Grid Grid.Row="1">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="3*"/>
                         <ColumnDefinition Width="2*"/>
@@ -90,17 +115,17 @@
                     <ComboBox x:Name="cbLoaiTaiKhoan" Grid.Row="6" Grid.Column="1" 
                               VerticalAlignment="Center" 
                               ItemsSource="{Binding LoaiTaiKhoanItems}" 
-                              SelectedItem="{Binding SelectedLoaiTaiKhoan}" 
-                              IsEnabled="False"/>
+                                
+                              IsEnabled="True"/>
                     <DatePicker x:Name="dpNgayDangKy" Text="{Binding NgayDangKy}" Grid.Row="7" Grid.Column="1" VerticalAlignment="Center" IsEnabled="False"/>
                     <DatePicker x:Name="dpNgayHetHan" Text="{Binding NgayHetHan}" Grid.Row="8" Grid.Column="1" VerticalAlignment="Center" IsEnabled="False"/>
                 </Grid>
-            </StackPanel>
+            </Grid>
 
             <Button x:Name ="btnSignUp" Margin="0,20" Content="Save" Foreground="#ffffff" 
                     FontSize="18" materialDesign:ButtonAssist.CornerRadius="22" Height="45" Width="120" 
                     Click="btnSave_Click"/>
         </StackPanel>
-        
+
     </ScrollViewer>
 </UserControl>
