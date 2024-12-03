@@ -150,7 +150,131 @@ namespace QLTV
 
         private void dpNgayNhap_Loaded(object sender, RoutedEventArgs e)
         {
+            // Tìm TextBox bên trong DatePicker
+            var textBox = (dpNgayNhap.Template.FindName("PART_TextBox", dpNgayNhap) as TextBox);
+            if (textBox != null)
+            {
+                textBox.TextChanged += TextBox_TextChanged;
+            }
+        }
 
+        private void TextBox_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            var textBox = sender as TextBox;
+
+            // Danh sách định dạng hỗ trợ nhiều cách nhập ngày
+            string[] formats = { "dd/MM/yyyy", "d/M/yyyy", "dd/M/yyyy", "d/MM/yyyy" };
+            if (!DateTime.TryParseExact(textBox.Text, formats, null, System.Globalization.DateTimeStyles.AllowWhiteSpaces, out DateTime ngayNhap))
+            {
+                icNgayNhapError.ToolTip = "Ngày Nhập không hợp lệ (định dạng đúng: dd/MM/yyyy)";
+                icNgayNhapError.Visibility = Visibility.Visible;
+                return;
+            }
+
+            // Kiểm tra giới hạn ngày từ 1/1/2000 đến hiện tại
+            DateTime minDate = new DateTime(2000, 1, 1);
+            if (ngayNhap < minDate)
+            {
+                icNgayNhapError.ToolTip = "Ngày Nhập không được trước ngày 1/1/2000";
+                icNgayNhapError.Visibility = Visibility.Visible;
+                return;
+            }
+
+            if (ngayNhap > DateTime.Now)
+            {
+                icNgayNhapError.ToolTip = "Ngày Nhập không được sau ngày hiện tại";
+                icNgayNhapError.Visibility = Visibility.Visible;
+                return;
+            }
+
+            // Nếu hợp lệ, ẩn thông báo lỗi
+            icNgayNhapError.Visibility = Visibility.Collapsed;
+        }
+
+        private void tbxNhaXuatBan_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            if (string.IsNullOrWhiteSpace(tbxNhaXuatBan.Text))
+            {
+                icNhaXuatBanError.ToolTip = "Nhà Xuất Bản không được để trống";
+                icNhaXuatBanError.Visibility = Visibility.Visible;
+                return;
+            }
+
+            foreach (char c in tbxNhaXuatBan.Text)
+            {
+                if (!char.IsLetter(c) && !char.IsDigit(c) && !char.IsWhiteSpace(c))
+                {
+                    icNhaXuatBanError.ToolTip = "Nhà Xuất Bản không được có kí tự đặc biệt";
+                    icNhaXuatBanError.Visibility = Visibility.Visible;
+                    return;
+                }
+            }
+
+            icNhaXuatBanError.Visibility = Visibility.Collapsed;
+        }
+
+        private void tbxNamXuatBan_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            if (string.IsNullOrWhiteSpace(tbxNamXuatBan.Text))
+            {
+                icNamXuatBanError.ToolTip = "Năm Xuất Bản không được để trống";
+                icNamXuatBanError.Visibility = Visibility.Visible;
+                return;
+            }
+
+            if (!int.TryParse(tbxNamXuatBan.Text, out int nxb))
+            {
+                icNamXuatBanError.ToolTip = "Năm Xuất Bản phải là số nguyên";
+                icNamXuatBanError.Visibility = Visibility.Visible;
+                return;
+            }
+
+            if (nxb <= 1900 || nxb > DateTime.Now.Year)
+            {
+                icNamXuatBanError.ToolTip = "Năm Xuất Bản phải sau 1900 và không quá năm hiện tại";
+                icNamXuatBanError.Visibility = Visibility.Visible;
+                return;
+            }
+
+            icNamXuatBanError.Visibility = Visibility.Collapsed;
+        }
+
+        private void tbxTriGia_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            if (string.IsNullOrWhiteSpace(tbxTriGia.Text))
+            {
+                icTriGiaError.ToolTip = "Trị Giá không được để trống";
+                icTriGiaError.Visibility = Visibility.Visible;
+                return;
+            }
+
+            if (!int.TryParse(tbxTriGia.Text, out int tg) || tg < 5000 || tg > 10000000)
+            {
+                icTriGiaError.ToolTip = "Trị Giá phải là lớn hơn 5 ngàn và nhỏ hơn 10 triệu";
+                icTriGiaError.Visibility = Visibility.Visible;
+                return;
+            }
+
+            icTriGiaError.Visibility = Visibility.Collapsed;
+        }
+
+        private void tbxSoLuong_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            if (string.IsNullOrWhiteSpace(tbxSoLuong.Text))
+            {
+                icSoLuongError.ToolTip = "Số Lượng không được để trống";
+                icSoLuongError.Visibility = Visibility.Visible;
+                return;
+            }
+
+            if (!int.TryParse(tbxSoLuong.Text, out int sl) || sl <= 0)
+            {
+                icSoLuongError.ToolTip = "Số Lượng phải là số nguyên dương";
+                icSoLuongError.Visibility = Visibility.Visible;
+                return;
+            }
+
+            icSoLuongError.Visibility = Visibility.Collapsed;
         }
     }
 }

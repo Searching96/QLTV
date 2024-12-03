@@ -55,8 +55,18 @@
                    FontWeight="Bold" HorizontalAlignment="Center"
                    VerticalAlignment="Center"/>
         
-        <StackPanel Orientation="Vertical" Grid.Row="1">
-            <ComboBox x:Name="cbbTuaSach" 
+        <Grid Grid.Row="1">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+            </Grid.RowDefinitions>
+
+            <ComboBox x:Name="cbbTuaSach" Grid.Row="0"
                       Style="{StaticResource ModernComboBox}"
                       materialDesign:HintAssist.Hint="Tựa Sách"
                       materialDesign:TextFieldAssist.HasLeadingIcon="True"
@@ -68,39 +78,64 @@
                       IsSynchronizedWithCurrentItem="False"
                       materialDesign:TextFieldAssist.HasClearButton="True"/>
 
-            <TextBox x:Name="tbxNhaXuatBan"
+            <materialDesign:PackIcon x:Name="icTuaSachError" Grid.Row="0"
+                                     Style="{StaticResource ErrorIcon}"
+                                     Margin="10, 0, 30, 10"/>
+
+            <TextBox x:Name="tbxNhaXuatBan" Grid.Row="1"
                      Style="{StaticResource DataDisplayTextBox}"
                      materialDesign:HintAssist.Hint="Nhà Xuất Bản"
                      materialDesign:TextFieldAssist.HasLeadingIcon="True"
                      materialDesign:TextFieldAssist.LeadingIcon="Publish"
-                     Margin="{x:Static local:AWThemTuaSach.DisplayElementMargin}"/>
+                     Margin="{x:Static local:AWThemTuaSach.DisplayElementMargin}"
+                     TextChanged="tbxNhaXuatBan_TextChanged"/>
 
-            <TextBox x:Name="tbxNamXuatBan"
+            <materialDesign:PackIcon x:Name="icNhaXuatBanError" Grid.Row="1"
+                                     Style="{StaticResource ErrorIcon}"
+                                     Margin="{x:Static local:AWThemTuaSach.ErrorIconMargin}"/>
+
+            <TextBox x:Name="tbxNamXuatBan" Grid.Row="2"
                      Style="{StaticResource DataDisplayTextBox}"
                      materialDesign:HintAssist.Hint="Năm Xuất Bản"
                      materialDesign:TextFieldAssist.HasLeadingIcon="True"
                      materialDesign:TextFieldAssist.LeadingIcon="StoreClock"
-                     Margin="{x:Static local:AWThemTuaSach.DisplayElementMargin}"/>
+                     Margin="{x:Static local:AWThemTuaSach.DisplayElementMargin}"
+                     TextChanged="tbxNamXuatBan_TextChanged"/>
 
-            <DatePicker x:Name="dpNgayNhap"
+            <materialDesign:PackIcon x:Name="icNamXuatBanError" Grid.Row="2"
+                                     Style="{StaticResource ErrorIcon}"
+                                     Margin="{x:Static local:AWThemTuaSach.ErrorIconMargin}"/>
+
+            <DatePicker x:Name="dpNgayNhap" Grid.Row="3"
                         Style="{StaticResource ModernDatePicker}"
                         materialDesign:HintAssist.Hint="Ngày Nhập"
                         materialDesign:TextFieldAssist.HasLeadingIcon="True"
                         materialDesign:TextFieldAssist.LeadingIcon="HomeImportOutline"
                         Margin="{x:Static local:AWThemTuaSach.DisplayElementMargin}"
+                        xmlns:sys="clr-namespace:System;assembly=mscorlib"
+                        SelectedDate="{x:Static sys:DateTime.Now}"
                         IsEnabled="True"
                         Loaded="dpNgayNhap_Loaded"
                         FirstDayOfWeek="Monday"
                         Language="vi-VN"/>
 
-            <TextBox x:Name="tbxTriGia"
+            <materialDesign:PackIcon x:Name="icNgayNhapError" Grid.Row="3"
+                                     Style="{StaticResource ErrorIcon}"
+                                     Margin="10, 0, 35, 10"/>
+
+            <TextBox x:Name="tbxTriGia" Grid.Row="4"
                      Style="{StaticResource DataDisplayTextBox}"
                      materialDesign:HintAssist.Hint="Trị Giá"
                      materialDesign:TextFieldAssist.HasLeadingIcon="True"
                      materialDesign:TextFieldAssist.LeadingIcon="Cash"
-                     Margin="{x:Static local:AWThemTuaSach.DisplayElementMargin}"/>
+                     Margin="{x:Static local:AWThemTuaSach.DisplayElementMargin}"
+                     TextChanged="tbxTriGia_TextChanged"/>
 
-            <ComboBox x:Name="cbbTinhTrang"
+            <materialDesign:PackIcon x:Name="icTriGiaError" Grid.Row="4"
+                                     Style="{StaticResource ErrorIcon}"
+                                     Margin="{x:Static local:AWThemTuaSach.ErrorIconMargin}"/>
+
+            <ComboBox x:Name="cbbTinhTrang" Grid.Row="5"
                       Style="{StaticResource ModernComboBox}"
                       materialDesign:HintAssist.Hint="Tình Trạng"
                       materialDesign:TextFieldAssist.HasLeadingIcon="True"
@@ -108,13 +143,23 @@
                       Margin="{x:Static local:AWThemTuaSach.DisplayElementMargin}"
                       IsEditable="True"/>
 
-            <TextBox x:Name="tbxSoLuong"
+            <materialDesign:PackIcon x:Name="icTinhTrangError" Grid.Row="5"
+                                     Style="{StaticResource ErrorIcon}"
+                                     Margin="10, 0, 30, 10"/>
+
+            <TextBox x:Name="tbxSoLuong" Grid.Row="6"
                      Style="{StaticResource DataDisplayTextBox}"
                      materialDesign:HintAssist.Hint="Số Lượng"
                      materialDesign:TextFieldAssist.HasLeadingIcon="True"
                      materialDesign:TextFieldAssist.LeadingIcon="AlphaNBox"
-                     Margin="{x:Static local:AWThemTuaSach.DisplayElementMargin}"/>
-        </StackPanel>
+                     Margin="{x:Static local:AWThemTuaSach.DisplayElementMargin}"
+                     Text="1"
+                     TextChanged="tbxSoLuong_TextChanged"/>
+
+            <materialDesign:PackIcon x:Name="icSoLuongError" Grid.Row="6"
+                                     Style="{StaticResource ErrorIcon}"
+                                     Margin="{x:Static local:AWThemTuaSach.ErrorIconMargin}"/>
+        </Grid>
         <Button x:Name="btnThem" Grid.Row="2" Content="Thêm" Margin="0, 5, 0, 5"
                 HorizontalAlignment="Center" VerticalAlignment="Center" Click="btnThem_Click"/>
     </Grid>

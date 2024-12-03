@@ -45,5 +45,46 @@ namespace QLTV
             this.DialogResult = true;
             this.Close();
         }
+
+        private void tbxTenTheLoai_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            if (string.IsNullOrWhiteSpace(tbxTenTheLoai.Text))
+            {
+                icTenTheLoaiError.ToolTip = "Tên Thể Loại không được để trống";
+                icTenTheLoaiError.Visibility = Visibility.Visible;
+                return;
+            }
+
+            if (tbxTenTheLoai.Text.Length > 100)
+            {
+                icTenTheLoaiError.ToolTip = "Tên Thể Loại không được quá 100 ký tự";
+                icTenTheLoaiError.Visibility = Visibility.Visible;
+                return;
+            }
+
+            foreach (char c in tbxTenTheLoai.Text)
+            {
+                if (!char.IsLetter(c) && !char.IsWhiteSpace(c))
+                {
+                    icTenTheLoaiError.ToolTip = "Tên Thể Loại không được có số hay kí tự đặc biệt";
+                    icTenTheLoaiError.Visibility = Visibility.Visible;
+                    return;
+                }
+            }
+
+            icTenTheLoaiError.Visibility = Visibility.Collapsed;
+        }
+
+        private void tbxMoTa_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            if (tbxMoTa.Text.Length > 500)
+            {
+                icMoTaError.ToolTip = "Mô Tả không được quá 500 ký tự";
+                icMoTaError.Visibility = Visibility.Visible;
+                return;
+            }
+
+            icMoTaError.Visibility = Visibility.Collapsed;
+        }
     }
 }

@@ -208,15 +208,15 @@ namespace QLTV
 
             if (string.IsNullOrWhiteSpace(tbxTenTheLoai.Text))
             {
-                icTenTheLoai.ToolTip = "Tên Thể Loại không được để trống";
-                icTenTheLoai.Visibility = Visibility.Visible;
+                icTenTheLoaiError.ToolTip = "Tên Thể Loại không được để trống";
+                icTenTheLoaiError.Visibility = Visibility.Visible;
                 return;
             }
 
             if (tbxTenTheLoai.Text.Length > 100)
             {
-                icTenTheLoai.ToolTip = "Tên Thể Loại không được quá 100 ký tự";
-                icTenTheLoai.Visibility = Visibility.Visible;
+                icTenTheLoaiError.ToolTip = "Tên Thể Loại không được quá 100 ký tự";
+                icTenTheLoaiError.Visibility = Visibility.Visible;
                 return;
             }
 
@@ -224,13 +224,13 @@ namespace QLTV
             {
                 if (!char.IsLetter(c) && !char.IsWhiteSpace(c))
                 {
-                    icTenTheLoai.ToolTip = "Tên Thể Loại không được có số hay kí tự đặc biệt";
-                    icTenTheLoai.Visibility = Visibility.Visible;
+                    icTenTheLoaiError.ToolTip = "Tên Thể Loại không được có số hay kí tự đặc biệt";
+                    icTenTheLoaiError.Visibility = Visibility.Visible;
                     return;
                 }
             }
 
-            icTenTheLoai.Visibility = Visibility.Collapsed;
+            icTenTheLoaiError.Visibility = Visibility.Collapsed;
         }
 
         private void tbxMoTa_TextChanged(object sender, TextChangedEventArgs e)
@@ -240,12 +240,12 @@ namespace QLTV
 
             if (tbxMoTa.Text.Length > 500)
             {
-                icMoTa.ToolTip = "Mô Tả không được quá 500 ký tự";
-                icMoTa.Visibility = Visibility.Visible;
+                icMoTaError.ToolTip = "Mô Tả không được quá 500 ký tự";
+                icMoTaError.Visibility = Visibility.Visible;
                 return;
             }
 
-            icMoTa.Visibility = Visibility.Collapsed;
+            icMoTaError.Visibility = Visibility.Collapsed;
         }
     }
 }

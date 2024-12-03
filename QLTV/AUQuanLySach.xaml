@@ -126,7 +126,8 @@
                          materialDesign:HintAssist.Hint="Nhà Xuất Bản"
                          materialDesign:TextFieldAssist.HasLeadingIcon="True"
                          materialDesign:TextFieldAssist.LeadingIcon="Publish"
-                         Margin="{x:Static local:AUQuanLyTuaSach.DisplayElementMargin}"/>
+                         Margin="{x:Static local:AUQuanLyTuaSach.DisplayElementMargin}"
+                         TextChanged="tbxNhaXuatBan_TextChanged"/>
 
                 <materialDesign:PackIcon x:Name="icNhaXuatBanError" Grid.Row="1" Grid.Column="4"
                                          Style="{StaticResource ErrorIcon}"
@@ -137,7 +138,8 @@
                          materialDesign:HintAssist.Hint="Năm Xuất Bản"
                          materialDesign:TextFieldAssist.HasLeadingIcon="True"
                          materialDesign:TextFieldAssist.LeadingIcon="StoreClock"
-                         Margin="{x:Static local:AUQuanLyTuaSach.DisplayElementMargin}"/>
+                         Margin="{x:Static local:AUQuanLyTuaSach.DisplayElementMargin}"
+                         TextChanged="tbxNamXuatBan_TextChanged"/>
 
                 <materialDesign:PackIcon x:Name="icNamXuatBanError" Grid.Row="2" Grid.Column="0"
                                          Style="{StaticResource ErrorIcon}"
@@ -148,7 +150,8 @@
                          materialDesign:HintAssist.Hint="Trị Giá"
                          materialDesign:TextFieldAssist.HasLeadingIcon="True"
                          materialDesign:TextFieldAssist.LeadingIcon="Cash"
-                         Margin="{x:Static local:AUQuanLyTuaSach.DisplayElementMargin}"/>
+                         Margin="{x:Static local:AUQuanLyTuaSach.DisplayElementMargin}"
+                         TextChanged="tbxTriGia_TextChanged"/>
 
                 <materialDesign:PackIcon x:Name="icTriGiaError" Grid.Row="2" Grid.Column="2"
                                          Style="{StaticResource ErrorIcon}"

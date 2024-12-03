@@ -74,10 +74,8 @@ namespace QLTV
 
         private void btnSuaTheLoai_Click(object sender, RoutedEventArgs e)
         {
-            // Chuyển DSTacGia trong TextBox thành List<TacGia>
             var currentCategories = ParseDSTheLoai(tbxDSTheLoai.Text);
 
-            // Lấy danh sách tất cả các tác giả từ cơ sở dữ liệu
             List<THELOAI> allCategories;
             using (var context = new QLTVContext())
             {
@@ -86,12 +84,10 @@ namespace QLTV
                                        .ToList();
             }
 
-            // Mở cửa sổ WDChonTacGia
             var awChonTheLoai = new AWChonTheLoai(allCategories, currentCategories);
 
             if (awChonTheLoai.ShowDialog() == true)
             {
-                // Cập nhật DSTacGia từ danh sách tác giả mới
                 var newSelectedCategories = awChonTheLoai.SelectedCategories;
                 tbxDSTheLoai.Text = string.Join(", ", newSelectedCategories.Select(c => c.TenTheLoai));
             }
@@ -168,6 +164,61 @@ namespace QLTV
 
             this.DialogResult = true;
             this.Close();
+        }
+
+        private void tbxTenTuaSach_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            if (string.IsNullOrWhiteSpace(tbxTenTuaSach.Text))
+            {
+                icTenTuaSachError.ToolTip = "Tên Tựa Sách không được để trống!";
+                icTenTuaSachError.Visibility = Visibility.Visible;
+                return;
+            }
+
+            icTenTuaSachError.Visibility = Visibility.Collapsed;
+        }
+
+        private void tbxHanMuonToiDa_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            if (string.IsNullOrWhiteSpace(tbxHanMuonToiDa.Text))
+            {
+                icHanMuonToiDaError.ToolTip = "Hạn Mượn Tối Đa không được để trống";
+                icHanMuonToiDaError.Visibility = Visibility.Visible;
+                return;
+            }
+
+            if (!int.TryParse(tbxHanMuonToiDa.Text, out int hmtd) || hmtd <= 0 || hmtd > 16)
+            {
+                icHanMuonToiDaError.ToolTip = "Hạn Mượn Tối Đa phải là số nguyên dương không quá 16";
+                icHanMuonToiDaError.Visibility = Visibility.Visible;
+                return;
+            }
+
+            icHanMuonToiDaError.Visibility = Visibility.Collapsed;
+        }
+
+        private void tbxDSTheLoai_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            if (string.IsNullOrWhiteSpace(tbxDSTheLoai.Text))
+            {
+                icDSTheLoaiError.ToolTip = "Thể Loại không được để trống";
+                icDSTheLoaiError.Visibility = Visibility.Visible;
+                return;
+            }
+
+            icDSTheLoaiError.Visibility = Visibility.Collapsed;
+        }
+
+        private void tbxDSTacGia_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            if (string.IsNullOrWhiteSpace(tbxDSTacGia.Text))
+            {
+                icDSTacGiaError.ToolTip = "Tác Giả không được để trống";
+                icDSTacGiaError.Visibility = Visibility.Visible;
+                return;
+            }
+
+            icDSTacGiaError.Visibility = Visibility.Collapsed;
         }
     }
 }

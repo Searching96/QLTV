@@ -55,15 +55,25 @@
                    FontWeight="Bold" HorizontalAlignment="Center"
                    VerticalAlignment="Center"/>
         
-        <StackPanel Orientation="Vertical" Grid.Row="1">
-            <TextBox x:Name="tbxTenTheLoai"
+        <Grid Grid.Row="1">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+            </Grid.RowDefinitions>
+            
+            <TextBox x:Name="tbxTenTheLoai" Grid.Row="0"
                      Style="{StaticResource DataDisplayTextBox}"
                      materialDesign:HintAssist.Hint="Tên Thể Loại"
                      materialDesign:TextFieldAssist.HasLeadingIcon="True"
                      materialDesign:TextFieldAssist.LeadingIcon="Shape"
-                     Margin="{x:Static local:AWThemTuaSach.DisplayElementMargin}"/>
+                     Margin="{x:Static local:AWThemTuaSach.DisplayElementMargin}"
+                     TextChanged="tbxTenTheLoai_TextChanged"/>
 
-            <TextBox x:Name="tbxMoTa"
+            <materialDesign:PackIcon x:Name="icTenTheLoaiError" Grid.Row="0"
+                                     Style="{StaticResource ErrorIcon}"
+                                     Margin="{x:Static local:AWThemTuaSach.ErrorIconMargin}"/>
+
+            <TextBox x:Name="tbxMoTa" Grid.Row="1"
                      Style="{StaticResource DataDisplayTextBox}"
                      materialDesign:HintAssist.Hint="Mô Tả"
                      materialDesign:TextFieldAssist.HasLeadingIcon="True"
@@ -71,8 +81,14 @@
                      Margin="{x:Static local:AWThemTuaSach.DisplayElementMargin}"
                      TextWrapping="Wrap" AcceptsReturn="True" 
                      VerticalScrollBarVisibility="Auto"
-                     MaxHeight="200"/>
-        </StackPanel>
+                     MaxHeight="200"
+                     TextChanged="tbxMoTa_TextChanged"/>
+
+            <materialDesign:PackIcon x:Name="icMoTaError" Grid.Row="1" VerticalAlignment="Bottom"
+                                     Style="{StaticResource ErrorIcon}" Background="Transparent"
+                                     Margin="10, 0, 35, 15"/>
+            
+        </Grid>
         
         <Button x:Name="btnThem" Grid.Row="2" Content="Thêm" Margin="0, 5, 0, 5"
                 HorizontalAlignment="Center" Click="btnThem_Click"/>

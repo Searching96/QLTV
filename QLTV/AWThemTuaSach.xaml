@@ -53,15 +53,27 @@
         <TextBlock Text="Thêm Tựa Sách" Grid.Row="0" FontSize="24"
                    FontWeight="Bold" HorizontalAlignment="Center"
                    VerticalAlignment="Center"/>
-        <StackPanel Orientation="Vertical" Grid.Row="1">
-            <TextBox x:Name="tbxTenTuaSach"
-                         Style="{StaticResource DataDisplayTextBox}"
-                         materialDesign:HintAssist.Hint="Tên Tựa Sách"
-                         materialDesign:TextFieldAssist.HasLeadingIcon="True"
-                         materialDesign:TextFieldAssist.LeadingIcon="NotebookOutline"
-                         Margin="{x:Static local:AWThemTuaSach.DisplayElementMargin}"/>
+        <Grid Grid.Row="1">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+            </Grid.RowDefinitions>
 
-            <Grid Margin="10, 0, 10, 0">
+            <TextBox x:Name="tbxTenTuaSach" Grid.Row="0"
+                     Style="{StaticResource DataDisplayTextBox}"
+                     materialDesign:HintAssist.Hint="Tên Tựa Sách"
+                     materialDesign:TextFieldAssist.HasLeadingIcon="True"
+                     materialDesign:TextFieldAssist.LeadingIcon="NotebookOutline"
+                     Margin="{x:Static local:AWThemTuaSach.DisplayElementMargin}"
+                     TextChanged="tbxTenTuaSach_TextChanged"/>
+
+            <materialDesign:PackIcon x:Name="icTenTuaSachError" Grid.Row="0"
+                                     Style="{StaticResource ErrorIcon}"
+                                     Margin="{x:Static local:AWThemTuaSach.ErrorIconMargin}"/>
+
+            <Grid Margin="10, 0, 10, 0" Grid.Row="1">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="10*"/>
                     <ColumnDefinition Width="1*"/>
@@ -71,7 +83,12 @@
                          materialDesign:HintAssist.Hint="Tác Giả"
                          materialDesign:TextFieldAssist.HasLeadingIcon="True"
                          materialDesign:TextFieldAssist.LeadingIcon="AccountGroup"
-                         Margin="{x:Static local:AUQuanLyTuaSach.DisplayElementMargin}"/>
+                         Margin="{x:Static local:AUQuanLyTuaSach.DisplayElementMargin}"
+                         TextChanged="tbxDSTacGia_TextChanged"/>
+
+                <materialDesign:PackIcon x:Name="icDSTacGiaError" Grid.Column="0"
+                                     Style="{StaticResource ErrorIcon}"
+                                     Margin="10, 0, 5, 10"/>
 
                 <Button x:Name="btnSuaTacGia" Grid.Column="1"
                         Margin="{x:Static local:AUQuanLyTuaSach.DisplayElementMargin}"
@@ -82,7 +99,7 @@
                                          Margin="{x:Static local:AUQuanLyTuaSach.DisplayElementMargin}"/>
             </Grid>
 
-            <Grid Margin="10, 0, 10, 0">
+            <Grid Margin="10, 0, 10, 0" Grid.Row="2">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="10*"/>
                     <ColumnDefinition Width="1*"/>
@@ -92,24 +109,35 @@
                          materialDesign:HintAssist.Hint="Thể Loại"
                          materialDesign:TextFieldAssist.HasLeadingIcon="True"
                          materialDesign:TextFieldAssist.LeadingIcon="Shape"
-                         Margin="{x:Static local:AUQuanLyTuaSach.DisplayElementMargin}"/>
+                         Margin="{x:Static local:AUQuanLyTuaSach.DisplayElementMargin}"
+                         TextChanged="tbxDSTheLoai_TextChanged"/>
+
+                <materialDesign:PackIcon x:Name="icDSTheLoaiError" Grid.Column="0"
+                                         Style="{StaticResource ErrorIcon}"
+                                         Margin="10, 0, 5, 10"/>
 
                 <Button x:Name="btnSuaTheLoai" Grid.Column="1"
                         Margin="{x:Static local:AUQuanLyTuaSach.DisplayElementMargin}"
-                        VerticalAlignment="Center" Click="btnSuaTacGia_Click"/>
+                        VerticalAlignment="Center" Click="btnSuaTheLoai_Click"/>
 
                 <materialDesign:PackIcon Kind="TextBoxEdit" HorizontalAlignment="Center"
                                          Grid.Column="1" VerticalAlignment="Center"
                                          Margin="{x:Static local:AUQuanLyTuaSach.DisplayElementMargin}"/>
             </Grid>
             
-            <TextBox x:Name="tbxHanMuonToiDa"
+            <TextBox x:Name="tbxHanMuonToiDa" Grid.Row="3"
                      Style="{StaticResource DataDisplayTextBox}"
                      materialDesign:HintAssist.Hint="Hạn Mượn Tối Đa (Tuần)"
                      materialDesign:TextFieldAssist.HasLeadingIcon="True"
                      materialDesign:TextFieldAssist.LeadingIcon="TimerSand"
-                     Margin="{x:Static local:AWThemTuaSach.DisplayElementMargin}"/>
-        </StackPanel>
+                     Margin="{x:Static local:AWThemTuaSach.DisplayElementMargin}"
+                     TextChanged="tbxHanMuonToiDa_TextChanged"/>
+
+            <materialDesign:PackIcon x:Name="icHanMuonToiDaError" Grid.Row="3"
+                                     Style="{StaticResource ErrorIcon}"
+                                     Margin="{x:Static local:AWThemTuaSach.ErrorIconMargin}"/>
+            
+        </Grid>
         <Button x:Name="btnThem" Grid.Row="2" Content="Thêm" Margin="0, 5, 0, 5"
                 HorizontalAlignment="Center" VerticalAlignment="Center" Click="btnThem_Click"/>
     </Grid>

@@ -90,7 +90,7 @@
                          Margin="{x:Static local:AUQuanLyTuaSach.DisplayElementMargin}"
                          TextChanged="tbxTenTheLoai_TextChanged"/>
 
-                <materialDesign:PackIcon x:Name="icTenTheLoai" Grid.Row="0" Grid.Column="2"
+                <materialDesign:PackIcon x:Name="icTenTheLoaiError" Grid.Row="0" Grid.Column="2"
                                          Style="{StaticResource ErrorIcon}"
                                          Margin="{x:Static local:AUQuanLyTuaSach.ErrorIconMargin}"/>
 
@@ -102,7 +102,7 @@
                          Margin="{x:Static local:AUQuanLyTuaSach.DisplayElementMargin}"
                          TextChanged="tbxMoTa_TextChanged"/>
 
-                <materialDesign:PackIcon x:Name="icMoTa" Grid.Row="0" Grid.Column="4"
+                <materialDesign:PackIcon x:Name="icMoTaError" Grid.Row="0" Grid.Column="4"
                                          Style="{StaticResource ErrorIcon}"
                                          Margin="{x:Static local:AUQuanLyTuaSach.ErrorIconMargin}"/>
             </Grid>
