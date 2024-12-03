@@ -69,8 +69,18 @@
         </Grid>
         <!-- Buttons -->
         <StackPanel Grid.Row="3" Orientation="Horizontal" HorizontalAlignment="Right">
-            <Button Content="Lưu" Width="100" Margin="0,0,10,0" Click="btnSave_Click"/>
-            <Button Content="Hủy" Width="100" Click="btnCancel_Click"/>
+            <Button Style="{StaticResource MaterialDesignRaisedButton}" ToolTip="Lưu" Width="100" Margin="0,0,10,0" Click="btnSave_Click">
+                <materialDesign:PackIcon Kind="BookArrowUpOutline"
+                        HorizontalAlignment="Center" VerticalAlignment="Center"
+                        Foreground="White" Background="Transparent" Width="20" Height="20"
+                        ToolTipService.InitialShowDelay="0"/>
+            </Button>
+            <Button Style="{StaticResource MaterialDesignRaisedButton}" ToolTip="Hủy" Width="100" Click="btnCancel_Click">
+                <materialDesign:PackIcon Kind="CancelCircleOutline"
+                        HorizontalAlignment="Center" VerticalAlignment="Center"
+                        Foreground="White" Background="Transparent" Width="20" Height="20"
+                        ToolTipService.InitialShowDelay="0"/>
+            </Button>
         </StackPanel>
     </Grid>
 </UserControl>

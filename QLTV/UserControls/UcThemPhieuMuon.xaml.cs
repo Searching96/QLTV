@@ -404,15 +404,15 @@ namespace QLTV.UserControls
                 }
 
                 // Update BCMUONSACH
-                var currentMonth = new DateTime(DateTime.Now.Year, DateTime.Now.Month, 1);
+                var Today = DateTime.Now;
                 var bcMuonSach = await _context.BCMUONSACH
-                    .FirstOrDefaultAsync(bc => bc.Thang == currentMonth);
+                    .FirstOrDefaultAsync(bc => bc.Thang == Today);
 
                 if (bcMuonSach == null)
                 {
                     bcMuonSach = new BCMUONSACH
                     {
-                        Thang = currentMonth,
+                        Thang = Today,
                         TongSoLuotMuon = _selectedBooks.Count
                     };
                     _context.BCMUONSACH.Add(bcMuonSach);

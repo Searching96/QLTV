@@ -247,6 +247,8 @@ namespace QLTV.UserControls
                             ctpt.TienPhat += book.TriGia * 0.5m;
                         }
 
+
+                        selectedReader.TongNo += ctpt.TienPhat;
                         ctpt.TinhTrangTra = returnBook.TinhTrangTra;
                         ctpt.GhiChu = returnBook.GhiChu;
 

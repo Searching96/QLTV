@@ -25,18 +25,63 @@
                     <DataGrid x:Name="dgBorrowingReports" Grid.Row="1" AutoGenerateColumns="False" 
                           IsReadOnly="True" SelectionMode="Single" Grid.ColumnSpan="2">
                         <DataGrid.Columns>
-                            <DataGridTextColumn Header="Mã báo cáo" Binding="{Binding MaBCMuonSach}"/>
-                            <DataGridTextColumn Header="Tháng" Binding="{Binding Thang, StringFormat=MM/yyyy}"/>
+                            <DataGridTextColumn Header="Tháng" Binding="{Binding Month, StringFormat=MM/yyyy}"/>
+                            <DataGridTextColumn Header="Tổng số lượt mượn" Binding="{Binding TongSoLuotMuon}"/>
                             <DataGridTemplateColumn Header="Thao tác">
                                 <DataGridTemplateColumn.CellTemplate>
                                     <DataTemplate>
                                         <StackPanel Orientation="Horizontal">
-                                            <Button Content="Chi tiết" Click="btnViewBorrowReportDetail_Click" Margin="0,0,5,0"/>
+                                            <Button Content="Chi tiết" Click="btnViewReportDetail_Click" Margin="0,0,5,0"/>
                                         </StackPanel>
                                     </DataTemplate>
                                 </DataGridTemplateColumn.CellTemplate>
                             </DataGridTemplateColumn>
                         </DataGrid.Columns>
+                        <DataGrid.RowDetailsTemplate>
+                            <DataTemplate>
+                                <DataGrid ItemsSource="{Binding DSBCMuonSach}" AutoGenerateColumns="False" 
+                                            IsReadOnly="True" SelectionMode="Single"
+                                            Margin="30,0,0,0">
+                                    <DataGrid.Columns>
+                                        <DataGridTextColumn Header="Mã báo cáo" Binding="{Binding BCMuonSach.MaBCMuonSach}"/>
+                                        <DataGridTextColumn Header="Ngày" Binding="{Binding BCMuonSach.Thang, StringFormat=dd/MM/yyyy}"/>
+                                        <DataGridTemplateColumn Header="Thao tác">
+                                            <DataGridTemplateColumn.CellTemplate>
+                                                <DataTemplate>
+                                                    <StackPanel Orientation="Horizontal">
+                                                        <Button Content="Chi tiết" Click="btnViewReportDetail_Click" Margin="0,0,5,0"/>
+                                                    </StackPanel>
+                                                </DataTemplate>
+                                            </DataGridTemplateColumn.CellTemplate>
+                                        </DataGridTemplateColumn>
+                                    </DataGrid.Columns>
+                                    <DataGrid.RowDetailsTemplate>
+                                        <DataTemplate>
+                                            <DataGrid ItemsSource="{Binding BCMuonSach.CTBCMUONSACH}" 
+                                                      AutoGenerateColumns="False" 
+                                                      IsReadOnly="True" Margin="30,0,0,0">
+                                                <DataGrid.Columns>
+                                                    <DataGridTextColumn Header="Mã thể loại" Binding="{Binding IDTheLoaiNavigation.MaTheLoai}"/>
+                                                    <DataGridTextColumn Header="Tên thể loại" Binding="{Binding IDTheLoaiNavigation.TenTheLoai}"/>
+                                                    <DataGridTextColumn Header="Số lượt mượn" Binding="{Binding SoLuotMuon}"/>
+                                                    <DataGridTextColumn Header="Tỉ lệ" Binding="{Binding TiLe, StringFormat=P2}"/>
+                                                </DataGrid.Columns>
+                                            </DataGrid>
+                                        </DataTemplate>
+                                    </DataGrid.RowDetailsTemplate>
+                                </DataGrid>
+                            </DataTemplate>
+                        </DataGrid.RowDetailsTemplate>
+                        <DataGrid.Resources>
+                            <Style TargetType="DataGridRow">
+                                <Setter Property="DetailsVisibility" Value="Collapsed" />
+                                <Style.Triggers>
+                                    <DataTrigger Binding="{Binding IsExpanded, RelativeSource={RelativeSource Self}}" Value="True">
+                                        <Setter Property="DetailsVisibility" Value="Visible" />
+                                    </DataTrigger>
+                                </Style.Triggers>
+                            </Style>
+                        </DataGrid.Resources>
                     </DataGrid>
                 </Grid>
             </TabItem>
@@ -52,22 +97,43 @@
                         <RowDefinition Height="*"/>
                     </Grid.RowDefinitions>
 
-                    <!-- Borrowing Reports DataGrid -->
+                    <!-- Late Returning Reports DataGrid -->
                     <DataGrid x:Name="dgLateReturnReports" Grid.Row="1" AutoGenerateColumns="False" 
-              IsReadOnly="True" SelectionMode="Single" Grid.ColumnSpan="2">
+                            IsReadOnly="True" SelectionMode="Single" Grid.ColumnSpan="2">
                         <DataGrid.Columns>
-                            <DataGridTextColumn Header="Mã báo cáo" Binding="{Binding MaBCTraTre}"/>
-                            <DataGridTextColumn Header="Tháng" Binding="{Binding Ngay, StringFormat=dd/MM/yyyy}"/>
+                            <DataGridTextColumn Header="Mã báo cáo" Binding="{Binding BCTraTre.MaBCTraTre}"/>
+                            <DataGridTextColumn Header="Ngày" Binding="{Binding BCTraTre.Ngay, StringFormat=MM/yyyy}"/>
+                            <DataGridTextColumn Header="Tổng số lượt trả trễ" Binding="{Binding BCTraTre.TongSoLuotTraTre}"/>
                             <DataGridTemplateColumn Header="Thao tác">
                                 <DataGridTemplateColumn.CellTemplate>
                                     <DataTemplate>
                                         <StackPanel Orientation="Horizontal">
-                                            <Button Content="Chi tiết" Click="btnViewLateReturnReportDetail_Click" Margin="0,0,5,0"/>
+                                            <Button Content="Chi tiết" Click="btnViewReportDetail_Click" Margin="0,0,5,0"/>
                                         </StackPanel>
                                     </DataTemplate>
                                 </DataGridTemplateColumn.CellTemplate>
                             </DataGridTemplateColumn>
                         </DataGrid.Columns>
+                        <DataGrid.RowDetailsTemplate>
+                            <DataTemplate>
+                                <DataGrid ItemsSource="{Binding BCTraTre.CTBCTRATRE}" AutoGenerateColumns="False" IsReadOnly="True" Margin="0,0,0,10">
+                                    <DataGrid.Columns>
+                                        <DataGridTextColumn Header="Mã phiếu trả" Binding="{Binding IDPhieuTra}"/>
+                                        <DataGridTextColumn Header="Số ngày trả trễ" Binding="{Binding SoNgayTraTre}"/>
+                                    </DataGrid.Columns>
+                                </DataGrid>
+                            </DataTemplate>
+                        </DataGrid.RowDetailsTemplate>
+                        <DataGrid.Resources>
+                            <Style TargetType="DataGridRow">
+                                <Setter Property="DetailsVisibility" Value="Collapsed" />
+                                <Style.Triggers>
+                                    <DataTrigger Binding="{Binding IsExpanded, RelativeSource={RelativeSource Self}}" Value="True">
+                                        <Setter Property="DetailsVisibility" Value="Visible" />
+                                    </DataTrigger>
+                                </Style.Triggers>
+                            </Style>
+                        </DataGrid.Resources>
                     </DataGrid>
                 </Grid>
             </TabItem>
