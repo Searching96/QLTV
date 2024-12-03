@@ -30,8 +30,8 @@
             <ComboBox x:Name="cboDocGia" 
                       Grid.Column="0"
                       Margin="0,0,15,0"
-                      DisplayMemberPath="DocGia.IDTaiKhoanNavigation.TenTaiKhoan"
-                      SelectedValuePath="DocGia.ID"
+                      DisplayMemberPath="IDTaiKhoanNavigation.TenTaiKhoan"
+                      SelectedValuePath="ID"
                       IsEditable="True"
                       Style="{StaticResource ModernComboBox}"
                       IsTextSearchEnabled="True"
@@ -39,18 +39,11 @@
                       IsSynchronizedWithCurrentItem="False"
                       Width="300" HorizontalAlignment="Left"
                       materialDesign:HintAssist.Hint="Chọn độc giả"
-                      materialDesign:HintAssist.FloatingScale="0.8">
-                <!--<ComboBox.SelectedValue>
-                    <Binding Path="SelectedDocGia" 
-                         UpdateSourceTrigger="PropertyChanged" 
-                         ValidatesOnDataErrors="True">
-                    <Binding.ValidationRules>
-                        <ExceptionValidationRule />
-                    </Binding.ValidationRules>
-                </Binding>
-                </ComboBox.SelectedValue>-->
+                      materialDesign:HintAssist.FloatingScale="0.8"
+                      SelectionChanged="cboDocGia_SelectionChanged">
             </ComboBox>
             <materialDesign:PackIcon Kind="AlertCircleOutline"
+                                     x:Name="icDocGiaError"
                         Style="{StaticResource Warning}"
                         Grid.Column="1"
                         HorizontalAlignment="Left" VerticalAlignment="Center"
@@ -130,8 +123,6 @@
         <DataGrid Grid.Row="5" x:Name="dgSelectedBooks" 
                   AutoGenerateColumns="False" 
                   Margin="0,0,0,10"
-                  VerticalContentAlignment="Center"
-                  HorizontalContentAlignment="Center"
                   CanUserAddRows="False">
             <DataGrid.CellStyle>
                 <Style TargetType="DataGridCell">
@@ -165,7 +156,7 @@
                                 <materialDesign:PackIcon Kind="AlertCircleOutline" Grid.Row="0" Grid.Column="2"
                                     Style="{StaticResource Warning}"
                                     HorizontalAlignment="Right" VerticalAlignment="Center"
-                                    Foreground="Red" Background="White" Width="20" Height="20"
+                                    Foreground="Red" Background="Transparent" Width="20" Height="20"
                                     ToolTipService.InitialShowDelay="0"
                             />
                             </Grid>

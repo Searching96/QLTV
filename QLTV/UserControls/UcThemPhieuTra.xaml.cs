@@ -49,11 +49,11 @@ namespace QLTV.UserControls
                 //Load tất cả độc giả và các phiếu mượn của độc giả đó
 
                 var pendingBorrows = await _context.DOCGIA
-                    .Include(dg => dg.PHIEUMUON)
+                    .Include(dg => dg.PHIEUMUON.Where(pm => pm.CTPHIEUMUON.Count != pm.CTPHIEUTRA.Count))
                         .ThenInclude(pm => pm.CTPHIEUMUON)
                             .ThenInclude(ct => ct.IDSachNavigation)
                                 .ThenInclude(s => s.IDTuaSachNavigation)
-                    .Include(dg => dg.PHIEUMUON)
+                    .Include(dg => dg.PHIEUMUON.Where(pm => pm.CTPHIEUMUON.Count != pm.CTPHIEUTRA.Count))
                         .ThenInclude(pm => pm.CTPHIEUTRA)
                     .Include(dg => dg.IDTaiKhoanNavigation)
                     .ToListAsync();
@@ -61,8 +61,13 @@ namespace QLTV.UserControls
                 //Chọn các phiếu mượn chưa hoàn tất trả
 
                 var availableBorrows = pendingBorrows
-                    .Where(p => p.PHIEUMUON.Any(p => p.CTPHIEUMUON.Any(ct => !p.CTPHIEUTRA.Any(ptr => ct.IDPhieuMuon == ptr.IDPhieuMuon && ptr.IDSach == ct.IDSach))))
+                    .Where(dg => dg.PHIEUMUON.Any(pm =>
+                        pm.CTPHIEUMUON.Any(ct =>
+                            !pm.CTPHIEUTRA.Any(ptr => ptr.IDPhieuMuonNavigation == pm && ptr.IDSach == ct.IDSach)
+                        )
+                    ))
                     .ToList();
+
 
                 var viewSource = new CollectionViewSource();
                 viewSource.Source = availableBorrows;

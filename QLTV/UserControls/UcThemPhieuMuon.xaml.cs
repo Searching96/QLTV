@@ -25,54 +25,6 @@ namespace QLTV.UserControls
         private ObservableCollection<BookWithCustomDate> _selectedBooks;
         private CollectionViewSource viewSource;
 
-        private class ReaderDisplayItem : INotifyPropertyChanged, IDataErrorInfo
-        {
-            private DOCGIA _docGia;
-            public DOCGIA DocGia
-            {
-                get => _docGia;
-                set
-                {
-                    _docGia = value;
-                    OnPropertyChanged();
-                }
-            }
-
-            private bool _isValid;
-
-            public bool IsValid
-            {
-                get => _isValid;
-                set
-                {
-                    _isValid = value;
-                    OnPropertyChanged();
-                }
-            }
-
-            string IDataErrorInfo.Error => null;
-
-            string IDataErrorInfo.this[string columnName]
-            {
-                get
-                {
-                    if (DocGia.PHIEUMUON.Any(pm => pm.CTPHIEUMUON.Count - pm.CTPHIEUTRA.Count >= DocGia.IDLoaiDocGiaNavigation.SoSachMuonToiDa))
-                    {
-                        IsValid = false;
-                        return $"Độc giả này không thể mượn quá {DocGia.IDLoaiDocGiaNavigation.SoSachMuonToiDa} quyển sách.";
-                    }
-                    return null;
-                }
-            }
-
-            public event PropertyChangedEventHandler? PropertyChanged;
-
-            protected virtual void OnPropertyChanged( [CallerMemberName] string propertyName = null)
-            {
-                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
-            }
-        }
-
         private class BookWithCustomDate : INotifyPropertyChanged, IDataErrorInfo
         {
             private BookDisplayItem _bookItem;
@@ -260,14 +212,14 @@ namespace QLTV.UserControls
                     HanMuonToiDa = s.IDTuaSachNavigation.HanMuonToiDa
                 }).ToList());
 
-                var docGia = new ObservableCollection<ReaderDisplayItem>(await _context.DOCGIA
+                var docGia = await _context.DOCGIA
                     .Include(d => d.IDTaiKhoanNavigation)
                     .Include(d => d.IDLoaiDocGiaNavigation)
-                    .Select(s => new ReaderDisplayItem
-                    {
-                        DocGia = s,
-                        IsValid = true
-                    }).ToListAsync());
+                    .Include(d => d.PHIEUMUON)
+                        .ThenInclude(pm => pm.CTPHIEUMUON)
+                    .Include(d => d.PHIEUMUON)
+                        .ThenInclude(pm => pm.CTPHIEUTRA)
+                    .ToListAsync();
                 
                 dgAvailableBooks.ItemsSource = dsSach;
 
@@ -285,7 +237,7 @@ namespace QLTV.UserControls
                         {
                             if (string.IsNullOrEmpty(searchText))
                                 return true;
-                            var docGia = (item as ReaderDisplayItem).DocGia;
+                            var docGia = item as DOCGIA;
                             if (docGia != null)
                             {
                                 var itemText = ConvertToUnsigned(docGia.IDTaiKhoanNavigation.TenTaiKhoan.ToString());
@@ -369,6 +321,8 @@ namespace QLTV.UserControls
             var book = ((Button)sender).DataContext as BookDisplayItem;
             if (book == null) return;
 
+            if (!DocGiaValidation(cboDocGia.SelectedItem as DOCGIA)) return;
+
             if (!_selectedBooks.Any(b => b.Book.ID == book.Book.ID))
             {
                 var bookWithDate = new BookWithCustomDate 
@@ -379,6 +333,7 @@ namespace QLTV.UserControls
                 dsSach.Remove(book);
                 _allBooks.Remove(book.Book);
                 BookSearch(txtSearchBook.Text);
+                
                 _selectedBooks.Add(bookWithDate);
             }
         }
@@ -548,6 +503,32 @@ namespace QLTV.UserControls
         private void txtCustomDays_PreviewTextInput(object sender, TextCompositionEventArgs e)
         {
             e.Handled = !int.TryParse(e.Text, out _);
+        }
+
+        private void cboDocGia_SelectionChanged(object sender, SelectionChangedEventArgs e)
+       {
+           var docGia = (sender as ComboBox).SelectedItem as DOCGIA;
+            if (docGia == null) return;
+            DocGiaValidation(docGia);
+        }
+
+        private bool DocGiaValidation(DOCGIA _docGia)
+        {
+            if (_docGia == null)
+            {
+                icDocGiaError.ToolTip = $"Vui lòng chọn 1 độc giả.";
+                icDocGiaError.Visibility = Visibility.Visible;
+                return false;
+            }
+            if (_docGia.PHIEUMUON.Any(pm => pm.CTPHIEUMUON.Count - pm.CTPHIEUTRA.Count + _selectedBooks.Count >= _docGia.IDLoaiDocGiaNavigation.SoSachMuonToiDa)
+                || _selectedBooks.Count >= _docGia.IDLoaiDocGiaNavigation.SoSachMuonToiDa)
+            {
+                icDocGiaError.ToolTip = $"Độc giả này không thể mượn quá {_docGia.IDLoaiDocGiaNavigation.SoSachMuonToiDa} quyển sách.";
+                icDocGiaError.Visibility = Visibility.Visible;
+                return false;
+            }
+            icDocGiaError.Visibility = Visibility.Collapsed;
+            return true;
         }
     }
 } 

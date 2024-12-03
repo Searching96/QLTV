@@ -28,7 +28,9 @@
                                  materialDesign:HintAssist.Hint="Tìm kiếm phiếu mượn"
                                  materialDesign:HintAssist.FloatingScale="1"
                                  TextChanged="txtSearchBorrow_TextChanged"/>
-                        <Button x:Name="btnAddBorrow" Content="Thêm phiếu mượn" Click="btnAddBorrow_Click"/>
+                        <Button x:Name="btnAddBorrow" Content="Thêm phiếu mượn" Click="btnAddBorrow_Click"
+                                Style="{StaticResource MaterialDesignRaisedButton}"
+                                Height="50"/>
                     </StackPanel>
 
                     <!-- Borrowing DataGrid -->
