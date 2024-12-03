@@ -1,4 +1,6 @@
-﻿using QLTV.Models;
+﻿using MaterialDesignThemes.Wpf;
+using Microsoft.IdentityModel.Tokens;
+using QLTV.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -27,8 +29,6 @@ namespace QLTV
         {
             InitializeComponent();
         }
-
-
 
         private void btnSuaTacGia_Click(object sender, RoutedEventArgs e)
         {
@@ -108,8 +108,71 @@ namespace QLTV
             }
         }
 
+        public bool HasError()
+        {
+            // Tìm tất cả các PackIcon trong UserControl
+            foreach (var icon in FindVisualChildren<PackIcon>(this))
+            {
+                if (icon.Style == FindResource("ErrorIcon") && icon.Visibility == Visibility.Visible)
+                {
+                    return true;
+                }
+            }
+            return false;
+        }
+
+        private static IEnumerable<T> FindVisualChildren<T>(DependencyObject depObj) where T : DependencyObject
+        {
+            if (depObj != null)
+            {
+                for (int i = 0; i < VisualTreeHelper.GetChildrenCount(depObj); i++)
+                {
+                    DependencyObject child = VisualTreeHelper.GetChild(depObj, i);
+                    if (child is T t)
+                    {
+                        yield return t;
+                    }
+                    foreach (T childOfChild in FindVisualChildren<T>(child))
+                    {
+                        yield return childOfChild;
+                    }
+                }
+            }
+        }
+
         private void btnThem_Click(object sender, RoutedEventArgs e)
         {
+            if (string.IsNullOrWhiteSpace(tbxTenTuaSach.Text))
+            {
+                icTenTuaSachError.ToolTip = "Tên Tựa Sách không được để trống";
+                icTenTuaSachError.Visibility = Visibility.Visible;
+            }
+
+            if (string.IsNullOrWhiteSpace(tbxDSTacGia.Text))
+            {
+                icDSTacGiaError.ToolTip = "Tác Giả không được để trống";
+                icDSTacGiaError.Visibility = Visibility.Visible;
+            }
+
+            if (string.IsNullOrWhiteSpace(tbxDSTheLoai.Text))
+            {
+                icDSTheLoaiError.ToolTip = "Thể Loại không được để trống";
+                icDSTheLoaiError.Visibility = Visibility.Visible;
+            }
+
+            if (string.IsNullOrWhiteSpace(tbxHanMuonToiDa.Text))
+            {
+                icHanMuonToiDaError.ToolTip = "Hạn Mượn Tối Đa không được để trống";
+                icHanMuonToiDaError.Visibility = Visibility.Visible;
+            }
+
+            if (HasError())
+            {
+                MessageBox.Show("Tất cả thuộc tính phải hợp lệ trước khi sửa!", "Thông báo",
+                    MessageBoxButton.OK, MessageBoxImage.Warning);
+                return;
+            }
+
             string tenTuaSach = tbxTenTuaSach.Text;
             int hanMuonToiDa = int.Parse(tbxHanMuonToiDa.Text);
             var lstTenTacGia = tbxDSTacGia.Text.Split(", ").Select(n => n.Trim()).ToList();

@@ -22,6 +22,7 @@ using Microsoft.Win32;
 using OfficeOpenXml.Drawing.Style.Coloring;
 using Microsoft.EntityFrameworkCore.Diagnostics.Internal;
 using System.Globalization;
+using MaterialDesignThemes.Wpf;
 
 namespace QLTV
 {
@@ -163,12 +164,51 @@ namespace QLTV
                 LoadSach();
         }
 
+        public bool HasError()
+        {
+            // Tìm tất cả các PackIcon trong UserControl
+            foreach (var icon in FindVisualChildren<PackIcon>(this))
+            {
+                if (icon.Style == FindResource("ErrorIcon") && icon.Visibility == Visibility.Visible)
+                {
+                    return true;
+                }
+            }
+            return false;
+        }
+
+        private static IEnumerable<T> FindVisualChildren<T>(DependencyObject depObj) where T : DependencyObject
+        {
+            if (depObj != null)
+            {
+                for (int i = 0; i < VisualTreeHelper.GetChildrenCount(depObj); i++)
+                {
+                    DependencyObject child = VisualTreeHelper.GetChild(depObj, i);
+                    if (child is T t)
+                    {
+                        yield return t;
+                    }
+                    foreach (T childOfChild in FindVisualChildren<T>(child))
+                    {
+                        yield return childOfChild;
+                    }
+                }
+            }
+        }
+
         private void btnSuaSach_Click(object sender, RoutedEventArgs e)
         {
             if (dgSach.SelectedItem == null)
             {
                 // Kiểm tra xem có dòng nào được chọn không
                 MessageBox.Show("Vui lòng chọn sách cần sửa!", "Thông báo",
+                    MessageBoxButton.OK, MessageBoxImage.Warning);
+                return;
+            }
+
+            if (HasError())
+            {
+                MessageBox.Show("Tất cả thuộc tính phải hợp lệ trước khi sửa!", "Thông báo",
                     MessageBoxButton.OK, MessageBoxImage.Warning);
                 return;
             }

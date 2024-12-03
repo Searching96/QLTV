@@ -1,4 +1,5 @@
-﻿using QLTV.Models;
+﻿using MaterialDesignThemes.Wpf;
+using QLTV.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -25,8 +26,65 @@ namespace QLTV
             InitializeComponent();
         }
 
+        public bool HasError()
+        {
+            // Tìm tất cả các PackIcon trong UserControl
+            foreach (var icon in FindVisualChildren<PackIcon>(this))
+            {
+                if (icon.Style == FindResource("ErrorIcon") && icon.Visibility == Visibility.Visible)
+                {
+                    return true;
+                }
+            }
+            return false;
+        }
+
+        private static IEnumerable<T> FindVisualChildren<T>(DependencyObject depObj) where T : DependencyObject
+        {
+            if (depObj != null)
+            {
+                for (int i = 0; i < VisualTreeHelper.GetChildrenCount(depObj); i++)
+                {
+                    DependencyObject child = VisualTreeHelper.GetChild(depObj, i);
+                    if (child is T t)
+                    {
+                        yield return t;
+                    }
+                    foreach (T childOfChild in FindVisualChildren<T>(child))
+                    {
+                        yield return childOfChild;
+                    }
+                }
+            }
+        }
+
         private void btnThem_Click(object sender, RoutedEventArgs e)
         {
+            if (string.IsNullOrWhiteSpace(tbxTenTacGia.Text))
+            {
+                icTenTacGiaError.ToolTip = "Tên Tác Giả không được để trống";
+                icTenTacGiaError.Visibility = Visibility.Visible;
+            }
+
+            if (string.IsNullOrWhiteSpace(tbxNamSinh.Text))
+            {
+                icNamSinhError.ToolTip = "Năm Sinh không được để trống";
+                icNamSinhError.Visibility = Visibility.Visible;
+            }
+
+            if (string.IsNullOrWhiteSpace(tbxQuocTich.Text))
+            {
+                icQuocTichError.ToolTip = "Quốc Tịch không được để trống";
+                icQuocTichError.Visibility = Visibility.Visible;
+            }
+
+            if (HasError())
+            {
+                MessageBox.Show("Tất cả thuộc tính phải hợp lệ trước khi sửa!", "Thông báo",
+                    MessageBoxButton.OK, MessageBoxImage.Warning);
+                return;
+            }
+
             string tenTacGia = tbxTenTacGia.Text;
             int namSinh = int.Parse(tbxNamSinh.Text);
             string quocTich = tbxQuocTich.Text;

@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using MaterialDesignThemes.Wpf;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using QLTV.Models;
 using System;
@@ -85,16 +86,86 @@ namespace QLTV
             using (var context = new QLTVContext())
             {
                 var dsTinhTrang = context.TINHTRANG
-                    .Where(tt => !tt.IsDeleted)
+                    .Where(tt => !tt.IsDeleted && tt.TenTinhTrang != "Mất" 
+                        && tt.TenTinhTrang != "Hỏng nặng" && tt.TenTinhTrang != "Hỏng hoàn toàn")
                     .Select(tt => tt.TenTinhTrang)
                     .ToList();
 
                 cbbTinhTrang.ItemsSource = dsTinhTrang;
+                cbbTinhTrang.SelectedIndex = 0;
+            }
+        }
+
+        public bool HasError()
+        {
+            // Tìm tất cả các PackIcon trong UserControl
+            foreach (var icon in FindVisualChildren<PackIcon>(this))
+            {
+                if (icon.Style == FindResource("ErrorIcon") && icon.Visibility == Visibility.Visible)
+                {
+                    return true;
+                }
+            }
+            return false;
+        }
+
+        private static IEnumerable<T> FindVisualChildren<T>(DependencyObject depObj) where T : DependencyObject
+        {
+            if (depObj != null)
+            {
+                for (int i = 0; i < VisualTreeHelper.GetChildrenCount(depObj); i++)
+                {
+                    DependencyObject child = VisualTreeHelper.GetChild(depObj, i);
+                    if (child is T t)
+                    {
+                        yield return t;
+                    }
+                    foreach (T childOfChild in FindVisualChildren<T>(child))
+                    {
+                        yield return childOfChild;
+                    }
+                }
             }
         }
 
         private async void btnThem_Click(object sender, RoutedEventArgs e)
         {
+            if (string.IsNullOrWhiteSpace(tbxNhaXuatBan.Text))
+            {
+                icNhaXuatBanError.ToolTip = "Nhà Xuất Bản không được để trống";
+                icNhaXuatBanError.Visibility = Visibility.Visible;
+            }
+
+            if (string.IsNullOrWhiteSpace(tbxNamXuatBan.Text))
+            {
+                icNamXuatBanError.ToolTip = "Năm Xuất Bản không được để trống";
+                icNamXuatBanError.Visibility = Visibility.Visible;
+            }
+
+            if (string.IsNullOrWhiteSpace(tbxTriGia.Text))
+            {
+                icTriGiaError.ToolTip = "Trị Giá không được để trống";
+                icTriGiaError.Visibility = Visibility.Visible;
+            }
+
+            if (string.IsNullOrWhiteSpace(tbxSoLuong.Text))
+            {
+                icSoLuongError.ToolTip = "Số Lượng không được để trống";
+                icSoLuongError.Visibility = Visibility.Visible;
+            }
+
+            if (cbbTuaSach.SelectedItem == null)
+            {
+                icTuaSachError.ToolTip = "Phải chọn một tựa sách";
+                icTuaSachError.Visibility = Visibility.Visible;
+            }
+
+            if (HasError())
+            {
+                MessageBox.Show("Tất cả thuộc tính phải hợp lệ trước khi sửa!", "Thông báo",
+                    MessageBoxButton.OK, MessageBoxImage.Warning);
+                return;
+            }
             string tuaSach = cbbTuaSach.SelectedItem?.ToString() ?? string.Empty;
             string nhaXuatBan = tbxNhaXuatBan.Text;
             int namXuatBan = int.Parse(tbxNamXuatBan.Text);
@@ -274,7 +345,14 @@ namespace QLTV
                 return;
             }
 
-            icSoLuongError.Visibility = Visibility.Collapsed;
+            if (icSoLuongError != null) 
+                icSoLuongError.Visibility = Visibility.Collapsed;
+        }
+
+        private void cbbTuaSach_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            if (cbbTuaSach.SelectedItem != null)
+                icTuaSachError.Visibility = Visibility.Collapsed;
         }
     }
 }

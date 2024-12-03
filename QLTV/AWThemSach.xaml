@@ -76,7 +76,8 @@
                       IsTextSearchEnabled="False"
                       SelectedValue="{x:Null}"
                       IsSynchronizedWithCurrentItem="False"
-                      materialDesign:TextFieldAssist.HasClearButton="True"/>
+                      materialDesign:TextFieldAssist.HasClearButton="True"
+                      SelectionChanged="cbbTuaSach_SelectionChanged"/>
 
             <materialDesign:PackIcon x:Name="icTuaSachError" Grid.Row="0"
                                      Style="{StaticResource ErrorIcon}"
