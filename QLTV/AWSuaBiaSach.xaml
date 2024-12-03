@@ -1,0 +1,19 @@
+﻿<Window x:Class="QLTV.AWSuaBiaSach"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:QLTV"
+        mc:Ignorable="d"
+        Title="AWSuaBiaSach" Height="450" Width="800">
+    <Grid>
+        <Border BorderBrush="Black" BorderThickness="3"
+                Width="250" Height="400">
+            <Image x:Name="imgBiaSach"
+                   Stretch="Fill" 
+                   MaxWidth="75" 
+                   MaxHeight="117.5"
+                   Source="https://upload.wikimedia.org/wikipedia/commons/thumb/a/ac/No_image_available.svg/800px-No_image_available.svg.png"/>
+        </Border>
+    </Grid>
+</Window>

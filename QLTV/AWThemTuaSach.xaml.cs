@@ -33,28 +33,6 @@ namespace QLTV
             InitializeComponent();
         }
 
-        public async Task<string> GetBookCoverUrlAsync(string tuaSach)
-        {
-            string apiKey = "AIzaSyDRuxWjyIOb0Vy2JVEaJEQxXNc70ijJJUg";
-            string url = $"https://www.googleapis.com/books/v1/volumes?q=intitle:{tuaSach}&key={apiKey}";
-            
-            using HttpClient client = new HttpClient();
-            var response = await client.GetStringAsync(url);
-            using JsonDocument document = JsonDocument.Parse(response);
-            var root = document.RootElement;
-
-            if (root.TryGetProperty("items", out JsonElement items) && items.GetArrayLength() > 0)
-            {
-                var volumeInfo = items[0].GetProperty("volumeInfo");
-                if (volumeInfo.TryGetProperty("imageLinks", out JsonElement thumbnail))
-                {
-                    return thumbnail.GetString() ?? "No cover available";
-                }
-            }
-
-            return "No cover available";
-        }
-
         private void btnSuaTacGia_Click(object sender, RoutedEventArgs e)
         {
             // Chuyển DSTacGia trong TextBox thành List<TacGia>

@@ -75,6 +75,13 @@
                     <RowDefinition Height="Auto"/>
                 </Grid.RowDefinitions>
 
+                <Grid Grid.Column="0" Grid.Row="0" Grid.RowSpan="3">
+                    <Image x:Name="imgBiaSach"
+                           Grid.Column="0" Grid.Row="0" Grid.RowSpan="3"
+                           VerticalAlignment="Center" HorizontalAlignment="Center"
+                           Stretch="Uniform" Margin="5"/>
+                </Grid>
+
                 <TextBox x:Name="tbxMaSach" Grid.Row="0" Grid.Column="1"
                          Style="{StaticResource DataDisplayTextBox}"
                          materialDesign:HintAssist.Hint="Mã Sách"
