@@ -22,21 +22,40 @@
                     </Grid.RowDefinitions>
 
                     <!-- Search and Add Section -->
-                    <StackPanel Grid.Row="0" Orientation="Horizontal" Margin="0,0,0,10" Grid.ColumnSpan="2">
-                        <TextBox x:Name="txtSearchBorrow" Width="200" Margin="0,0,10,0" 
+                    <Grid Grid.Row="0" Grid.ColumnSpan="2">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition/>
+                            <ColumnDefinition/>
+                        </Grid.ColumnDefinitions>
+                        <StackPanel Orientation="Horizontal" Margin="0,0,0,10" Grid.ColumnSpan="1">
+                            <TextBox x:Name="txtSearchBorrow" Width="200" Margin="0,0,10,0" 
                                  Style="{StaticResource MaterialDesignOutlinedTextBox}"
                                  materialDesign:HintAssist.Hint="Tìm kiếm phiếu mượn"
                                  materialDesign:HintAssist.FloatingScale="1"
                                  TextChanged="txtSearchBorrow_TextChanged"/>
-                        <Button x:Name="btnAddBorrow" ToolTip="Thêm phiếu mượn" Click="btnAddBorrow_Click"
+                            <Button x:Name="btnAddBorrow" ToolTip="Thêm phiếu mượn" Click="btnAddBorrow_Click"
                                 Style="{StaticResource MaterialDesignRaisedButton}"
                                 Height="50">
-                            <materialDesign:PackIcon Kind="BookMultipleAdd"
+                                <materialDesign:PackIcon Kind="BookMultipleAdd"
                                 HorizontalAlignment="Center" VerticalAlignment="Center"
                                 Foreground="White" Background="Transparent" Width="20" Height="20"
                                 ToolTipService.InitialShowDelay="0"/>
-                        </Button>
-                    </StackPanel>
+                            </Button>
+                        </StackPanel>
+                        <ComboBox Style="{StaticResource ModernComboBox}"
+                                  x:Name="cboLoc"
+                                  HorizontalAlignment="Right"
+                                  Grid.Column="1"
+                                  Width="200"
+                                  IsEditable="False"
+                                  materialDesign:HintAssist.Hint="Tình trạng phiếu mượn"
+                                  materialDesign:HintAssist.FloatingScale="0.8"
+                                  SelectionChanged="cboLoc_SelectionChanged">
+                            <ComboBoxItem Name="All" IsSelected="True">Tất cả</ComboBoxItem>
+                            <ComboBoxItem Name="Returned">Đã trả hết</ComboBoxItem>
+                            <ComboBoxItem Name="NotReturned">Chưa trả hết</ComboBoxItem>
+                        </ComboBox>
+                    </Grid>
 
                     <!-- Borrowing DataGrid -->
                     <DataGrid x:Name="dgBorrowings" Grid.Row="1" AutoGenerateColumns="False" 
