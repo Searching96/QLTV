@@ -6,13 +6,14 @@ using System.Windows.Controls;
 
 namespace QLTV
 {
-    public partial class UCRM_PenaltyReceiptWindow : Window
+    public partial class AWPhieuThuTienPhat : Window
     {
-        private readonly QLTVContext _context;
+        private readonly QLTVContext _context = new QLTVContext(); // Khởi tạo _context
 
-        public UCRM_PenaltyReceiptWindow(PHIEUTHUTIENPHAT receipt)
+        public AWPhieuThuTienPhat(PHIEUTHUTIENPHAT receipt)
         {
             InitializeComponent();
+            _context = new QLTVContext(); // Khởi tạo _context
             LoadPenaltyReceipt(receipt);
         }
 
@@ -34,7 +35,8 @@ namespace QLTV
             MaDocGiaTextBlock.Text = docGia.MaDocGia;
             TenDocGiaTextBlock.Text = docGia.IDTaiKhoanNavigation.TenTaiKhoan; 
             SoTienThuTextBlock.Text = receipt.SoTienThu.ToString("N2");
-            ConNoTextBlock.Text = receipt.ConLai.ToString("N2");  
+            ConNoTextBlock.Text = receipt.ConLai.ToString("N2");
+            TongNoTextBlock.Text = receipt.TongNo.ToString("N2");
         }
     }
 }

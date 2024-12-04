@@ -1,4 +1,4 @@
-﻿<Window x:Class="QLTV.UCReaderManagement"
+﻿<Window x:Class="QLTV.AUQuanLyDocGia"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
@@ -119,6 +119,10 @@
                 </TabItem.Header>
 
                 <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="849*"/>
+                        <ColumnDefinition Width="151*"/>
+                    </Grid.ColumnDefinitions>
                     <Grid.RowDefinitions>
                         <RowDefinition Height="Auto"/>
                         <RowDefinition Height="Auto"/>
@@ -126,7 +130,7 @@
                     </Grid.RowDefinitions>
 
                     <!-- Phần Nhập Liệu -->
-                    <Border BorderBrush="#DDDDDD" BorderThickness="1" Padding="20" Margin="0,0,0,10" Grid.Row="0">
+                    <Border BorderBrush="#DDDDDD" BorderThickness="1" Padding="20" Margin="0,0,0,10" Grid.Row="0" Grid.ColumnSpan="2">
                         <Grid>
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="3*"/>
@@ -142,40 +146,40 @@
                             <TextBox Grid.Row="0" Grid.Column="0" Margin="0,5,5,0"
                             x:Name="IDTaiKhoan"
                             Style="{StaticResource ModernTextBox}"
-                            materialDesign:HintAssist.Hint="Nhập ID Tài Khoản"
+                            materialDesign:HintAssist.Hint="ID Tài Khoản"
                             materialDesign:TextFieldAssist.HasLeadingIcon="True"
                             materialDesign:TextFieldAssist.LeadingIcon="Account"/>
 
                             <TextBox Grid.Row="0" Grid.Column="1" Margin="0,5,5,0"
                  x:Name="IDLoaiDocGia"
                  Style="{StaticResource ModernTextBox}"
-                 materialDesign:HintAssist.Hint="Nhập ID Loại Độc Giả"
+                 materialDesign:HintAssist.Hint="ID Loại Độc Giả"
                      materialDesign:TextFieldAssist.HasLeadingIcon="True"
                      materialDesign:TextFieldAssist.LeadingIcon="AccountGroup"/>
 
                             <DatePicker Grid.Row="0" Grid.Column="2" Margin="0,5,0,0"
                     x:Name="NgayLapTheDatePicker"
                     Style="{StaticResource ModernDatePicker}"
-                    materialDesign:HintAssist.Hint="Chọn Ngày Lập Thẻ"/>
+                    materialDesign:HintAssist.Hint="Ngày Lập Thẻ"/>
 
                             <TextBox Grid.Row="1" Grid.Column="0" Margin="0,5,5,0"
                  x:Name="GioiThieu"
                  Style="{StaticResource ModernTextBox}"
-                 materialDesign:HintAssist.Hint="Nhập Thông Tin Giới Thiệu"
+                 materialDesign:HintAssist.Hint="Thông Tin Giới Thiệu"
                      materialDesign:TextFieldAssist.HasLeadingIcon="True"
                      materialDesign:TextFieldAssist.LeadingIcon="Information"/>
 
                             <TextBox Grid.Row="1" Grid.Column="1" Margin="0,5,5,0"
                  x:Name="TongNoTextBox" 
                  Style="{StaticResource ModernTextBox}"
-                 materialDesign:HintAssist.Hint="Nhập Tổng Nợ"
+                 materialDesign:HintAssist.Hint="Tổng Nợ"
                      materialDesign:TextFieldAssist.HasLeadingIcon="True"
                      materialDesign:TextFieldAssist.LeadingIcon="Cash"/>
 
                             <DatePicker Grid.Row="1" Grid.Column="2" Margin="0,5,0,0"
                     x:Name="NgayHetHanDatePicker"
                     Style="{StaticResource ModernDatePicker}"
-                    materialDesign:HintAssist.Hint="Chọn Ngày Hết Hạn"/>
+                    materialDesign:HintAssist.Hint="Ngày Hết Hạn"/>
 
                             <StackPanel Grid.Row="2" Grid.ColumnSpan="3" 
                     Orientation="Horizontal" 
@@ -192,7 +196,7 @@
                     </Border>
 
                     <!-- Thanh Tìm Kiếm -->
-                    <Grid Grid.Row="1">
+                    <Grid Grid.Row="1" Grid.ColumnSpan="2">
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="459"/>
                             <ColumnDefinition Width="114.493"/>
@@ -211,15 +215,15 @@
                             Margin="15,0,186,0"/>
                         <TextBlock Text="Tìm Kiếm:" Grid.Column="1" FontSize="14" VerticalAlignment="Center" Margin="114,0,10,0" Grid.ColumnSpan="2"/>
 
-                        <TextBox x:Name="SearchTextBox" Grid.Column="2" VerticalAlignment="Center" Style="{StaticResource ModernTextBox}" materialDesign:HintAssist.Hint="Từ Khóa" materialDesign:HintAssist.FloatingScale="0.8" Margin="10,0,3,0" Grid.ColumnSpan="2"/>
+                        <TextBox x:Name="TTDGSearchTextBox" Grid.Column="2" VerticalAlignment="Center" Style="{StaticResource ModernTextBox}" materialDesign:HintAssist.Hint="Từ Khóa" materialDesign:HintAssist.FloatingScale="0.8" Margin="10,0,3,0" Grid.ColumnSpan="2"/>
 
-                        <ComboBox x:Name="SearchCriteriaComboBox" Grid.Column="4" Style="{StaticResource ModernComboBox}" materialDesign:HintAssist.Hint="Thuộc Tính" materialDesign:HintAssist.FloatingScale="0.8">
+                        <ComboBox x:Name="TTDGSearchCriteriaComboBox" Grid.Column="4" Style="{StaticResource ModernComboBox}" materialDesign:HintAssist.Hint="Thuộc Tính" materialDesign:HintAssist.FloatingScale="0.8">
                             <ComboBoxItem Content="Mã Độc Giả"/>
                             <ComboBoxItem Content="ID Tài Khoản"/>
                             <ComboBoxItem Content="ID Loại Độc Giả"/>
                         </ComboBox>
 
-                        <Button x:Name="SearchButton" Grid.Column="5" Click="SearchButton_Click" Style="{StaticResource MaterialDesignFlatButton}">
+                        <Button x:Name="TTDGSearchButton" Grid.Column="5" Click="TTDGSearchButton_Click" Style="{StaticResource MaterialDesignFlatButton}">
                             <materialDesign:PackIcon Kind="Magnify" Width="20" Height="20"/>
                         </Button>
                     </Grid>
@@ -232,9 +236,10 @@
                   CanUserAddRows="False" 
                   CanUserDeleteRows="False" 
                   IsReadOnly="True" 
-                  SelectionChanged="ReadersDataGrid_SelectionChanged">
+                  SelectionChanged="ReadersDataGrid_SelectionChanged"
+                              VerticalScrollBarVisibility="Auto"
+  ScrollViewer.CanContentScroll="True" Grid.ColumnSpan="2">
                         <DataGrid.Columns>
-                            <DataGridTextColumn Header="ID Độc Giả" Binding="{Binding ID}"/>
                             <DataGridTextColumn Header="Mã Độc Giả" Binding="{Binding MaDocGia}"/>
                             <DataGridTextColumn Header="ID Tài Khoản" Binding="{Binding IDTaiKhoan}"/>
                             <DataGridTextColumn Header="ID Loại Độc Giả" Binding="{Binding IDLoaiDocGia}"/>
@@ -251,51 +256,56 @@
                 <TabItem.Header>
                     <StackPanel Orientation="Horizontal">
                         <materialDesign:PackIcon Kind="AccountCheck" 
-                        Width="24" 
-                        Height="24" 
-                        VerticalAlignment="Center"
-                        Opacity="0.7"
-                        Margin="0,0,8,0"/>
+                                     Width="24" 
+                                     Height="24" 
+                                     VerticalAlignment="Center" 
+                                     Opacity="0.7" 
+                                     Margin="0,0,8,0"/>
                         <TextBlock Text="Quản Lý Loại Độc Giả" 
-                        FontFamily="Segoe UI"  
-                        FontSize="14" 
-                        FontWeight="Bold"
-                        Opacity="0.7"
-                        VerticalAlignment="Center"/>
+                       FontFamily="Segoe UI" 
+                       FontSize="14" 
+                       FontWeight="Bold" 
+                       Opacity="0.7" 
+                       VerticalAlignment="Center"/>
                     </StackPanel>
                 </TabItem.Header>
 
-                <Grid Margin="10">
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="170"/>
-                        <ColumnDefinition/>
-                    </Grid.ColumnDefinitions>
+                <Grid>
                     <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
                         <RowDefinition Height="Auto"/>
                         <RowDefinition Height="*"/>
                     </Grid.RowDefinitions>
 
-                    <Border BorderBrush="#DDDDDD" BorderThickness="1" Padding="20" Margin="0,0,0,10" Grid.ColumnSpan="2">
+                    <Border BorderBrush="#DDDDDD" BorderThickness="1" Padding="20" Margin="0,0,0,10" Grid.Row="0">
                         <Grid>
                             <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="Auto"/>
                                 <ColumnDefinition Width="*"/>
-                                <ColumnDefinition Width="Auto"/>
                                 <ColumnDefinition Width="*"/>
                             </Grid.ColumnDefinitions>
                             <Grid.RowDefinitions>
                                 <RowDefinition Height="Auto"/>
                                 <RowDefinition Height="Auto"/>
-                                <RowDefinition Height="Auto"/>
                             </Grid.RowDefinitions>
 
-                            <Label Grid.Row="0" Grid.Column="0" Content="Tên Loại Độc Giả:" VerticalAlignment="Center"/>
-                            <TextBox Grid.Row="0" Grid.Column="1" Margin="0,5,5,0" x:Name="TenLoaiDocGiaTextBox" />
-                            <Label Grid.Row="0" Grid.Column="2" Content="Số sách mượn tối đa:" VerticalAlignment="Center"/>
-                            <TextBox Grid.Row="0" Grid.Column="3" Margin="0,5,0,0" x:Name="SoSachMuonToiDaTextBox" />
+                            <TextBox Grid.Row="0" Grid.Column="0" Margin="0,5,5,0"
+                         x:Name="TenLoaiDocGiaTextBox"
+                         Style="{StaticResource ModernTextBox}"
+                         materialDesign:HintAssist.Hint="Tên Loại Độc Giả"
+                         materialDesign:TextFieldAssist.HasLeadingIcon="True"
+                         materialDesign:TextFieldAssist.LeadingIcon="AccountGroup"/>
 
-                            <StackPanel Grid.Row="3" Grid.ColumnSpan="4" Orientation="Horizontal" 
-                HorizontalAlignment="Right" Margin="0,15,0,0">
+                            <TextBox Grid.Row="0" Grid.Column="1" Margin="0,5,5,0"
+                         x:Name="SoSachMuonToiDaTextBox"
+                         Style="{StaticResource ModernTextBox}"
+                         materialDesign:HintAssist.Hint="Số Sách Mượn Tối Đa"
+                         materialDesign:TextFieldAssist.HasLeadingIcon="True"
+                         materialDesign:TextFieldAssist.LeadingIcon="BookOpenPageVariant"/>
+
+                            <StackPanel Grid.Row="1" Grid.ColumnSpan="2" 
+                            Orientation="Horizontal" 
+                            HorizontalAlignment="Right" 
+                            Margin="0,15,0,0">
                                 <Button Content="Thêm" Padding="10,5" Margin="0,0,5,0" Click="AddReaderType_Click"/>
                                 <Button Content="Cập nhật" Padding="10,5" Margin="0,0,5,0" Click="UpdateReaderType_Click"/>
                                 <Button Content="Xóa" Padding="10,5" Margin="0,0,5,0" Click="DeleteReaderType_Click"/>
@@ -303,106 +313,193 @@
                         </Grid>
                     </Border>
 
-                    <DataGrid Grid.Row="1" x:Name="ReaderTypesDataGrid" AutoGenerateColumns="False" Margin="0,10,0,0" 
-      CanUserAddRows="False" CanUserDeleteRows="False" IsReadOnly="True" 
-      SelectionChanged="ReaderTypesDataGrid_SelectionChanged" Grid.ColumnSpan="2">
+                    <Grid Grid.Row="1">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="459"/>
+                            <ColumnDefinition Width="114.493"/>
+                            <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition Width="Auto"/>
+                        </Grid.ColumnDefinitions>
+
+                        <TextBlock Text="Danh Sách Các Loại Độc Giả" 
+        FontFamily="Segoe UI"  
+        FontSize="24" 
+        FontWeight="Bold"
+        Opacity="0.7"
+        VerticalAlignment="Center"
+        Margin="15,0,106,0"/>
+                        <TextBlock Text="Tìm Kiếm:" Grid.Column="1" FontSize="14" VerticalAlignment="Center" Margin="114,0,10,0" Grid.ColumnSpan="2"/>
+
+                        <TextBox x:Name="LDGSearchTextBox" Grid.Column="2" VerticalAlignment="Center" Style="{StaticResource ModernTextBox}" materialDesign:HintAssist.Hint="Từ Khóa" materialDesign:HintAssist.FloatingScale="0.8" Margin="10,0,3,0" Grid.ColumnSpan="2"/>
+
+                        <ComboBox x:Name="LDGSearchCriteriaComboBox" Grid.Column="4" Style="{StaticResource ModernComboBox}" materialDesign:HintAssist.Hint="Thuộc Tính" materialDesign:HintAssist.FloatingScale="0.8">
+                            <ComboBoxItem Content="Tên Loại Độc Giả"/>
+                            <ComboBoxItem Content="Số Sách Mượn Tối Đa"/>
+                        </ComboBox>
+
+                        <Button x:Name="LDGSearchButton" Grid.Column="5" Click="LDGSearchButton_Click" Style="{StaticResource MaterialDesignFlatButton}">
+                            <materialDesign:PackIcon Kind="Magnify" Width="20" Height="20"/>
+                        </Button>
+                    </Grid>
+
+                    <DataGrid Grid.Row="2" 
+                  x:Name="ReaderTypesDataGrid" 
+                  AutoGenerateColumns="False" 
+                  Margin="0,10,0,0" 
+                  CanUserAddRows="False" 
+                  CanUserDeleteRows="False" 
+                  IsReadOnly="True" 
+                  SelectionChanged="ReaderTypesDataGrid_SelectionChanged">
                         <DataGrid.Columns>
-                            <DataGridTextColumn Header="ID" Binding="{Binding ID}"/>
-                            <DataGridTextColumn Header="Tên Loại Độc Giả" Binding="{Binding TenLoaiDocGia}"/>
                             <DataGridTextColumn Header="Mã Loại Độc Giả" Binding="{Binding MaLoaiDocGia}"/>
+                            <DataGridTextColumn Header="Tên Loại Độc Giả" Binding="{Binding TenLoaiDocGia}"/>
                             <DataGridTextColumn Header="Số Sách Mượn Tối Đa" Binding="{Binding SoSachMuonToiDa}"/>
                         </DataGrid.Columns>
                     </DataGrid>
+
                 </Grid>
             </TabItem>
 
             <TabItem>
-
                 <TabItem.Header>
                     <StackPanel Orientation="Horizontal">
                         <materialDesign:PackIcon Kind="Money" 
-                        Width="24" 
-                        Height="24" 
-                        VerticalAlignment="Center"
-                        Opacity="0.7"
-                        Margin="0,0,8,0"/>
+                                     Width="24" 
+                                     Height="24" 
+                                     VerticalAlignment="Center" 
+                                     Opacity="0.7" 
+                                     Margin="0,0,8,0"/>
                         <TextBlock Text="Quản Lý Thu Tiền Phạt" 
-                        FontFamily="Segoe UI"  
-                        FontSize="14" 
-                        FontWeight="Bold"
-                        Opacity="0.7"
-                        VerticalAlignment="Center"/>
+                       FontFamily="Segoe UI" 
+                       FontSize="14" 
+                       FontWeight="Bold" 
+                       Opacity="0.7" 
+                       VerticalAlignment="Center"/>
                     </StackPanel>
                 </TabItem.Header>
 
-                <Grid Margin="10">
+                <Grid>
                     <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="197*"/>
-                        <ColumnDefinition Width="777*"/>
+                        <ColumnDefinition Width="78*"/>
+                        <ColumnDefinition Width="47*"/>
                     </Grid.ColumnDefinitions>
                     <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
                         <RowDefinition Height="Auto"/>
                         <RowDefinition Height="*"/>
                     </Grid.RowDefinitions>
 
-                    <Border BorderBrush="#DDDDDD" BorderThickness="1" Padding="20" Margin="0,0,0,10" Grid.ColumnSpan="2">
+                    <Border BorderBrush="#DDDDDD" BorderThickness="1" Padding="20" Margin="0,0,0,10" Grid.Row="0" Grid.ColumnSpan="2">
                         <Grid>
                             <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="Auto"/>
-                                <ColumnDefinition/>
-                                <ColumnDefinition Width="Auto"/>
-                                <ColumnDefinition/>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="*"/>
                             </Grid.ColumnDefinitions>
                             <Grid.RowDefinitions>
                                 <RowDefinition Height="Auto"/>
                                 <RowDefinition Height="Auto"/>
                                 <RowDefinition Height="Auto"/>
-                                <RowDefinition Height="Auto"/>
                             </Grid.RowDefinitions>
 
-                            <Label Grid.Row="0" Grid.Column="0" Content="ID Độc Giả:" VerticalAlignment="Center"/>
-                            <TextBox Grid.Row="0" Grid.Column="1" Margin="0,5,5,0" x:Name="MaDocGiaPhat" 
-                                     TextChanged="MaDocGiaPhat_TextChanged"/>
-                            <Label Grid.Row="0" Grid.Column="2" Content="Ngày Thu:" VerticalAlignment="Center"/>
-                            <DatePicker Grid.Row="0" Grid.Column="3" Margin="0,5,0,0" x:Name="NgayThuPhat"/>
+                            <TextBox Grid.Row="0" Grid.Column="0" Margin="0,5,5,0"
+                         x:Name="MaDocGiaPhat"
+                         Style="{StaticResource ModernTextBox}"
+                         materialDesign:HintAssist.Hint="ID Độc Giả"
+                         materialDesign:TextFieldAssist.HasLeadingIcon="True"
+                         materialDesign:TextFieldAssist.LeadingIcon="Account"
+                         TextChanged="MaDocGiaPhat_TextChanged"/>
 
-                            <Label Grid.Row="1" Grid.Column="0" Content="Tổng Nợ:" VerticalAlignment="Center"/>
-                            <TextBox Grid.Row="1" Grid.Column="1" Margin="0,5,5,0" x:Name="TongNoPhat" IsEnabled="False"/>
-                            <Label Grid.Row="1" Grid.Column="2" Content="Số Tiền Thu:" VerticalAlignment="Center"/>
-                            <TextBox Grid.Row="1" Grid.Column="3" Margin="0,5,0,0" x:Name="SoTienThu"/>
+                            <DatePicker Grid.Row="0" Grid.Column="1" Margin="0,5,5,0" 
+                            x:Name="NgayThuPhat"
+                            Style="{StaticResource ModernDatePicker}"
+                            materialDesign:HintAssist.Hint="Ngày Thu"/>
 
-                            <Label Grid.Row="2" Grid.Column="0" Content="Còn Lại:" VerticalAlignment="Center"/>
-                            <TextBox Grid.Row="2" Grid.Column="1" Margin="0,5,5,0" x:Name="ConLai" IsEnabled="False"/>
+                            <TextBox Grid.Row="0" Grid.Column="2" Margin="0,5,5,0"
+                         x:Name="SoTienThu"
+                         Style="{StaticResource ModernTextBox}"
+                         materialDesign:HintAssist.Hint="Số Tiền Thu"
+                         materialDesign:TextFieldAssist.HasLeadingIcon="True"
+                         materialDesign:TextFieldAssist.LeadingIcon="Cash"/>
 
+                            <TextBox Grid.Row="1" Grid.Column="0" Margin="0,5,5,0"
+                         x:Name="TongNoPhat"
+                         Style="{StaticResource ModernTextBox}"
+                         materialDesign:HintAssist.Hint="Tổng Nợ"
+                         materialDesign:TextFieldAssist.HasLeadingIcon="True"
+                         materialDesign:TextFieldAssist.LeadingIcon="Cash"
+                         IsEnabled="False"/>
 
-                            <StackPanel Grid.Row="3" Grid.ColumnSpan="5" Orientation="Horizontal" 
-                                        HorizontalAlignment="Right" Margin="0,15,0,0">
-                                <Button Content="Tạo Phiếu Thu" Padding="10,5" Margin="0,0,5,0" 
-                                        Click="CreatePenaltyReceipt_Click"/>
+                            <TextBox Grid.Row="1" Grid.Column="1" Margin="0,5,5,0"
+                         x:Name="ConLai"
+                         Style="{StaticResource ModernTextBox}"
+                         materialDesign:HintAssist.Hint="Còn Lại"
+                         materialDesign:TextFieldAssist.HasLeadingIcon="True"
+                         materialDesign:TextFieldAssist.LeadingIcon="Cash" 
+                         IsEnabled="False"/>
+
+                            <StackPanel Grid.Row="2" Grid.ColumnSpan="3" 
+                            Orientation="Horizontal" 
+                            HorizontalAlignment="Right" 
+                            Margin="0,15,0,0">
+                                <Button Content="Tạo Phiếu Thu" Padding="10,5" Margin="0,0,5,0" Click="CreatePenaltyReceipt_Click"/>
                                 <Button Content="Xóa" Padding="10,5" Margin="0,0,5,0" Click="DeletePenalty_Click"/>
                                 <Button Content="Sửa" Padding="10,5" Margin="0,0,5,0" Click="EditPenalty_Click"/>
                                 <Button Content="Clear" Padding="10,5" Margin="0,0,5,0" Click="ClearPenalty_Click"/>
-                                <Button Content="In Phiếu Thu" Padding="10,5" Margin="0,0,5,0" 
-                                        Click="PrintPenaltyReceipt_Click"/>
+                                <Button Content="In Phiếu Thu" Padding="10,5" Margin="0,0,5,0" Click="PrintPenaltyReceipt_Click"/>
                             </StackPanel>
                         </Grid>
                     </Border>
 
+                    <Grid Grid.Row="1" Grid.ColumnSpan="2">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="459"/>
+                            <ColumnDefinition Width="114.493"/>
+                            <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition Width="Auto"/>
+                        </Grid.ColumnDefinitions>
 
+                        <TextBlock Text="Danh Sách Các Phiếu Thu Tiền Phạt" 
+        FontFamily="Segoe UI"  
+        FontSize="24" 
+        FontWeight="Bold"
+        Opacity="0.7"
+        VerticalAlignment="Center"
+        Margin="15,0,25,0"/>
+                        <TextBlock Text="Tìm Kiếm:" Grid.Column="1" FontSize="14" VerticalAlignment="Center" Margin="114,0,10,0" Grid.ColumnSpan="2"/>
 
-                    <DataGrid Grid.Row="1" x:Name="PenaltyReceiptsDataGrid" AutoGenerateColumns="False" 
-                              Margin="0,10,0,0" CanUserAddRows="False" CanUserDeleteRows="False" 
-                              IsReadOnly="True" SelectionChanged="PenaltyReceiptsDataGrid_SelectionChanged" Grid.ColumnSpan="2">
-                        <DataGrid.Columns>
-                            <DataGridTextColumn Header="ID Phiếu Thu" Binding="{Binding ID}"/>
-                            <DataGridTextColumn Header="Mã Phiếu Thu" Binding="{Binding MaPTTP}"/>
-                            <DataGridTextColumn Header="ID Độc Giả" Binding="{Binding IDDocGiaNavigation.MaDocGia}"/>
-                            <DataGridTextColumn Header="Ngày Thu" Binding="{Binding NgayThu, StringFormat=\{0:dd/MM/yyyy\}}"/>
-                            <DataGridTextColumn Header="Tổng Nợ" Binding="{Binding IDDocGiaNavigation.TongNo}"/>
-                            <DataGridTextColumn Header="Số Tiền Thu" Binding="{Binding SoTienThu, StringFormat=\{0:N0\}}"/>
-                            <DataGridTextColumn Header="Còn Lại" Binding="{Binding ConLai, StringFormat=\{0:N0\}}"/>
-                        </DataGrid.Columns>
-                    </DataGrid>
+                        <TextBox x:Name="TTPSearchTextBox" Grid.Column="2" VerticalAlignment="Center" Style="{StaticResource ModernTextBox}" materialDesign:HintAssist.Hint="Từ Khóa" materialDesign:HintAssist.FloatingScale="0.8" Margin="10,0,3,0" Grid.ColumnSpan="2"/>
+
+                        <ComboBox x:Name="TTPSearchCriteriaComboBox" Grid.Column="4" Style="{StaticResource ModernComboBox}" materialDesign:HintAssist.Hint="Thuộc Tính" materialDesign:HintAssist.FloatingScale="0.8">
+                            <ComboBoxItem Content="ID Độc Giả"/>
+                            <ComboBoxItem Content="Số Tiền Thu"/>
+                        </ComboBox>
+
+                        <Button x:Name="TTPSearchButton" Grid.Column="5" Click="TTPSearchButton_Click" Style="{StaticResource MaterialDesignFlatButton}">
+                            <materialDesign:PackIcon Kind="Magnify" Width="20" Height="20"/>
+                        </Button>
+                    </Grid>
+                        <DataGrid Grid.Row="2" 
+                  x:Name="PenaltyReceiptsDataGrid" 
+                  AutoGenerateColumns="False" 
+                  Margin="0,10,0,0" 
+                  CanUserAddRows="False" 
+                  CanUserDeleteRows="False" 
+                  IsReadOnly="True" 
+                  SelectionChanged="PenaltyReceiptsDataGrid_SelectionChanged" Grid.ColumnSpan="2">
+                            <DataGrid.Columns>
+                                <DataGridTextColumn Header="Mã Phiếu Thu" Binding="{Binding MaPTTP}"/>
+                                <DataGridTextColumn Header="ID Độc Giả" Binding="{Binding IDDocGiaNavigation.MaDocGia}"/>
+                                <DataGridTextColumn Header="Ngày Thu" Binding="{Binding NgayThu, StringFormat=\{0:dd/MM/yyyy\}}"/>
+                                <DataGridTextColumn Header="Tổng Nợ" Binding="{Binding IDDocGiaNavigation.TongNo}"/>
+                                <DataGridTextColumn Header="Số Tiền Thu" Binding="{Binding SoTienThu, StringFormat=\{0:N0\}}"/>
+                                <DataGridTextColumn Header="Còn Lại" Binding="{Binding ConLai, StringFormat=\{0:N0\}}"/>
+                            </DataGrid.Columns>
+                        </DataGrid>
                 </Grid>
             </TabItem>
         </TabControl>

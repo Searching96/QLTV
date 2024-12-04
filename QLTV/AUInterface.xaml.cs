@@ -6,10 +6,10 @@ using QLTV.Models;
 
 namespace QLTV
 {
-    public partial class UCInterface : Window
+    public partial class AUInterface : Window
     {
         private readonly QLTVContext _context;
-        public UCInterface()
+        public AUInterface()
         {
             InitializeComponent();
             _context = new QLTVContext();
@@ -22,7 +22,7 @@ namespace QLTV
 
         private void ReaderManagement_Click(object sender, RoutedEventArgs e)
         {
-            UCReaderManagement readerManagementPage = new UCReaderManagement();
+            AUQuanLyDocGia readerManagementPage = new AUQuanLyDocGia();
             readerManagementPage.Show();
         }
 
