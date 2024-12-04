@@ -1,6 +1,9 @@
-﻿create database QLTV
+﻿create database [QLTVten]
 go
-use QLTV
+use [QLTVten]
+go
+
+set dateformat dmy
 go
 
 create table [PHANQUYEN]
@@ -31,8 +34,8 @@ create table [TAIKHOAN]
 	[ID] int identity(1, 1) constraint [PK_TAIKHOAN] primary key,
 	[MaTaiKhoan] as ('TK' + right('00000' + cast([ID] as varchar(5)), 5)) persisted,
 	[MatKhau] varchar(50) not null,
-	[TenTaiKhoan] nvarchar(100) unique not null,
-	[Email] varchar(100) unique not null,
+	[TenTaiKhoan] nvarchar(100) constraint [UQ_TenTaiKhoan] unique not null,
+	[Email] varchar(100) constraint [UQ_Email] unique not null,
 	[SinhNhat] datetime not null,
 	[DiaChi] nvarchar(200) not null,
 	[SDT] varchar(20) not null,
@@ -67,6 +70,7 @@ create table [TACGIA]
 (
     [ID] int identity(1, 1) constraint [PK_TACGIA] primary key,
     [MaTacGia] as ('TG' + right('00000' + cast([ID] as varchar(5)), 5)) persisted,
+	[TenTacGia] nvarchar(100) not null,
     [NamSinh] int not null,
     [QuocTich] nvarchar(100) not null,
     [IsDeleted] bit not null -- thu xem them cai global query excluder thi khi query sach tac gia, voi mot sach co nhieu tac gia thi co tu dong ko lay cac tac gia da delete ko
@@ -77,6 +81,7 @@ create table [THELOAI]
     [ID] int identity(1, 1) constraint [PK_THELOAI] primary key,
     [MaTheLoai] as ('TL' + right('00000' + cast([ID] as varchar(5)), 5)) persisted,
     [TenTheLoai] nvarchar(100) not null,
+	[MoTa] nvarchar(500) not null,
     [IsDeleted] bit not null
 )
 
@@ -148,7 +153,7 @@ create table [CTPHIEUMUON]
     [IDSach] int not null, -- FK
     constraint [PK_CTPHIEUMUON] primary key([IDPhieuMuon], [IDSach]),
     [HanTra] datetime not null,
-    [TinhTrangMuon] nvarchar(100) not null -- tinh trang moi/cu cua sach luc muon?
+    [IDTinhTrangMuon] int not null -- tinh trang moi/cu cua sach luc muon?
 )
 
 create table [PHIEUTRA]
@@ -167,7 +172,7 @@ create table [CTPHIEUTRA]
     constraint [PK_CTPHIEUTRA] primary key([IDPhieuTra], [IDPhieuMuon], [IDSach]),
     [SoNgayMuon] int not null,
     [TienPhat] decimal(18, 0) not null,
-    [TinhTrangTra] nvarchar(100) not null,
+    [IDTinhTrangTra] int not null,
     [GhiChu] nvarchar(200) not null
 )
 
@@ -222,6 +227,19 @@ create table [THAMSO]
     [TienPhatTraTreMotNgay] decimal(18, 0) not null
 )
 
+create table [DANHGIA]
+(
+	[ID] int identity(1,1) constraint [PK_DANHGIA] primary key,
+	[IDSach] int not null,
+	[IDPhieuMuon] int not null,
+	[DanhGia] decimal(4, 2) not null
+)
+
+-- Dummy: delete when done
+alter table TUASACH_TACGIA add Dummy int;
+alter table TUASACH_TACGIA add constraint DF_TSTG_Dummy default 0 for Dummy;
+alter table TUASACH_THELOAI add Dummy int;
+alter table TUASACH_THELOAI add constraint DF_TSTL_Dummy default 0 for Dummy;
 
 -- default BiaSach
 alter table [TUASACH]
@@ -234,11 +252,17 @@ FOR [BiaSach];
 alter table [DOCGIA]
 add constraint [DF_DOCGIA_TongNo] default 0 for [TongNo];
 
+-- default HanMuoiToiDa
+alter table [TUASACH]
+add constraint [DF_TUASACH_HanMuonToiDa] default 2 for [HanMuonToiDa];
 
 -- default SoLuong 
 alter table [TUASACH]
 add constraint [DF_TUASACH_SoLuong] default 0 for [SoLuong];
 
+-- default IsAvailable
+alter table [SACH]
+add constraint [DF_SACH_IsAvailable] default 1 for [IsAvailable];
 
 -- default IsDeleted
 alter table [PHANQUYEN]
@@ -276,6 +300,18 @@ add constraint [DF_PHIEUTHUTIENPHAT_IsDeleted] default 0 for [IsDeleted];
 
 
 -- FK
+alter table [CTPHIEUMUON] add constraint [FK_CTPHIEUMUON_IDTinhTrangMuon]
+foreign key ([IDTinhTrangMuon]) references [TINHTRANG]([ID]);
+
+alter table [CTPHIEUTRA] add constraint [FK_CTPHIEUTRA_IDTinhTrangTra]
+foreign key ([IDTinhTrangTra]) references [TINHTRANG]([ID]);
+
+alter table [DANHGIA] add constraint [FK_DANHGIA_IDSach]
+foreign key ([IDSach]) references [SACH]([ID]);
+
+alter table [DANHGIA] add constraint [FK_DANHGIA_IDPhieuMuon]
+foreign key ([IDPhieuMuon]) references [PHIEUMUON]([ID]);
+
 alter table [TAIKHOAN] add constraint [FK_TAIKHOAN_IDPhanQuyen]
 foreign key ([IDPhanQuyen]) references [PHANQUYEN]([ID]);
 
@@ -338,3 +374,121 @@ foreign key ([IDTheLoai]) references [THELOAI]([ID]);
 
 alter table [PHIEUTHUTIENPHAT] add constraint [FK_PHIEUTHUTIENPHAT_IDDocGia]
 foreign key ([IDDocGia]) references [DOCGIA]([ID]);
+
+insert into TUASACH(TenTuaSach, HanMuonToiDa) values('Two Dimensions', 2)
+insert into THELOAI(TenTheLoai, MoTa) values('Khong xac dinh', 'mo ta')
+insert into TACGIA(TenTacGia, NamSinh, QuocTich) values('Aurora', 2077, 'Somewhere')
+
+insert into TUASACH_TACGIA(IDTuaSach, IDTacGia) values(1, 1)
+insert into TUASACH_THELOAI(IDTuaSach, IDTheLoai) values(1, 1)
+
+INSERT INTO TACGIA(TenTacGia, NamSinh, QuocTich) VALUES ('William Shakespeare', 1564, 'England');
+INSERT INTO TACGIA(TenTacGia, NamSinh, QuocTich) VALUES ('Jane Austen', 1775, 'England');
+INSERT INTO TACGIA(TenTacGia, NamSinh, QuocTich) VALUES ('Mark Twain', 1835, 'United States');
+INSERT INTO TACGIA(TenTacGia, NamSinh, QuocTich) VALUES ('Leo Tolstoy', 1828, 'Russia');
+INSERT INTO TACGIA(TenTacGia, NamSinh, QuocTich) VALUES ('Victor Hugo', 1802, 'France');
+INSERT INTO TACGIA(TenTacGia, NamSinh, QuocTich) VALUES ('Gabriel Garcia Marquez', 1927, 'Colombia');
+INSERT INTO TACGIA(TenTacGia, NamSinh, QuocTich) VALUES ('Haruki Murakami', 1949, 'Japan');
+INSERT INTO TACGIA(TenTacGia, NamSinh, QuocTich) VALUES ('Nguyen Du', 1766, 'Vietnam');
+INSERT INTO TACGIA(TenTacGia, NamSinh, QuocTich) VALUES ('Chinua Achebe', 1930, 'Nigeria');
+
+INSERT INTO THELOAI(TenTheLoai, MoTa) VALUES (N'Văn học cổ điển', 'mo ta');
+INSERT INTO THELOAI(TenTheLoai, MoTa) VALUES (N'Khoa học viễn tưởng', 'mo ta');
+INSERT INTO THELOAI(TenTheLoai, MoTa) VALUES (N'Kinh dị', 'mo ta');
+INSERT INTO THELOAI(TenTheLoai, MoTa) VALUES (N'Hồi ký', 'mo ta');
+INSERT INTO THELOAI(TenTheLoai, MoTa) VALUES (N'Trinh thám', 'mo ta');
+INSERT INTO THELOAI(TenTheLoai, MoTa) VALUES (N'Lãng mạn', 'mo ta');
+INSERT INTO THELOAI(TenTheLoai, MoTa) VALUES (N'Tâm lý học', 'mo ta');
+INSERT INTO THELOAI(TenTheLoai, MoTa) VALUES (N'Giáo dục', 'mo ta');
+INSERT INTO THELOAI(TenTheLoai, MoTa) VALUES (N'Thần thoại', 'mo ta');
+INSERT INTO THELOAI(TenTheLoai, MoTa) VALUES (N'Thiếu nhi', 'mo ta');
+INSERT INTO THELOAI(TenTheLoai, MoTa) VALUES (N'Kinh doanh', 'mo ta');
+INSERT INTO THELOAI(TenTheLoai, MoTa) VALUES (N'Kỹ năng số', 'mo ta');
+INSERT INTO THELOAI(TenTheLoai, MoTa) VALUES (N'Lịch sử', 'mo ta');
+INSERT INTO THELOAI(TenTheLoai, MoTa) VALUES (N'Chính trị', 'mo ta');
+INSERT INTO THELOAI(TenTheLoai, MoTa) VALUES (N'Khoa học tự nhiên', 'mo ta');
+
+--create table [TINHTRANG]
+--(
+--    -- vd: TT1: Nguyen ven, TT2: Hu muc 1 (25), TT3: muc 2 (50), TT4: 75, TT5: (Hu nang ne/ hoan toan) 100
+--    -- -> tien phat bang (MHH(moi) - MHH(cu)) x 2 x GiaTri
+--    [ID] int identity(1, 1) constraint [PK_TINHTRANG] primary key,
+--    [MaTinhTrang] as ('TT' + right('00000' + cast([ID] as varchar(5)), 5)) persisted,
+--    [TenTinhTrang] nvarchar(100) not null,
+--    [MucHuHong] int not null,
+--    [IsDeleted] bit not null
+--)
+
+insert into TINHTRANG(TenTinhTrang, MucHuHong) values(N'Mới', 0);
+insert into TINHTRANG(TenTinhTrang, MucHuHong) values(N'Hỏng nhẹ', 25);
+insert into TINHTRANG(TenTinhTrang, MucHuHong) values(N'Hỏng vừa', 50);
+insert into TINHTRANG(TenTinhTrang, MucHuHong) values(N'Hỏng nặng', 75);
+insert into TINHTRANG(TenTinhTrang, MucHuHong) values(N'Hỏng hoàn toàn', 100);
+insert into TINHTRANG(TenTinhTrang, MucHuHong) values(N'Mất', 100);
+
+--create table [SACH]
+--(
+--    -- Một đợt nhập nhiều quyển giống nhau thì vẫn cho là 2 sách khác nhau vì sau này có thể khác tình trạng
+--    [ID] int identity(1, 1) constraint [PK_SACH] primary key,
+--    [MaSach] as ('S' + right('00000' + cast([ID] as varchar(5)), 5)) persisted,
+--    [IDTuaSach] int not null, -- FK
+--    [NamXuatBan] int not null,
+--    [NhaXuatBan] nvarchar(100) not null,
+--    [NgayNhap] date not null,
+--    [TriGia] decimal(18, 0) not null,
+--    [IDTinhTrang] int not null, -- FK
+--    [IsAvailable] bit not null,
+--    [IsDeleted] bit not null
+--)
+
+insert into SACH(IDTuaSach, NamXuatBan, NhaXuatBan, NgayNhap, TriGia, IDTinhTrang) values(1 , 2077, 'Su That', '1/1/2049', 100000, 1);
+insert into SACH(IDTuaSach, NamXuatBan, NhaXuatBan, NgayNhap, TriGia, IDTinhTrang) values(1 , 2011, 'Su That', '1/1/2009', 90000, 1);
+
+-- Trigger
+--CREATE TRIGGER trg_AfterInsertSACH_UpdateTUASACHSoLuong 
+--ON SACH
+--AFTER INSERT
+--AS
+--BEGIN
+--    -- Updating the TUASACH table after an insert into SACH
+--    UPDATE TUASACH
+--    SET SoLuong = SoLuong + 1
+--    WHERE ID = (SELECT IDTuaSach FROM inserted)
+--END
+
+--drop trigger trg_AfterInsertSACH_UpdateTUASACHSoLuong 
+--select * from sys.triggers
+
+INSERT INTO PHANQUYEN (MaHanhDong, MoTa, IsDeleted)
+VALUES 
+('Admin', N'Quản trị hệ thống', 0),
+('DocGia', N'Độc giả thư viện', 0),
+('Banned', N'Tài khoản bị cấm', 0),
+('KoXacDinh', N'Phân quyền không xác định', 0);
+
+-- Bảng LOAIDOCGIA
+INSERT INTO LOAIDOCGIA (TenLoaiDocGia, SoSachMuonToiDa, IsDeleted)
+VALUES 
+('Sinh viên', 5, 0),
+('Giảng viên', 10, 0),
+('Nhân viên thư viện', 15, 0);
+
+-- Bảng TAIKHOAN
+INSERT INTO TAIKHOAN (MatKhau, TenTaiKhoan, Email, SinhNhat, DiaChi, SDT, Avatar, TrangThai, IDPhanQuyen, IsDeleted)
+VALUES 
+('admin123', 'admin1', 'admin1@example.com', '1/1/1982', 'Trụ sở chính', '0901111222', 'admin_avatar.png', 1, 1, 0),
+('pass123', 'sv1', 'sv1@example.com', '15/5/2005', '123 Đường ABC', '0901234567', 'avatar1.png', 0, 2, 0),
+('pass234', 'gv1', 'gv1@example.com', '10/3/1985', '456 Đường XYZ', '0912345678', 'avatar2.png', 0, 2, 0),
+('pass345', 'nvthuvien', 'nvthuvien@example.com', '20/8/1980', '789 Đường DEF', '0923456789', 'avatar3.png', 0, 2, 0),
+('banned123', 'banned1', 'banned1@example.com', '30/7/1995', 'Nơi nào đó', '0939876543', 'banned_avatar.png', 0, 3, 0);
+
+-- Bảng DOCGIA
+INSERT INTO DOCGIA (IDTaiKhoan, IDLoaiDocGia, NgayLapThe, NgayHetHan, TongNo, GioiThieu)
+VALUES 
+(2, 1, '2024-01-10', '2025-01-10', 0, N'Sinh viên năm nhất'),
+(3, 2, '2023-09-01', '2025-09-01', 0, N'Giảng viên khoa CNTT'),
+(4, 3, '2022-05-20', '2024-05-20', 0, N'Nhân viên thư viện chính');
+
+select * from TUASACH;
+select * from SACH;
+select * from TINHTRANG;
