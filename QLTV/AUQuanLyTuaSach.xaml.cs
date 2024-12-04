@@ -22,6 +22,7 @@ using Azure.Core;
 using System.Net.Http;
 using System.Text.Json;
 using System.Windows.Media.Imaging;
+using Microsoft.Identity.Client;
 
 namespace QLTV
 {
@@ -32,10 +33,16 @@ namespace QLTV
     {
         public static readonly Thickness DisplayElementMargin = new Thickness(0, 0, 0, 10);
         public static readonly Thickness ErrorIconMargin = new Thickness(0, 0, 5, 10);
+        public List<string> lstSelectedMaTuaSach = new List<string>();
+        public ObservableCollection<TUASACH> AllTuaSach { get; set; }
+        public PaginatedCollection<TUASACH> PaginatedTuaSach { get; set; }
+        public int MaxRowsPerPage = 5;
 
         public AUQuanLyTuaSach()
         {
             InitializeComponent();
+            AllTuaSach = new ObservableCollection<TUASACH>();
+            PaginatedTuaSach = new PaginatedCollection<TUASACH>(AllTuaSach, MaxRowsPerPage); // Example page size of 10 items
             LoadTuaSach();
             ExcelPackage.LicenseContext = LicenseContext.NonCommercial;
         }
@@ -44,14 +51,15 @@ namespace QLTV
         {
             using (var context = new QLTVContext())
             {
+                // Lấy danh sách TUASACH với thông tin chi tiết
                 var dsTuaSach = context.TUASACH
                     .Where(ts => !ts.IsDeleted)
                     .Select(ts => new
                     {
-                        ts.MaTuaSach,
-                        ts.TenTuaSach,
-                        ts.SoLuong,
-                        ts.HanMuonToiDa,
+                        MaTuaSach = ts.MaTuaSach,
+                        TenTuaSach = ts.TenTuaSach,
+                        SoLuong = ts.SoLuong,
+                        HanMuonToiDa = ts.HanMuonToiDa,
                         DSTacGia = string.Join(", ", ts.TUASACH_TACGIA
                             .Select(ts_tg => ts_tg.IDTacGiaNavigation.TenTacGia)),
                         DSTheLoai = string.Join(", ", ts.TUASACH_THELOAI
@@ -59,8 +67,146 @@ namespace QLTV
                     })
                     .ToList();
 
-                dgTuaSach.ItemsSource = dsTuaSach;
+                // Xóa dữ liệu cũ trong AllTuaSach
+                AllTuaSach.Clear();
+
+                // Thêm dữ liệu mới vào AllTuaSach
+                var tuaSachList = dsTuaSach.Select(item => new TUASACH
+                {
+                    MaTuaSach = item.MaTuaSach,
+                    TenTuaSach = item.TenTuaSach,
+                    SoLuong = item.SoLuong,
+                    HanMuonToiDa = item.HanMuonToiDa,
+                }).ToList();
+
+                foreach (var tuaSach in tuaSachList)
+                {
+                    AllTuaSach.Add(tuaSach);
+                }
+
+                // Đặt trang đầu tiên
+                PaginatedTuaSach.SetPage(1);
+
+                // Cập nhật số trang hiện tại
+                UpdatePageNumber();
+
+                // QUAN TRỌNG: Đặt ItemsSource cho DataGrid là danh sách trang hiện tại
+                dgTuaSach.ItemsSource = PaginatedTuaSach.CurrentPageItems;
             }
+        }
+
+        private void PreviousPage_Click(object sender, RoutedEventArgs e)
+        {
+            if (PaginatedTuaSach.CurrentPage > 1)
+            {
+                PaginatedTuaSach.SetPage(PaginatedTuaSach.CurrentPage - 1);
+                UpdatePageNumber();
+            }
+        }
+
+        private void NextPage_Click(object sender, RoutedEventArgs e)
+        {
+            if (PaginatedTuaSach.CurrentPage < PaginatedTuaSach.TotalPages)
+            {
+                PaginatedTuaSach.SetPage(PaginatedTuaSach.CurrentPage + 1);
+                UpdatePageNumber();
+            }
+        }
+
+        private void UpdatePageNumber()
+        {
+            txtPageNumber.Text = $"Page {PaginatedTuaSach.CurrentPage} of {PaginatedTuaSach.TotalPages}";
+        }
+
+        private DataGridRow GetRow(CheckBox cbx)
+        {
+            var dgRow = VisualTreeHelper.GetParent(cbx) as FrameworkElement;
+            while (dgRow != null && !(dgRow is DataGridRow))
+                dgRow = VisualTreeHelper.GetParent(dgRow) as FrameworkElement;
+            return dgRow as DataGridRow;
+        }
+
+        private CheckBox GetCheckBox(FrameworkElement element)
+        {
+            if (element == null) return null;
+
+            for (int i = 0; i < VisualTreeHelper.GetChildrenCount(element); i++)
+            {
+                var child = VisualTreeHelper.GetChild(element, i) as FrameworkElement;
+                if (child is CheckBox checkBox)
+                {
+                    return checkBox; // Tìm thấy CheckBox
+                }
+                else
+                {
+                    var result = GetCheckBox(child); // Đệ quy tìm sâu hơn
+                    if (result != null)
+                        return result;
+                }
+            }
+            return null;
+        }
+
+        private void RowCheckBox_Checked(object sender, RoutedEventArgs e)
+        {
+            var cbx = sender as CheckBox;
+            var row = GetRow(cbx);
+            if (row != null)
+            {
+                var tuaSach = row.Item as dynamic;
+                if (tuaSach != null && !lstSelectedMaTuaSach.Contains(tuaSach.MaTuaSach))
+                {
+                    lstSelectedMaTuaSach.Add(tuaSach.MaTuaSach);
+                }
+            }
+        }
+
+        private void RowCheckBox_Unchecked(object sender, RoutedEventArgs e)
+        {
+            var cbx = sender as CheckBox;
+            var row = GetRow(cbx);
+            if (row != null)
+            {
+                var tuaSach = row.Item as dynamic;
+                if (tuaSach != null && lstSelectedMaTuaSach.Contains(tuaSach.MaTuaSach))
+                {
+                    lstSelectedMaTuaSach.Remove(tuaSach.MaTuaSach);
+                }
+            }
+        }
+
+        private void SelectAll_Checked(object sender, RoutedEventArgs e)
+        {
+            foreach (var item in dgTuaSach.Items)
+            {
+                var row = dgTuaSach.ItemContainerGenerator.ContainerFromItem(item) as DataGridRow;
+                if (row != null) 
+                {
+                    var cbx = GetCheckBox(row);
+                    if (cbx != null && !cbx.IsChecked.GetValueOrDefault())
+                        cbx.IsChecked = true;
+                }
+            }
+        }
+
+        private void SelectAll_Unchecked(object sender, RoutedEventArgs e)
+        {
+            foreach (var item in dgTuaSach.Items)
+            {
+                var row = dgTuaSach.ItemContainerGenerator.ContainerFromItem(item) as DataGridRow;
+                if (row != null)
+                {
+                    var cbx = GetCheckBox(row);
+                    if (cbx != null && cbx.IsChecked.GetValueOrDefault())
+                        cbx.IsChecked = false;
+                }
+            }
+        }
+
+        private void btnShow_Click(object sender, RoutedEventArgs e)
+        {
+            string selectedItems = string.Join(", ", lstSelectedMaTuaSach);
+            MessageBox.Show($"Các mã tựa sách đã chọn: {selectedItems}", "Thông báo");
         }
 
         private void btnThemTuaSach_Click(object sender, RoutedEventArgs e)
@@ -202,13 +348,29 @@ namespace QLTV
                         .Where(ts => ts.MaTuaSach == maTuaSach)
                         .FirstOrDefault();
 
-                    BitmapImage bitmap = new BitmapImage();
-                    bitmap.BeginInit();
-                    bitmap.UriSource = new Uri(tuaSach.BiaSach, UriKind.Absolute);
-                    bitmap.EndInit();
+                    try
+                    {
+                        Uri uri = new Uri(tuaSach.BiaSach, UriKind.Absolute);
 
-                    imgBiaSach.Source = bitmap;
-                    bdBiaSach.Visibility = Visibility.Visible;
+                        if (Uri.IsWellFormedUriString(uri.ToString(), UriKind.Absolute))
+                        {
+                            BitmapImage bitmap = new BitmapImage();
+                            bitmap.BeginInit();
+                            bitmap.UriSource = uri;
+                            bitmap.EndInit();
+
+                            imgBiaSach.Source = bitmap;
+                            bdBiaSach.Visibility = Visibility.Visible;
+                        }
+                        else
+                        {
+                            imgBiaSach.Source = null; // Nếu Uri không hợp lệ, không gán hình ảnh
+                        }
+                    }
+                    catch (UriFormatException)
+                    {
+                        imgBiaSach.Source = null; // Nếu có lỗi trong việc tạo Uri, không gán hình ảnh
+                    }
                 }
             }
             else
@@ -663,6 +825,102 @@ namespace QLTV
                     bitmap.EndInit();
                     imgBiaSach.Source = bitmap;
                 }
+            }
+        }
+
+        private void btnXoaChon_Click(object sender, RoutedEventArgs e)
+        {
+            MessageBoxResult mbrXacNhan = MessageBox.Show(
+                $"Bạn có chắc chắn muốn xóa các tựa sách đã chọn?",
+                "Xác nhận xóa",
+                MessageBoxButton.YesNo,
+                MessageBoxImage.Warning);
+
+            if (mbrXacNhan == MessageBoxResult.Yes)
+            {
+                using (var context = new QLTVContext())
+                {
+                    using (var transaction = context.Database.BeginTransaction()) // Đảm bảo đồng bộ các thao tác
+                    {
+                        try
+                        {
+                            foreach (var maTuaSach in lstSelectedMaTuaSach)
+                            {
+                                var tuaSachToDelete = context.TUASACH
+                                    .Include(ts => ts.TUASACH_TACGIA)
+                                    .Include(ts => ts.TUASACH_THELOAI)
+                                    .FirstOrDefault(tg => tg.MaTuaSach == maTuaSach);
+
+                                if (tuaSachToDelete != null)
+                                {
+                                    // Cập nhật các sách liên quan
+                                    var lstSachToDelete = context.SACH
+                                        .Where(s => s.IDTuaSach == tuaSachToDelete.ID)
+                                        .ToList();
+
+                                    foreach (var sach in lstSachToDelete)
+                                        sach.IsDeleted = true;
+
+                                    // Xóa mối quan hệ giữa TuaSach và TacGia/ TheLoai
+                                    context.TUASACH_TACGIA.RemoveRange(tuaSachToDelete.TUASACH_TACGIA);
+                                    context.TUASACH_THELOAI.RemoveRange(tuaSachToDelete.TUASACH_THELOAI);
+
+                                    // Đánh dấu TuaSach là đã xóa
+                                    tuaSachToDelete.IsDeleted = true;
+                                }
+                            }
+
+                            // Lưu tất cả thay đổi trong một giao dịch
+                            context.SaveChanges();
+                            transaction.Commit(); // Commit giao dịch
+
+                            MessageBox.Show($"Đã xóa thành công các tựa sách được chọn.", "Thông báo",
+                                MessageBoxButton.OK, MessageBoxImage.Information);
+
+                            LoadTuaSach();
+                        }
+                        catch (Exception ex)
+                        {
+                            transaction.Rollback(); // Rollback giao dịch nếu có lỗi
+                            MessageBox.Show($"Có lỗi xảy ra: {ex.Message}", "Lỗi", MessageBoxButton.OK, MessageBoxImage.Error);
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    public class PaginatedCollection<T> : ObservableCollection<T>
+    {
+        public int PageSize { get; set; }
+        public int CurrentPage { get; set; }
+        public int TotalPages => (int)Math.Ceiling((double)this.Count / PageSize);
+
+        public PaginatedCollection(IEnumerable<T> items, int pageSize)
+        {
+            this.PageSize = pageSize;
+            this.CurrentPage = 1;
+            this.AddRange(items);
+        }
+
+        public void SetPage(int pageNumber)
+        {
+            if (pageNumber < 1 || pageNumber > TotalPages) return;
+
+            CurrentPage = pageNumber;
+            var pagedItems = this.Skip((CurrentPage - 1) * PageSize).Take(PageSize).ToList();
+            Clear();
+            foreach (var item in pagedItems)
+            {
+                Add(item);
+            }
+        }
+
+        public void AddRange(IEnumerable<T> items)
+        {
+            foreach (var item in items)
+            {
+                Add(item);
             }
         }
     }

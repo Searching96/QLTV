@@ -40,7 +40,7 @@ namespace QLTV
 
         public async Task<string> GetBookCoverUrlAsync(string tuaSach)
         {
-            string apiKey = "uapik";     
+            string apiKey = "AIzaSyDRuxWjyIOb0Vy2JVEaJEQxXNc70ijJJUg";     
             string url = $"https://www.googleapis.com/books/v1/volumes?q=intitle:{Uri.EscapeDataString(tuaSach)}&key={apiKey}";
 
             using HttpClient client = new HttpClient();

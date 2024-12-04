@@ -49,6 +49,7 @@
             <RowDefinition Height="300*"/>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="650*"/>
+            <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
         <Grid>
             <Grid.RowDefinitions>
@@ -199,6 +200,10 @@
                         Margin="5, 0, 0, 0" Click="btnExportExcel_Click"/>
                     <Button x:Name="btnImportExcel" Content="Nhập Excel" 
                         Margin="5, 0, 0, 0" Click="btnImportExcel_Click"/>
+                    <Button x:Name="btnShow" Content="Show" 
+                            Margin="5, 0, 0, 0" Click="btnShow_Click"/>
+                    <Button x:Name="btnXoaChon" Content="XChon" 
+                            Margin="5, 0, 0, 0" Click="btnXoaChon_Click"/>                
                 </StackPanel>
             </Grid>
         </Grid>
@@ -248,17 +253,40 @@
         </Grid>
 
         <DataGrid x:Name="dgTuaSach" Grid.Row="2" SelectionMode="Single"
-                  SelectionUnit="FullRow" IsReadOnly="true" AutoGenerateColumns="False"
+                  SelectionUnit="FullRow" IsReadOnly="True" AutoGenerateColumns="False"
                   SelectionChanged="dgTuaSach_SelectionChanged"
-                  materialDesign:DataGridAssist.CornerRadius="4">
+                  materialDesign:DataGridAssist.CornerRadius="4" HorizontalAlignment="Stretch">
             <DataGrid.Columns>
-                <DataGridTextColumn Header="Mã Tựa Sách" Width="*" Binding="{Binding MaTuaSach}"/>
-                <DataGridTextColumn Header="Tên Tựa Sách" Width="*" Binding="{Binding TenTuaSach}"/>
-                <DataGridTextColumn Header="Tác Giả" Width="*" Binding="{Binding DSTacGia}"/>
-                <DataGridTextColumn Header="Thể Loại" Width="*" Binding="{Binding DSTheLoai}"/>
-                <DataGridTextColumn Header="Số Lượng" Width="*" Binding="{Binding SoLuong}"/>
-                <DataGridTextColumn Header="Hạn Mượn Tối Đa (Tuần)" Width="*" Binding="{Binding HanMuonToiDa}"/>
+                <!-- Cột CheckBox -->
+                <DataGridTemplateColumn Width="50">
+                    <DataGridTemplateColumn.Header>
+                        <CheckBox x:Name="cbxSelectAll" Content=""
+                                  Checked="SelectAll_Checked"
+                                  Unchecked="SelectAll_Unchecked" />
+                    </DataGridTemplateColumn.Header>
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <CheckBox Checked="RowCheckBox_Checked" Unchecked="RowCheckBox_Unchecked"/>
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
+
+                <!-- Các cột dữ liệu khác -->
+                <DataGridTextColumn Header="Mã Tựa Sách" Width="*" Binding="{Binding MaTuaSach, Mode=OneWay}" IsReadOnly="True"/>
+                <DataGridTextColumn Header="Tên Tựa Sách" Width="*" Binding="{Binding TenTuaSach, Mode=OneWay}" IsReadOnly="True"/>
+                <DataGridTextColumn Header="Tác Giả" Width="*" Binding="{Binding DSTacGia, Mode=OneWay}" IsReadOnly="True"/>
+                <DataGridTextColumn Header="Thể Loại" Width="*" Binding="{Binding DSTheLoai, Mode=OneWay}" IsReadOnly="True"/>
+                <DataGridTextColumn Header="Số Lượng" Width="*" Binding="{Binding SoLuong, Mode=OneWay}" IsReadOnly="True"/>
+                <DataGridTextColumn Header="Hạn Mượn Tối Đa (Tuần)" Width="*" Binding="{Binding HanMuonToiDa, Mode=OneWay}" IsReadOnly="True"/>
             </DataGrid.Columns>
         </DataGrid>
+
+        <!-- Paging Controls -->
+        <StackPanel Orientation="Horizontal" Grid.Row="3" 
+                    HorizontalAlignment="Center" VerticalAlignment="Bottom" Margin="0,10">
+            <Button Content=">" Click="PreviousPage_Click"/>
+            <TextBlock x:Name="txtPageNumber" VerticalAlignment="Center" Margin="5"/>
+            <Button Content=">" Click="NextPage_Click"/>
+        </StackPanel>
     </Grid>
 </UserControl>

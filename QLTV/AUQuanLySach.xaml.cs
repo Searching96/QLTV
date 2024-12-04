@@ -148,13 +148,29 @@ namespace QLTV
                         .Where(ts => ts.TenTuaSach == tenTuaSach)
                         .FirstOrDefault();
 
-                    BitmapImage bitmap = new BitmapImage();
-                    bitmap.BeginInit();
-                    bitmap.UriSource = new Uri(tuaSach.BiaSach, UriKind.Absolute);
-                    bitmap.EndInit();
+                    try
+                    {
+                        Uri uri = new Uri(tuaSach.BiaSach, UriKind.Absolute);
 
-                    imgBiaSach.Source = bitmap;
-                    bdBiaSach.Visibility = Visibility.Visible;
+                        if (Uri.IsWellFormedUriString(uri.ToString(), UriKind.Absolute))
+                        {
+                            BitmapImage bitmap = new BitmapImage();
+                            bitmap.BeginInit();
+                            bitmap.UriSource = uri;
+                            bitmap.EndInit();
+
+                            imgBiaSach.Source = bitmap;
+                            bdBiaSach.Visibility = Visibility.Visible;
+                        }
+                        else
+                        {
+                            imgBiaSach.Source = null; // Nếu Uri không hợp lệ, không gán hình ảnh
+                        }
+                    }
+                    catch (UriFormatException)
+                    {
+                        imgBiaSach.Source = null; // Nếu có lỗi trong việc tạo Uri, không gán hình ảnh
+                    }
                 }
             }
             else
