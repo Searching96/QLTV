@@ -766,52 +766,7 @@ namespace QLTV
         // Import and Export 
         private void ImportExcel_Click(object sender, RoutedEventArgs e)
         {
-            try
-            {
-                OpenFileDialog openFileDialog = new OpenFileDialog();
-                openFileDialog.Filter = "Excel Files|*.xls;*.xlsx;*.xlsm";
-
-                if (openFileDialog.ShowDialog() == true)
-                {
-                    var filePath = openFileDialog.FileName;
-
-                    using (var package = new ExcelPackage(new FileInfo(filePath)))
-                    {
-                        var worksheet = package.Workbook.Worksheets[0]; // Lấy sheet đầu tiên
-
-                        // Đọc dữ liệu từ dòng 2 (bỏ qua dòng tiêu đề)
-                        for (int row = 2; row <= worksheet.Dimension.End.Row; row++)
-                        {
-                            try
-                            {
-                                var newReader = new DOCGIA
-                                {
-                                    IDTaiKhoan = int.Parse(worksheet.Cells[row, 2].Value.ToString()), // Đọc từ cột B
-                                    IDLoaiDocGia = int.Parse(worksheet.Cells[row, 3].Value.ToString()), // Đọc từ cột C
-                                    NgayLapThe = DateTime.ParseExact(worksheet.Cells[row, 4].Value.ToString(), "dd/MM/yyyy", CultureInfo.InvariantCulture), // Đọc từ cột D
-                                    NgayHetHan = DateTime.ParseExact(worksheet.Cells[row, 5].Value.ToString(), "dd/MM/yyyy", CultureInfo.InvariantCulture), // Đọc từ cột E
-                                    TongNo = decimal.Parse(worksheet.Cells[row, 6].Value.ToString()), // Đọc từ cột F
-                                    GioiThieu = worksheet.Cells[row, 7].Value.ToString() // Đọc từ cột G
-                                };
-
-                                _context.DOCGIA.Add(newReader);
-                            }
-                            catch (Exception ex)
-                            {
-                                MessageBox.Show($"Lỗi khi đọc dữ liệu từ dòng {row}: {ex.Message}", "Lỗi", MessageBoxButton.OK, MessageBoxImage.Error);
-                            }
-                        }
-
-                        _context.SaveChanges();
-                        LoadReadersData(); // Load lại dữ liệu
-                        MessageBox.Show("Import dữ liệu từ Excel thành công!", "Thông báo", MessageBoxButton.OK, MessageBoxImage.Information);
-                    }
-                }
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show($"Lỗi khi import dữ liệu: {ex.Message}", "Lỗi", MessageBoxButton.OK, MessageBoxImage.Error);
-            }
+            
         }
 
         private void ExportExcel_Click(object sender, RoutedEventArgs e)
