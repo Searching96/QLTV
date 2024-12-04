@@ -34,27 +34,45 @@ namespace QLTV
         public static readonly Thickness DisplayElementMargin = new Thickness(0, 0, 0, 10);
         public static readonly Thickness ErrorIconMargin = new Thickness(0, 0, 5, 10);
         public List<string> lstSelectedMaTuaSach = new List<string>();
-        public ObservableCollection<TUASACH> AllTuaSach { get; set; }
-        public PaginatedCollection<TUASACH> PaginatedTuaSach { get; set; }
-        public int MaxRowsPerPage = 5;
+        private ObservableCollection<TuaSachViewModel> _dsTuaSach;
+        private int _currentPage = 1;
+        private int _itemsPerPage = 10;
+        private int _totalItems = 0;
+
+        public class TuaSachViewModel
+        {
+            public string MaTuaSach { get; set; }
+            public string TenTuaSach { get; set; }
+            public int SoLuong { get; set; }
+            public int HanMuonToiDa { get; set; }
+            public string DSTacGia { get; set; }
+            public string DSTheLoai { get; set; }
+        }
 
         public AUQuanLyTuaSach()
         {
             InitializeComponent();
-            AllTuaSach = new ObservableCollection<TUASACH>();
-            PaginatedTuaSach = new PaginatedCollection<TUASACH>(AllTuaSach, MaxRowsPerPage); // Example page size of 10 items
+            _dsTuaSach = new ObservableCollection<TuaSachViewModel>();
             LoadTuaSach();
-            ExcelPackage.LicenseContext = LicenseContext.NonCommercial;
         }
 
         private void LoadTuaSach()
         {
             using (var context = new QLTVContext())
             {
-                // Lấy danh sách TUASACH với thông tin chi tiết
+                // Đếm tổng số items
+                _totalItems = context.TUASACH
+                    .Count(ts => !ts.IsDeleted);
+
+                // Tính toán số trang
+                int totalPages = (int)Math.Ceiling((double)_totalItems / _itemsPerPage);
+
+                // Truy vấn dữ liệu cho trang hiện tại
                 var dsTuaSach = context.TUASACH
                     .Where(ts => !ts.IsDeleted)
-                    .Select(ts => new
+                    .Skip((_currentPage - 1) * _itemsPerPage)
+                    .Take(_itemsPerPage)
+                    .Select(ts => new TuaSachViewModel
                     {
                         MaTuaSach = ts.MaTuaSach,
                         TenTuaSach = ts.TenTuaSach,
@@ -67,55 +85,49 @@ namespace QLTV
                     })
                     .ToList();
 
-                // Xóa dữ liệu cũ trong AllTuaSach
-                AllTuaSach.Clear();
-
-                // Thêm dữ liệu mới vào AllTuaSach
-                var tuaSachList = dsTuaSach.Select(item => new TUASACH
+                // Cập nhật ObservableCollection
+                _dsTuaSach.Clear();
+                foreach (var item in dsTuaSach)
                 {
-                    MaTuaSach = item.MaTuaSach,
-                    TenTuaSach = item.TenTuaSach,
-                    SoLuong = item.SoLuong,
-                    HanMuonToiDa = item.HanMuonToiDa,
-                }).ToList();
-
-                foreach (var tuaSach in tuaSachList)
-                {
-                    AllTuaSach.Add(tuaSach);
+                    _dsTuaSach.Add(item);
                 }
 
-                // Đặt trang đầu tiên
-                PaginatedTuaSach.SetPage(1);
+                // Cập nhật DataGrid
+                dgTuaSach.ItemsSource = _dsTuaSach;
 
-                // Cập nhật số trang hiện tại
-                UpdatePageNumber();
-
-                // QUAN TRỌNG: Đặt ItemsSource cho DataGrid là danh sách trang hiện tại
-                dgTuaSach.ItemsSource = PaginatedTuaSach.CurrentPageItems;
+                // Cập nhật thông tin trang
+                UpdatePageInfo();
             }
         }
 
-        private void PreviousPage_Click(object sender, RoutedEventArgs e)
+        private void UpdatePageInfo()
         {
-            if (PaginatedTuaSach.CurrentPage > 1)
+            int totalPages = (int)Math.Ceiling((double)_totalItems / _itemsPerPage);
+            var tbxPageNumber = (TextBlock)FindName("tbxPageNumber");
+
+            if (tbxPageNumber != null)
             {
-                PaginatedTuaSach.SetPage(PaginatedTuaSach.CurrentPage - 1);
-                UpdatePageNumber();
+                tbxPageNumber.Text = $"Trang {_currentPage}/{totalPages}";
             }
         }
 
-        private void NextPage_Click(object sender, RoutedEventArgs e)
+        private void btnPrevious_Click(object sender, RoutedEventArgs e)
         {
-            if (PaginatedTuaSach.CurrentPage < PaginatedTuaSach.TotalPages)
+            if (_currentPage > 1)
             {
-                PaginatedTuaSach.SetPage(PaginatedTuaSach.CurrentPage + 1);
-                UpdatePageNumber();
+                _currentPage--;
+                LoadTuaSach();
             }
         }
 
-        private void UpdatePageNumber()
+        private void btnNext_Click(object sender, RoutedEventArgs e)
         {
-            txtPageNumber.Text = $"Page {PaginatedTuaSach.CurrentPage} of {PaginatedTuaSach.TotalPages}";
+            int totalPages = (int)Math.Ceiling((double)_totalItems / _itemsPerPage);
+            if (_currentPage < totalPages)
+            {
+                _currentPage++;
+                LoadTuaSach();
+            }
         }
 
         private DataGridRow GetRow(CheckBox cbx)

@@ -284,9 +284,9 @@
         <!-- Paging Controls -->
         <StackPanel Orientation="Horizontal" Grid.Row="3" 
                     HorizontalAlignment="Center" VerticalAlignment="Bottom" Margin="0,10">
-            <Button Content=">" Click="PreviousPage_Click"/>
-            <TextBlock x:Name="txtPageNumber" VerticalAlignment="Center" Margin="5"/>
-            <Button Content=">" Click="NextPage_Click"/>
+            <Button Content=">" Click="btnPrevious_Click"/>
+            <TextBlock x:Name="tbxPageNumber" VerticalAlignment="Center" Margin="5"/>
+            <Button Content=">" Click="btnNext_Click"/>
         </StackPanel>
     </Grid>
 </UserControl>
