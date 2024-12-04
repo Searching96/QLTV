@@ -23,6 +23,7 @@ using OfficeOpenXml.Drawing.Style.Coloring;
 using Microsoft.EntityFrameworkCore.Diagnostics.Internal;
 using System.Globalization;
 using MaterialDesignThemes.Wpf;
+using System.Collections.ObjectModel;
 
 namespace QLTV
 {
@@ -32,37 +33,169 @@ namespace QLTV
     public partial class AUQuanLySach : UserControl
     {
         private bool isUpdatingText = false;
+        private List<SachViewModel> _fullDataSource;
+        private ObservableCollection<SachViewModel> _dsSach;
+        private int _currentPage = 1;
+        private int _itemsPerPage = 10;
+        private bool _isSearchMode = false;
+
+        public class SachViewModel
+        {
+            public string MaSach { get; set; }
+            public string TuaSach { get; set; }
+            public string DSTacGia { get; set; }
+            public string DSTheLoai { get; set; }
+            public string NhaXuatBan { get; set; }
+            public int NamXuatBan { get; set; }
+            public string NgayNhap { get; set; }
+            public decimal TriGia { get; set; }
+            public string TinhTrang { get; set; }
+        }
 
         public AUQuanLySach()
         {
             InitializeComponent();
-            LoadSach();
             ExcelPackage.LicenseContext = LicenseContext.NonCommercial;
+            _dsSach = new ObservableCollection<SachViewModel>();
+            LoadSach();
         }
 
-        private void LoadSach()
+        private void LoadSach(bool isInitialLoad = false)
         {
             using (var context = new QLTVContext())
             {
-                var dsSach = context.SACH
+                _fullDataSource = context.SACH
                     .Where(s => !s.IsDeleted && !s.IDTuaSachNavigation.IsDeleted)
-                    .Select(s => new
+                    .Select(s => new SachViewModel
                     {
-                        s.MaSach,
+                        MaSach = s.MaSach,
                         TuaSach = s.IDTuaSachNavigation.TenTuaSach,
                         DSTacGia = string.Join(", ", s.IDTuaSachNavigation.TUASACH_TACGIA
                             .Select(ts_tg => ts_tg.IDTacGiaNavigation.TenTacGia)),
                         DSTheLoai = string.Join(", ", s.IDTuaSachNavigation.TUASACH_THELOAI
                             .Select(ts_tl => ts_tl.IDTheLoaiNavigation.TenTheLoai)),
-                        s.NhaXuatBan,
-                        s.NamXuatBan,
+                        NhaXuatBan = s.NhaXuatBan,
+                        NamXuatBan = s.NamXuatBan,
                         NgayNhap = s.NgayNhap.ToString("dd/MM/yyyy"),
-                        s.TriGia,
+                        TriGia = s.TriGia,
                         TinhTrang = s.IDTinhTrangNavigation.TenTinhTrang
                     })
                     .ToList();
 
-                dgSach.ItemsSource = dsSach;
+                _isSearchMode = false;
+                _currentPage = 1;
+                ApplyPaging();
+            }
+        }
+
+        private void btnTimKiem_Click(object sender, RoutedEventArgs e)
+        {
+            string searchTerm = NormalizeString(tbxThongTinTimKiem.Text.Trim().ToLower());
+            string selectedProperty = ((ComboBoxItem)cbbThuocTinhTimKiem.SelectedItem)?.Content.ToString();
+
+            if (string.IsNullOrEmpty(selectedProperty))
+            {
+                MessageBox.Show("Vui lòng chọn thuộc tính tìm kiếm", "Thông báo", MessageBoxButton.OK, MessageBoxImage.Warning);
+                return;
+            }
+
+            using (var context = new QLTVContext())
+            {
+                _fullDataSource = context.SACH
+                    .Where(s => !s.IsDeleted && !s.IDTuaSachNavigation.IsDeleted)
+                    .Select(s => new SachViewModel
+                    {
+                        MaSach = s.MaSach,
+                        TuaSach = s.IDTuaSachNavigation.TenTuaSach,
+                        DSTacGia = string.Join(", ", s.IDTuaSachNavigation.TUASACH_TACGIA
+                            .Select(ts_tg => ts_tg.IDTacGiaNavigation.TenTacGia)),
+                        DSTheLoai = string.Join(", ", s.IDTuaSachNavigation.TUASACH_THELOAI
+                            .Select(ts_tl => ts_tl.IDTheLoaiNavigation.TenTheLoai)),
+                        NhaXuatBan = s.NhaXuatBan,
+                        NamXuatBan = s.NamXuatBan,
+                        NgayNhap = s.NgayNhap.ToString("dd/MM/yyyy"),
+                        TriGia = s.TriGia,
+                        TinhTrang = s.IDTinhTrangNavigation.TenTinhTrang
+                    })
+                    .AsEnumerable()
+                    .Where(s =>
+                        selectedProperty == "Tựa Sách" ? NormalizeString(s.TuaSach).Contains(searchTerm) :
+                        selectedProperty == "Tác Giả" ? NormalizeString(s.DSTacGia).Contains(searchTerm) :
+                        selectedProperty == "Thể Loại" ? NormalizeString(s.DSTheLoai).Contains(searchTerm) :
+                        selectedProperty == "Nhà Xuất Bản" ? NormalizeString(s.NhaXuatBan).Contains(searchTerm) :
+                        selectedProperty == "Tình Trạng" ? NormalizeString(s.TinhTrang).Contains(searchTerm) :
+                        true
+                    )
+                    .ToList();
+
+                _isSearchMode = true;
+                _currentPage = 1;
+                ApplyPaging();
+            }
+        }
+
+        private void ApplyPaging()
+        {
+            if (_fullDataSource == null || _fullDataSource.Count == 0)
+            {
+                dgSach.ItemsSource = new ObservableCollection<dynamic>();
+                UpdatePageInfo(0);
+                return;
+            }
+
+            int totalItems = _fullDataSource.Count;
+            int totalPages = (int)Math.Ceiling((double)totalItems / _itemsPerPage);
+
+            var pageData = _fullDataSource
+                .Skip((_currentPage - 1) * _itemsPerPage)
+                .Take(_itemsPerPage)
+                .ToList();
+
+            _dsSach.Clear();
+            foreach (var item in pageData)
+            {
+                _dsSach.Add(item);
+            }
+
+            dgSach.ItemsSource = _dsSach;
+            UpdatePageInfo(totalItems);
+        }
+
+        private void UpdatePageInfo(int totalItems)
+        {
+            int totalPages = (int)Math.Ceiling((double)totalItems / _itemsPerPage);
+            var tbxPageNumber = (TextBlock)FindName("tbxPageNumber");
+
+            if (tbxPageNumber != null)
+            {
+                tbxPageNumber.Text = totalItems > 0
+                    ? $"Trang {_currentPage}/{totalPages} (Tổng: {totalItems} kết quả)"
+                    : "Không có kết quả";
+            }
+
+            var btnPrevious = (Button)FindName("btnPrevious");
+            var btnNext = (Button)FindName("btnNext");
+
+            if (btnPrevious != null) btnPrevious.IsEnabled = _currentPage > 1;
+            if (btnNext != null) btnNext.IsEnabled = _currentPage < totalPages;
+        }
+
+        private void btnPrevious_Click(object sender, RoutedEventArgs e)
+        {
+            if (_currentPage > 1)
+            {
+                _currentPage--;
+                ApplyPaging();
+            }
+        }
+
+        private void btnNext_Click(object sender, RoutedEventArgs e)
+        {
+            int totalPages = (int)Math.Ceiling((double)_fullDataSource.Count / _itemsPerPage);
+            if (_currentPage < totalPages)
+            {
+                _currentPage++;
+                ApplyPaging();
             }
         }
 
@@ -323,11 +456,6 @@ namespace QLTV
         private void btnLamMoi_Click(object sender, RoutedEventArgs e)
         {
             LoadSach();
-        }
-
-        private void btnTimKiem_Click(object sender, RoutedEventArgs e)
-        {
-
         }
 
         private void btnExportExcel_Click(object sender, RoutedEventArgs e)
@@ -644,6 +772,18 @@ namespace QLTV
             }
 
             icTriGiaError.Visibility = Visibility.Collapsed;
+        }
+
+        private string NormalizeString(string text)
+        {
+            if (string.IsNullOrEmpty(text))
+                return text;
+
+            return new string(
+                text.Normalize(NormalizationForm.FormD)
+                    .Where(c => CharUnicodeInfo.GetUnicodeCategory(c) != UnicodeCategory.NonSpacingMark)
+                    .ToArray()
+            ).Normalize(NormalizationForm.FormC).ToLower();
         }
 
         //private void dpNgayNhap_SelectedDateChanged(object sender, SelectionChangedEventArgs e)

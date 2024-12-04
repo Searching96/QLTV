@@ -99,6 +99,13 @@ namespace QLTV
                 MessageBox.Show("Ảnh không tồn tại hoặc URL không hợp lệ.", "Thông báo",
                     MessageBoxButton.OK, MessageBoxImage.Error);
             }
+
+            //BitmapImage bitmap = new BitmapImage();
+            //bitmap.BeginInit();
+            //bitmap.UriSource = new Uri(tbxLinkBia.Text, UriKind.Absolute);
+            //bitmap.EndInit();
+
+            //imgBiaSach.Source = bitmap;
         }
 
         private async void btnTimAPI_Click(object sender, RoutedEventArgs e)

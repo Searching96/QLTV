@@ -35,9 +35,11 @@ namespace QLTV
         public static readonly Thickness ErrorIconMargin = new Thickness(0, 0, 5, 10);
         public List<string> lstSelectedMaTuaSach = new List<string>();
         private ObservableCollection<TuaSachViewModel> _dsTuaSach;
+        private List<TuaSachViewModel> _fullDataSource; // Nguồn dữ liệu đầy đủ
         private int _currentPage = 1;
         private int _itemsPerPage = 10;
         private int _totalItems = 0;
+        private bool _isSearchMode = false; // Cờ để phân biệt chế độ
 
         public class TuaSachViewModel
         {
@@ -52,26 +54,18 @@ namespace QLTV
         public AUQuanLyTuaSach()
         {
             InitializeComponent();
+            ExcelPackage.LicenseContext = LicenseContext.NonCommercial;
             _dsTuaSach = new ObservableCollection<TuaSachViewModel>();
-            LoadTuaSach();
+            LoadTuaSach(true);
         }
 
-        private void LoadTuaSach()
+        private void LoadTuaSach(bool isInitialLoad = false)
         {
             using (var context = new QLTVContext())
             {
-                // Đếm tổng số items
-                _totalItems = context.TUASACH
-                    .Count(ts => !ts.IsDeleted);
-
-                // Tính toán số trang
-                int totalPages = (int)Math.Ceiling((double)_totalItems / _itemsPerPage);
-
-                // Truy vấn dữ liệu cho trang hiện tại
-                var dsTuaSach = context.TUASACH
+                // Truy vấn cơ sở dữ liệu gốc
+                _fullDataSource = context.TUASACH
                     .Where(ts => !ts.IsDeleted)
-                    .Skip((_currentPage - 1) * _itemsPerPage)
-                    .Take(_itemsPerPage)
                     .Select(ts => new TuaSachViewModel
                     {
                         MaTuaSach = ts.MaTuaSach,
@@ -85,30 +79,119 @@ namespace QLTV
                     })
                     .ToList();
 
-                // Cập nhật ObservableCollection
-                _dsTuaSach.Clear();
-                foreach (var item in dsTuaSach)
-                {
-                    _dsTuaSach.Add(item);
-                }
+                // Reset trạng thái
+                _isSearchMode = false;
+                _currentPage = 1;
 
-                // Cập nhật DataGrid
-                dgTuaSach.ItemsSource = _dsTuaSach;
-
-                // Cập nhật thông tin trang
-                UpdatePageInfo();
+                // Áp dụng phân trang
+                ApplyPaging();
             }
         }
 
-        private void UpdatePageInfo()
+        private void PerformSearch()
         {
-            int totalPages = (int)Math.Ceiling((double)_totalItems / _itemsPerPage);
+            string searchTerm = NormalizeString(tbxThongTinTimKiem.Text.Trim().ToLower());
+            string selectedProperty = ((ComboBoxItem)cbbThuocTinhTimKiem.SelectedItem)?.Content.ToString();
+
+            // Kiểm tra nếu không có gì được chọn
+            if (string.IsNullOrEmpty(selectedProperty))
+            {
+                MessageBox.Show("Vui lòng chọn thuộc tính tìm kiếm", "Thông báo", MessageBoxButton.OK, MessageBoxImage.Warning);
+                return;
+            }
+
+            using (var context = new QLTVContext())
+            {
+                // Truy vấn cơ sở dữ liệu để lấy tất cả các tựa sách
+                _fullDataSource = context.TUASACH
+                    .Where(ts => !ts.IsDeleted)
+                    .Select(ts => new TuaSachViewModel
+                    {
+                        MaTuaSach = ts.MaTuaSach,
+                        TenTuaSach = ts.TenTuaSach,
+                        SoLuong = ts.SoLuong,
+                        HanMuonToiDa = ts.HanMuonToiDa,
+                        DSTacGia = string.Join(", ", ts.TUASACH_TACGIA.Select(ts_tg => ts_tg.IDTacGiaNavigation.TenTacGia)),
+                        DSTheLoai = string.Join(", ", ts.TUASACH_THELOAI.Select(ts_tl => ts_tl.IDTheLoaiNavigation.TenTheLoai))
+                    })
+                    .AsEnumerable() // Chuyển về IEnumerable để lọc trên máy khách
+                    .Where(ts =>
+                        selectedProperty == "Tên Tựa Sách" ?
+                            NormalizeString(ts.TenTuaSach).Contains(searchTerm) :
+                        selectedProperty == "Tác Giả" ?
+                            NormalizeString(ts.DSTacGia).Contains(searchTerm) :
+                        selectedProperty == "Thể Loại" ?
+                            NormalizeString(ts.DSTheLoai).Contains(searchTerm) :
+                        true
+                    )
+                    .ToList();
+
+                // Đánh dấu đang ở chế độ tìm kiếm
+                _isSearchMode = true;
+                _currentPage = 1;
+
+                // Áp dụng phân trang
+                ApplyPaging();
+            }
+        }
+
+        private void ApplyPaging()
+        {
+            if (_fullDataSource == null || _fullDataSource.Count == 0)
+            {
+                // Không có dữ liệu
+                dgTuaSach.ItemsSource = new ObservableCollection<TuaSachViewModel>();
+                UpdatePageInfo(0);
+                return;
+            }
+
+            // Tính toán phân trang
+            int totalItems = _fullDataSource.Count;
+            int totalPages = (int)Math.Ceiling((double)totalItems / _itemsPerPage);
+
+            // Lấy dữ liệu cho trang hiện tại
+            var pageData = _fullDataSource
+                .Skip((_currentPage - 1) * _itemsPerPage)
+                .Take(_itemsPerPage)
+                .ToList();
+
+            // Cập nhật ObservableCollection
+            _dsTuaSach.Clear();
+            foreach (var item in pageData)
+            {
+                _dsTuaSach.Add(item);
+            }
+
+            // Cập nhật DataGrid
+            dgTuaSach.ItemsSource = _dsTuaSach;
+
+            // Cập nhật thông tin trang
+            UpdatePageInfo(totalItems);
+        }
+
+        private void UpdatePageInfo(int totalItems)
+        {
+            int totalPages = (int)Math.Ceiling((double)totalItems / _itemsPerPage);
             var tbxPageNumber = (TextBlock)FindName("tbxPageNumber");
 
             if (tbxPageNumber != null)
             {
-                tbxPageNumber.Text = $"Trang {_currentPage}/{totalPages}";
+                tbxPageNumber.Text = totalItems > 0
+                    ? $"Trang {_currentPage}/{totalPages} (Tổng: {totalItems} kết quả)"
+                    : "Không có kết quả";
             }
+
+            // Kiểm soát trạng thái nút
+            var btnPrevious = (Button)FindName("btnPrevious");
+            var btnNext = (Button)FindName("btnNext");
+
+            if (btnPrevious != null) btnPrevious.IsEnabled = _currentPage > 1;
+            if (btnNext != null) btnNext.IsEnabled = _currentPage < totalPages;
+        }
+
+        private void btnTimKiem_Click(object sender, RoutedEventArgs e)
+        {
+            PerformSearch();
         }
 
         private void btnPrevious_Click(object sender, RoutedEventArgs e)
@@ -116,17 +199,17 @@ namespace QLTV
             if (_currentPage > 1)
             {
                 _currentPage--;
-                LoadTuaSach();
+                ApplyPaging();
             }
         }
 
         private void btnNext_Click(object sender, RoutedEventArgs e)
         {
-            int totalPages = (int)Math.Ceiling((double)_totalItems / _itemsPerPage);
+            int totalPages = (int)Math.Ceiling((double)_fullDataSource.Count / _itemsPerPage);
             if (_currentPage < totalPages)
             {
                 _currentPage++;
-                LoadTuaSach();
+                ApplyPaging();
             }
         }
 
@@ -605,6 +688,7 @@ namespace QLTV
 
         private void ImportExcelToDb(string filePath)
         {
+            HashSet<int> lstDongBiLoi = new HashSet<int>();
             var context = new QLTVContext();
             using (var package = new ExcelPackage(new FileInfo(filePath)))
             {
@@ -614,12 +698,31 @@ namespace QLTV
                 var existingAuthors = context.TACGIA.ToDictionary(tg => tg.TenTacGia);
                 var existingCategories = context.THELOAI.ToDictionary(tl => tl.TenTheLoai);
 
+                // Tìm các dòng bị lỗi và cho vào lst
                 for (int row = 2; row <= worksheet.Dimension.End.Row; row++)
                 {
                     string tenTuaSach = worksheet.Cells[row, 1].Text;
                     string hanMuonToiDaText = worksheet.Cells[row, 4].Text;
                     if (string.IsNullOrWhiteSpace(tenTuaSach) || !int.TryParse(hanMuonToiDaText, out int hanMuonToiDa))
-                        continue;  // Skip invalid rows
+                        lstDongBiLoi.Add(row);
+                }
+
+                MessageBoxResult mbrXacNhan = MessageBox.Show(
+                    $"Có {lstDongBiLoi.Count} dòng bị lỗi. Bạn có muốn tiếp tục nhập dữ liệu bỏ qua các dòng đó không?",
+                    "Xác nhận nhập",
+                    MessageBoxButton.YesNo,
+                    MessageBoxImage.Warning);
+
+                if (mbrXacNhan != MessageBoxResult.Yes)
+                    return;
+
+                for (int row = 2; row <= worksheet.Dimension.End.Row; row++) 
+                {
+                    if (lstDongBiLoi.Contains(row))
+                        continue;
+
+                    string tenTuaSach = worksheet.Cells[row, 1].Text;
+                    int hanMuonToiDa = int.Parse(worksheet.Cells[row, 4].Text);
 
                     var newTuaSach = new TUASACH
                     {
@@ -689,54 +792,6 @@ namespace QLTV
                     .Where(c => CharUnicodeInfo.GetUnicodeCategory(c) != UnicodeCategory.NonSpacingMark)
                     .ToArray()
             ).Normalize(NormalizationForm.FormC).ToLower();
-        }
-
-        private void btnTimKiem_Click(object sender, RoutedEventArgs e)
-        {
-            string searchTerm = NormalizeString(tbxThongTinTimKiem.Text.Trim().ToLower());
-            string selectedProperty = ((ComboBoxItem)cbbThuocTinhTimKiem.SelectedItem)?.Content.ToString();
-
-            // Kiểm tra nếu không có gì được chọn
-            if (string.IsNullOrEmpty(selectedProperty))
-            {
-                MessageBox.Show("Vui lòng chọn thuộc tính tìm kiếm", "Thông báo", MessageBoxButton.OK, MessageBoxImage.Warning);
-                return;
-            }
-
-            using (var context = new QLTVContext())
-            {
-                // Truy vấn cơ sở dữ liệu để lấy tất cả các tựa sách
-                var query = context.TUASACH
-                    .Where(ts => !ts.IsDeleted)
-                    .Select(ts => new
-                    {
-                        ts.MaTuaSach,
-                        ts.TenTuaSach,
-                        ts.SoLuong,
-                        ts.HanMuonToiDa,
-                        DSTacGia = string.Join(", ", ts.TUASACH_TACGIA.Select(ts_tg => ts_tg.IDTacGiaNavigation.TenTacGia)),
-                        DSTheLoai = string.Join(", ", ts.TUASACH_THELOAI.Select(ts_tl => ts_tl.IDTheLoaiNavigation.TenTheLoai))
-                    })
-                    .AsEnumerable() // Chuyển về IEnumerable để lọc trên máy khách
-                    .ToList();
-
-                // Lọc theo thuộc tính tìm kiếm được chọn
-                if (selectedProperty == "Tên Tựa Sách")
-                {
-                    query = query.Where(ts => NormalizeString(ts.TenTuaSach).Contains(NormalizeString(searchTerm))).ToList();
-                }
-                else if (selectedProperty == "Tác Giả")
-                {
-                    query = query.Where(ts => NormalizeString(ts.DSTacGia).Contains(NormalizeString(searchTerm))).ToList();
-                }
-                else if (selectedProperty == "Thể Loại")
-                {
-                    query = query.Where(ts => NormalizeString(ts.DSTheLoai).Contains(NormalizeString(searchTerm))).ToList();
-                }
-
-                // Cập nhật ItemsSource cho DataGrid
-                dgTuaSach.ItemsSource = query;
-            }
         }
 
         private void tbxTenTuaSach_TextChanged(object sender, TextChangedEventArgs e)
@@ -898,41 +953,6 @@ namespace QLTV
                         }
                     }
                 }
-            }
-        }
-    }
-
-    public class PaginatedCollection<T> : ObservableCollection<T>
-    {
-        public int PageSize { get; set; }
-        public int CurrentPage { get; set; }
-        public int TotalPages => (int)Math.Ceiling((double)this.Count / PageSize);
-
-        public PaginatedCollection(IEnumerable<T> items, int pageSize)
-        {
-            this.PageSize = pageSize;
-            this.CurrentPage = 1;
-            this.AddRange(items);
-        }
-
-        public void SetPage(int pageNumber)
-        {
-            if (pageNumber < 1 || pageNumber > TotalPages) return;
-
-            CurrentPage = pageNumber;
-            var pagedItems = this.Skip((CurrentPage - 1) * PageSize).Take(PageSize).ToList();
-            Clear();
-            foreach (var item in pagedItems)
-            {
-                Add(item);
-            }
-        }
-
-        public void AddRange(IEnumerable<T> items)
-        {
-            foreach (var item in items)
-            {
-                Add(item);
             }
         }
     }

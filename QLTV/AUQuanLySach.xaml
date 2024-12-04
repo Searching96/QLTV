@@ -45,6 +45,7 @@
             <RowDefinition Height="300*"/>
             <RowDefinition Height="100*"/>
             <RowDefinition Height="580*"/>
+            <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
 
         <Grid Grid.Row="0">
@@ -230,21 +231,20 @@
 
                 <TextBox x:Name="tbxThongTinTimKiem" Grid.Column="1" VerticalAlignment="Center"
                          Style="{StaticResource DataDisplayTextBox}"
-                         Padding="7"
+                         Padding="7.5"
                          materialDesign:HintAssist.Hint="Từ Khóa"
                          materialDesign:HintAssist.FloatingScale="0.8"/>
 
                 <ComboBox x:Name="cbbThuocTinhTimKiem" Grid.Column="2" 
                           VerticalAlignment="Center"
                           Style="{StaticResource ModernComboBox}"
-                          Padding="7"
+                          Padding="7.5"
                           materialDesign:HintAssist.Hint="Thuộc Tính"
                           materialDesign:HintAssist.FloatingScale="0.8">
                     <ComboBoxItem Content="Tựa Sách"/>
                     <ComboBoxItem Content="Tác Giả"/>
                     <ComboBoxItem Content="Thể Loại"/>
                     <ComboBoxItem Content="Nhà Xuất Bản"/>
-                    <ComboBoxItem Content="Năm Xuất Bản"/>
                     <ComboBoxItem Content="Tình Trạng"/>
                 </ComboBox>
 
@@ -272,5 +272,12 @@
                 <DataGridTextColumn Header="Tình Trạng" Width="*" Binding="{Binding TinhTrang}"/>
             </DataGrid.Columns>
         </DataGrid>
+
+        <StackPanel Orientation="Horizontal" Grid.Row="3" 
+                    HorizontalAlignment="Center" VerticalAlignment="Bottom" Margin="0,10">
+            <Button Content=">" Click="btnPrevious_Click"/>
+            <TextBlock x:Name="tbxPageNumber" VerticalAlignment="Center" Margin="5"/>
+            <Button Content=">" Click="btnNext_Click"/>
+        </StackPanel>
     </Grid>
 </UserControl>

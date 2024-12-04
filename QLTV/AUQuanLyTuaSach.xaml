@@ -229,13 +229,14 @@
                 
                 <TextBox x:Name="tbxThongTinTimKiem" Grid.Column="1" VerticalAlignment="Center"
                          Style="{StaticResource DataDisplayTextBox}"
-                         Padding="8"
+                         Padding="7"
                          materialDesign:HintAssist.Hint="Từ Khóa"
                          materialDesign:HintAssist.FloatingScale="0.8"/>
                 
                 <ComboBox x:Name="cbbThuocTinhTimKiem" Grid.Column="2" 
                           VerticalAlignment="Center"
                           Style="{StaticResource ModernComboBox}"
+                          Padding="7"
                           materialDesign:HintAssist.Hint="Thuộc Tính"
                           materialDesign:HintAssist.FloatingScale="0.8">
                     <ComboBoxItem Content="Tên Tựa Sách"/>
