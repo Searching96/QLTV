@@ -19,13 +19,13 @@
     
     <Grid>
         <Grid.RowDefinitions>
-            <RowDefinition Height="10*"/>
+            <RowDefinition Height="Auto"/>
             <RowDefinition Height="10*"/>
             <RowDefinition Height="70*"/>
             <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
         <TextBlock Text="Chọn Thể Loại" Grid.Row="0" FontWeight="Bold" 
-                   FontSize="16" Margin="10" HorizontalAlignment="Center"/>
+                   FontSize="26" Margin="10" HorizontalAlignment="Center"/>
         <TextBox x:Name="tbxTimKiem" Grid.Row="1"
                  Style="{StaticResource DataDisplayTextBox}"
                  materialDesign:HintAssist.Hint="Tên Thể Loại"
@@ -34,26 +34,59 @@
                  Margin="10, 0, 150, 0"
                  TextChanged="tbxTimKiem_TextChanged"
                  VerticalAlignment="Center"/>
-        
-        <ListBox x:Name="lbTheLoai" SelectionMode="Multiple" Grid.Row="2"
-                 Margin="10, 10, 10, 0" SelectionChanged="lbTheLoai_SelectionChanged"
-                 ToolTipService.InitialShowDelay="500"
-                 ToolTipService.BetweenShowDelay="0">
-            <ListBox.ItemTemplate>
-                <DataTemplate>
-                    <TextBlock>
-                        <TextBlock.Text>
-                            <Binding Path="TenTheLoai"/>
-                        </TextBlock.Text>
 
-                        <TextBlock.ToolTip>
-                            <Binding Path="MaTheLoai"/>
-                        </TextBlock.ToolTip>
-                    </TextBlock>
-                </DataTemplate>
-            </ListBox.ItemTemplate>
-        </ListBox>
-        <Button x:Name="btnOK" Content="OK" Click="btnOK_Click" Grid.Row="3"
-                Margin="5" Width="85" HorizontalAlignment="Center"/>
+        <Border Grid.Row="2" BorderBrush="Gray" BorderThickness="1" CornerRadius="5" Margin="10, 0, 10, 0">
+            <ListBox x:Name="lbTheLoai" SelectionMode="Multiple"
+             Margin="0" SelectionChanged="lbTheLoai_SelectionChanged"
+             ToolTipService.InitialShowDelay="500"
+             ToolTipService.BetweenShowDelay="0">
+                <!-- Áp dụng ItemContainerStyle -->
+                <ListBox.ItemContainerStyle>
+                    <Style TargetType="ListBoxItem">
+                        <!-- Màu nền mặc định khi không chọn -->
+                        <Setter Property="Background" Value="Transparent" />
+                        <Setter Property="BorderBrush" Value="Transparent" />
+                        <Setter Property="BorderThickness" Value="0" />
+                        <Setter Property="Padding" Value="5" />
+
+                        <Style.Triggers>
+                            <!-- Khi mục được chọn -->
+                            <Trigger Property="IsSelected" Value="True">
+                                <Setter Property="Background" Value="#22007ACC" />
+                                <!-- Xanh nhạt -->
+                                <Setter Property="Foreground" Value="Black" />
+                            </Trigger>
+
+                            <!-- Khi di chuột qua -->
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter Property="Background" Value="#33007ACC" />
+                                <!-- Xanh đậm -->
+                            </Trigger>
+                        </Style.Triggers>
+                    </Style>
+                </ListBox.ItemContainerStyle>
+
+                <ListBox.ItemTemplate>
+                    <DataTemplate>
+                        <TextBlock>
+                            <TextBlock.Text>
+                                <Binding Path="TenTheLoai"/>
+                            </TextBlock.Text>
+
+                            <TextBlock.ToolTip>
+                                <Binding Path="MaTheLoai"/>
+                            </TextBlock.ToolTip>
+                        </TextBlock>
+                    </DataTemplate>
+                </ListBox.ItemTemplate>
+            </ListBox>
+        </Border>
+
+        <DockPanel Grid.Row="3">
+            <Button x:Name="btnThoat" Content="Thoát" Click="btnThoat_Click" DockPanel.Dock="Right"
+                Margin="0, 5, 10, 5" Width="85" HorizontalAlignment="Right"/>
+            <Button x:Name="btnOK" Content="OK" Click="btnOK_Click" DockPanel.Dock="Right"
+                Margin="0, 5, 10, 5" Width="85" HorizontalAlignment="Right"/>
+        </DockPanel>
     </Grid>
 </Window>

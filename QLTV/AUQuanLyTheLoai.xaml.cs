@@ -3,6 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using QLTV.Models;
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -196,9 +197,56 @@ namespace QLTV
             LoadTheLoai();
         }
 
+        private string NormalizeString(string text)
+        {
+            if (string.IsNullOrEmpty(text))
+                return text;
+
+            return new string(
+                text.Normalize(NormalizationForm.FormD)
+                    .Where(c => CharUnicodeInfo.GetUnicodeCategory(c) != UnicodeCategory.NonSpacingMark)
+                    .ToArray()
+            ).Normalize(NormalizationForm.FormC).ToLower();
+        }
+
         private void btnTimKiem_Click(object sender, RoutedEventArgs e)
         {
+            string searchTerm = NormalizeString(tbxThongTinTimKiem.Text.Trim().ToLower());
+            string selectedProperty = ((ComboBoxItem)cbbThuocTinhTimKiem.SelectedItem)?.Content.ToString();
 
+            // Kiểm tra nếu không có gì được chọn
+            if (string.IsNullOrEmpty(selectedProperty))
+            {
+                MessageBox.Show("Vui lòng chọn thuộc tính tìm kiếm", "Thông báo", MessageBoxButton.OK, MessageBoxImage.Warning);
+                return;
+            }
+
+            using (var context = new QLTVContext())
+            {
+                var query = context.THELOAI
+                    .Where(tl => !tl.IsDeleted)
+                    .Select(tl => new
+                    {
+                        tl.MaTheLoai,
+                        tl.TenTheLoai,
+                        tl.MoTa
+                    })
+                    .AsEnumerable() // Chuyển về IEnumerable để lọc trên máy khách
+                    .ToList();
+
+                // Lọc theo thuộc tính tìm kiếm được chọn
+                if (selectedProperty == "Tên Thể Loại")
+                {
+                    query = query.Where(tl => NormalizeString(tl.TenTheLoai).Contains(NormalizeString(searchTerm))).ToList();
+                }
+                else if (selectedProperty == "Mô Tả")
+                {
+                    query = query.Where(tl => NormalizeString(tl.MoTa).Contains(NormalizeString(searchTerm))).ToList();
+                }
+
+                // Cập nhật ItemsSource cho DataGrid
+                dgTheLoai.ItemsSource = query;
+            }
         }
 
         private void tbxTenTheLoai_TextChanged(object sender, TextChangedEventArgs e)

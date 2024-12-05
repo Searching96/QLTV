@@ -298,11 +298,11 @@ namespace QLTV
             }
         }
 
-        private void btnShow_Click(object sender, RoutedEventArgs e)
-        {
-            string selectedItems = string.Join(", ", lstSelectedMaTuaSach);
-            MessageBox.Show($"Các mã tựa sách đã chọn: {selectedItems}", "Thông báo");
-        }
+        //private void btnShow_Click(object sender, RoutedEventArgs e)
+        //{
+        //    string selectedItems = string.Join(", ", lstSelectedMaTuaSach);
+        //    MessageBox.Show($"Các mã tựa sách đã chọn: {selectedItems}", "Thông báo");
+        //}
 
         private void btnThemTuaSach_Click(object sender, RoutedEventArgs e)
         {
@@ -861,7 +861,7 @@ namespace QLTV
             icDSTacGiaError.Visibility = Visibility.Collapsed;
         }
 
-        private async void btnTimBiaSach_Click(object sender, RoutedEventArgs e)
+        private async void btnSuaBiaSach_Click(object sender, RoutedEventArgs e)
         {
             dynamic tuaSach = dgTuaSach.SelectedItem;
             if (tuaSach == null)

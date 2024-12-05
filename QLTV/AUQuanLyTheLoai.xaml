@@ -40,9 +40,9 @@
         </Style>
     </UserControl.Resources>
     
-    <Grid Background="White">
+    <Grid Background="White" Margin="0, 0, 0, 5">
         <Grid.RowDefinitions>
-            <RowDefinition Height="300*"/>
+            <RowDefinition Height="Auto"/>
             <RowDefinition Height="100*"/>
             <RowDefinition Height="800*"/>
         </Grid.RowDefinitions>
@@ -54,7 +54,7 @@
                 <RowDefinition Height="Auto"/>
             </Grid.RowDefinitions>
 
-            <TextBlock Grid.Row="0" Text="Thông Tin Thể Loại" FontSize="18"
+            <TextBlock Grid.Row="0" Text="Thông Tin Thể Loại" FontSize="26"
                        FontWeight="Bold" HorizontalAlignment="Left" Margin="5"/>
 
             <!--Section hien thi the loai duoc chon-->
@@ -65,7 +65,6 @@
                     <ColumnDefinition Width="5*"/>
                     <ColumnDefinition Width="1*"/>
                     <ColumnDefinition Width="5*"/>
-                    <ColumnDefinition Width="1*"/>
                 </Grid.ColumnDefinitions>
 
                 <Grid.RowDefinitions>
@@ -79,7 +78,7 @@
                          materialDesign:HintAssist.Hint="Mã Thể Loại"
                          materialDesign:TextFieldAssist.HasLeadingIcon="True"
                          materialDesign:TextFieldAssist.LeadingIcon="PoundBoxOutline"
-                         Margin="{x:Static local:AUQuanLyTuaSach.DisplayElementMargin}" 
+                         Margin="10, 0, 0, 10" 
                          IsReadOnly="True"/>
 
                 <TextBox x:Name="tbxTenTheLoai" Grid.Row="0" Grid.Column="2"
@@ -99,25 +98,53 @@
                          materialDesign:HintAssist.Hint="Mô Tả"
                          materialDesign:TextFieldAssist.HasLeadingIcon="True"
                          materialDesign:TextFieldAssist.LeadingIcon="InvoiceTextOutline"
-                         Margin="{x:Static local:AUQuanLyTuaSach.DisplayElementMargin}"
+                         Margin="0, 0, 10, 10"
                          TextChanged="tbxMoTa_TextChanged"/>
 
                 <materialDesign:PackIcon x:Name="icMoTaError" Grid.Row="0" Grid.Column="4"
                                          Style="{StaticResource ErrorIcon}"
-                                         Margin="{x:Static local:AUQuanLyTuaSach.ErrorIconMargin}"/>
+                                         Margin="0, 0, 15, 10"/>
             </Grid>
 
             <!--CRUD buttons-->
-            <StackPanel Grid.Row="2" Orientation="Horizontal"  
-                        HorizontalAlignment="Left" Margin="5">
-                <Button x:Name="btnThemTheLoai" Content="Thêm" Background="Gray" 
-                        Margin="5, 0, 0, 0" Click="btnThemTheLoai_Click"/>
-                <Button x:Name="btnSuaTheLoai" Content="Sửa" Background="Gray" 
-                        Margin="5, 0, 0, 0" Click="btnSuaTheLoai_Click"/>
-                <Button x:Name="btnXoaTheLoai" Content="Xóa" Background="Gray" 
-                        Margin="5, 0, 0, 0" Click="btnXoaTheLoai_Click"/>
-                <Button x:Name="btnLamMoi" Content="Làm mới" Background="Gray" 
-                        Margin="5, 0, 0, 0" Click="btnLamMoi_Click"/>
+            <StackPanel Grid.Row="2"
+                        Orientation="Horizontal"
+                        HorizontalAlignment="Stretch">
+                <Button x:Name="btnThemTheLoai" 
+                            ToolTip="Thêm Thể Loại" 
+                            Margin="10, 0, 0, 0" 
+                            Click="btnThemTheLoai_Click"
+                            Width="30"
+                            Padding="0">
+                    <materialDesign:PackIcon Kind="PlusCircleOutline" Width="24" Height="24"/>
+                </Button>
+
+                <Button x:Name="btnSuaTheLoai" 
+                            ToolTip="Sửa Thể Loại" 
+                            Margin="5, 0, 0, 0" 
+                            Click="btnSuaTheLoai_Click"
+                            Width="30"
+                            Padding="0">
+                    <materialDesign:PackIcon Kind="CircleEditOutline" Width="22.5" Height="22.5"/>
+                </Button>
+
+                <Button x:Name="btnXoaTheLoai" 
+                            ToolTip="Xóa Thể Loại" 
+                            Margin="5, 0, 0, 0" 
+                            Click="btnXoaTheLoai_Click"
+                            Width="30"
+                            Padding="0">
+                    <materialDesign:PackIcon Kind="Delete" Width="22.5" Height="22.5"/>
+                </Button>
+
+                <Button x:Name="btnLamMoi" 
+                            ToolTip="Làm Mới" 
+                            Margin="5, 0, 0, 0" 
+                            Click="btnLamMoi_Click"
+                            Width="30"
+                            Padding="0">
+                    <materialDesign:PackIcon Kind="Refresh" Width="24" Height="24"/>
+                </Button>
             </StackPanel>
         </Grid>
 
@@ -129,14 +156,15 @@
             </Grid.ColumnDefinitions>
 
             <TextBlock Text="Danh Sách Các Thể Loại" Grid.Column="0" FontWeight="Bold"
-                       FontSize="26" VerticalAlignment="Center"/>
+                       FontSize="26" VerticalAlignment="Center" Margin="5"/>
             <Grid Grid.Column="1">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="1*"/>
                     <ColumnDefinition Width="2.5*"/>
-                    <ColumnDefinition Width="0.15*"/>
+                    <ColumnDefinition Width="1*"/>
+                    <ColumnDefinition Width="Auto"/>
                 </Grid.ColumnDefinitions>
-                
+
                 <TextBlock Text="Tìm Kiếm:" Grid.Column="0" FontSize="14" VerticalAlignment="Center"/>
 
                 <TextBox x:Name="tbxThongTinTimKiem" Grid.Column="1" VerticalAlignment="Center"
@@ -145,12 +173,18 @@
                          materialDesign:HintAssist.Hint="Từ Khóa"
                          materialDesign:HintAssist.FloatingScale="0.8"/>
 
-                <Button x:Name="btnTimKiem" Grid.Column="2" Click="btnTimKiem_Click"/>
-                <materialDesign:PackIcon Kind="Magnify" Grid.Column="3"
-                                         Width=" 20"
-                                         Height="20"
-                                         HorizontalAlignment="Center" 
-                                         VerticalAlignment="Center"/>
+                <ComboBox x:Name="cbbThuocTinhTimKiem" Grid.Column="2" 
+                          VerticalAlignment="Center"
+                          Style="{StaticResource ModernComboBox}"
+                          materialDesign:HintAssist.Hint="Thuộc Tính"
+                          materialDesign:HintAssist.FloatingScale="0.8">
+                    <ComboBoxItem Content="Tên Thể Loại"/>
+                    <ComboBoxItem Content="Mô Tả"/>
+                </ComboBox>
+
+                <Button x:Name="btnTimKiem" Grid.Column="3" Click="btnTimKiem_Click" Padding="0" Width="25">
+                    <materialDesign:PackIcon Kind="Magnify" Width="22" Height="22"/>
+                </Button>
             </Grid>
         </Grid>
 

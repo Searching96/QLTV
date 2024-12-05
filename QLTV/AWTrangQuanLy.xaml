@@ -6,9 +6,8 @@
         xmlns:local="clr-namespace:QLTV"
         mc:Ignorable="d"
         Title="TRANG QUẢN LÝ" Height="750" Width="1250"
-        WindowStartupLocation="CenterScreen"
-        Background="GhostWhite">
-    <Grid>
+        WindowStartupLocation="CenterScreen">
+    <Grid Background="{x:Static local:App.BgColor}">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="*"/>

@@ -123,5 +123,10 @@ namespace QLTV
                 return obj.ID.GetHashCode();
             }
         }
+
+        private void btnThoat_Click(object sender, RoutedEventArgs e)
+        {
+            this.Close();
+        }
     }
 }

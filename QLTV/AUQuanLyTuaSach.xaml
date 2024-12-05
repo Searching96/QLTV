@@ -46,9 +46,10 @@
     
     <Grid Background="White">
         <Grid.RowDefinitions>
-            <RowDefinition Height="300*"/>
             <RowDefinition Height="Auto"/>
-            <RowDefinition Height="650*"/>
+            <RowDefinition Height="5"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="420*"/>
             <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
         <Grid>
@@ -57,11 +58,11 @@
                 <RowDefinition Height="Auto"/>
             </Grid.RowDefinitions>
 
-            <TextBlock Grid.Row="0" Text="Thông Tin Tựa Sách" FontSize="18"
-               FontWeight="Bold" HorizontalAlignment="Left" Margin="5"/>
+            <TextBlock Grid.Row="0" Text="Thông Tin Tựa Sách" FontSize="26"
+               FontWeight="Bold" HorizontalAlignment="Left" Margin="10, 5"/>
 
             <!-- Section hien thi sach duoc chon -->
-            <Grid Grid.Row="1">
+            <Grid Grid.Row="1" Margin="0, 0, 0, 5">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="0.4*"/>
                     <ColumnDefinition Width="1*"/>
@@ -69,7 +70,6 @@
                     <ColumnDefinition Width="1*"/>
                     <ColumnDefinition Width="0.2*"/>
                     <ColumnDefinition Width="1*"/>
-                    <ColumnDefinition Width="0.2*"/>
                 </Grid.ColumnDefinitions>
 
                 <Grid.RowDefinitions>
@@ -112,13 +112,13 @@
                          materialDesign:HintAssist.Hint="Số Lượng (Quyển)"
                          materialDesign:TextFieldAssist.HasLeadingIcon="True"
                          materialDesign:TextFieldAssist.LeadingIcon="AlphaNBox"
-                         Margin="{x:Static local:AUQuanLyTuaSach.DisplayElementMargin}"
+                         Margin="0, 0, 5, 10"
                          IsReadOnly="True"/>
 
                 <Grid x:Name="grTacGia" Grid.Row="1" Grid.Column="1">
                     <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="7*"/>
-                        <ColumnDefinition Width="1*"/>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="Auto"/>
                     </Grid.ColumnDefinitions>
                     
                     <TextBox x:Name="tbxDSTacGia" Grid.Row="1" Grid.Column="0"
@@ -136,17 +136,16 @@
 
                     <Button x:Name="btnSuaTacGia" Grid.Column="1"
                             Margin="{x:Static local:AUQuanLyTuaSach.DisplayElementMargin}"
-                            VerticalAlignment="Center" Click="btnSuaTacGia_Click"/>
-                    
-                    <materialDesign:PackIcon Kind="TextBoxEdit" HorizontalAlignment="Center"
-                                             Grid.Column="1" VerticalAlignment="Center"
-                                             Margin="{x:Static local:AUQuanLyTuaSach.DisplayElementMargin}"/>
+                            VerticalAlignment="Center" Click="btnSuaTacGia_Click"
+                            Width="25" Padding="0">
+                        <materialDesign:PackIcon Kind="TextBoxEdit"/>
+                    </Button>
                 </Grid>
 
                 <Grid x:Name="grTheLoai" Grid.Row="1" Grid.Column="3">
                     <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="7*"/>
-                        <ColumnDefinition Width="1*"/>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="Auto"/>
                     </Grid.ColumnDefinitions>
                     
                     <TextBox x:Name="tbxDSTheLoai" Grid.Column="0"
@@ -164,11 +163,10 @@
 
                     <Button x:Name="btnSuaTheLoai" Grid.Column="1"
                             Margin="{x:Static local:AUQuanLyTuaSach.DisplayElementMargin}"
-                            VerticalAlignment="Center" Click="btnSuaTheLoai_Click"/>
-                    
-                    <materialDesign:PackIcon Kind="TextBoxEdit" HorizontalAlignment="Center"
-                                             Grid.Column="2" VerticalAlignment="Center"
-                                             Margin="{x:Static local:AUQuanLyTuaSach.DisplayElementMargin}"/>
+                            VerticalAlignment="Center" Click="btnSuaTheLoai_Click"
+                            Width="25" Padding="0">
+                        <materialDesign:PackIcon Kind="TextBoxEdit"/>
+                    </Button>
                 </Grid>
 
                 <TextBox x:Name="tbxHanMuonToiDa" Grid.Row="1" Grid.Column="5"
@@ -176,53 +174,108 @@
                          materialDesign:HintAssist.Hint="Hạn Mượn Tối Đa (Tuần)"
                          materialDesign:TextFieldAssist.HasLeadingIcon="True"
                          materialDesign:TextFieldAssist.LeadingIcon="TimerSand"
-                         Margin="{x:Static local:AUQuanLyTuaSach.DisplayElementMargin}"
+                         Margin="0, 0, 5, 10"
                          TextChanged="tbxHanMuonToiDa_TextChanged"/>
 
                 <materialDesign:PackIcon x:Name="icHanMuonToiDaError" Grid.Row="1" Grid.Column="5"
                                          Style="{StaticResource ErrorIcon}"
-                                         Margin="{x:Static local:AUQuanLyTuaSach.ErrorIconMargin}"/>
+                                         Margin="0, 0, 10, 10"/>
 
-                <StackPanel Grid.Row="3" Grid.Column="1" Grid.ColumnSpan="6"
-                            Orientation="Horizontal"  
-                            HorizontalAlignment="Left">
-                    <Button x:Name="btnTimBiaSach" Content="Bìa" 
-                        Margin="0, 0, 0, 0" Click="btnTimBiaSach_Click"/>
-                    <Button x:Name="btnThemTuaSach" Content="Thêm" 
-                        Margin="5, 0, 0, 0" Click="btnThemTuaSach_Click"/>
-                    <Button x:Name="btnSuaTuaSach" Content="Sửa"  
-                        Margin="5, 0, 0, 0" Click="btnSuaTuaSach_Click"/>
-                    <Button x:Name="btnXoaTuaSach" Content="Xóa" 
-                        Margin="5, 0, 0, 0" Click="btnXoaTuaSach_Click"/>
-                    <Button x:Name="btnLamMoi" Content="Làm mới"  
-                        Margin="5, 0, 0, 0" Click="btnLamMoi_Click"/>
-                    <Button x:Name="btnExportExcel" Content="Xuất Excel" 
-                        Margin="5, 0, 0, 0" Click="btnExportExcel_Click"/>
-                    <Button x:Name="btnImportExcel" Content="Nhập Excel" 
-                        Margin="5, 0, 0, 0" Click="btnImportExcel_Click"/>
-                    <Button x:Name="btnShow" Content="Show" 
-                            Margin="5, 0, 0, 0" Click="btnShow_Click"/>
-                    <Button x:Name="btnXoaChon" Content="XChon" 
-                            Margin="5, 0, 0, 0" Click="btnXoaChon_Click"/>                
-                </StackPanel>
+                <DockPanel Grid.Row="3" Grid.Column="1" Grid.ColumnSpan="6"
+                           HorizontalAlignment="Stretch">
+                    <Button x:Name="btnSuaBiaSach" 
+                            ToolTip="Sửa Bìa Sách" 
+                            Click="btnSuaBiaSach_Click"
+                            Width="30"
+                            Padding="0">
+                        <materialDesign:PackIcon Kind="NotebookEdit" Width="22" Height="22"/>
+                    </Button>
+
+                    <Button x:Name="btnThemTuaSach" 
+                            ToolTip="Thêm Tựa Sách" 
+                            Margin="5, 0, 0, 0" 
+                            Click="btnThemTuaSach_Click"
+                            Width="30"
+                            Padding="0">
+                        <materialDesign:PackIcon Kind="PlusCircleOutline" Width="24" Height="24"/>
+                    </Button>
+
+                    <Button x:Name="btnSuaTuaSach" 
+                            ToolTip="Sửa Tựa Sách" 
+                            Margin="5, 0, 0, 0" 
+                            Click="btnSuaTuaSach_Click"
+                            Width="30"
+                            Padding="0">
+                        <materialDesign:PackIcon Kind="CircleEditOutline" Width="22.5" Height="22.5"/>
+                    </Button>
+
+                    <Button x:Name="btnXoaTuaSach" 
+                            ToolTip="Xóa Tựa Sách" 
+                            Margin="5, 0, 0, 0" 
+                            Click="btnXoaTuaSach_Click"
+                            Width="30"
+                            Padding="0">        
+                        <materialDesign:PackIcon Kind="Delete" Width="22.5" Height="22.5"/>
+                    </Button>
+
+                    <Button x:Name="btnLamMoi" 
+                            ToolTip="Làm Mới" 
+                            Margin="5, 0, 0, 0" 
+                            Click="btnLamMoi_Click"
+                            Width="30"
+                            Padding="0">
+                        <materialDesign:PackIcon Kind="Refresh" Width="24" Height="24"/>
+                    </Button>
+
+                    <Button x:Name="btnXoaChon"
+                            DockPanel.Dock="Right"
+                            ToolTip="Xóa Tựa Đã Chọn" 
+                            Margin="0, 0, 5, 0" 
+                            Click="btnXoaChon_Click"
+                            Width="30"
+                            Padding="0">
+                        <materialDesign:PackIcon Kind="DeleteSweep" Width="24" Height="24"/>
+                    </Button>
+
+                    <materialDesign:SplitButton VerticalAlignment="Center"
+                                                HorizontalAlignment="Right"
+                                                DockPanel.Dock="Right"
+                                                Margin="0, 0, 2.5, 0" 
+                                                Padding="0"
+                                                ToolTip="Nhập/Xuất">
+                        <materialDesign:PackIcon Kind="MicrosoftExcel" Width="24" Height="24"/>
+                        <materialDesign:SplitButton.PopupContent>
+                            <StackPanel>
+                                <Button x:Name="btnExportExcel"
+                                        Content="Xuất Excel"
+                                        Click="btnExportExcel_Click" />
+                                <Button x:Name="btnImportExcel"
+                                        Content="Nhập Excel"
+                                        Click="btnImportExcel_Click" />
+                            </StackPanel>
+                        </materialDesign:SplitButton.PopupContent>
+                    </materialDesign:SplitButton>
+                </DockPanel>
             </Grid>
         </Grid>
 
+        <Grid Grid.Row="1" Background="{x:Static local:App.BgColor}"/>
+        
         <!--Grid cho title Data Grid va Thanh Search-->
-        <Grid Grid.Row="1">
+        <Grid Grid.Row="2">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="1*"/>
                 <ColumnDefinition Width="1*"/>
             </Grid.ColumnDefinitions>
 
             <TextBlock Text="Danh Sách Các Tựa Sách" Grid.Column="0" FontWeight="Bold"
-                   FontSize="26" VerticalAlignment="Center"/>
+                       FontSize="26" VerticalAlignment="Center" Margin="5"/>
             <Grid Grid.Column="1">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="1*"/>
                     <ColumnDefinition Width="2.5*"/>
                     <ColumnDefinition Width="1*"/>
-                    <ColumnDefinition Width="0.25*"/>
+                    <ColumnDefinition Width="Auto"/>
                 </Grid.ColumnDefinitions>
 
                 <TextBlock Text="Tìm Kiếm:" Grid.Column="0" FontSize="14" VerticalAlignment="Center"/>
@@ -244,16 +297,13 @@
                     <ComboBoxItem Content="Thể Loại"/>
                 </ComboBox>
 
-                <Button x:Name="btnTimKiem" Grid.Column="3" Click="btnTimKiem_Click"/>
-                <materialDesign:PackIcon Kind="Magnify" Grid.Column="3"
-                                         Width=" 20"
-                                         Height="20"
-                                         HorizontalAlignment="Center" 
-                                         VerticalAlignment="Center"/>
+                <Button x:Name="btnTimKiem" Grid.Column="3" Click="btnTimKiem_Click" Padding="0" Width="25">
+                    <materialDesign:PackIcon Kind="Magnify" Width="22" Height="22"/>
+                </Button>
             </Grid>
         </Grid>
 
-        <DataGrid x:Name="dgTuaSach" Grid.Row="2" SelectionMode="Single"
+        <DataGrid x:Name="dgTuaSach" Grid.Row="3" SelectionMode="Single"
                   SelectionUnit="FullRow" IsReadOnly="True" AutoGenerateColumns="False"
                   SelectionChanged="dgTuaSach_SelectionChanged"
                   materialDesign:DataGridAssist.CornerRadius="4" HorizontalAlignment="Stretch">
@@ -283,11 +333,17 @@
         </DataGrid>
 
         <!-- Paging Controls -->
-        <StackPanel Orientation="Horizontal" Grid.Row="3" 
-                    HorizontalAlignment="Center" VerticalAlignment="Bottom" Margin="0,10">
-            <Button Content=">" Click="btnPrevious_Click"/>
+        <StackPanel Orientation="Horizontal" Grid.Row="4" 
+                    HorizontalAlignment="Center" VerticalAlignment="Bottom">
+            <Button Click="btnPrevious_Click" Width="20" Height="20" Padding="0">
+                <materialDesign:PackIcon Kind="ChevronLeft"/>
+            </Button>
+            
             <TextBlock x:Name="tbxPageNumber" VerticalAlignment="Center" Margin="5"/>
-            <Button Content=">" Click="btnNext_Click"/>
+
+            <Button Click="btnNext_Click" Width="20" Height="20" Padding="0">
+                <materialDesign:PackIcon Kind="ChevronRight"/>
+            </Button>
         </StackPanel>
     </Grid>
 </UserControl>
