@@ -1,10 +1,14 @@
 ﻿using MaterialDesignThemes.Wpf;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Internal;
+using Microsoft.Win32;
+using OfficeOpenXml;
+using OfficeOpenXml.Style;
 using QLTV.Models;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
@@ -30,6 +34,7 @@ namespace QLTV
         public AUQuanLyTacGia()
         {
             InitializeComponent();
+            ExcelPackage.LicenseContext = LicenseContext.NonCommercial;
             LoadTacGia();
         }
 
@@ -264,14 +269,151 @@ namespace QLTV
             }
         }
 
+        private void ExportDataGridToExcel()
+        {
+            // Cấu hình đường dẫn lưu file Excel
+            SaveFileDialog saveFileDialog = new SaveFileDialog
+            {
+                Filter = "Excel Files|*.xlsx",
+                Title = "Lưu file Excel",
+                FileName = "DanhSachTacGia.xlsx"
+            };
+
+            if (saveFileDialog.ShowDialog() == true)
+            {
+                var filePath = saveFileDialog.FileName;
+
+                // Tạo file Excel mới
+                using (ExcelPackage package = new ExcelPackage())
+                {
+                    // Tạo một sheet mới
+                    ExcelWorksheet worksheet = package.Workbook.Worksheets.Add("Danh Sách Tác Giả");
+
+                    // Đặt tiêu đề cho các cột trong Excel
+                    worksheet.Cells[1, 1].Value = "Mã Tác Giả";
+                    worksheet.Cells[1, 2].Value = "Tên Tác Giả";
+                    worksheet.Cells[1, 3].Value = "Năm Sinh";
+                    worksheet.Cells[1, 4].Value = "Quốc Tịch";
+
+                    // Áp dụng style cho tiêu đề
+                    using (var range = worksheet.Cells[1, 1, 1, 6])
+                    {
+                        range.Style.Font.Bold = true;
+                        range.Style.HorizontalAlignment = ExcelHorizontalAlignment.Center;
+                        range.Style.Fill.PatternType = ExcelFillStyle.Solid;
+                        range.Style.Fill.BackgroundColor.SetColor(System.Drawing.Color.LightGray);
+                    }
+
+                    // Duyệt qua dữ liệu trong DataGrid và ghi vào Excel
+                    var items = dgTacGia.ItemsSource as System.Collections.IEnumerable;
+                    int rowIndex = 2;
+
+                    foreach (var item in items)
+                    {
+                        dynamic data = item;
+                        worksheet.Cells[rowIndex, 1].Value = data.MaTacGia;
+                        worksheet.Cells[rowIndex, 2].Value = data.TenTacGia;
+                        worksheet.Cells[rowIndex, 3].Value = data.NamSinh;
+                        worksheet.Cells[rowIndex, 4].Value = data.QuocTich;
+                        rowIndex++;
+                    }
+
+                    // Tự động điều chỉnh độ rộng cột
+                    worksheet.Cells.AutoFitColumns();
+
+                    // Lưu file Excel
+                    FileInfo excelFile = new FileInfo(filePath);
+                    package.SaveAs(excelFile);
+                }
+
+                MessageBox.Show("Xuất Excel thành công!", "Thông báo", MessageBoxButton.OK, MessageBoxImage.Information);
+            }
+        }
+
         private void btnExportExcel_Click(object sender, RoutedEventArgs e)
         {
+            ExportDataGridToExcel();
+        }
 
+        private int ImportExcelToDb(string filePath)
+        {
+            int thanhCong = 0;
+            HashSet<int> lstDongBiLoi = new HashSet<int>();
+            var context = new QLTVContext();
+            using (var package = new ExcelPackage(new FileInfo(filePath)))
+            {
+                var worksheet = package.Workbook.Worksheets.FirstOrDefault();
+                if (worksheet == null) return -1;
+
+                // Tìm các dòng bị lỗi và cho vào lst
+                for (int row = 2; row <= worksheet.Dimension.End.Row; row++)
+                {
+                    string tenTacGia = worksheet.Cells[row, 1].Text;
+                    string namSinh = worksheet.Cells[row, 2].Text;
+                    if (string.IsNullOrWhiteSpace(tenTacGia) || !int.TryParse(namSinh, out int ns))
+                        lstDongBiLoi.Add(row);
+                }
+
+                MessageBoxResult mbrXacNhan = MessageBox.Show(
+                    $"Có {lstDongBiLoi.Count} dòng bị lỗi. Bạn có muốn tiếp tục nhập dữ liệu bỏ qua các dòng đó không?",
+                    "Xác nhận nhập",
+                    MessageBoxButton.YesNo,
+                    MessageBoxImage.Warning);
+
+                if (mbrXacNhan != MessageBoxResult.Yes)
+                    return -1;
+
+                for (int row = 2; row <= worksheet.Dimension.End.Row; row++)
+                {
+                    if (lstDongBiLoi.Contains(row))
+                        continue;
+
+                    string tenTacGia = worksheet.Cells[row, 1].Text;
+                    int namSinh = int.Parse(worksheet.Cells[row, 2].Text);
+                    string quocTich = worksheet.Cells[row, 3].Text;
+
+                    var checkTacGia = context.TACGIA
+                        .Where(tg => tg.TenTacGia == tenTacGia && tg.NamSinh == namSinh)
+                        .FirstOrDefault();
+
+                    if (checkTacGia != null)
+                        continue;
+
+                    var newTacGia = new TACGIA
+                    {
+                        TenTacGia = tenTacGia,
+                        NamSinh = namSinh,
+                        QuocTich = quocTich
+                    };
+                    context.TACGIA.Add(newTacGia);
+                    context.SaveChanges();
+
+                    thanhCong++;
+                }
+
+                // Save all changes at the end for efficiency
+                context.SaveChanges();
+            }
+
+            return thanhCong;
         }
 
         private void btnImportExcel_Click(object sender, RoutedEventArgs e)
         {
-            
+            OpenFileDialog openFileDialog = new OpenFileDialog
+            {
+                Filter = "Excel Files|*.xlsx"
+            };
+
+            if (openFileDialog.ShowDialog() == true)
+            {
+                int thanhCong = ImportExcelToDb(openFileDialog.FileName);
+                if (thanhCong != -1)
+                {
+                    MessageBox.Show($"Nhập thành công {thanhCong} dòng từ Excel!", "Thông báo", MessageBoxButton.OK, MessageBoxImage.Information);
+                    LoadTacGia();
+                }
+            }
         }
 
         private void tbxTenTacGia_TextChanged(object sender, TextChangedEventArgs e)

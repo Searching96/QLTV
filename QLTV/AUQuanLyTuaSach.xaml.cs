@@ -659,7 +659,7 @@ namespace QLTV
                     }
 
                     // Duyệt qua dữ liệu trong DataGrid và ghi vào Excel
-                    var items = dgTuaSach.ItemsSource as System.Collections.IEnumerable;
+                    var items = _fullDataSource as System.Collections.IEnumerable;
                     int rowIndex = 2;
 
                     foreach (var item in items)
@@ -686,14 +686,15 @@ namespace QLTV
             }
         }
 
-        private void ImportExcelToDb(string filePath)
+        private int ImportExcelToDb(string filePath)
         {
+            int thanhCong = 0;
             HashSet<int> lstDongBiLoi = new HashSet<int>();
             var context = new QLTVContext();
             using (var package = new ExcelPackage(new FileInfo(filePath)))
             {
                 var worksheet = package.Workbook.Worksheets.FirstOrDefault();
-                if (worksheet == null) return;
+                if (worksheet == null) return -1;
 
                 var existingAuthors = context.TACGIA.ToDictionary(tg => tg.TenTacGia);
                 var existingCategories = context.THELOAI.ToDictionary(tl => tl.TenTheLoai);
@@ -714,7 +715,7 @@ namespace QLTV
                     MessageBoxImage.Warning);
 
                 if (mbrXacNhan != MessageBoxResult.Yes)
-                    return;
+                    return -1;
 
                 for (int row = 2; row <= worksheet.Dimension.End.Row; row++) 
                 {
@@ -760,11 +761,14 @@ namespace QLTV
                         }
                         context.TUASACH_THELOAI.Add(new TUASACH_THELOAI { IDTuaSach = newTuaSach.ID, IDTheLoai = theLoai.ID });
                     }
+                    thanhCong++;
                 }
 
                 // Save all changes at the end for efficiency
                 context.SaveChanges();
             }
+
+            return thanhCong;
         }
 
         private void btnImportExcel_Click(object sender, RoutedEventArgs e)
@@ -776,9 +780,12 @@ namespace QLTV
 
             if (openFileDialog.ShowDialog() == true)
             {
-                ImportExcelToDb(openFileDialog.FileName);
-                MessageBox.Show("Nhập Excel thành công!", "Thông báo", MessageBoxButton.OK, MessageBoxImage.Information);
-                LoadTuaSach();
+                int thanhCong = ImportExcelToDb(openFileDialog.FileName);
+                if (thanhCong != -1)
+                {
+                    MessageBox.Show($"Nhập thành công {thanhCong} dòng từ Excel!", "Thông báo", MessageBoxButton.OK, MessageBoxImage.Information);
+                    LoadTuaSach();
+                }
             }
         }
 

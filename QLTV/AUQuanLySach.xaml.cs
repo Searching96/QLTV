@@ -24,6 +24,7 @@ using Microsoft.EntityFrameworkCore.Diagnostics.Internal;
 using System.Globalization;
 using MaterialDesignThemes.Wpf;
 using System.Collections.ObjectModel;
+using System.Net.WebSockets;
 
 namespace QLTV
 {
@@ -504,7 +505,8 @@ namespace QLTV
                     }
 
                     // Duyệt qua dữ liệu trong DataGrid và ghi vào Excel
-                    var items = dgSach.ItemsSource as System.Collections.IEnumerable;
+                    
+                    var items = _fullDataSource as System.Collections.IEnumerable;
                     int rowIndex = 2;
 
                     foreach (var item in items)
@@ -534,17 +536,46 @@ namespace QLTV
             }
         }
 
-        private void ImportExcelToDb(string filePath)
+        private int ImportExcelToDb(string filePath)
         {
+            int thanhCong = 0;
+            HashSet<int> lstDongBiLoi = new HashSet<int>();
             var context = new QLTVContext();
+
             using (var package = new ExcelPackage(new FileInfo(filePath)))
             {
                 var worksheet = package.Workbook.Worksheets.FirstOrDefault();
-                if (worksheet == null) return;
+                if (worksheet == null) return -1;
 
+                // Bước 1: Kiểm tra và đánh dấu các dòng lỗi
                 for (int row = 2; row <= worksheet.Dimension.End.Row; row++)
                 {
-                    // Extract data from Excel row
+                    string triGia = worksheet.Cells[row, 7].Text;
+                    string tenTinhTrang = worksheet.Cells[row, 8].Text;
+
+                    var tinhTrang = context.TINHTRANG
+                        .FirstOrDefault(tt => !tt.IsDeleted && tt.TenTinhTrang == tenTinhTrang);
+
+                    if (tinhTrang == null || !decimal.TryParse(triGia, out decimal _))
+                        lstDongBiLoi.Add(row);
+                }
+
+                // Hiển thị hộp thoại xác nhận nếu có dòng bị lỗi
+                MessageBoxResult mbrXacNhan = MessageBox.Show(
+                    $"Có {lstDongBiLoi.Count} dòng bị lỗi. Bạn có muốn tiếp tục nhập dữ liệu bỏ qua các dòng đó không?",
+                    "Xác nhận nhập",
+                    MessageBoxButton.YesNo,
+                    MessageBoxImage.Warning);
+
+                if (mbrXacNhan != MessageBoxResult.Yes)
+                    return -1;
+
+                // Bước 2: Nhập dữ liệu từng dòng
+                for (int row = 2; row <= worksheet.Dimension.End.Row; row++)
+                {
+                    if (lstDongBiLoi.Contains(row)) continue;
+
+                    // Trích xuất thông tin từ Excel
                     string tenTuaSach = worksheet.Cells[row, 1].Text;
                     string dsTacGia = worksheet.Cells[row, 2].Text;
                     string dsTheLoai = worksheet.Cells[row, 3].Text;
@@ -554,74 +585,74 @@ namespace QLTV
                     decimal triGia = decimal.Parse(worksheet.Cells[row, 7].Text);
                     string tenTinhTrang = worksheet.Cells[row, 8].Text;
 
-                    // Find or create TinhTrang
+                    // Tìm tình trạng
                     var tinhTrang = context.TINHTRANG
                         .FirstOrDefault(tt => !tt.IsDeleted && tt.TenTinhTrang == tenTinhTrang);
-                    if (tinhTrang == null) continue;
 
-                    // Prepare dictionaries for existing entities
-                    var existingAuthors = context.TACGIA.ToDictionary(tg => tg.TenTacGia);
-                    var existingCategories = context.THELOAI.ToDictionary(tl => tl.TenTheLoai);
+                    // Xử lý danh sách tác giả và thể loại
+                    var lstTenTacGia = dsTacGia.Split(", ").Select(n => n.Trim()).OrderBy(n => n).ToList();
+                    var lstTenTheLoai = dsTheLoai.Split(", ").Select(n => n.Trim()).OrderBy(n => n).ToList();
 
-                    // Find existing TuaSach
+                    // Tìm TUASACH hiện có
                     var existingTuaSach = context.TUASACH
-                        .FirstOrDefault(ts => !ts.IsDeleted && ts.TenTuaSach == tenTuaSach);
+                        .Include(ts => ts.TUASACH_TACGIA)
+                            .ThenInclude(ts_tg => ts_tg.IDTacGiaNavigation)
+                        .Include(ts => ts.TUASACH_THELOAI)
+                            .ThenInclude(ts_tl => ts_tl.IDTheLoaiNavigation)
+                        .Where(ts => !ts.IsDeleted && ts.TenTuaSach == tenTuaSach)
+                        .AsEnumerable() // Chuyển sang in-memory query
+                        .FirstOrDefault(ts =>
+                            ts.TUASACH_TACGIA
+                                .Select(ts_tg => ts_tg.IDTacGiaNavigation != null ? ts_tg.IDTacGiaNavigation.TenTacGia : null)
+                                .Where(name => name != null)
+                                .OrderBy(t => t)
+                                .SequenceEqual(lstTenTacGia) &&
+                            ts.TUASACH_THELOAI
+                                .Select(ts_tl => ts_tl.IDTheLoaiNavigation != null ? ts_tl.IDTheLoaiNavigation.TenTheLoai : null)
+                                .Where(name => name != null)
+                                .OrderBy(t => t)
+                                .SequenceEqual(lstTenTheLoai)
+                        );
 
-                    // Determine if we need to create a new TuaSach
-                    bool createNewTuaSach = existingTuaSach == null;
-                    if (existingTuaSach != null)
-                    {
-                        // Check if authors or categories are different
-                        string existingDSTacGia = string.Join(", ", existingTuaSach.TUASACH_TACGIA
-                            .Select(ts_tg => ts_tg.IDTacGiaNavigation.TenTacGia));
-                        string existingDSTheLoai = string.Join(", ", existingTuaSach.TUASACH_THELOAI
-                            .Select(ts_tl => ts_tl.IDTheLoaiNavigation.TenTheLoai));
-
-                        createNewTuaSach = (dsTacGia != existingDSTacGia || dsTheLoai != existingDSTheLoai);
-                    }
-
-                    // Create new TuaSach if needed
+                    // Nếu không tìm thấy TUASACH phù hợp, tạo mới
                     TUASACH tuaSach = existingTuaSach;
-                    if (createNewTuaSach)
+                    if (existingTuaSach == null)
                     {
-                        tuaSach = new TUASACH
-                        {
-                            TenTuaSach = tenTuaSach,
-                        };
+                        tuaSach = new TUASACH { TenTuaSach = tenTuaSach };
                         context.TUASACH.Add(tuaSach);
                         context.SaveChanges();
 
-                        // Process authors
-                        var lstTenTacGia = dsTacGia.Split(", ").Select(n => n.Trim()).ToList();
+                        // Thêm tác giả
                         foreach (var tenTacGia in lstTenTacGia)
                         {
-                            if (!existingAuthors.TryGetValue(tenTacGia, out var tacGia))
+                            var tacGia = context.TACGIA.FirstOrDefault(tg => !tg.IsDeleted && tg.TenTacGia == tenTacGia) ??
+                                new TACGIA { TenTacGia = tenTacGia, NamSinh = -1, QuocTich = "Chưa Có" };
+
+                            if (tacGia.ID == 0)
                             {
-                                tacGia = new TACGIA { TenTacGia = tenTacGia, NamSinh = -1, QuocTich = "Chưa Có" };
                                 context.TACGIA.Add(tacGia);
                                 context.SaveChanges();
-                                existingAuthors[tenTacGia] = tacGia;
                             }
                             context.TUASACH_TACGIA.Add(new TUASACH_TACGIA { IDTuaSach = tuaSach.ID, IDTacGia = tacGia.ID });
                         }
 
-                        // Process categories
-                        var lstTenTheLoai = dsTheLoai.Split(", ").Select(n => n.Trim()).ToList();
+                        // Thêm thể loại
                         foreach (var tenTheLoai in lstTenTheLoai)
                         {
-                            if (!existingCategories.TryGetValue(tenTheLoai, out var theLoai))
+                            var theLoai = context.THELOAI.FirstOrDefault(tl => !tl.IsDeleted && tl.TenTheLoai == tenTheLoai) ??
+                                new THELOAI { TenTheLoai = tenTheLoai, MoTa = "" };
+
+                            if (theLoai.ID == 0)
                             {
-                                theLoai = new THELOAI { TenTheLoai = tenTheLoai };
                                 context.THELOAI.Add(theLoai);
                                 context.SaveChanges();
-                                existingCategories[tenTheLoai] = theLoai;
                             }
                             context.TUASACH_THELOAI.Add(new TUASACH_THELOAI { IDTuaSach = tuaSach.ID, IDTheLoai = theLoai.ID });
                         }
                         context.SaveChanges();
                     }
 
-                    // Create new Sach
+                    // Tạo mới SACH
                     var newSach = new SACH
                     {
                         IDTuaSach = tuaSach.ID,
@@ -633,9 +664,12 @@ namespace QLTV
                     };
                     context.SACH.Add(newSach);
                     context.SaveChanges();
+                    thanhCong++;
                 }
             }
+            return thanhCong;
         }
+
 
         private void btnImportExcel_Click(object sender, RoutedEventArgs e)
         {
@@ -646,9 +680,12 @@ namespace QLTV
 
             if (openFileDialog.ShowDialog() == true)
             {
-                ImportExcelToDb(openFileDialog.FileName);
-                MessageBox.Show("Nhập Excel thành công!", "Thông báo", MessageBoxButton.OK, MessageBoxImage.Information);
-                LoadSach();
+                int thanhCong = ImportExcelToDb(openFileDialog.FileName);
+                if (thanhCong != -1)
+                {
+                    MessageBox.Show($"Nhập thành công {thanhCong} dòng từ Excel!", "Thông báo", MessageBoxButton.OK, MessageBoxImage.Information);
+                    LoadSach();
+                }
             }
         }
 

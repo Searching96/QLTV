@@ -128,7 +128,7 @@ namespace QLTV
         {
             AWThemTheLoai awThemTheLoai = new AWThemTheLoai();
             if (awThemTheLoai.ShowDialog() == true)
-                LoadTheLoai();
+                AllCategories.Add(awThemTheLoai.NewTheLoai);
         }
 
         private void btnThoat_Click(object sender, RoutedEventArgs e)

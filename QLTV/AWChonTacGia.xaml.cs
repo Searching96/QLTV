@@ -127,6 +127,8 @@ namespace QLTV
         private void btnThemTacGia_Click(object sender, RoutedEventArgs e)
         {
             AWThemTacGia awThemTacGia = new AWThemTacGia();
+            if (awThemTacGia.ShowDialog() == true)
+                AllAuthors.Add(awThemTacGia.NewTacGia);
         }
 
         private void btnThoat_Click(object sender, RoutedEventArgs e)

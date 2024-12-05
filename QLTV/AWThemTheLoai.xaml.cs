@@ -21,6 +21,8 @@ namespace QLTV
     /// </summary>
     public partial class AWThemTheLoai : Window
     {
+        public THELOAI NewTheLoai;
+
         public AWThemTheLoai()
         {
             InitializeComponent();
@@ -86,8 +88,10 @@ namespace QLTV
 
                 context.THELOAI.Add(newTheLoai);
                 context.SaveChanges();
+                NewTheLoai = newTheLoai;
             }
 
+            
             this.DialogResult = true;
             this.Close();
         }

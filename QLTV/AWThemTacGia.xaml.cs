@@ -21,6 +21,8 @@ namespace QLTV
     /// </summary>
     public partial class AWThemTacGia : Window
     {
+        public TACGIA NewTacGia;
+
         public AWThemTacGia()
         {
             InitializeComponent();
@@ -100,6 +102,7 @@ namespace QLTV
 
                 context.TACGIA.Add(newTacGia);
                 context.SaveChanges();
+                NewTacGia = newTacGia;
             }
 
             this.DialogResult = true;

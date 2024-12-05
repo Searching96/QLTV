@@ -92,11 +92,9 @@
 
                 <Button x:Name="btnSuaTacGia" Grid.Column="1"
                         Margin="{x:Static local:AUQuanLyTuaSach.DisplayElementMargin}"
-                        VerticalAlignment="Center" Click="btnSuaTacGia_Click"/>
-
-                <materialDesign:PackIcon Kind="TextBoxEdit" HorizontalAlignment="Center"
-                                         Grid.Column="1" VerticalAlignment="Center"
-                                         Margin="{x:Static local:AUQuanLyTuaSach.DisplayElementMargin}"/>
+                        VerticalAlignment="Center" Click="btnSuaTacGia_Click" Padding="0">
+                    <materialDesign:PackIcon Kind="TextBoxEdit"/>
+                </Button>
             </Grid>
 
             <Grid Margin="10, 0, 10, 0" Grid.Row="2">
@@ -118,11 +116,9 @@
 
                 <Button x:Name="btnSuaTheLoai" Grid.Column="1"
                         Margin="{x:Static local:AUQuanLyTuaSach.DisplayElementMargin}"
-                        VerticalAlignment="Center" Click="btnSuaTheLoai_Click"/>
-
-                <materialDesign:PackIcon Kind="TextBoxEdit" HorizontalAlignment="Center"
-                                         Grid.Column="1" VerticalAlignment="Center"
-                                         Margin="{x:Static local:AUQuanLyTuaSach.DisplayElementMargin}"/>
+                        VerticalAlignment="Center" Click="btnSuaTheLoai_Click" Padding="0">
+                    <materialDesign:PackIcon Kind="TextBoxEdit"/>
+                </Button>
             </Grid>
             
             <TextBox x:Name="tbxHanMuonToiDa" Grid.Row="3"
