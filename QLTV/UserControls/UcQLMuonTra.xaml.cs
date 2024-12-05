@@ -273,7 +273,9 @@ namespace QLTV.UserControls
 
         private void txtSearchBorrow_TextChanged(object sender, TextChangedEventArgs e)
         {
-            BorrowSearch();
+            ComboBoxItem cbi = (ComboBoxItem)cboLoc.SelectedItem;
+            string selectedText = cbi.Content.ToString();
+            BorrowSearch(selectedText);
         }
 
         private void txtSearchReturn_TextChanged(object sender, TextChangedEventArgs e)

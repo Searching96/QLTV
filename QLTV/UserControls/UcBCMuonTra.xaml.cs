@@ -132,10 +132,6 @@ namespace QLTV.UserControls
         }
     }
 
-
-
-
-
     /// <summary>
     /// Interaction logic for UcBCMuonTra.xaml
     /// </summary>
@@ -143,7 +139,9 @@ namespace QLTV.UserControls
     {
         private readonly QLTVContext _context;
         private ObservableCollection<DSBCMuonSachModel> _borrowReports;
+        private ObservableCollection<DSBCMuonSachModel> _filteredBorrowReports;
         private ObservableCollection<BCTraTreModel> _lateReturnReports;
+        private ObservableCollection<BCTraTreModel> _filteredLateReturnReports;
 
 
         public UcBCMuonTra()
@@ -153,7 +151,13 @@ namespace QLTV.UserControls
             LoadData();
         }
 
-        private async void LoadData()
+        private async Task LoadData()
+        {
+            await LoadReportsData();
+            PopulateYearComboBox();
+        }
+
+        private async Task LoadReportsData()
         {
             try
             {
@@ -224,7 +228,8 @@ namespace QLTV.UserControls
                         })
                         .ToList()
                                 );
-                dgBorrowingReports.ItemsSource = _borrowReports;
+                _filteredBorrowReports = new ObservableCollection<DSBCMuonSachModel>(_borrowReports);
+                dgBorrowingReports.ItemsSource = _filteredBorrowReports;
 
                 // Load late return reports with related data, excluding soft-deleted records
                 var lateReturnReports = await _context.BCTRATRE
@@ -239,13 +244,59 @@ namespace QLTV.UserControls
                             IsExpanded = false
                         })
                     );
-                dgLateReturnReports.ItemsSource = _lateReturnReports;
+                _filteredLateReturnReports = new ObservableCollection<BCTraTreModel>(_lateReturnReports);
+                dgLateReturnReports.ItemsSource = _filteredLateReturnReports;
 
             }
             catch (Exception ex)
             {
                 MessageBox.Show($"Lỗi khi tải dữ liệu: {ex.Message}", "Lỗi", MessageBoxButton.OK, MessageBoxImage.Error);
             }
+        }
+
+        private void PopulateYearComboBox()
+        {
+            var NamBCMS = _borrowReports
+                .Select(r => r.Month.Year.ToString())
+                .Distinct()
+                .OrderBy(y => y)
+                .ToList();
+            NamBCMS.Insert(0, "Tất cả"); // Thêm tuỳ chọn "Tất cả"
+            cboNamBCMS.ItemsSource = NamBCMS;
+            cboNamBCMS.SelectedIndex = 0; // Chọn giá trị mặc định "Tất cả"
+
+            var NamBCTT = _lateReturnReports
+                .Select(r => r.BCTraTre.Ngay.Year.ToString())
+                .Distinct()
+                .OrderBy(y => y)
+                .ToList();
+
+            NamBCTT.Insert(0, "Tất cả"); // Add "Tất cả" option
+            cboNamBCTT.ItemsSource = NamBCTT;
+            cboNamBCTT.SelectedIndex = 0;
+        }
+
+        private void PopulateMonthComboBox(string? selectedYear)
+        {
+            var ThangBCTT = _lateReturnReports
+                .Where(r => selectedYear == "Tất cả" || r.BCTraTre.Ngay.Year == int.Parse(selectedYear))
+                .Select(r => r.BCTraTre.Ngay.Month.ToString())
+                .Distinct()
+                .OrderBy(m => m)
+                .ToList();
+            ThangBCTT.Insert(0, "Tất cả"); // Add "Tất cả" option
+            cboThangBCTT.ItemsSource = ThangBCTT;
+            cboThangBCTT.SelectedIndex = 0; // Select "Tất cả" by default
+        }
+
+        private void cboNamBCMS_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            var selectedYear = cboNamBCMS.SelectedItem as string;
+
+            _filteredBorrowReports = new ObservableCollection<DSBCMuonSachModel>(
+                _borrowReports.Where(r => selectedYear == "Tất cả" || r.Month.Year == int.Parse(selectedYear))
+            );
+            dgBorrowingReports.ItemsSource = _filteredBorrowReports;
         }
 
         private void btnViewDetail_Click(object sender, RoutedEventArgs e)
@@ -264,6 +315,32 @@ namespace QLTV.UserControls
             {
                 bctt.IsExpanded = !bctt.IsExpanded;
             }
+        }
+
+        private void cboNamBCTT_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            PopulateMonthComboBox(cboNamBCTT.SelectedItem as string);
+            BaoCaoTraTreSearch();
+        }
+
+        private void cboThangBCTT_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            BaoCaoTraTreSearch();
+        }
+
+        private void BaoCaoTraTreSearch()
+        {
+            var selectedYear = cboNamBCTT.SelectedItem as string;
+            var selectedMonth = cboThangBCTT.SelectedItem as string;
+
+            _filteredLateReturnReports = new ObservableCollection<BCTraTreModel>(
+                _lateReturnReports.Where(r =>
+                    (selectedYear == "Tất cả" || r.BCTraTre.Ngay.Year == int.Parse(selectedYear)) &&
+                    (selectedMonth == "Tất cả" || r.BCTraTre.Ngay.Month == int.Parse(selectedMonth))
+                )
+            );
+
+            dgLateReturnReports.ItemsSource = _filteredLateReturnReports;
         }
     }
 }
