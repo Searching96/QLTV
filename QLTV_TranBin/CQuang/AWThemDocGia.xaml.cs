@@ -21,17 +21,18 @@ namespace QLTV_TranBin.CQuang
     /// </summary>
     public partial class AWThemDocGia : Window
     {
-        public AWThemDocGia()
+        private string _tenTaiKhoan;
+        private string _tenLoaiDocGia;
+
+        public AWThemDocGia(string tenTaiKhoan, string tenLoaiDocGia)
         {
             InitializeComponent();
+            _tenTaiKhoan = tenTaiKhoan;
+            _tenLoaiDocGia = tenLoaiDocGia;
             LoadLoaiDocGia();
-            SetDefaultDates();
-        }
 
-        private void SetDefaultDates()
-        {
-            dpNgayLapThe.SelectedDate = DateTime.Now;
-            dpNgayHetHan.SelectedDate = DateTime.Now.AddYears(1);
+            tbxTenTaiKhoan.Text = _tenTaiKhoan;
+            cbbTenLoaiDocGia.SelectedItem = _tenLoaiDocGia;
         }
 
         private void LoadLoaiDocGia()
@@ -111,78 +112,6 @@ namespace QLTV_TranBin.CQuang
 
             icTongNoError.Visibility = Visibility.Collapsed;
         }
-
-        private void dpNgayLapThe_Loaded(object sender, RoutedEventArgs e)
-        {
-            // Tìm TextBox bên trong DatePicker
-            var textBox = (dpNgayLapThe.Template.FindName("PART_TextBox", dpNgayLapThe) as TextBox);
-            if (textBox != null)
-            {
-                textBox.TextChanged += NgayLapThe_TextChanged;
-            }
-        }
-
-        private void NgayLapThe_TextChanged(object sender, TextChangedEventArgs e)
-        {
-            var textBox = sender as TextBox;
-
-            // Danh sách định dạng hỗ trợ nhiều cách nhập ngày
-            string[] formats = { "dd/MM/yyyy", "d/M/yyyy", "dd/M/yyyy", "d/MM/yyyy" };
-            if (!DateTime.TryParseExact(textBox.Text, formats, null, System.Globalization.DateTimeStyles.AllowWhiteSpaces, out DateTime ngayLapThe))
-            {
-                icNgayLapTheError.ToolTip = "Ngày Lập Thẻ không hợp lệ (định dạng đúng: dd/MM/yyyy)";
-                icNgayLapTheError.Visibility = Visibility.Visible;
-                return;
-            }
-
-            // Kiểm tra ngày lập thẻ không được sau ngày hiện tại
-            if (ngayLapThe > DateTime.Now)
-            {
-                icNgayLapTheError.ToolTip = "Ngày Lập Thẻ không được sau ngày hiện tại";
-                icNgayLapTheError.Visibility = Visibility.Visible;
-                return;
-            }
-
-            // Nếu hợp lệ, ẩn thông báo lỗi và cập nhật ngày hết hạn
-            icNgayLapTheError.Visibility = Visibility.Collapsed;
-            dpNgayHetHan.SelectedDate = ngayLapThe.AddYears(1);
-        }
-
-        private void dpNgayHetHan_Loaded(object sender, RoutedEventArgs e)
-        {
-            // Tìm TextBox bên trong DatePicker
-            var textBox = (dpNgayHetHan.Template.FindName("PART_TextBox", dpNgayHetHan) as TextBox);
-            if (textBox != null)
-            {
-                textBox.TextChanged += NgayHetHan_TextChanged;
-            }
-        }
-
-        private void NgayHetHan_TextChanged(object sender, TextChangedEventArgs e)
-        {
-            var textBox = sender as TextBox;
-
-            // Danh sách định dạng hỗ trợ nhiều cách nhập ngày
-            string[] formats = { "dd/MM/yyyy", "d/M/yyyy", "dd/M/yyyy", "d/MM/yyyy" };
-            if (!DateTime.TryParseExact(textBox.Text, formats, null, System.Globalization.DateTimeStyles.AllowWhiteSpaces, out DateTime ngayHetHan))
-            {
-                icNgayLapTheError.ToolTip = "Ngày Hết Hạn không hợp lệ (định dạng đúng: dd/MM/yyyy)";
-                icNgayLapTheError.Visibility = Visibility.Visible;
-                return;
-            }
-
-            // Kiểm tra ngày hết hạn phải sau ngày lập thẻ ít nhất 1 năm
-            if (ngayHetHan <= dpNgayLapThe.SelectedDate.Value.AddYears(1))
-            {
-                icNgayLapTheError.ToolTip = "Ngày Hết Hạn phải sau Ngày Lập Thẻ ít nhất 1 năm";
-                icNgayLapTheError.Visibility = Visibility.Visible;
-                return;
-            }
-
-            // Nếu hợp lệ, ẩn thông báo lỗi
-            icNgayLapTheError.Visibility = Visibility.Collapsed;
-        }
-
         private void btnThem_Click(object sender, RoutedEventArgs e)
         {
             try
@@ -219,10 +148,8 @@ namespace QLTV_TranBin.CQuang
                 string loaiDocGia = cbbTenLoaiDocGia.SelectedItem.ToString();
                 string gioiThieu = tbxGioiThieu.Text;
                 decimal tongNo = decimal.Parse(tbxTongNo.Text);
-                DateTime ngayLapThe = dpNgayLapThe.SelectedDate.Value;
-                DateTime ngayHetHan = dpNgayHetHan.SelectedDate.Value;
 
-                using (var context = new QLTV2Context() )
+                using (var context = new QLTV2Context())
                 {
                     // Lấy ID của Loại Độc Giả
                     int idLoaiDocGia = context.LOAIDOCGIA
@@ -243,10 +170,8 @@ namespace QLTV_TranBin.CQuang
                         {
                             IDTaiKhoan = idTaiKhoan,
                             IDLoaiDocGia = idLoaiDocGia,
-                            //GioiThieu = gioiThieu,
-                            TongNo = tongNo,
-                            //NgayLapThe = ngayLapThe,
-                            //NgayHetHan = ngayHetHan
+                            GioiThieu = gioiThieu,
+                            TongNo = tongNo
                         };
 
                         context.DOCGIA.Add(newDocGia);

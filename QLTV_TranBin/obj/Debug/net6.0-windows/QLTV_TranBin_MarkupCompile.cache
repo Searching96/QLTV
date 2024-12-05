@@ -4,16 +4,16 @@
 winexe
 C#
 .cs
-E:\Repos_DoAn\QLTV_TranBin\obj\Debug\net6.0-windows\
+D:\Web\QLTV\QLTV_TranBin\obj\Debug\net6.0-windows\
 QLTV_TranBin
 none
 false
 TRACE;DEBUG;NET;NET6_0;NETCOREAPP
-E:\Repos_DoAn\QLTV_TranBin\App.xaml
+D:\Web\QLTV\QLTV_TranBin\App.xaml
 15-982292095
 
 451043443714
-245-1104486614
+252108600411
 BaoCaoThongKe.xaml;ChiTietTaiKhoan.xaml;CQuang\AUInterface.xaml;CQuang\AUQuanLyDocGia.xaml;CQuang\AWPhieuThuTienPhat.xaml;CQuang\AWThemDocGia.xaml;CreateAccount.xaml;LoginScreen.xaml;MainScreen.xaml;QuanLyTaiKhoan.xaml;ResetPassword.xaml;SignInScreen.xaml;UCChiTietSach.xaml;UCTrangChuUser.xaml;UserScreen.xaml;
 
 False

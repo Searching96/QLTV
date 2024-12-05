@@ -138,7 +138,7 @@ namespace QLTV_TranBin {
                 return;
             }
             _contentLoaded = true;
-            System.Uri resourceLocater = new System.Uri("/QLTV_TranBin;V1.0.0.0;component/quanlytaikhoan.xaml", System.UriKind.Relative);
+            System.Uri resourceLocater = new System.Uri("/QLTV_TranBin;component/quanlytaikhoan.xaml", System.UriKind.Relative);
             
             #line 1 "..\..\..\QuanLyTaiKhoan.xaml"
             System.Windows.Application.LoadComponent(this, resourceLocater);

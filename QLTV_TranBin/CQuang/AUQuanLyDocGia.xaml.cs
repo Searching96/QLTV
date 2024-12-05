@@ -6,6 +6,8 @@ using System.Windows.Controls;
 using QLTV_TranBin.Models;
 using System.IO;
 using System.Windows.Media;
+using iTextSharp.text;
+using iTextSharp.text.pdf;
 using Microsoft.Win32;
 using OfficeOpenXml;
 using System.Collections.ObjectModel;
@@ -16,6 +18,7 @@ using System.Windows.Input;
 using System.Windows.Media.Animation;
 using System.Globalization;
 using System.Text;
+using iTextSharp.text.pdf.codec.wmf;
 
 
 namespace QLTV_TranBin.CQuang
@@ -25,8 +28,9 @@ namespace QLTV_TranBin.CQuang
     /// </summary>
     public partial class AUQuanLyDocGia : Window
     {
-        
-        
+        public List<string> TenTaiKhoanList { get; set; }
+        public List<string> TenLoaiDocGiaList { get; set; }
+
         private QLTV2Context _context = new QLTV2Context();
         public ObservableCollection<DOCGIA> Readers { get; set; }
         public ObservableCollection<PHIEUTHUTIENPHAT> PenaltyReceipts { get; set; }
@@ -48,6 +52,13 @@ namespace QLTV_TranBin.CQuang
 
             PenaltyReceiptsDataGrid.ItemsSource = ReaderTypes;
             LoadPenaltyReceiptsData();
+
+            TenTaiKhoanList = _context.TAIKHOAN.Select(tk => tk.TenTaiKhoan).ToList();
+            TenTaiKhoanComboBox.ItemsSource = TenTaiKhoanList;
+
+            TenLoaiDocGiaList = _context.LOAIDOCGIA.Where(ldg => !ldg.IsDeleted).Select(ldg => ldg.TenLoaiDocGia).ToList();
+            TenLoaiDocGiaComboBox.ItemsSource = TenLoaiDocGiaList;
+
         }
 
         private void OpenExportMenu_Click(object sender, RoutedEventArgs e)
@@ -126,15 +137,13 @@ namespace QLTV_TranBin.CQuang
             MessageBox.Show("BCTK");
         }
 
+
+
         // Readers 
         private void LoadReadersData()
         {
             Readers.Clear();
-            var readers = _context.DOCGIA
-                                  .Include(d => d.IDTaiKhoanNavigation) // Bao gồm dữ liệu liên kết
-                                  .Where(d => d.IDTaiKhoanNavigation != null && d.IDTaiKhoanNavigation.IsDeleted == false) // Chỉ lấy tài khoản chưa bị xóa
-                                  .ToList();
-
+            var readers = _context.DOCGIA.Include(d => d.IDTaiKhoanNavigation).ToList();
             foreach (var reader in readers)
             {
                 Readers.Add(reader);
@@ -143,7 +152,12 @@ namespace QLTV_TranBin.CQuang
 
         private void AddReader_Click(object sender, RoutedEventArgs e)
         {
-            AWThemDocGia aWThemDocGia = new AWThemDocGia();
+            // Lấy tên tài khoản và tên loại độc giả từ ComboBox
+            string tenTaiKhoan = TenTaiKhoanComboBox.Text;
+            string tenLoaiDocGia = TenLoaiDocGiaComboBox.Text;
+
+            // Truyền tên tài khoản và tên loại độc giả vào AWThemDocGia
+            AWThemDocGia aWThemDocGia = new AWThemDocGia(tenTaiKhoan, tenLoaiDocGia);
             bool? result = aWThemDocGia.ShowDialog();
 
             if (result == true)
@@ -158,9 +172,22 @@ namespace QLTV_TranBin.CQuang
             {
                 try
                 {
-                    selectedReader.IDLoaiDocGia = int.Parse(IDLoaiDocGia.Text);
-                    //selectedReader.NgayLapThe = NgayLapTheDatePicker.SelectedDate ?? selectedReader.NgayLapThe;
-                    //selectedReader.NgayHetHan = NgayHetHanDatePicker.SelectedDate ?? selectedReader.NgayHetHan;
+                    // Lấy tên tài khoản và tên loại độc giả từ ComboBox
+                    string tenTaiKhoan = TenTaiKhoanComboBox.SelectedItem as string;
+                    string tenLoaiDocGia = TenLoaiDocGiaComboBox.SelectedItem as string;
+
+                    // Tìm ID tương ứng trong database
+                    var taiKhoan = _context.TAIKHOAN.FirstOrDefault(tk => tk.TenTaiKhoan == tenTaiKhoan);
+                    var loaiDocGia = _context.LOAIDOCGIA.FirstOrDefault(ldg => ldg.TenLoaiDocGia == tenLoaiDocGia);
+
+                    if (taiKhoan == null || loaiDocGia == null)
+                    {
+                        MessageBox.Show("Tên tài khoản hoặc tên loại độc giả không hợp lệ.", "Lỗi", MessageBoxButton.OK, MessageBoxImage.Error);
+                        return;
+                    }
+
+                    selectedReader.IDTaiKhoan = taiKhoan.ID;
+                    selectedReader.IDLoaiDocGia = loaiDocGia.ID;
                     selectedReader.TongNo = decimal.TryParse(TongNoTextBox.Text, out decimal tongNo) ? tongNo : selectedReader.TongNo;
                     selectedReader.GioiThieu = GioiThieu.Text;
                     _context.SaveChanges();
@@ -238,26 +265,30 @@ namespace QLTV_TranBin.CQuang
         {
             try
             {
-                DateTime ngayLapThe = NgayLapTheDatePicker.SelectedDate.GetValueOrDefault();
-                DateTime? ngayHetHan = NgayHetHanDatePicker.SelectedDate;
-
-                if (ngayLapThe >= ngayHetHan)
-                {
-                    MessageBox.Show("Ngày lập thẻ phải nhỏ hơn ngày hết hạn.", "Lỗi", MessageBoxButton.OK, MessageBoxImage.Error);
-                    return null;
-                }
-
                 if (!decimal.TryParse(TongNoTextBox.Text, out decimal tongNo))
                 {
                     MessageBox.Show("Tổng nợ không hợp lệ.", "Lỗi", MessageBoxButton.OK, MessageBoxImage.Error);
                     return null;
                 }
+
+                // Lấy tên tài khoản và tên loại độc giả từ ComboBox
+                string tenTaiKhoan = TenTaiKhoanComboBox.Text;
+                string tenLoaiDocGia = TenLoaiDocGiaComboBox.Text;
+
+                // Tìm ID tương ứng trong database
+                var taiKhoan = _context.TAIKHOAN.FirstOrDefault(tk => tk.TenTaiKhoan == tenTaiKhoan);
+                var loaiDocGia = _context.LOAIDOCGIA.FirstOrDefault(ldg => ldg.TenLoaiDocGia == tenLoaiDocGia);
+
+                if (taiKhoan == null || loaiDocGia == null)
+                {
+                    MessageBox.Show("Tên tài khoản hoặc tên loại độc giả không hợp lệ.", "Lỗi", MessageBoxButton.OK, MessageBoxImage.Error);
+                    return null;
+                }
+
                 return new DOCGIA
                 {
-                    IDTaiKhoan = int.Parse(IDTaiKhoan.Text),
-                    IDLoaiDocGia = int.Parse(IDLoaiDocGia.Text),
-                    //NgayLapThe = NgayLapTheDatePicker.SelectedDate ?? DateTime.Now,
-                    //NgayHetHan = NgayHetHanDatePicker.SelectedDate ?? DateTime.Now.AddYears(1),
+                    IDTaiKhoan = taiKhoan.ID,
+                    IDLoaiDocGia = loaiDocGia.ID,
                     TongNo = decimal.Parse(TongNoTextBox.Text),
                     GioiThieu = GioiThieu.Text
                 };
@@ -269,34 +300,59 @@ namespace QLTV_TranBin.CQuang
             }
         }
 
+        private string NormalizeString(string text)
+        {
+            if (string.IsNullOrEmpty(text))
+                return text;
+
+            return new string(
+                text.Normalize(NormalizationForm.FormD)
+                    .Where(c => CharUnicodeInfo.GetUnicodeCategory(c) != UnicodeCategory.NonSpacingMark)
+                    .ToArray()
+            ).Normalize(NormalizationForm.FormC).ToLower();
+        }
+
         private void TTDGSearchButton_Click(object sender, RoutedEventArgs e)
         {
-            string searchTerm = TTDGSearchTextBox.Text.Trim().ToLower();
+            string searchTerm = NormalizeString(TTDGSearchTextBox.Text.Trim());
             string searchCriteria = (TTDGSearchCriteriaComboBox.SelectedItem as ComboBoxItem)?.Content.ToString();
-            var query = _context.DOCGIA.AsQueryable();
-            switch (searchCriteria)
+
+            var query = _context.DOCGIA
+                .Include(r => r.IDTaiKhoanNavigation)
+                .Include(r => r.IDLoaiDocGiaNavigation)
+                .AsEnumerable() // Chuyển về IEnumerable để lọc trên máy khách
+                .ToList();
+
+            // Kiểm tra xem có tiêu chí tìm kiếm được chọn hay không
+            if (string.IsNullOrEmpty(searchCriteria))
             {
-                case "Mã Độc Giả":
-                    query = query.Where(r => r.MaDocGia.ToLower().Contains(searchTerm));
-                    break;
-                case "ID Tài Khoản":
-                    query = query.Where(r => r.IDTaiKhoan.ToString().Contains(searchTerm));
-                    break;
-                case "ID Loại Độc Giả":
-                    query = query.Where(r => r.IDLoaiDocGia.ToString().Contains(searchTerm));
-                    break;
-                default:
-                    // Nếu không có tiêu chí nào được chọn, tìm kiếm trên tất cả các trường
-                    query = query.Where(r =>
-                        r.MaDocGia.ToLower().Contains(searchTerm) ||
-                        r.IDTaiKhoan.ToString().Contains(searchTerm) ||
-                        r.IDLoaiDocGia.ToString().Contains(searchTerm)
-                    );
-                    break;
+                // Nếu không có tiêu chí, tìm kiếm trên tất cả các trường
+                query = query.Where(r =>
+                    NormalizeString(r.MaDocGia).Contains(searchTerm) ||
+                    NormalizeString(r.IDTaiKhoanNavigation.TenTaiKhoan).Contains(searchTerm) ||
+                    NormalizeString(r.IDLoaiDocGiaNavigation.TenLoaiDocGia).Contains(searchTerm)
+                ).ToList();
             }
-            var filteredReaders = query.ToList();
+            else
+            {
+                // Nếu có tiêu chí, lọc theo tiêu chí được chọn
+                switch (searchCriteria)
+                {
+                    case "Mã Độc Giả":
+                        query = query.Where(r => NormalizeString(r.MaDocGia).Contains(searchTerm)).ToList();
+                        break;
+                    case "Tên Tài Khoản":
+                        query = query.Where(r => NormalizeString(r.IDTaiKhoanNavigation.TenTaiKhoan).Contains(searchTerm)).ToList();
+                        break;
+                    case "Tên Loại Độc Giả":
+                        query = query.Where(r => NormalizeString(r.IDLoaiDocGiaNavigation.TenLoaiDocGia).Contains(searchTerm)).ToList();
+                        break;
+                }
+            }
+
+            // Cập nhật ItemsSource cho DataGrid
             Readers.Clear();
-            foreach (var reader in filteredReaders)
+            foreach (var reader in query)
             {
                 Readers.Add(reader);
             }
@@ -304,10 +360,8 @@ namespace QLTV_TranBin.CQuang
 
         private void ClearInputs()
         {
-            IDTaiKhoan.Text = string.Empty;
-            IDLoaiDocGia.Text = string.Empty;
-            NgayLapTheDatePicker.SelectedDate = null;
-            NgayHetHanDatePicker.SelectedDate = null;
+            TenTaiKhoanComboBox.SelectedItem = null; // Cập nhật cho ComboBox
+            TenLoaiDocGiaComboBox.SelectedItem = null; // Cập nhật cho ComboBox
             TongNoTextBox.Text = string.Empty;
             GioiThieu.Text = string.Empty;
         }
@@ -316,9 +370,10 @@ namespace QLTV_TranBin.CQuang
         {
             if (ReadersDataGrid.SelectedItem is DOCGIA selectedReader)
             {
-                IDTaiKhoan.Text = selectedReader.IDTaiKhoan.ToString();
-                IDLoaiDocGia.Text = selectedReader.IDLoaiDocGia.ToString();
-                
+                // Đặt SelectedItem cho ComboBox
+                TenTaiKhoanComboBox.SelectedItem = selectedReader.IDTaiKhoanNavigation.TenTaiKhoan;
+                TenLoaiDocGiaComboBox.SelectedItem = selectedReader.IDLoaiDocGiaNavigation.TenLoaiDocGia;
+
                 TongNoTextBox.Text = selectedReader.TongNo.ToString();
                 GioiThieu.Text = selectedReader.GioiThieu;
             }
@@ -327,7 +382,7 @@ namespace QLTV_TranBin.CQuang
         // Reader Types 
         private void LoadReaderTypesData()
         {
-            var readerTypes = _context.LOAIDOCGIA.ToList();
+            var readerTypes = _context.LOAIDOCGIA.Where(r => !r.IsDeleted).ToList(); // Chỉ lấy những loại độc giả chưa bị xóa
             ReaderTypesDataGrid.ItemsSource = readerTypes;
         }
 
@@ -410,13 +465,28 @@ namespace QLTV_TranBin.CQuang
         {
             if (ReaderTypesDataGrid.SelectedItem is LOAIDOCGIA selectedReaderType)
             {
+                // Kiểm tra xem loại độc giả có đang được sử dụng bởi độc giả nào không
                 var existingReaders = _context.DOCGIA.Any(d => d.IDLoaiDocGia == selectedReaderType.ID);
                 if (existingReaders)
                 {
-                    MessageBox.Show("Không thể xóa loại độc giả đang được sử dụng.", "Lỗi", MessageBoxButton.OK, MessageBoxImage.Error);
-                    return;
+                    // Lấy ID của loại độc giả "Mặc định"
+                    var defaultReaderType = _context.LOAIDOCGIA.FirstOrDefault(ldg => ldg.TenLoaiDocGia == "Mặc định");
+                    if (defaultReaderType == null)
+                    {
+                        MessageBox.Show("Không tìm thấy loại độc giả 'Mặc định'.", "Lỗi", MessageBoxButton.OK, MessageBoxImage.Error);
+                        return;
+                    }
+
+                    // Cập nhật IDLoaiDocGia của các độc giả đang sử dụng loại độc giả cần xóa
+                    var readersToUpdate = _context.DOCGIA.Where(d => d.IDLoaiDocGia == selectedReaderType.ID).ToList();
+                    foreach (var reader in readersToUpdate)
+                    {
+                        reader.IDLoaiDocGia = defaultReaderType.ID;
+                    }
+                    _context.SaveChanges();
                 }
 
+                // Hiển thị hộp thoại xác nhận xóa
                 var result = MessageBox.Show(
                     "Bạn có chắc chắn muốn xóa loại độc giả này?",
                     "Xác nhận xóa",
@@ -428,16 +498,11 @@ namespace QLTV_TranBin.CQuang
                 {
                     try
                     {
-                        // Soft delete
+                        // Soft delete loại độc giả
                         var readerTypeToDelete = _context.LOAIDOCGIA.Find(selectedReaderType.ID);
                         if (readerTypeToDelete != null)
                         {
-                            // Option 1: Soft Delete
                             readerTypeToDelete.IsDeleted = true;
-
-                            // Option 2: Hard Delete 
-                            // _context.LOAIDOCGIA.Remove(readerTypeToDelete);
-
                             _context.SaveChanges();
 
                             LoadReaderTypesData();
@@ -476,7 +541,8 @@ namespace QLTV_TranBin.CQuang
         {
             string searchTerm = LDGSearchTextBox.Text.Trim().ToLower();
             string searchCriteria = (LDGSearchCriteriaComboBox.SelectedItem as ComboBoxItem)?.Content.ToString();
-            var query = _context.LOAIDOCGIA.AsQueryable();
+            var query = _context.LOAIDOCGIA.Where(r => !r.IsDeleted).AsQueryable();
+
             switch (searchCriteria)
             {
                 case "Tên Loại Độc Giả":
@@ -493,6 +559,7 @@ namespace QLTV_TranBin.CQuang
                     );
                     break;
             }
+
             var filteredReaderTypes = query.ToList();
 
             ObservableCollection<LOAIDOCGIA> filteredReaderTypesCollection = new ObservableCollection<LOAIDOCGIA>(filteredReaderTypes);
@@ -514,6 +581,19 @@ namespace QLTV_TranBin.CQuang
                 PenaltyReceipts.Add(receipt);
             }
             PenaltyReceiptsDataGrid.ItemsSource = PenaltyReceipts;
+        }
+
+        private void UpdateReadersData()
+        {
+            // Tải lại dữ liệu độc giả từ database
+            var updatedReaders = _context.DOCGIA.Include(d => d.IDTaiKhoanNavigation).ToList();
+
+            // Cập nhật ObservableCollection<DOCGIA> Readers
+            Readers.Clear();
+            foreach (var reader in updatedReaders)
+            {
+                Readers.Add(reader);
+            }
         }
 
         private void CreatePenaltyReceipt_Click(object sender, RoutedEventArgs e)
@@ -543,11 +623,12 @@ namespace QLTV_TranBin.CQuang
 
                 _context.PHIEUTHUTIENPHAT.Add(newPenaltyReceipt);
 
-                _context.SaveChanges();
-
                 // Cập nhật tổng nợ của độc giả
                 docGia.TongNo = newPenaltyReceipt.ConLai;
+                _context.SaveChanges();
 
+                UpdateReadersData();
+                ReadersDataGrid.Items.Refresh();
                 LoadPenaltyReceiptsData();
                 ClearPenaltyInputs();
 
@@ -590,6 +671,8 @@ namespace QLTV_TranBin.CQuang
                             _context.PHIEUTHUTIENPHAT.Remove(penaltyToDelete);
                             _context.SaveChanges();
 
+                            UpdateReadersData();
+                            ReadersDataGrid.Items.Refresh();
                             // Load lại dữ liệu
                             LoadPenaltyReceiptsData();
                             ClearPenaltyInputs();
@@ -659,6 +742,8 @@ namespace QLTV_TranBin.CQuang
                         {
                             _context.SaveChanges();
 
+                            UpdateReadersData();
+                            ReadersDataGrid.Items.Refresh();
                             // Load lại dữ liệu
                             LoadPenaltyReceiptsData();
                             ClearPenaltyInputs();
@@ -784,7 +869,7 @@ namespace QLTV_TranBin.CQuang
                 saveFileDialog.Filter = "Excel Files|*.xlsx";
 
                 if (saveFileDialog.ShowDialog()
-                                                == true)
+ == true)
                 {
                     var filePath = saveFileDialog.FileName;
 
@@ -796,10 +881,8 @@ namespace QLTV_TranBin.CQuang
                         worksheet.Cells[1, 1].Value = "Mã độc giả";
                         worksheet.Cells[1, 2].Value = "Tên tài khoản";
                         worksheet.Cells[1, 3].Value = "Tên loại độc giả";
-                        worksheet.Cells[1, 4].Value = "Ngày lập thẻ";
-                        worksheet.Cells[1, 5].Value = "Ngày hết hạn";
-                        worksheet.Cells[1, 6].Value = "Tổng nợ";
-                        worksheet.Cells[1, 7].Value = "Giới thiệu";
+                        worksheet.Cells[1, 4].Value = "Tổng nợ";
+                        worksheet.Cells[1, 5].Value = "Giới thiệu";
 
                         // Điền dữ liệu 
                         int row = 2;
@@ -808,10 +891,8 @@ namespace QLTV_TranBin.CQuang
                             worksheet.Cells[row, 1].Value = reader.MaDocGia;
                             worksheet.Cells[row, 2].Value = reader.IDTaiKhoanNavigation?.TenTaiKhoan;
                             worksheet.Cells[row, 3].Value = reader.IDLoaiDocGiaNavigation?.TenLoaiDocGia;
-                            //worksheet.Cells[row, 4].Value = reader.NgayLapThe.ToString("dd/MM/yyyy");
-                            //worksheet.Cells[row, 5].Value = reader.NgayHetHan.ToString("dd/MM/yyyy");
-                            worksheet.Cells[row, 6].Value = reader.TongNo;
-                            worksheet.Cells[row, 7].Value = reader.GioiThieu;
+                            worksheet.Cells[row, 4].Value = reader.TongNo;
+                            worksheet.Cells[row, 5].Value = reader.GioiThieu;
                             row++;
                         }
 
@@ -828,7 +909,96 @@ namespace QLTV_TranBin.CQuang
             }
         }
 
-     
+        private void ExportPDF_Click(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+                SaveFileDialog saveFileDialog = new SaveFileDialog
+                {
+                    Filter = "PDF Files|*.pdf",
+                    FileName = "DanhSachDocGia.pdf"
+                };
+
+                if (saveFileDialog.ShowDialog() == true)
+                {
+                    string filePath = saveFileDialog.FileName;
+
+                    using (FileStream fs = new FileStream(filePath, FileMode.Create))
+                    {
+                        Document document = new Document(PageSize.A4.Rotate(), 10f, 10f, 10f, 10f);
+                        PdfWriter writer = PdfWriter.GetInstance(document, fs);
+                        document.Open();
+
+                        // Font 
+                        BaseFont baseFont = BaseFont.CreateFont("c:/windows/fonts/arial.ttf", BaseFont.IDENTITY_H, BaseFont.EMBEDDED);
+                        Font titleFont = new Font(baseFont, 16, Font.BOLD);
+                        Font headerFont = new Font(baseFont, 10, Font.BOLD);
+                        Font dataFont = new Font(baseFont, 10, Font.NORMAL);
+
+                        // Tiêu đề
+                        Paragraph title = new Paragraph("DANH SÁCH ĐỘC GIẢ", titleFont)
+                        {
+                            Alignment = Element.ALIGN_CENTER
+                        };
+                        document.Add(title);
+                        document.Add(new Paragraph(" ")); // Khoảng trắng
+
+                        // Tạo bảng với 7 cột
+                        PdfPTable table = new PdfPTable(5)
+                        {
+                            WidthPercentage = 100,
+                            SpacingBefore = 10f,
+                            SpacingAfter = 10f
+                        };
+                        table.SetWidths(new float[] { 2f, 2f, 2f, 2f, 2f });
+
+                        // Tiêu đề cột
+                        string[] headers = {
+                    "Mã độc giả",
+                    "Tên tài khoản",
+                    "Tên loại độc giả",
+                    "Tổng nợ",
+                    "Giới thiệu"
+                };
+
+                        foreach (string header in headers)
+                        {
+                            PdfPCell cell = new PdfPCell(new Phrase(header, headerFont))
+                            {
+                                HorizontalAlignment = Element.ALIGN_CENTER,
+                                VerticalAlignment = Element.ALIGN_MIDDLE,
+                                Padding = 5f
+                            };
+                            table.AddCell(cell);
+                        }
+
+                        // Dữ liệu
+                        var readers = _context.DOCGIA
+                            .Include(r => r.IDTaiKhoanNavigation)
+                            .Include(r => r.IDLoaiDocGiaNavigation)
+                            .ToList();
+
+                        foreach (var reader in readers)
+                        {
+                            table.AddCell(new Phrase(reader.MaDocGia.ToString(), dataFont));
+                            table.AddCell(new Phrase(reader.IDTaiKhoanNavigation?.TenTaiKhoan ?? "", dataFont));
+                            table.AddCell(new Phrase(reader.IDLoaiDocGiaNavigation?.TenLoaiDocGia ?? "", dataFont));
+                            table.AddCell(new Phrase(reader.TongNo.ToString("N2"), dataFont));
+                            table.AddCell(new Phrase(reader.GioiThieu?.ToString() ?? "", dataFont));
+                        }
+
+                        document.Add(table);
+                        document.Close();
+
+                        MessageBox.Show("Xuất PDF thành công!", "Thông báo", MessageBoxButton.OK, MessageBoxImage.Information);
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Lỗi khi xuất dữ liệu: {ex.Message}", "Lỗi", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
+        }
     }
 }
 
