@@ -124,6 +124,11 @@ namespace QLTV
             }
         }
 
+        private void btnThemTacGia_Click(object sender, RoutedEventArgs e)
+        {
+            AWThemTacGia awThemTacGia = new AWThemTacGia();
+        }
+
         private void btnThoat_Click(object sender, RoutedEventArgs e)
         {
             this.Close();

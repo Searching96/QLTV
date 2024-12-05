@@ -26,14 +26,25 @@
         </Grid.RowDefinitions>
         <TextBlock Text="Chọn Thể Loại" Grid.Row="0" FontWeight="Bold" 
                    FontSize="26" Margin="10" HorizontalAlignment="Center"/>
-        <TextBox x:Name="tbxTimKiem" Grid.Row="1"
+
+        <StackPanel Grid.Row="1" Orientation="Horizontal">
+            <TextBox x:Name="tbxTimKiem" Grid.Row="1"
                  Style="{StaticResource DataDisplayTextBox}"
+                 Width="235"
                  materialDesign:HintAssist.Hint="Tên Thể Loại"
                  materialDesign:TextFieldAssist.HasLeadingIcon="True"
                  materialDesign:TextFieldAssist.LeadingIcon="Magnify"
-                 Margin="10, 0, 150, 0"
+                 Margin="10, 0, 0, 0"
                  TextChanged="tbxTimKiem_TextChanged"
                  VerticalAlignment="Center"/>
+            <Button x:Name="btnThemTheLoai" 
+                            ToolTip="Thêm Thể Loại" 
+                            Click="btnThemTheLoai_Click"
+                            Width="30"
+                            Padding="0">
+                <materialDesign:PackIcon Kind="PlusCircleOutline" Width="24" Height="24"/>
+            </Button>
+        </StackPanel>
 
         <Border Grid.Row="2" BorderBrush="Gray" BorderThickness="1" CornerRadius="5" Margin="10, 0, 10, 0">
             <ListBox x:Name="lbTheLoai" SelectionMode="Multiple"

@@ -124,6 +124,13 @@ namespace QLTV
             }
         }
 
+        private void btnThemTheLoai_Click(object sender, RoutedEventArgs e)
+        {
+            AWThemTheLoai awThemTheLoai = new AWThemTheLoai();
+            if (awThemTheLoai.ShowDialog() == true)
+                LoadTheLoai();
+        }
+
         private void btnThoat_Click(object sender, RoutedEventArgs e)
         {
             this.Close();
