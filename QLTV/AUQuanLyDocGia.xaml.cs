@@ -51,7 +51,7 @@ namespace QLTV
             TenTaiKhoanList = _context.TAIKHOAN.Select(tk => tk.TenTaiKhoan).ToList();
             TenTaiKhoanComboBox.ItemsSource = TenTaiKhoanList;
 
-            TenLoaiDocGiaList = _context.LOAIDOCGIA.Select(ldg => ldg.TenLoaiDocGia).ToList();
+            TenLoaiDocGiaList = _context.LOAIDOCGIA.Where(ldg => !ldg.IsDeleted).Select(ldg => ldg.TenLoaiDocGia).ToList();
             TenLoaiDocGiaComboBox.ItemsSource = TenLoaiDocGiaList;
 
         }
@@ -394,7 +394,7 @@ namespace QLTV
         // Reader Types 
         private void LoadReaderTypesData()
         {
-            var readerTypes = _context.LOAIDOCGIA.ToList();
+            var readerTypes = _context.LOAIDOCGIA.Where(r => !r.IsDeleted).ToList(); // Chỉ lấy những loại độc giả chưa bị xóa
             ReaderTypesDataGrid.ItemsSource = readerTypes;
         }
 
@@ -477,13 +477,28 @@ namespace QLTV
         {
             if (ReaderTypesDataGrid.SelectedItem is LOAIDOCGIA selectedReaderType)
             {
+                // Kiểm tra xem loại độc giả có đang được sử dụng bởi độc giả nào không
                 var existingReaders = _context.DOCGIA.Any(d => d.IDLoaiDocGia == selectedReaderType.ID);
                 if (existingReaders)
                 {
-                    MessageBox.Show("Không thể xóa loại độc giả đang được sử dụng.", "Lỗi", MessageBoxButton.OK, MessageBoxImage.Error);
-                    return;
+                    // Lấy ID của loại độc giả "Mặc định"
+                    var defaultReaderType = _context.LOAIDOCGIA.FirstOrDefault(ldg => ldg.TenLoaiDocGia == "Mặc định");
+                    if (defaultReaderType == null)
+                    {
+                        MessageBox.Show("Không tìm thấy loại độc giả 'Mặc định'.", "Lỗi", MessageBoxButton.OK, MessageBoxImage.Error);
+                        return;
+                    }
+
+                    // Cập nhật IDLoaiDocGia của các độc giả đang sử dụng loại độc giả cần xóa
+                    var readersToUpdate = _context.DOCGIA.Where(d => d.IDLoaiDocGia == selectedReaderType.ID).ToList();
+                    foreach (var reader in readersToUpdate)
+                    {
+                        reader.IDLoaiDocGia = defaultReaderType.ID;
+                    }
+                    _context.SaveChanges();
                 }
 
+                // Hiển thị hộp thoại xác nhận xóa
                 var result = MessageBox.Show(
                     "Bạn có chắc chắn muốn xóa loại độc giả này?",
                     "Xác nhận xóa",
@@ -495,16 +510,11 @@ namespace QLTV
                 {
                     try
                     {
-                        // Soft delete
+                        // Soft delete loại độc giả
                         var readerTypeToDelete = _context.LOAIDOCGIA.Find(selectedReaderType.ID);
                         if (readerTypeToDelete != null)
                         {
-                            // Option 1: Soft Delete
                             readerTypeToDelete.IsDeleted = true;
-
-                            // Option 2: Hard Delete 
-                            // _context.LOAIDOCGIA.Remove(readerTypeToDelete);
-
                             _context.SaveChanges();
 
                             LoadReaderTypesData();
@@ -543,7 +553,8 @@ namespace QLTV
         {
             string searchTerm = LDGSearchTextBox.Text.Trim().ToLower();
             string searchCriteria = (LDGSearchCriteriaComboBox.SelectedItem as ComboBoxItem)?.Content.ToString();
-            var query = _context.LOAIDOCGIA.AsQueryable();
+            var query = _context.LOAIDOCGIA.Where(r => !r.IsDeleted).AsQueryable();  
+
             switch (searchCriteria)
             {
                 case "Tên Loại Độc Giả":
@@ -560,6 +571,7 @@ namespace QLTV
                     );
                     break;
             }
+
             var filteredReaderTypes = query.ToList();
 
             ObservableCollection<LOAIDOCGIA> filteredReaderTypesCollection = new ObservableCollection<LOAIDOCGIA>(filteredReaderTypes);
@@ -769,9 +781,45 @@ namespace QLTV
             }
         }
 
+        private void ClearReader_Click(object sender, RoutedEventArgs e)
+        {
+            ClearInputs();
+            RefreshReadersTab();
+        }
+
+        private void ClearReaderType_Click(object sender, RoutedEventArgs e)
+        {
+            ClearReaderTypeInputs();
+            RefreshReaderTypesTab();
+        }
+
         private void ClearPenalty_Click(object sender, RoutedEventArgs e)
         {
             ClearPenaltyInputs();
+            RefreshPenaltyReceiptsTab();
+        }
+
+        private void RefreshReadersTab()
+        {
+            Readers.Clear();
+            LoadReadersData();
+            ReadersDataGrid.Items.Refresh();
+            TenTaiKhoanComboBox.SelectedItem = null;
+            TenLoaiDocGiaComboBox.SelectedItem = null;
+        }
+
+        private void RefreshReaderTypesTab()
+        {
+            ReaderTypes.Clear();
+            LoadReaderTypesData();
+            ReaderTypesDataGrid.Items.Refresh();
+        }
+
+        private void RefreshPenaltyReceiptsTab()
+        {
+            PenaltyReceipts.Clear();
+            LoadPenaltyReceiptsData();
+            PenaltyReceiptsDataGrid.Items.Refresh();
         }
 
         private void PrintPenaltyReceipt_Click(object sender, RoutedEventArgs e)
