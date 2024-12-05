@@ -1,0 +1,2 @@
+Dòng 2: Tên tài khoản hoặc Email đã tồn tại: TenTaiKhoan='tnb848', Email='tranbinn848@gmail.com'
+Dòng 3: Tên tài khoản hoặc Email đã tồn tại: TenTaiKhoan='tranbin12312', Email='h3lohell0@gmail.com'

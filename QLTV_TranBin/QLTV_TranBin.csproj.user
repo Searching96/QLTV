@@ -1,0 +1,103 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="Current" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup />
+  <ItemGroup>
+    <ApplicationDefinition Update="App.xaml">
+      <SubType>Designer</SubType>
+    </ApplicationDefinition>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Update="BaoCaoThongKe.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Update="ChiTietTaiKhoan.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Update="CQuang\AUInterface.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Update="CQuang\AUQuanLyDocGia.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Update="CQuang\AWPhieuThuTienPhat.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Update="CQuang\AWThemDocGia.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Update="CreateAccount.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Update="LoginScreen.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Update="MainScreen.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Update="QuanLyTaiKhoan.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Update="ResetPassword.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Update="SignInScreen.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Update="UCChiTietSach.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Update="UCTrangChuUser.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Update="UserScreen.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <Page Update="BaoCaoThongKe.xaml">
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="ChiTietTaiKhoan.xaml">
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="CQuang\AUInterface.xaml">
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="CQuang\AUQuanLyDocGia.xaml">
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="CQuang\AWPhieuThuTienPhat.xaml">
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="CQuang\AWThemDocGia.xaml">
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="CreateAccount.xaml">
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="LoginScreen.xaml">
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="MainScreen.xaml">
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="QuanLyTaiKhoan.xaml">
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="ResetPassword.xaml">
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="SignInScreen.xaml">
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="UCChiTietSach.xaml">
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="UCTrangChuUser.xaml">
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="UserScreen.xaml">
+      <SubType>Designer</SubType>
+    </Page>
+  </ItemGroup>
+</Project>

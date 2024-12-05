@@ -1,0 +1,12 @@
+﻿<Window x:Class="QLTV_TranBin.LoginScreen"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:QLTV_TranBin"
+        mc:Ignorable="d"
+        Title="LoginScreen" Height="550" Width="500">
+    <Grid>
+        <Frame x:Name="LoginMain" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" NavigationUIVisibility="Hidden"/>
+    </Grid>
+</Window>

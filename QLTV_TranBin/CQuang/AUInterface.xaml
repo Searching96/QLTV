@@ -1,0 +1,171 @@
+﻿<Window x:Class="QLTV_TranBin.CQuang.AUInterface"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+        Title="Library Management System"
+        Height="700" 
+        Width="1000"
+        WindowStartupLocation="CenterScreen"
+        TextElement.Foreground="{DynamicResource MaterialDesignBody}"
+        Background="{DynamicResource MaterialDesignPaper}"
+        TextElement.FontWeight="Regular"
+        TextElement.FontSize="13"
+        FontFamily="{materialDesign:MaterialDesignFont}">
+    <Window.Resources>
+        <Style x:Key="MenuButtonStyle" TargetType="Button" BasedOn="{StaticResource MaterialDesignFlatButton}">
+            <Setter Property="Height" Value="56"/>
+            <Setter Property="FontSize" Value="14"/>
+            <Setter Property="Foreground" Value="White"/>
+            <Setter Property="materialDesign:ButtonAssist.CornerRadius" Value="28"/>
+            <Setter Property="Margin" Value="16,4"/>
+            <Setter Property="Padding" Value="16,8"/>
+            <Style.Triggers>
+                <Trigger Property="IsMouseOver" Value="True">
+                    <Setter Property="Background" Value="#2962FF"/>
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+    </Window.Resources>
+
+    <materialDesign:DialogHost Identifier="RootDialog">
+        <Grid>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="250"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+
+            <!-- Sidebar -->
+            <Grid Grid.Column="0" Background="#1976D2">
+                <DockPanel>
+                    <!-- Header -->
+                    <StackPanel DockPanel.Dock="Top" Margin="0,32,0,32">
+                        <materialDesign:PackIcon Kind="Library" 
+                                               Width="48" 
+                                               Height="48" 
+                                               Foreground="White"
+                                               HorizontalAlignment="Center"/>
+                        <TextBlock Text="LIBRARY MANAGEMENT" 
+                                 FontSize="20" 
+                                 Foreground="White" 
+                                 FontWeight="Bold" 
+                                 TextAlignment="Center"
+                                 Margin="0,16,0,32"/>
+                    </StackPanel>
+
+                    <!-- Menu -->
+                    <StackPanel>
+                        <Button Style="{StaticResource MenuButtonStyle}"
+                                Click="Dashboard_Click">
+                            <StackPanel Orientation="Horizontal">
+                                <materialDesign:PackIcon Kind="ViewDashboard" 
+                                                       Width="24" 
+                                                       Height="24" 
+                                                       Margin="0,0,12,0"/>
+                                <TextBlock Text="Trang Chủ"/>
+                            </StackPanel>
+                        </Button>
+
+                        <Button Style="{StaticResource MenuButtonStyle}"
+                                Click="ReaderManagement_Click">
+                            <StackPanel Orientation="Horizontal">
+                                <materialDesign:PackIcon Kind="AccountMultiple" 
+                                                       Width="24" 
+                                                       Height="24" 
+                                                       Margin="0,0,12,0"/>
+                                <TextBlock Text="Quản Lý Độc Giả"/>
+                            </StackPanel>
+                        </Button>
+
+                        <Button Style="{StaticResource MenuButtonStyle}"
+                                Click="BookManagement_Click">
+                            <StackPanel Orientation="Horizontal">
+                                <materialDesign:PackIcon Kind="BookMultiple" 
+                                                       Width="24" 
+                                                       Height="24" 
+                                                       Margin="0,0,12,0"/>
+                                <TextBlock Text="Quản Lý Sách"/>
+                            </StackPanel>
+                        </Button>
+
+                        <Button Style="{StaticResource MenuButtonStyle}"
+                                Click="LoanManagement_Click">
+                            <StackPanel Orientation="Horizontal">
+                                <materialDesign:PackIcon Kind="SwapHorizontal" 
+                                                       Width="24" 
+                                                       Height="24" 
+                                                       Margin="0,0,12,0"/>
+                                <TextBlock Text="Quản Lý Mượn Trả"/>
+                            </StackPanel>
+                        </Button>
+
+                        <Button Style="{StaticResource MenuButtonStyle}"
+                                Click="Report_Click">
+                            <StackPanel Orientation="Horizontal">
+                                <materialDesign:PackIcon Kind="ChartBar" 
+                                                       Width="24" 
+                                                       Height="24" 
+                                                       Margin="0,0,12,0"/>
+                                <TextBlock Text="Báo Cáo Thống Kê"/>
+                            </StackPanel>
+                        </Button>
+                        <Button x:Name="btnQLTK" Click="btnQLTK_Click" Style="{StaticResource MenuButtonStyle}"
+                                >
+                            <StackPanel Orientation="Horizontal">
+                                <materialDesign:PackIcon Kind="AccountMultiple" 
+                               Width="24" 
+                               Height="24" 
+                               Margin="0,0,12,0"/>
+                                <TextBlock Text="Quản Lý Tài Khoản"/>
+                            </StackPanel>
+                        </Button>
+                    </StackPanel>
+                </DockPanel>
+            </Grid>
+
+            <!-- Main -->
+            <Grid Grid.Column="1">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="64"/>
+                    <RowDefinition Height="*"/>
+                </Grid.RowDefinitions>
+
+                <!-- Top Bar -->
+                <Grid Background="White" Grid.Row="0">
+                    <Grid.Effect>
+                        <DropShadowEffect BlurRadius="10" 
+                                        ShadowDepth="1" 
+                                        Direction="270" 
+                                        Color="#DDDDDD"/>
+                    </Grid.Effect>
+
+                    <DockPanel Margin="16,0">
+                        <TextBlock x:Name="PageTitle"
+                                 FontSize="24" 
+                                 VerticalAlignment="Center"/>
+
+                        <StackPanel DockPanel.Dock="Right" 
+                                  Orientation="Horizontal" 
+                                  HorizontalAlignment="Right">
+                            <Button Style="{StaticResource MaterialDesignIconButton}">
+                                <materialDesign:PackIcon Kind="Bell"/>
+                            </Button>
+                            <materialDesign:PopupBox>
+                                <StackPanel>
+                                    <Button Content="Settings"/>
+                                    <Button Content="Help"/>
+                                    <Separator/>
+                                    <Button Content="Logout"/>
+                                </StackPanel>
+                            </materialDesign:PopupBox>
+                        </StackPanel>
+                    </DockPanel>
+                </Grid>
+
+                <Frame Grid.Row="1" 
+                       x:Name="MainFrame" 
+                       NavigationUIVisibility="Hidden"/>
+            </Grid>
+        </Grid>
+    </materialDesign:DialogHost>
+</Window>
+
