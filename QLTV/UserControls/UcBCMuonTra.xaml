@@ -8,22 +8,16 @@
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
     <Grid>
-        <TabControl>
+        <TabControl HorizontalAlignment="Left">
             <!-- Borrowing Tab -->
             <TabItem Header="Báo cáo mượn sách">
-                <Grid Margin="10">
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="101*"/>
-                        <ColumnDefinition Width="426*"/>
-                    </Grid.ColumnDefinitions>
-                    <Grid.RowDefinitions>
-                        <RowDefinition Height="Auto"/>
-                        <RowDefinition Height="*"/>
-                    </Grid.RowDefinitions>
-
+                <Grid>
                     <!-- Borrowing Reports DataGrid -->
-                    <DataGrid x:Name="dgBorrowingReports" Grid.Row="1" AutoGenerateColumns="False" 
-                          IsReadOnly="True" SelectionMode="Single" Grid.ColumnSpan="2">
+                    <DataGrid x:Name="dgBorrowingReports"
+                              AutoGenerateColumns="False" 
+                              RowStyle="{StaticResource DataGridRowExpand}"
+                              IsReadOnly="True" 
+                              SelectionMode="Single">
                         <DataGrid.Columns>
                             <DataGridTextColumn Header="Tháng" Binding="{Binding Month, StringFormat=MM/yyyy}"/>
                             <DataGridTextColumn Header="Tổng số lượt mượn" Binding="{Binding TongSoLuotMuon}"/>
@@ -31,7 +25,13 @@
                                 <DataGridTemplateColumn.CellTemplate>
                                     <DataTemplate>
                                         <StackPanel Orientation="Horizontal">
-                                            <Button Content="Chi tiết" Click="btnViewReportDetail_Click" Margin="0,0,5,0"/>
+                                            <ToggleButton
+                                                Style="{StaticResource MaterialDesignRaisedToggleButton}"
+                                                Width="52"
+                                                IsChecked="{Binding IsExpanded, Mode=TwoWay}" 
+                                                ToolTip="Chi tiết"
+                                                ToolTipService.InitialShowDelay="0"
+                                                Click="btnViewDetail_Click" Margin="0,0,5,0"/>
                                         </StackPanel>
                                     </DataTemplate>
                                 </DataGridTemplateColumn.CellTemplate>
@@ -39,7 +39,8 @@
                         </DataGrid.Columns>
                         <DataGrid.RowDetailsTemplate>
                             <DataTemplate>
-                                <DataGrid ItemsSource="{Binding DSBCMuonSach}" AutoGenerateColumns="False" 
+                                <DataGrid ItemsSource="{Binding DSBCMuonSach}" AutoGenerateColumns="False"
+                                          RowStyle="{StaticResource DataGridRowExpand}"
                                             IsReadOnly="True" SelectionMode="Single"
                                             Margin="30,0,0,0">
                                     <DataGrid.Columns>
@@ -49,7 +50,13 @@
                                             <DataGridTemplateColumn.CellTemplate>
                                                 <DataTemplate>
                                                     <StackPanel Orientation="Horizontal">
-                                                        <Button Content="Chi tiết" Click="btnViewReportDetail_Click" Margin="0,0,5,0"/>
+                                                        <ToggleButton
+                                                            Style="{StaticResource MaterialDesignRaisedToggleButton}"
+                                                            Width="52"
+                                                            IsChecked="{Binding IsExpanded, Mode=TwoWay}" 
+                                                            ToolTip="Chi tiết"
+                                                            ToolTipService.InitialShowDelay="0"
+                                                            Click="btnViewDetail_Click" Margin="0,0,5,0"/>
                                                     </StackPanel>
                                                 </DataTemplate>
                                             </DataGridTemplateColumn.CellTemplate>
@@ -72,34 +79,23 @@
                                 </DataGrid>
                             </DataTemplate>
                         </DataGrid.RowDetailsTemplate>
-                        <DataGrid.Resources>
-                            <Style TargetType="DataGridRow">
-                                <Setter Property="DetailsVisibility" Value="Collapsed" />
-                                <Style.Triggers>
-                                    <DataTrigger Binding="{Binding IsExpanded, RelativeSource={RelativeSource Self}}" Value="True">
-                                        <Setter Property="DetailsVisibility" Value="Visible" />
-                                    </DataTrigger>
-                                </Style.Triggers>
-                            </Style>
-                        </DataGrid.Resources>
                     </DataGrid>
                 </Grid>
             </TabItem>
 
             <TabItem Header="Báo cáo trả trễ">
                 <Grid Margin="10">
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="101*"/>
-                        <ColumnDefinition Width="426*"/>
-                    </Grid.ColumnDefinitions>
                     <Grid.RowDefinitions>
                         <RowDefinition Height="Auto"/>
                         <RowDefinition Height="*"/>
                     </Grid.RowDefinitions>
 
                     <!-- Late Returning Reports DataGrid -->
-                    <DataGrid x:Name="dgLateReturnReports" Grid.Row="1" AutoGenerateColumns="False" 
-                            IsReadOnly="True" SelectionMode="Single" Grid.ColumnSpan="2">
+                    <DataGrid x:Name="dgLateReturnReports"
+                              AutoGenerateColumns="False" 
+                              RowStyle="{StaticResource DataGridRowExpand}"
+                              IsReadOnly="True" 
+                              SelectionMode="Single">
                         <DataGrid.Columns>
                             <DataGridTextColumn Header="Mã báo cáo" Binding="{Binding BCTraTre.MaBCTraTre}"/>
                             <DataGridTextColumn Header="Ngày" Binding="{Binding BCTraTre.Ngay, StringFormat=MM/yyyy}"/>
@@ -108,7 +104,13 @@
                                 <DataGridTemplateColumn.CellTemplate>
                                     <DataTemplate>
                                         <StackPanel Orientation="Horizontal">
-                                            <Button Content="Chi tiết" Click="btnViewReportDetail_Click" Margin="0,0,5,0"/>
+                                            <ToggleButton
+                                                Style="{StaticResource MaterialDesignRaisedToggleButton}"
+                                                Width="52"
+                                                IsChecked="{Binding IsExpanded, Mode=TwoWay}" 
+                                                ToolTip="Chi tiết"
+                                                ToolTipService.InitialShowDelay="0"
+                                                Click="btnViewDetail_Click" Margin="0,0,5,0"/>
                                         </StackPanel>
                                     </DataTemplate>
                                 </DataGridTemplateColumn.CellTemplate>
@@ -116,7 +118,9 @@
                         </DataGrid.Columns>
                         <DataGrid.RowDetailsTemplate>
                             <DataTemplate>
-                                <DataGrid ItemsSource="{Binding BCTraTre.CTBCTRATRE}" AutoGenerateColumns="False" IsReadOnly="True" Margin="0,0,0,10">
+                                <DataGrid ItemsSource="{Binding BCTraTre.CTBCTRATRE}" 
+                                          AutoGenerateColumns="False" IsReadOnly="True" Margin="0,0,0,10"
+                                          RowStyle="{StaticResource DataGridRowExpand}">
                                     <DataGrid.Columns>
                                         <DataGridTextColumn Header="Mã phiếu trả" Binding="{Binding IDPhieuTra}"/>
                                         <DataGridTextColumn Header="Số ngày trả trễ" Binding="{Binding SoNgayTraTre}"/>
@@ -124,16 +128,6 @@
                                 </DataGrid>
                             </DataTemplate>
                         </DataGrid.RowDetailsTemplate>
-                        <DataGrid.Resources>
-                            <Style TargetType="DataGridRow">
-                                <Setter Property="DetailsVisibility" Value="Collapsed" />
-                                <Style.Triggers>
-                                    <DataTrigger Binding="{Binding IsExpanded, RelativeSource={RelativeSource Self}}" Value="True">
-                                        <Setter Property="DetailsVisibility" Value="Visible" />
-                                    </DataTrigger>
-                                </Style.Triggers>
-                            </Style>
-                        </DataGrid.Resources>
                     </DataGrid>
                 </Grid>
             </TabItem>

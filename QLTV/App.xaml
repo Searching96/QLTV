@@ -8,9 +8,28 @@
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
                 <materialDesign:BundledTheme BaseTheme="Light" PrimaryColor="LightBlue" SecondaryColor="Indigo" />
-
+                <ResourceDictionary Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesignTheme.Shadows.xaml" />
                 <ResourceDictionary Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesign2.Defaults.xaml" />
             </ResourceDictionary.MergedDictionaries>
+
+            <Duration x:Key="ExpandDuration">0:0:0.250</Duration>
+            <Duration x:Key="CollapseDuration">0:0:0.200</Duration>
+
+            <KeyTime x:Key="ExpandKeyTime">0:0:0.250</KeyTime>
+            <KeyTime x:Key="CollapseKeyTime">0:0:0.200</KeyTime>
+
+            <Style x:Key="DataGridRowExpand" TargetType="DataGridRow" BasedOn="{StaticResource MaterialDesignDataGridRow}">
+                <Setter Property="DetailsVisibility" Value="Collapsed" />
+                <Style.Triggers>
+                    <DataTrigger Binding="{Binding IsExpanded}" Value="True">
+                        <Setter Property="DetailsVisibility" Value="Visible"/>
+                    </DataTrigger>
+                    <DataTrigger Binding="{Binding IsExpanded}" Value="False">
+                        <Setter Property="DetailsVisibility" Value="Collapsed"/>
+                    </DataTrigger>
+                </Style.Triggers>
+            </Style>
+
             <Style x:Key="DataDisplayTextBox" TargetType="TextBox" BasedOn="{StaticResource MaterialDesignOutlinedTextBox}">
                 <Setter Property="Padding" Value="5.5"/>
                 <Setter Property="Height" Value="Auto"/>
@@ -35,6 +54,106 @@
                     </DataTrigger>
                 </Style.Triggers>
             </Style>
+
+            <Style x:Key="CustomExpandButtonStyle" TargetType="Button" BasedOn="{StaticResource MaterialDesignRaisedButton}">
+                <Setter Property="ToolTip" Value="Expand/Collapse"/>
+                <Setter Property="ContentTemplate">
+                    <Setter.Value>
+                        <DataTemplate>
+                            <materialDesign:PackIcon
+                                Kind="{Binding RelativeSource={RelativeSource AncestorType=Button}, Path=Tag, Converter={StaticResource ExpandCollapseIconConverter}}"
+                                HorizontalAlignment="Center"
+                                VerticalAlignment="Center"
+                                Foreground="White"
+                                Background="Transparent"
+                                Width="20"
+                                Height="20"/>
+                        </DataTemplate>
+                    </Setter.Value>
+                </Setter>
+            </Style>
+
+            <Style x:Key="MaterialDesignRaisedToggleButton" TargetType="{x:Type ToggleButton}" BasedOn="{StaticResource MaterialDesignRaisedButton}">
+                <Setter Property="Background" Value="{DynamicResource MaterialDesign.Brush.Primary}" />
+                <Setter Property="BorderBrush" Value="{DynamicResource MaterialDesign.Brush.Primary}" />
+                <Setter Property="BorderThickness" Value="1" />
+                <Setter Property="Foreground" Value="{DynamicResource MaterialDesign.Brush.Primary.Foreground}" />
+                <Setter Property="Height" Value="32" />
+                <Setter Property="Padding" Value="16,4,16,4" />
+                <Setter Property="HorizontalContentAlignment" Value="Center" />
+                <Setter Property="VerticalContentAlignment" Value="Center" />
+                <Setter Property="Template">
+                    <Setter.Value>
+                        <ControlTemplate TargetType="{x:Type ToggleButton}">
+                            <Border x:Name="border"
+                        Background="{TemplateBinding Background}"
+                        BorderBrush="{TemplateBinding BorderBrush}"
+                        BorderThickness="{TemplateBinding BorderThickness}"
+                        CornerRadius="{Binding Path=(materialDesign:ButtonAssist.CornerRadius), RelativeSource={RelativeSource TemplatedParent}}"
+                        Effect="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=(materialDesign:ElevationAssist.Elevation), Converter={x:Static materialDesign:ShadowConverter.Instance}}">
+                                <VisualStateManager.VisualStateGroups>
+                                    <VisualStateGroup x:Name="CheckStates">
+                                        <!-- Checked State -->
+                                        <VisualState x:Name="Checked">
+                                            <Storyboard>
+                                                <DoubleAnimationUsingKeyFrames
+                                        Storyboard.TargetName="iconTransform"
+                                        Storyboard.TargetProperty="Angle">
+                                                    <EasingDoubleKeyFrame
+                                            KeyTime="0:0:0.2"
+                                            Value="180" />
+                                                </DoubleAnimationUsingKeyFrames>
+                                            </Storyboard>
+                                        </VisualState>
+                                        <!-- Unchecked State -->
+                                        <VisualState x:Name="Unchecked">
+                                            <Storyboard>
+                                                <DoubleAnimationUsingKeyFrames
+                                        Storyboard.TargetName="iconTransform"
+                                        Storyboard.TargetProperty="Angle">
+                                                    <EasingDoubleKeyFrame
+                                            KeyTime="0:0:0.2"
+                                            Value="0" />
+                                                </DoubleAnimationUsingKeyFrames>
+                                            </Storyboard>
+                                        </VisualState>
+                                    </VisualStateGroup>
+                                </VisualStateManager.VisualStateGroups>
+                                <materialDesign:PackIcon
+                                    x:Name="icon"
+                                    Kind="ChevronDown"
+                                    Width="20"
+                                    Height="20"
+                                    Foreground="White"
+                                    VerticalAlignment="Center"
+                                    HorizontalAlignment="Center"
+                                    RenderTransformOrigin="0.5,0.5">
+                                    <materialDesign:PackIcon.RenderTransform>
+                                        <RotateTransform x:Name="iconTransform" Angle="0" />
+                                    </materialDesign:PackIcon.RenderTransform>
+                                </materialDesign:PackIcon>
+                            </Border>
+                            <ControlTemplate.Triggers>
+                                <Trigger Property="IsMouseOver" Value="True">
+                                    <Setter TargetName="border" Property="materialDesign:ShadowAssist.Darken" Value="True" />
+                                </Trigger>
+                                <Trigger Property="IsKeyboardFocused" Value="True">
+                                    <Setter TargetName="border" Property="materialDesign:ShadowAssist.Darken" Value="True" />
+                                </Trigger>
+                                <Trigger Property="IsEnabled" Value="False">
+                                    <Setter Property="Opacity" Value="0.38" />
+                                </Trigger>
+                                <Trigger Property="IsChecked" Value="True">
+                                    <Setter TargetName="border" Property="Background" Value="{DynamicResource MaterialDesign.Brush.Primary.Dark}" />
+                                </Trigger>
+                            </ControlTemplate.Triggers>
+                        </ControlTemplate>
+                    </Setter.Value>
+                </Setter>
+            </Style>
+
+
+
         </ResourceDictionary>
     </Application.Resources>
 </Application>

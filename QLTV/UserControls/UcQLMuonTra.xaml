@@ -34,12 +34,13 @@
                                  materialDesign:HintAssist.FloatingScale="1"
                                  TextChanged="txtSearchBorrow_TextChanged"/>
                             <Button x:Name="btnAddBorrow" ToolTip="Thêm phiếu mượn" Click="btnAddBorrow_Click"
-                                Style="{StaticResource MaterialDesignRaisedButton}"
+                                    Style="{StaticResource MaterialDesignRaisedButton}"
+                                    ToolTipService.InitialShowDelay="0"
                                 Height="50">
                                 <materialDesign:PackIcon Kind="BookMultipleAdd"
                                 HorizontalAlignment="Center" VerticalAlignment="Center"
                                 Foreground="White" Background="Transparent" Width="20" Height="20"
-                                ToolTipService.InitialShowDelay="0"/>
+                                />
                             </Button>
                         </StackPanel>
                         <ComboBox Style="{StaticResource ModernComboBox}"
@@ -60,6 +61,7 @@
                     <!-- Borrowing DataGrid -->
                     <DataGrid x:Name="dgBorrowings" Grid.Row="1" AutoGenerateColumns="False" 
                               IsReadOnly="True" SelectionMode="Single" Grid.ColumnSpan="2"
+                              RowStyle="{StaticResource DataGridRowExpand}"
                               SelectionUnit="FullRow">
                         <DataGrid.Columns>
                             <materialDesign:DataGridTextColumn Header="Mã phiếu" Binding="{Binding phieuMuon.MaPhieuMuon}"/>
@@ -69,8 +71,18 @@
                                 <DataGridTemplateColumn.CellTemplate>
                                     <DataTemplate>
                                         <StackPanel Orientation="Horizontal">
-                                            <Button Content="Chi tiết" Click="btnViewBorrowDetail_Click" Margin="0,0,5,0"/>
-                                            <Button Content="Xóa" Click="btnDeleteBorrow_Click"/>
+                                            <ToggleButton
+                                                Style="{StaticResource MaterialDesignRaisedToggleButton}"
+                                                Width="52"
+                                                IsChecked="{Binding IsExpanded, Mode=TwoWay}" 
+                                                ToolTip="Chi tiết"
+                                                ToolTipService.InitialShowDelay="0"
+                                                Click="btnViewDetail_Click" Margin="0,0,5,0"/>
+                                            <Button ToolTipService.InitialShowDelay="0" ToolTip="Xóa" Click="btnDeleteBorrow_Click" Style="{StaticResource MaterialDesignRaisedButton}">
+                                                <materialDesign:PackIcon Kind="BookRemoveOutline"
+                                                HorizontalAlignment="Center" VerticalAlignment="Center"
+                                                Foreground="White" Background="Transparent" Width="20" Height="20"/>
+                                            </Button>
                                         </StackPanel>
                                     </DataTemplate>
                                 </DataGridTemplateColumn.CellTemplate>
@@ -88,17 +100,6 @@
                                 </DataGrid>
                             </DataTemplate>
                         </DataGrid.RowDetailsTemplate>
-
-                        <DataGrid.Resources>
-                            <Style TargetType="DataGridRow">
-                                <Setter Property="DetailsVisibility" Value="Collapsed" />
-                                <Style.Triggers>
-                                    <DataTrigger Binding="{Binding IsExpanded, RelativeSource={RelativeSource Self}}" Value="True">
-                                        <Setter Property="DetailsVisibility" Value="Visible" />
-                                    </DataTrigger>
-                                </Style.Triggers>
-                            </Style>
-                        </DataGrid.Resources>
                     </DataGrid>
                 </Grid>
             </TabItem>
@@ -118,17 +119,19 @@
                                  materialDesign:HintAssist.Hint="Tìm kiếm phiếu trả..."
                                  TextChanged="txtSearchReturn_TextChanged"
                                  materialDesign:HintAssist.FloatingScale="1"/>
-                        <Button x:Name="btnAddReturn" ToolTip="Thêm phiếu trả" Click="btnAddReturn_Click" Height="50">
+                        <Button x:Name="btnAddReturn" ToolTip="Thêm phiếu trả" 
+                                Click="btnAddReturn_Click" Height="50"
+                                ToolTipService.InitialShowDelay="0">
                             <materialDesign:PackIcon Kind="BookMinusMultiple"
                                 HorizontalAlignment="Center" VerticalAlignment="Center"
-                                Foreground="White" Background="Transparent" Width="20" Height="20"
-                                ToolTipService.InitialShowDelay="0"/>
+                                Foreground="White" Background="Transparent" Width="20" Height="20"/>
                         </Button>
                     </StackPanel>
 
                     <!-- Returning DataGrid -->
                     <DataGrid x:Name="dgReturns" Grid.Row="1" AutoGenerateColumns="False" 
                               IsReadOnly="True" SelectionMode="Single"
+                              RowStyle="{StaticResource DataGridRowExpand}"
                               SelectionUnit="FullRow">
                         <DataGrid.Columns>
                             <DataGridTextColumn Header="Mã phiếu" Binding="{Binding phieuTra.MaPhieuTra}"/>
@@ -138,8 +141,20 @@
                                 <DataGridTemplateColumn.CellTemplate>
                                     <DataTemplate>
                                         <StackPanel Orientation="Horizontal">
-                                            <Button Content="Chi tiết" Click="btnViewReturnDetail_Click" Margin="0,0,5,0"/>
-                                            <Button Content="Xóa" Click="btnDeleteReturn_Click"/>
+                                            <ToggleButton
+                                                Style="{StaticResource MaterialDesignRaisedToggleButton}"
+                                                Width="52"
+                                                IsChecked="{Binding IsExpanded, Mode=TwoWay}" 
+                                                ToolTip="Chi tiết"
+                                                ToolTipService.InitialShowDelay="0"
+                                                Click="btnViewDetail_Click" Margin="0,0,5,0"/>
+                                            <Button ToolTip="Xóa" Click="btnDeleteReturn_Click" 
+                                                    Style="{StaticResource MaterialDesignRaisedButton}"
+                                                    ToolTipService.InitialShowDelay="0">
+                                                <materialDesign:PackIcon Kind="BookRemoveOutline"
+                                                HorizontalAlignment="Center" VerticalAlignment="Center"
+                                                Foreground="White" Background="Transparent" Width="20" Height="20"/>
+                                            </Button>
                                         </StackPanel>
                                     </DataTemplate>
                                 </DataGridTemplateColumn.CellTemplate>
@@ -159,17 +174,6 @@
                                 </DataGrid>
                             </DataTemplate>
                         </DataGrid.RowDetailsTemplate>
-
-                        <DataGrid.Resources>
-                            <Style TargetType="DataGridRow">
-                                <Setter Property="DetailsVisibility" Value="Collapsed" />
-                                <Style.Triggers>
-                                    <DataTrigger Binding="{Binding IsExpanded, RelativeSource={RelativeSource Self}}" Value="True">
-                                        <Setter Property="DetailsVisibility" Value="Visible" />
-                                    </DataTrigger>
-                                </Style.Triggers>
-                            </Style>
-                        </DataGrid.Resources>
                     </DataGrid>
                 </Grid>
             </TabItem>

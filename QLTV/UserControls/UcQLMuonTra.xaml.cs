@@ -8,6 +8,10 @@ using Microsoft.EntityFrameworkCore;
 using System.Windows.Input;
 using System.ComponentModel;
 using Microsoft.IdentityModel.Tokens;
+using System.Globalization;
+using System.Windows.Data;
+using System.Diagnostics;
+using System.Windows.Controls.Primitives;
 
 namespace QLTV.UserControls
 {
@@ -88,6 +92,7 @@ namespace QLTV.UserControls
     public partial class UcQLMuonTra : UserControl
     {
         private readonly QLTVContext _context;
+        private List<PHIEUMUON> borrowings;
         private ObservableCollection<BorrowViewModel> _borrowings;
         private ObservableCollection<ReturnViewModel> _returns;
 
@@ -95,15 +100,15 @@ namespace QLTV.UserControls
         {
             InitializeComponent();
             _context = new QLTVContext();
-            LoadData(cboLoc.Text ?? "Tất cả");
+            LoadData();
         }
 
-        private async void LoadData(string Loai)
+        private async void LoadData()
         {
             try
             {
                 // Load borrowings with related data, excluding soft-deleted records
-                var borrowings = await _context.PHIEUMUON
+                borrowings = await _context.PHIEUMUON
                     .Include(p => p.IDDocGiaNavigation)
                         .ThenInclude(d => d.IDTaiKhoanNavigation)
                     .Include(p => p.CTPHIEUMUON)
@@ -112,48 +117,15 @@ namespace QLTV.UserControls
                     .Where(p => !p.IsDeleted)
                     .ToListAsync();
 
-                dgBorrowings.ItemsSource = null;
-                switch (Loai)
-                {
-                    case "Chưa trả hết":
-                        {
-                            _borrowings = new ObservableCollection<BorrowViewModel>(
-                                borrowings.Select(b => new BorrowViewModel
-                                {
-                                    phieuMuon = b,
-                                    ctPhieuMuon = new ObservableCollection<CTPHIEUMUON>(b.CTPHIEUMUON),
-                                    IsExpanded = false
-                                })
-                                .Where(b => b.phieuMuon.CTPHIEUMUON.Count != b.phieuMuon.CTPHIEUTRA.Count)
-                            );
-                            break;
-                        }
-                    case "Đã trả hết":
-                        {
-                            _borrowings = new ObservableCollection<BorrowViewModel>(
-                                borrowings.Select(b => new BorrowViewModel
-                                {
-                                    phieuMuon = b,
-                                    ctPhieuMuon = new ObservableCollection<CTPHIEUMUON>(b.CTPHIEUMUON),
-                                    IsExpanded = false
-                                })
-                                .Where(b => b.phieuMuon.CTPHIEUMUON.Count == b.phieuMuon.CTPHIEUTRA.Count)
-                            );
-                            break;
-                        }
-                    default:
-                        {
-                            _borrowings = new ObservableCollection<BorrowViewModel>(
-                                borrowings.Select(b => new BorrowViewModel
-                                {
-                                    phieuMuon = b,
-                                    ctPhieuMuon = new ObservableCollection<CTPHIEUMUON>(b.CTPHIEUMUON),
-                                    IsExpanded = false
-                                })
-                            );
-                            break;
-                        }
-                }
+                var _borrowings = new ObservableCollection<BorrowViewModel>(
+                    borrowings.Select(b => new BorrowViewModel
+                    {
+                        phieuMuon = b,
+                        ctPhieuMuon = new ObservableCollection<CTPHIEUMUON>(b.CTPHIEUMUON),
+                        IsExpanded = false
+                    })
+                );
+
                 dgBorrowings.ItemsSource = _borrowings;
 
                 // Load returns with related data, excluding soft-deleted records
@@ -193,18 +165,21 @@ namespace QLTV.UserControls
             
             if (window.ShowDialog() == true)
             {
-                LoadData(cboLoc.Text ?? "Tất cả");
+                LoadData();
             }
         }
 
-        private void btnViewBorrowDetail_Click(object sender, RoutedEventArgs e)
+        private void btnViewDetail_Click(object sender, RoutedEventArgs e)
         {
-            var button = sender as Button;
+            var button = sender as ToggleButton;
             var row = DataGridRow.GetRowContainingElement(button);
             if (row?.DataContext is BorrowViewModel borrowing)
             {
                 borrowing.IsExpanded = !borrowing.IsExpanded;
-                row.DetailsVisibility = borrowing.IsExpanded ? Visibility.Visible : Visibility.Collapsed;
+            }
+            if (row?.DataContext is ReturnViewModel returning)
+            {
+                returning.IsExpanded = !returning.IsExpanded;
             }
         }
 
@@ -257,18 +232,7 @@ namespace QLTV.UserControls
             
             if (window.ShowDialog() == true)
             {
-                LoadData(cboLoc.Text ?? "Tất cả");
-            }
-        }
-
-        private void btnViewReturnDetail_Click(object sender, RoutedEventArgs e)
-        {
-            var button = sender as Button;
-            var row = DataGridRow.GetRowContainingElement(button);
-            if (row?.DataContext is ReturnViewModel returning)
-            {
-                returning.IsExpanded = !returning.IsExpanded;
-                row.DetailsVisibility = returning.IsExpanded ? Visibility.Visible : Visibility.Collapsed;
+                LoadData();
             }
         }
 
@@ -309,13 +273,7 @@ namespace QLTV.UserControls
 
         private void txtSearchBorrow_TextChanged(object sender, TextChangedEventArgs e)
         {
-            if (_borrowings == null) return;
-
-            var searchText = txtSearchBorrow.Text.Trim().ToLower();
-
-            dgBorrowings.ItemsSource = null;
-
-            BorrowSearch(searchText);
+            BorrowSearch();
         }
 
         private void txtSearchReturn_TextChanged(object sender, TextChangedEventArgs e)
@@ -338,8 +296,56 @@ namespace QLTV.UserControls
             dgReturns.ItemsSource = filteredReturns;
         }
 
-        private void BorrowSearch(string searchText)
+        private void BorrowSearch(string Loai = "")
         {
+            switch (Loai)
+            {
+                case "Chưa trả hết":
+                    {
+                        _borrowings = new ObservableCollection<BorrowViewModel>(
+                            borrowings.Select(b => new BorrowViewModel
+                            {
+                                phieuMuon = b,
+                                ctPhieuMuon = new ObservableCollection<CTPHIEUMUON>(b.CTPHIEUMUON),
+                                IsExpanded = false
+                            })
+                            .Where(b => b.phieuMuon.CTPHIEUMUON.Count != b.phieuMuon.CTPHIEUTRA.Count)
+                        );
+                        break;
+                    }
+                case "Đã trả hết":
+                    {
+                        _borrowings = new ObservableCollection<BorrowViewModel>(
+                            borrowings.Select(b => new BorrowViewModel
+                            {
+                                phieuMuon = b,
+                                ctPhieuMuon = new ObservableCollection<CTPHIEUMUON>(b.CTPHIEUMUON),
+                                IsExpanded = false
+                            })
+                            .Where(b => b.phieuMuon.CTPHIEUMUON.Count == b.phieuMuon.CTPHIEUTRA.Count)
+                        );
+                        break;
+                    }
+                default:
+                    {
+                        _borrowings = new ObservableCollection<BorrowViewModel>(
+                            borrowings.Select(b => new BorrowViewModel
+                            {
+                                phieuMuon = b,
+                                ctPhieuMuon = new ObservableCollection<CTPHIEUMUON>(b.CTPHIEUMUON),
+                                IsExpanded = false
+                            })
+                        );
+                        break;
+                    }
+            }
+
+            if (_borrowings == null) return;
+
+            var searchText = txtSearchBorrow.Text.Trim().ToLower();
+
+            dgBorrowings.ItemsSource = null;
+
             IEnumerable<BorrowViewModel> filteredBorrows = _borrowings;
 
             if (!string.IsNullOrEmpty(searchText))
@@ -358,8 +364,7 @@ namespace QLTV.UserControls
             if (_context == null) return;
             ComboBoxItem cbi = (ComboBoxItem)cboLoc.SelectedItem;
             string selectedText = cbi.Content.ToString();
-            LoadData(selectedText ?? "Tất cả");
-            BorrowSearch(txtSearchBorrow.Text.Trim().ToLower());
+            BorrowSearch(selectedText);
         }
     }
 }

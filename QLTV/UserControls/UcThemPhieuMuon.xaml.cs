@@ -520,8 +520,7 @@ namespace QLTV.UserControls
                 icDocGiaError.Visibility = Visibility.Visible;
                 return false;
             }
-            if (_docGia.PHIEUMUON.Any(pm => pm.CTPHIEUMUON.Count - pm.CTPHIEUTRA.Count + _selectedBooks.Count >= _docGia.IDLoaiDocGiaNavigation.SoSachMuonToiDa)
-                || _selectedBooks.Count >= _docGia.IDLoaiDocGiaNavigation.SoSachMuonToiDa)
+            if (_docGia.PHIEUMUON.Sum(pm => pm.CTPHIEUMUON.Count - pm.CTPHIEUTRA.Count) + _selectedBooks.Count >= _docGia.IDLoaiDocGiaNavigation.SoSachMuonToiDa)
             {
                 icDocGiaError.ToolTip = $"Độc giả này không thể mượn quá {_docGia.IDLoaiDocGiaNavigation.SoSachMuonToiDa} quyển sách.";
                 icDocGiaError.Visibility = Visibility.Visible;
