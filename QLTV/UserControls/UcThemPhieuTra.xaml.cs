@@ -335,7 +335,7 @@ namespace QLTV.UserControls
                         if (DateTime.Now > borrowDetail.HanTra)
                         {
                             int daysLate = (int)(DateTime.Now - borrowDetail.HanTra).TotalDays;
-                            ctpt.TienPhat = daysLate * 5000;
+                            ctpt.TienPhat = daysLate * _context.THAMSO.OrderBy(ts => ts.ID).Last().TienPhatTraTreMotNgay;
                         }
 
                         if (returnBook.TinhTrangTra != returnBook.TinhTrangMuon && book != null)
