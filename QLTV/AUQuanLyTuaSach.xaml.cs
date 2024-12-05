@@ -904,8 +904,15 @@ namespace QLTV
 
         private void btnXoaChon_Click(object sender, RoutedEventArgs e)
         {
+            if (lstSelectedMaTuaSach.Count == 0)
+            {
+                MessageBox.Show("Chưa chọn tựa sách để xóa.", "Thông báo", 
+                    MessageBoxButton.OK, MessageBoxImage.Information);
+                return;
+            }
+
             MessageBoxResult mbrXacNhan = MessageBox.Show(
-                $"Bạn có chắc chắn muốn xóa các tựa sách đã chọn?",
+                $"Bạn có chắc chắn muốn xóa {lstSelectedMaTuaSach.Count} tựa sách đã chọn?",
                 "Xác nhận xóa",
                 MessageBoxButton.YesNo,
                 MessageBoxImage.Warning);

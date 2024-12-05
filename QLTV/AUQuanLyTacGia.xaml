@@ -155,7 +155,7 @@
                     <materialDesign:PackIcon Kind="Refresh" Width="24" Height="24"/>
                 </Button>
 
-                <!--<Button x:Name="btnXoaChon"
+                <Button x:Name="btnXoaChon"
                             DockPanel.Dock="Right"
                             ToolTip="Xóa Tác Giả Đã Chọn" 
                             Margin="0, 0, 10, 0" 
@@ -163,7 +163,7 @@
                             Width="30"
                             Padding="0">
                     <materialDesign:PackIcon Kind="DeleteSweep" Width="24" Height="24"/>
-                </Button>-->
+                </Button>
 
                 <materialDesign:SplitButton VerticalAlignment="Center"
                                             HorizontalAlignment="Right"
@@ -228,9 +228,22 @@
         </Grid>
 
         <DataGrid x:Name="dgTacGia" Grid.Row="2" SelectionMode="Single"
-                  SelectionUnit="FullRow" IsReadOnly="true" AutoGenerateColumns="False"
+                  SelectionUnit="FullRow" IsReadOnly="false" AutoGenerateColumns="False"
                   SelectionChanged="dgTacGia_SelectionChanged">
             <DataGrid.Columns>
+                <!-- Cột Checkbox "Select All" ở header -->
+                <DataGridTemplateColumn Width="50">
+                    <DataGridTemplateColumn.Header>
+                        <CheckBox x:Name="cbxSelectAll" Checked="btnSelectAll_Checked" Unchecked="btnSelectAll_Unchecked" />
+                    </DataGridTemplateColumn.Header>
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <CheckBox IsChecked="{Binding IsSelected}" />
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
+
+                <!-- Các cột thông tin khác -->
                 <DataGridTextColumn Header="Mã Tác Giả:" Width="*" Binding="{Binding MaTacGia}"/>
                 <DataGridTextColumn Header="Tên Tác Giả:" Width="*" Binding="{Binding TenTacGia}"/>
                 <DataGridTextColumn Header="Năm Sinh:" Width="*" Binding="{Binding NamSinh}"/>

@@ -7,9 +7,12 @@ using OfficeOpenXml.Style;
 using QLTV.Models;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.ComponentModel;
 using System.Globalization;
 using System.IO;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
@@ -23,6 +26,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 using System.Windows.Xps;
+using static QLTV.AUQuanLyTuaSach;
 
 namespace QLTV
 {
@@ -31,27 +35,58 @@ namespace QLTV
     /// </summary>
     public partial class AUQuanLyTacGia : UserControl
     {
+        private List<TacGiaViewModel> _fullDataSource; // Nguồn dữ liệu đầy đủ
+
         public AUQuanLyTacGia()
         {
             InitializeComponent();
-            ExcelPackage.LicenseContext = LicenseContext.NonCommercial;
+            ExcelPackage.LicenseContext = OfficeOpenXml.LicenseContext.NonCommercial;
             LoadTacGia();
+        }
+
+        public class TacGiaViewModel : INotifyPropertyChanged
+        {
+            public string MaTacGia { get; set; }
+            public string TenTacGia { get; set; }
+            public int NamSinh { get; set; }
+            public string QuocTich { get; set; }
+
+            private bool _isSelected;
+            public bool IsSelected
+            {
+                get => _isSelected;
+                set
+                {
+                    if (_isSelected != value)
+                    {
+                        _isSelected = value;
+                        OnPropertyChanged();
+                    }
+                }
+            }
+
+            public event PropertyChangedEventHandler PropertyChanged;
+
+            protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)
+            {
+                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+            }
         }
 
         private void LoadTacGia()
         {
             using (var context = new QLTVContext())
             {
-                var dsTacGia = context.TACGIA
-                                      .Where(tg => !tg.IsDeleted)
-                                      .Select(tg => new
-                                      {
-                                          tg.MaTacGia,
-                                          tg.TenTacGia,
-                                          tg.NamSinh,
-                                          tg.QuocTich,
-                                      })
-                                      .ToList();
+                List<TacGiaViewModel> dsTacGia = context.TACGIA
+                    .Where(tg => !tg.IsDeleted)
+                    .Select(tg => new TacGiaViewModel
+                    {
+                        MaTacGia = tg.MaTacGia,
+                        TenTacGia = tg.TenTacGia,
+                        NamSinh = tg.NamSinh,
+                        QuocTich = tg.QuocTich,
+                    })
+                    .ToList();
 
                 dgTacGia.ItemsSource = dsTacGia;
             }
@@ -486,6 +521,91 @@ namespace QLTV
             }
 
             icQuocTichError.Visibility = Visibility.Collapsed;
+        }
+
+        private void btnSelectAll_Checked(object sender, RoutedEventArgs e)
+        {
+            var tacGiaList = dgTacGia.ItemsSource as List<TacGiaViewModel>;
+            if (tacGiaList != null)
+            {
+                foreach (var tacGia in tacGiaList)
+                {
+                    tacGia.IsSelected = true;
+                }
+                // Refresh DataGrid để cập nhật giao diện => đã dùng OnPropChange
+            }
+        }
+        private void btnSelectAll_Unchecked(object sender, RoutedEventArgs e)
+        {
+            var tacGiaList = dgTacGia.ItemsSource as List<TacGiaViewModel>;
+            if (tacGiaList != null)
+            {
+                foreach (var tacGia in tacGiaList)
+                {
+                    tacGia.IsSelected = false;
+                }
+                // Refresh DataGrid để cập nhật giao diện => đã dùng OnPropChange
+            }
+        }
+
+        private void btnXoaChon_Click(object sender, RoutedEventArgs e)
+        {
+            // Lấy danh sách các tác giả được chọn
+            List<TacGiaViewModel> dsTacGia = dgTacGia.ItemsSource as List<TacGiaViewModel>;
+            var lstSelectedMaTacGia = dsTacGia.Where(tg => tg.IsSelected)
+                .Select(tg => tg.MaTacGia)
+                .ToList();
+
+            if (lstSelectedMaTacGia.Count == 0)
+            {
+                MessageBox.Show("Chưa chọn tác giả để xóa.", "Thông báo", MessageBoxButton.OK, MessageBoxImage.Information);
+                return;
+            }
+
+            MessageBoxResult mbrXacNhan = MessageBox.Show(
+                $"Bạn có chắc chắn muốn xóa {lstSelectedMaTacGia.Count} tác giả đã chọn?",
+                "Xác nhận xóa",
+                MessageBoxButton.YesNo,
+                MessageBoxImage.Warning);
+
+            if (mbrXacNhan == MessageBoxResult.Yes)
+            {
+                using (var context = new QLTVContext())
+                {
+                    using (var transaction = context.Database.BeginTransaction()) // Đảm bảo đồng bộ các thao tác
+                    {
+                        try
+                        {
+                            foreach (var maTacGia in lstSelectedMaTacGia)
+                            {
+                                var tacGiaToDelete = context.TACGIA
+                                    .Include(ts => ts.TUASACH_TACGIA)
+                                    .FirstOrDefault(tg => tg.MaTacGia == maTacGia);
+
+                                if (tacGiaToDelete != null)
+                                {
+                                    context.TUASACH_TACGIA.RemoveRange(tacGiaToDelete.TUASACH_TACGIA);
+                                    tacGiaToDelete.IsDeleted = true;
+                                }
+                            }
+
+                            // Lưu tất cả thay đổi trong một giao dịch
+                            context.SaveChanges();
+                            transaction.Commit(); // Commit giao dịch
+
+                            MessageBox.Show($"Đã xóa thành công các tác giả được chọn.", "Thông báo",
+                                MessageBoxButton.OK, MessageBoxImage.Information);
+
+                            LoadTacGia();
+                        }
+                        catch (Exception ex)
+                        {
+                            transaction.Rollback(); // Rollback giao dịch nếu có lỗi
+                            MessageBox.Show($"Có lỗi xảy ra: {ex.Message}", "Lỗi", MessageBoxButton.OK, MessageBoxImage.Error);
+                        }
+                    }
+                }
+            }
         }
     }
 }
