@@ -76,12 +76,13 @@
          TextChanged="tbxTenTaiKhoan_TextChanged"/>
 
             <materialDesign:PackIcon x:Name="icTenTaiKhoanError" Grid.Row="0"
-                         Style="{StaticResource ErrorIcon}"/>
+                         Style="{StaticResource ErrorIcon}"
+                                     Margin="0,0,10,0"/>
 
             <ComboBox x:Name="cbbTenLoaiDocGia" Grid.Row="1"
                       Style="{StaticResource ModernComboBox}"
          Margin="5"
-                      materialDesign:HintAssist.Hint="Tên Loại Độc Giả"
+                      materialDesign:HintAssist.Hint="Loại Độc Giả"
                       materialDesign:TextFieldAssist.HasLeadingIcon="True"
                       materialDesign:TextFieldAssist.LeadingIcon="AccountGroup"
                       IsEditable="True" 
@@ -93,9 +94,9 @@
 
             <materialDesign:PackIcon x:Name="icTenLoaiDocGiaError" Grid.Row="1"
                                      Style="{StaticResource ErrorIcon}"
-                                     Margin="10, 0, 30, 10"/>
+                                     Margin="0,0,10,0"/>
 
-            
+
 
             <TextBox x:Name="tbxGioiThieu" Grid.Row="2"
                      Style="{StaticResource DataDisplayTextBox}"
@@ -107,7 +108,9 @@
                      TextChanged="tbxGioiThieu_TextChanged"/>
 
             <materialDesign:PackIcon x:Name="icGioiThieuError" Grid.Row="2"
-                                     Style="{StaticResource ErrorIcon}"/>
+                                     Style="{StaticResource ErrorIcon}"
+                                     Margin="0,0,10,0"/>
+
 
             <TextBox x:Name="tbxTongNo" Grid.Row="3"
          Style="{StaticResource DataDisplayTextBox}"
@@ -119,7 +122,9 @@
          TextChanged="tbxTongNo_TextChanged"/>
 
             <materialDesign:PackIcon x:Name="icTongNoError" Grid.Row="3"
-                         Style="{StaticResource ErrorIcon}"/>
+                         Style="{StaticResource ErrorIcon}"
+                         Margin="0,0,10,0"/>
+
 
             <DatePicker x:Name="dpNgayLapThe" Grid.Row="4"
                         Style="{StaticResource ModernDatePicker}"
@@ -137,7 +142,7 @@
 
             <materialDesign:PackIcon x:Name="icNgayLapTheError" Grid.Row="4"
                                      Style="{StaticResource ErrorIcon}"
-                                     Margin="10, 0, 35, 10"/>
+                                     Margin="0,0,10,0"/>
 
 
 
@@ -157,7 +162,7 @@
 
             <materialDesign:PackIcon x:Name="icNgayHetHanErrorr" Grid.Row="5"
                          Style="{StaticResource ErrorIcon}"
-                         Margin="10, 0, 35, 10"/>
+                         Margin="0,0,10,0"/>
         </Grid>
         <Button x:Name="btnThem" Grid.Row="2" Content="Thêm" Margin="0, 5, 0, 5"
                 HorizontalAlignment="Center" VerticalAlignment="Center" Click="btnThem_Click"/>

@@ -14,11 +14,19 @@ namespace QLTV
 {
     public partial class AWThemDocGia : Window
     {
-        public AWThemDocGia()
+        private string _tenTaiKhoan;
+        private string _tenLoaiDocGia;
+
+        public AWThemDocGia(string tenTaiKhoan, string tenLoaiDocGia)
         {
             InitializeComponent();
+            _tenTaiKhoan = tenTaiKhoan;
+            _tenLoaiDocGia = tenLoaiDocGia;
             LoadLoaiDocGia();
             SetDefaultDates();
+
+            tbxTenTaiKhoan.Text = _tenTaiKhoan;
+            cbbTenLoaiDocGia.SelectedItem = _tenLoaiDocGia;
         }
 
         private void SetDefaultDates()

@@ -31,20 +31,20 @@
 
         <Style x:Key="ModernTextBox" TargetType="TextBox" BasedOn="{StaticResource MaterialDesignOutlinedTextBox}">
             <Setter Property="Padding" Value="5.5"/>
-            <Setter Property="Height" Value="Auto"/>
+            <Setter Property="Height" Value="35"/>
             <Setter Property="materialDesign:HintAssist.FloatingScale" Value="0.8"/>
             <Setter Property="materialDesign:TextFieldAssist.HasClearButton" Value="True"/>
         </Style>
 
         <Style x:Key="ModernComboBox" TargetType="ComboBox" BasedOn="{StaticResource MaterialDesignOutlinedComboBox}">
             <Setter Property="Padding" Value="5.5"/>
-            <Setter Property="Height" Value="Auto"/>
+            <Setter Property="Height" Value="35"/>
             <Setter Property="materialDesign:HintAssist.FloatingScale" Value="0.8"/>
         </Style>
 
         <Style x:Key="ModernDatePicker" TargetType="DatePicker" BasedOn="{StaticResource MaterialDesignOutlinedDatePicker}">
             <Setter Property="Padding" Value="5.5"/>
-            <Setter Property="Height" Value="Auto"/>
+            <Setter Property="Height" Value="35"/>
             <Setter Property="materialDesign:HintAssist.FloatingScale" Value="0.8"/>
         </Style>
 
@@ -88,12 +88,6 @@
                     <Button Style="{StaticResource MaterialDesignIconButton}">
                         <materialDesign:PackIcon Kind="Settings"/>
                     </Button>
-                    <Button Style="{StaticResource MaterialDesignIconButton}" 
-        ContextMenu="{StaticResource ExportMenu}" 
-        Click="OpenExportMenu_Click">
-                        <materialDesign:PackIcon Kind="ImportExport"/>
-                    </Button>
-
                 </StackPanel>
             </DockPanel>
         </Grid>
@@ -143,19 +137,23 @@
                                 <RowDefinition Height="Auto"/>
                             </Grid.RowDefinitions>
 
-                            <TextBox Grid.Row="0" Grid.Column="0" Margin="0,5,5,0"
-                            x:Name="IDTaiKhoan"
-                            Style="{StaticResource ModernTextBox}"
-                            materialDesign:HintAssist.Hint="ID Tài Khoản"
-                            materialDesign:TextFieldAssist.HasLeadingIcon="True"
-                            materialDesign:TextFieldAssist.LeadingIcon="Account"/>
+                            <ComboBox Grid.Row="0" Grid.Column="0" Margin="0,5,5,0"
+          x:Name="TenTaiKhoanComboBox"
+          Style="{StaticResource ModernComboBox}"
+          materialDesign:HintAssist.Hint="Tên Tài Khoản"
+          materialDesign:TextFieldAssist.HasLeadingIcon="True"
+          materialDesign:TextFieldAssist.LeadingIcon="Account"
+          IsEditable="True"
+          ItemsSource="{Binding TenTaiKhoanList}"/>
 
-                            <TextBox Grid.Row="0" Grid.Column="1" Margin="0,5,5,0"
-                 x:Name="IDLoaiDocGia"
-                 Style="{StaticResource ModernTextBox}"
-                 materialDesign:HintAssist.Hint="ID Loại Độc Giả"
-                     materialDesign:TextFieldAssist.HasLeadingIcon="True"
-                     materialDesign:TextFieldAssist.LeadingIcon="AccountGroup"/>
+                            <ComboBox Grid.Row="0" Grid.Column="1" Margin="0,5,5,0"
+          x:Name="TenLoaiDocGiaComboBox"
+          Style="{StaticResource ModernComboBox}"
+          materialDesign:HintAssist.Hint="Loại Độc Giả"
+          materialDesign:TextFieldAssist.HasLeadingIcon="True"
+          materialDesign:TextFieldAssist.LeadingIcon="AccountGroup"
+          IsEditable="True"
+          ItemsSource="{Binding TenLoaiDocGiaList}"/>
 
                             <DatePicker Grid.Row="0" Grid.Column="2" Margin="0,5,0,0"
                     x:Name="NgayLapTheDatePicker"
@@ -188,9 +186,6 @@
                                 <Button Content="Thêm" Padding="10,5" Margin="0,0,5,0" Click="AddReader_Click"/>
                                 <Button Content="Cập nhật" Padding="10,5" Margin="0,0,5,0" Click="UpdateReader_Click"/>
                                 <Button Content="Xóa" Padding="10,5" Margin="0,0,5,0" Click="DeleteReader_Click"/>
-                                <!--<Button Content="Import Excel" Padding="10,5" Margin="0,0,5,0" Click="ImportExcel_Click"/>
-                                <Button Content="Export Excel" Padding="10,5" Margin="0,0,5,0" Click="ExportExcel_Click"/>
-                                <Button Content="Export PDF" Padding="10,5" Click="ExportPDF_Click"/>-->
                             </StackPanel>
                         </Grid>
                     </Border>
@@ -202,6 +197,7 @@
                             <ColumnDefinition Width="114.493"/>
                             <ColumnDefinition Width="Auto"/>
                             <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="Auto"/>
                             <ColumnDefinition Width="Auto"/>
                             <ColumnDefinition Width="Auto"/>
                         </Grid.ColumnDefinitions>
@@ -219,12 +215,18 @@
 
                         <ComboBox x:Name="TTDGSearchCriteriaComboBox" Grid.Column="4" Style="{StaticResource ModernComboBox}" materialDesign:HintAssist.Hint="Thuộc Tính" materialDesign:HintAssist.FloatingScale="0.8">
                             <ComboBoxItem Content="Mã Độc Giả"/>
-                            <ComboBoxItem Content="ID Tài Khoản"/>
-                            <ComboBoxItem Content="ID Loại Độc Giả"/>
+                            <ComboBoxItem Content="Tên Tài Khoản"/>
+                            <ComboBoxItem Content="Loại Độc Giả"/>
                         </ComboBox>
 
                         <Button x:Name="TTDGSearchButton" Grid.Column="5" Click="TTDGSearchButton_Click" Style="{StaticResource MaterialDesignFlatButton}">
                             <materialDesign:PackIcon Kind="Magnify" Width="20" Height="20"/>
+                        </Button>
+
+                        <Button Grid.Column="6" Style="{StaticResource MaterialDesignIconButton}" 
+ContextMenu="{StaticResource ExportMenu}" 
+Click="OpenExportMenu_Click">
+                            <materialDesign:PackIcon Kind="ImportExport"/>
                         </Button>
                     </Grid>
 
@@ -241,8 +243,8 @@
   ScrollViewer.CanContentScroll="True" Grid.ColumnSpan="2">
                         <DataGrid.Columns>
                             <DataGridTextColumn Header="Mã Độc Giả" Binding="{Binding MaDocGia}"/>
-                            <DataGridTextColumn Header="ID Tài Khoản" Binding="{Binding IDTaiKhoan}"/>
-                            <DataGridTextColumn Header="ID Loại Độc Giả" Binding="{Binding IDLoaiDocGia}"/>
+                            <DataGridTextColumn Header="Tên Tài Khoản" Binding="{Binding IDTaiKhoanNavigation.TenTaiKhoan}"/>
+                            <DataGridTextColumn Header="Loại Độc Giả" Binding="{Binding IDLoaiDocGiaNavigation.TenLoaiDocGia}"/>
                             <DataGridTextColumn Header="Ngày Lập Thẻ" Binding="{Binding NgayLapThe, StringFormat=\{0:dd/MM/yyyy\}}"/>
                             <DataGridTextColumn Header="Ngày Hết Hạn" Binding="{Binding NgayHetHan, StringFormat=\{0:dd/MM/yyyy\}}"/>
                             <DataGridTextColumn Header="Tổng nợ" Binding="{Binding TongNo}"/>
@@ -291,7 +293,7 @@
                             <TextBox Grid.Row="0" Grid.Column="0" Margin="0,5,5,0"
                          x:Name="TenLoaiDocGiaTextBox"
                          Style="{StaticResource ModernTextBox}"
-                         materialDesign:HintAssist.Hint="Tên Loại Độc Giả"
+                         materialDesign:HintAssist.Hint="Loại Độc Giả"
                          materialDesign:TextFieldAssist.HasLeadingIcon="True"
                          materialDesign:TextFieldAssist.LeadingIcon="AccountGroup"/>
 
@@ -354,7 +356,7 @@
                   SelectionChanged="ReaderTypesDataGrid_SelectionChanged">
                         <DataGrid.Columns>
                             <DataGridTextColumn Header="Mã Loại Độc Giả" Binding="{Binding MaLoaiDocGia}"/>
-                            <DataGridTextColumn Header="Tên Loại Độc Giả" Binding="{Binding TenLoaiDocGia}"/>
+                            <DataGridTextColumn Header="Loại Độc Giả" Binding="{Binding TenLoaiDocGia}"/>
                             <DataGridTextColumn Header="Số Sách Mượn Tối Đa" Binding="{Binding SoSachMuonToiDa}"/>
                         </DataGrid.Columns>
                     </DataGrid>
