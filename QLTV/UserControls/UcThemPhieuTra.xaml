@@ -40,7 +40,8 @@
             </Grid.RowDefinitions>
             <TextBlock Text="Sách trả:" Margin="0,0,0,5"/>
             <DataGrid Grid.Row="1" x:Name="dgBooks" 
-                      AutoGenerateColumns="False" 
+                      AutoGenerateColumns="False"
+                      CanUserAddRows="False"
                       Margin="0,0,0,10"
                       VerticalContentAlignment="Center"
                       HorizontalContentAlignment="Center">
@@ -57,12 +58,19 @@
                                       Binding="{Binding HanTra, StringFormat=dd/MM/yyyy}"
                                       IsReadOnly="True"/>
                     <DataGridTextColumn Header="Tình trạng mượn" 
-                                      Binding="{Binding BorrowStatus}"
+                                      Binding="{Binding TinhTrangMuon.TenTinhTrang}"
                                       IsReadOnly="True"/>
-                    <DataGridComboBoxColumn Header="Tình trạng trả" 
-                                          x:Name="colTinhTrangTra"
-                                          SelectedItemBinding="{Binding TinhTrangTra, UpdateSourceTrigger=PropertyChanged}"/>
-                    <DataGridTextColumn Header="Ghi chú" 
+                    <materialDesign:DataGridComboBoxColumn Header="Tình trạng trả"
+                                      x:Name="colTinhTrangTra"
+                                      DisplayMemberPath="TenTinhTrang"
+                                      SelectedValuePath=""
+                                      materialDesign:ValidationAssist.HorizontalAlignment="Right"
+                                      materialDesign:ValidationAssist.UsePopup="True"
+                                      materialDesign:ValidationAssist.PopupPlacement="Bottom"
+                                      SelectedValueBinding="{Binding TinhTrangTra, UpdateSourceTrigger=PropertyChanged, ValidatesOnDataErrors=True}" />
+                    <materialDesign:DataGridTextColumn Header="Ghi chú"
+                                      Foreground="{DynamicResource SecondaryHueMidBrush}"
+                                      Width="Auto"
                                       Binding="{Binding GhiChu, UpdateSourceTrigger=PropertyChanged}"/>
                 </DataGrid.Columns>
             </DataGrid>

@@ -95,7 +95,7 @@
                                         <materialDesign:DataGridTextColumn Header="Mã sách" Binding="{Binding IDSachNavigation.MaSach}"/>
                                         <materialDesign:DataGridTextColumn Header="Tên sách" Binding="{Binding IDSachNavigation.IDTuaSachNavigation.TenTuaSach}"/>
                                         <materialDesign:DataGridTextColumn Header="Hạn trả" Binding="{Binding HanTra, StringFormat=dd/MM/yyyy}"/>
-                                        <materialDesign:DataGridTextColumn Header="Tình trạng" Binding="{Binding TinhTrangMuon}"/>
+                                        <materialDesign:DataGridTextColumn Header="Tình trạng" Binding="{Binding IDTinhTrangMuonNavigation.TenTinhTrang}"/>
                                     </DataGrid.Columns>
                                 </DataGrid>
                             </DataTemplate>
@@ -168,7 +168,7 @@
                                         <materialDesign:DataGridTextColumn Header="Tên sách" Binding="{Binding IDSachNavigation.IDTuaSachNavigation.TenTuaSach}"/>
                                         <materialDesign:DataGridTextColumn Header="Số ngày mượn" Binding="{Binding SoNgayMuon}"/>
                                         <materialDesign:DataGridTextColumn Header="Tiền phạt" Binding="{Binding TienPhat, StringFormat=N0}"/>
-                                        <materialDesign:DataGridTextColumn Header="Tình trạng" Binding="{Binding TinhTrangTra}"/>
+                                        <materialDesign:DataGridTextColumn Header="Tình trạng" Binding="{Binding IDTinhTrangTraNavigation.TenTinhTrang}"/>
                                         <materialDesign:DataGridTextColumn Header="Ghi chú" Binding="{Binding GhiChu}"/>
                                     </DataGrid.Columns>
                                 </DataGrid>

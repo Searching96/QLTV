@@ -21,5 +21,7 @@ public partial class PHIEUMUON
 
     public virtual ICollection<CTPHIEUTRA> CTPHIEUTRA { get; set; } = new List<CTPHIEUTRA>();
 
+    public virtual ICollection<DANHGIA> DANHGIA { get; set; } = new List<DANHGIA>();
+
     public virtual DOCGIA IDDocGiaNavigation { get; set; } = null!;
 }

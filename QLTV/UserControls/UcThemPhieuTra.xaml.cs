@@ -5,28 +5,129 @@ using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
 using Microsoft.EntityFrameworkCore;
-using System.Dynamic;
 using System.Windows.Data;
 using System.Globalization;
 using System.Text;
+using System.ComponentModel;
+using System.Runtime.CompilerServices;
 
 namespace QLTV.UserControls
 {
+
+    public class ReturnDetailModel : INotifyPropertyChanged, IDataErrorInfo
+    {
+        private CTPHIEUMUON ctPhieuMuon;
+        public CTPHIEUMUON CTPhieuMuon
+        {
+            get => ctPhieuMuon;
+            set
+            {
+                ctPhieuMuon = value;
+                OnPropertyChanged();
+            }
+        }
+
+        private CTPHIEUTRA ctPhieuTra;
+        public CTPHIEUTRA CTPhieuTra
+        {
+            get => ctPhieuTra;
+            set
+            {
+                ctPhieuTra = value;
+                OnPropertyChanged();
+            }
+        }
+
+        private bool isSelected;
+        public bool IsSelected
+        {
+            get => isSelected;
+            set
+            {
+                isSelected = value;
+                OnPropertyChanged();
+            }
+        }
+
+        private bool isValid;
+        public bool IsValid
+        {
+            get => isValid;
+            set
+            {
+                isValid = value;
+                OnPropertyChanged();
+            }
+        }
+
+        public TINHTRANG TinhTrangMuon => ctPhieuMuon.IDTinhTrangMuonNavigation;
+        public TINHTRANG TinhTrangTra
+        {
+            get => ctPhieuTra.IDTinhTrangTraNavigation;
+            set
+            {
+                ctPhieuTra.IDTinhTrangTraNavigation = value;
+                OnPropertyChanged();
+            }
+        }
+
+        string IDataErrorInfo.this[string columnName]
+        {
+            get
+            {
+                if (columnName == nameof(TinhTrangTra))
+                {
+                    if (TinhTrangTra == null)
+                    {
+                        isValid = false;
+                        return "Vui lòng chọn tình trạng trả.";
+                    }
+
+                    if (TinhTrangTra.MucHuHong < TinhTrangMuon.MucHuHong)
+                    {
+                        isValid = false;
+                        return "Tình trạng trả không được tốt hơn tình trạng mượn.";
+                    }
+                    isValid = true;
+                    return null;
+                }
+                return null;
+            }
+        }
+
+        string IDataErrorInfo.Error => throw new NotImplementedException();
+
+        public string MaSach => ctPhieuTra.IDSachNavigation?.MaSach ?? "Không tồn tại";
+        public string TenSach => ctPhieuTra.IDSachNavigation?.IDTuaSachNavigation?.TenTuaSach ?? "Không tồn tại";
+        public DateTime HanTra => ctPhieuMuon.HanTra;
+        public string GhiChu
+        {
+            get => ctPhieuTra.GhiChu;
+            set
+            {
+                ctPhieuTra.GhiChu = value;
+                OnPropertyChanged();
+            }
+        }
+
+        public event PropertyChangedEventHandler? PropertyChanged;
+
+        protected void OnPropertyChanged([CallerMemberName] string propertyName = null)
+        {
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+        }
+    }
+
     public partial class UcThemPhieuTra : UserControl
     {
         private readonly QLTVContext _context;
-        private ObservableCollection<dynamic> _returnDetails;
+        private ObservableCollection<ReturnDetailModel> _returnDetails;
 
         public UcThemPhieuTra()
         {
             InitializeComponent();
             _context = new QLTVContext();
-            _returnDetails = new ObservableCollection<dynamic>();
-            dgBooks.ItemsSource = _returnDetails;
-
-            var tinhTrangList = new[] { "Tốt", "Hư hỏng nhẹ", "Hư hỏng nặng", "Mất sách" };
-            colTinhTrangTra.ItemsSource = tinhTrangList;
-
+            _returnDetails = new ObservableCollection<ReturnDetailModel>();
             LoadData();
         }
 
@@ -55,6 +156,10 @@ namespace QLTV.UserControls
                                 .ThenInclude(s => s.IDTuaSachNavigation)
                     .Include(dg => dg.PHIEUMUON.Where(pm => pm.CTPHIEUMUON.Count != pm.CTPHIEUTRA.Count))
                         .ThenInclude(pm => pm.CTPHIEUTRA)
+                    .Include(dg => dg.PHIEUMUON.Where(pm => pm.CTPHIEUMUON.Count != pm.CTPHIEUTRA.Count))
+                        .ThenInclude(pm => pm.CTPHIEUMUON)
+                            .ThenInclude(ct => ct.IDSachNavigation)
+                                .ThenInclude(s => s.IDTinhTrangNavigation)
                     .Include(dg => dg.IDTaiKhoanNavigation)
                     .ToListAsync();
 
@@ -67,6 +172,10 @@ namespace QLTV.UserControls
                         )
                     ))
                     .ToList();
+
+                //Load tất cả các tình trạng
+                var tinhTrangList = _context.TINHTRANG.ToList();
+                colTinhTrangTra.ItemsSource = tinhTrangList;
 
 
                 var viewSource = new CollectionViewSource();
@@ -111,33 +220,31 @@ namespace QLTV.UserControls
             }
 
             //Khởi tạo các chi tiết phiếu mượn tương ứng
-
             _returnDetails.Clear();
             foreach (var ctpm in selectedReader.PHIEUMUON.Where(pm => pm.CTPHIEUMUON.Count != pm.CTPHIEUTRA.Count).SelectMany(pm => pm.CTPHIEUMUON).ToList())
             {
                 var ctpt = new CTPHIEUTRA
                 {
                     IDPhieuMuon = ctpm.IDPhieuMuon,
+                    IDPhieuMuonNavigation = ctpm.IDPhieuMuonNavigation,
                     IDSach = ctpm.IDSach,
                     IDSachNavigation = ctpm.IDSachNavigation,
                     SoNgayMuon = (int)(DateTime.Now - ctpm.IDPhieuMuonNavigation.NgayMuon).TotalDays,
-                    TinhTrangTra = "Tốt",
+                    IDTinhTrangTra = ctpm.IDTinhTrangMuon,
+                    IDTinhTrangTraNavigation = ctpm.IDTinhTrangMuonNavigation,
                     GhiChu = "",
                     TienPhat = 0
                 };
 
-                dynamic returnDetail = new ExpandoObject();
-                returnDetail.IsSelected = true;
-                returnDetail.ReturnDetail = ctpt;
-                returnDetail.BorrowStatus = ctpm.TinhTrangMuon;
-                returnDetail.MaSach = ctpt.IDSachNavigation?.MaSach;
-                returnDetail.TenSach = ctpt.IDSachNavigation?.IDTuaSachNavigation?.TenTuaSach;
-                returnDetail.HanTra = ctpm.HanTra;
-                returnDetail.TinhTrangTra = ctpt.TinhTrangTra;
-                returnDetail.GhiChu = ctpt.GhiChu;
-
+                var returnDetail = new ReturnDetailModel {
+                    IsSelected = true,
+                    CTPhieuTra = ctpt,
+                    CTPhieuMuon = ctpm
+                };
+                
                 _returnDetails.Add(returnDetail);
             }
+            dgBooks.ItemsSource = _returnDetails;
         }
 
         private async void btnSave_Click(object sender, RoutedEventArgs e)
@@ -156,6 +263,12 @@ namespace QLTV.UserControls
                 return;
             }
 
+            if(selectedBooks.Any(b => !b.IsValid))
+            {
+                MessageBox.Show("Vui lòng nhập các tình trạng trả hợp lệ", "Thông báo", MessageBoxButton.OK, MessageBoxImage.Warning);
+                return;
+            }
+
             try
             {
                 var phieuTra = new PHIEUTRA
@@ -169,7 +282,7 @@ namespace QLTV.UserControls
                 // Check for late returns and update BCTRATRE if necessary
 
                 var lateReturns = selectedBooks
-                    .Where(r => DateTime.Now > ((dynamic)r).HanTra)
+                    .Where(r => DateTime.Now > r.HanTra)
                     .ToList();
 
                 if (lateReturns.Any())
@@ -188,7 +301,7 @@ namespace QLTV.UserControls
                         await _context.SaveChangesAsync();
                     }
 
-                    foreach (dynamic lateReturn in lateReturns)
+                    foreach (var lateReturn in lateReturns)
                     {
                         var ctBcTraTre = new CTBCTRATRE
                         {
@@ -203,10 +316,13 @@ namespace QLTV.UserControls
 
                 await _context.SaveChangesAsync();
 
-                foreach (dynamic returnBook in selectedBooks)
+                foreach (var returnBook in selectedBooks)
                 {
-                    CTPHIEUTRA ctpt = returnBook.ReturnDetail;
+                    CTPHIEUTRA ctpt = returnBook.CTPhieuTra;
                     ctpt.IDPhieuTra = phieuTra.ID;
+
+                    //ctpt.IDTinhTrangTra = returnBook.IDTinhTrangTra;
+                    //ctpt.IDTinhTrangTraNavigation = _context.TINHTRANG.Find(returnBook.IDTinhTrangTra);
 
                     var book = await _context.SACH.FindAsync(ctpt.IDSach);
                     var borrowDetail = await _context.CTPHIEUMUON
@@ -214,72 +330,31 @@ namespace QLTV.UserControls
 
                     if (borrowDetail != null)
                     {
-                        // Update TinhTrangMuon based on TinhTrangTra
-                        switch (returnBook.TinhTrangTra)
-                        {
-                            case "Tốt":
-                                borrowDetail.TinhTrangMuon = "Hoàn trả tốt";
-                                break;
-                            case "Hư hỏng nhẹ":
-                                borrowDetail.TinhTrangMuon = "Hoàn trả hư hỏng nhẹ";
-                                break;
-                            case "Hư hỏng nặng":
-                                borrowDetail.TinhTrangMuon = "Hoàn trả hư hỏng nặng";
-                                break;
-                            case "Mất sách":
-                                borrowDetail.TinhTrangMuon = "Mất sách";
-                                break;
-                            default:
-                                borrowDetail.TinhTrangMuon = "Đã trả";
-                                break;
-                        }
 
                         // Calculate fines
                         if (DateTime.Now > borrowDetail.HanTra)
                         {
                             int daysLate = (int)(DateTime.Now - borrowDetail.HanTra).TotalDays;
                             ctpt.TienPhat = daysLate * 5000;
-                            borrowDetail.TinhTrangMuon += " - Trễ hạn";
                         }
 
-                        if (returnBook.TinhTrangTra != "Tốt" && book != null)
+                        if (returnBook.TinhTrangTra != returnBook.TinhTrangMuon && book != null)
                         {
-                            ctpt.TienPhat += book.TriGia * 0.5m;
+                            ctpt.TienPhat += book.TriGia * _context.THAMSO.OrderBy(ts => ts.ID).Last().TiLeDenBu * (returnBook.TinhTrangTra.MucHuHong - returnBook.TinhTrangMuon.MucHuHong) / 100;
                         }
 
 
                         selectedReader.TongNo += ctpt.TienPhat;
-                        ctpt.TinhTrangTra = returnBook.TinhTrangTra;
                         ctpt.GhiChu = returnBook.GhiChu;
 
                         _context.CTPHIEUTRA.Add(ctpt);
                         if (book != null)
                         {
-                            book.IsAvailable = true;
+                            if (ctpt.IDTinhTrangTraNavigation.MucHuHong != 100)
+                                book.IsAvailable = true;
+                            book.IDTinhTrang = ctpt.IDTinhTrangTra;
                             _context.SACH.Update(book);
                         }
-                    }
-                }
-
-                var selectedBookIds = selectedBooks.Select(sb => ((dynamic)sb).ReturnDetail.IDSach).Cast<int>().ToList();
-
-                // Then use these IDs in the query
-                //var unreturnedBooks = await _context.CTDocGia
-                //    .Where(ct => ct.IDDocGia == selectedBorrow.ID &&
-                //           !selectedBookIds.Contains(ct.IDSach))
-                //    .ToListAsync();
-
-                var unreturnedBooks = await _context.CTPHIEUMUON
-                    .Where(ct => ct.IDPhieuMuonNavigation.IDDocGia == selectedReader.ID &&
-                             !selectedBookIds.Contains(ct.IDSach))
-                    .ToListAsync();
-
-                foreach (var unreturned in unreturnedBooks)
-                {
-                    if (unreturned.TinhTrangMuon == "Tốt") // Only update if not already modified
-                    {
-                        unreturned.TinhTrangMuon = "Đang mượn";
-                        _context.CTPHIEUMUON.Update(unreturned);
                     }
                 }
 
@@ -287,8 +362,8 @@ namespace QLTV.UserControls
 
                 foreach(var pm in selectedReader.PHIEUMUON.ToList())
 
-                if (pm.CTPHIEUMUON.All(ct => _returnDetails.Select(ctpm => ctpm.ReturnDetail).ToList().Contains(ct) && 
-                                                    pm.CTPHIEUMUON.All(r => _returnDetails.First(rd => rd.ReturnDetail == ct).IsSelected)))
+                if (pm.CTPHIEUMUON.All(ct => _returnDetails.Select(ctpm => ctpm.CTPhieuMuon).ToList().Contains(ct) && 
+                                                    pm.CTPHIEUMUON.All(r => _returnDetails.First(rd => rd.CTPhieuMuon == ct).IsSelected)))
                 {
                     pm.IsPending = false;
                     _context.PHIEUMUON.Update(pm);

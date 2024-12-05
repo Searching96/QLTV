@@ -15,5 +15,9 @@ public partial class TINHTRANG
 
     public bool IsDeleted { get; set; }
 
+    public virtual ICollection<CTPHIEUMUON> CTPHIEUMUON { get; set; } = new List<CTPHIEUMUON>();
+
+    public virtual ICollection<CTPHIEUTRA> CTPHIEUTRA { get; set; } = new List<CTPHIEUTRA>();
+
     public virtual ICollection<SACH> SACH { get; set; } = new List<SACH>();
 }

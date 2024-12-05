@@ -28,7 +28,7 @@ namespace QLTV.UserControls
         private class BookWithCustomDate : INotifyPropertyChanged, IDataErrorInfo
         {
             private BookDisplayItem _bookItem;
-            private int _customBorrowDays;
+            private int _CustomBorrowWeeks;
             private DateTime _customReturnDate;
 
             public SACH Book
@@ -65,14 +65,14 @@ namespace QLTV.UserControls
                 get => _bookItem.DSTacGia;
             }
 
-            public int CustomBorrowDays
+            public int CustomBorrowWeeks
             {
-                get => _customBorrowDays;
+                get => _CustomBorrowWeeks;
                 set
                 {
-                    _customBorrowDays = value;
+                    _CustomBorrowWeeks = value;
                     UpdateCustomReturnDate();
-                    OnPropertyChanged(nameof(CustomBorrowDays));
+                    OnPropertyChanged(nameof(CustomBorrowWeeks));
                 }
             }
 
@@ -103,18 +103,18 @@ namespace QLTV.UserControls
             {
                 get
                 {
-                    if (columnName == nameof(CustomBorrowDays))
+                    if (columnName == nameof(CustomBorrowWeeks))
                     {
-                        if (CustomBorrowDays <= 0)
+                        if (CustomBorrowWeeks <= 0)
                         {
                             isValid = false;
-                            return "Số ngày mượn phải lớn hơn 0.";
+                            return "Số tuần mượn phải lớn hơn 0.";
                         }
 
-                        if (CustomBorrowDays > Book.IDTuaSachNavigation.HanMuonToiDa * 7)
+                        if (CustomBorrowWeeks > Book.IDTuaSachNavigation.HanMuonToiDa)
                         {
                             isValid = false;
-                            return $"Số ngày mượn không thể vượt quá {Book.IDTuaSachNavigation.HanMuonToiDa * 7}.";
+                            return $"Số tuần mượn không thể vượt quá {Book.IDTuaSachNavigation.HanMuonToiDa}.";
                         }
                         isValid = true;
                         return null;
@@ -132,7 +132,7 @@ namespace QLTV.UserControls
 
             private void UpdateCustomReturnDate()
             {
-                CustomReturnDate = DateTime.Now.AddDays(CustomBorrowDays > 0 ? CustomBorrowDays : Book.IDTuaSachNavigation.HanMuonToiDa);
+                CustomReturnDate = DateTime.Now.AddDays(CustomBorrowWeeks > 0 ? CustomBorrowWeeks * 7 : Book.IDTuaSachNavigation.HanMuonToiDa * 7);
             }
 
             public event PropertyChangedEventHandler PropertyChanged;
@@ -147,7 +147,7 @@ namespace QLTV.UserControls
                     books.Select(book => new BookWithCustomDate
                     {
                         Book = book,
-                        CustomBorrowDays = book.IDTuaSachNavigation.HanMuonToiDa
+                        CustomBorrowWeeks = book.IDTuaSachNavigation.HanMuonToiDa
                     })
                 );
             }
@@ -197,6 +197,7 @@ namespace QLTV.UserControls
                     .Include(s => s.IDTuaSachNavigation)
                         .ThenInclude(ts => ts.TUASACH_TACGIA)
                             .ThenInclude(ts_tg => ts_tg.IDTacGiaNavigation)
+                    .Include(s => s.IDTinhTrangNavigation)
                     .Where(s => !s.IsDeleted && s.IsAvailable == true)
                     .ToListAsync());
 
@@ -328,7 +329,7 @@ namespace QLTV.UserControls
                 var bookWithDate = new BookWithCustomDate 
                 { 
                     BookItem = book,
-                    CustomBorrowDays = book.Book.IDTuaSachNavigation.HanMuonToiDa
+                    CustomBorrowWeeks = book.Book.IDTuaSachNavigation.HanMuonToiDa
                 };
                 dsSach.Remove(book);
                 _allBooks.Remove(book.Book);
@@ -396,7 +397,7 @@ namespace QLTV.UserControls
                         IDPhieuMuon = phieuMuon.ID,
                         IDSach = bookWithDate.ID,
                         HanTra = bookWithDate.CustomReturnDate,
-                        TinhTrangMuon = "Tốt"
+                        IDTinhTrangMuon = bookWithDate.Book.IDTinhTrang
                     };
                     _context.CTPHIEUMUON.Add(ctPhieuMuon);
 
@@ -493,16 +494,6 @@ namespace QLTV.UserControls
         private void btnCancel_Click(object sender, RoutedEventArgs e)
         {
             Window.GetWindow(this)?.Close();
-        }
-
-        private void txtBorrowDays_TextChanged(object sender, TextChangedEventArgs e)
-        {
-            //UpdateReturnDates();
-        }
-
-        private void txtCustomDays_PreviewTextInput(object sender, TextCompositionEventArgs e)
-        {
-            e.Handled = !int.TryParse(e.Text, out _);
         }
 
         private void cboDocGia_SelectionChanged(object sender, SelectionChangedEventArgs e)

@@ -64,7 +64,7 @@ namespace QLTV.UserControls
             }
         }
 
-        public string DocGia => _ctPhieuTra.First().IDPhieuMuonNavigation.IDDocGiaNavigation.IDTaiKhoanNavigation.TenTaiKhoan;
+        public string DocGia => _ctPhieuTra.First().IDPhieuMuonNavigation.IDDocGiaNavigation.IDTaiKhoanNavigation.TenTaiKhoan ?? "";
 
         public PHIEUTRA phieuTra { get; set; }
         private bool _isExpanded;
@@ -114,6 +114,8 @@ namespace QLTV.UserControls
                     .Include(p => p.CTPHIEUMUON)
                         .ThenInclude(ct => ct.IDSachNavigation)
                             .ThenInclude(s => s.IDTuaSachNavigation)
+                    .Include(p => p.CTPHIEUMUON)
+                        .ThenInclude(ct => ct.IDTinhTrangMuonNavigation)
                     .Where(p => !p.IsDeleted)
                     .ToListAsync();
 
@@ -133,6 +135,8 @@ namespace QLTV.UserControls
                     .Include(p => p.CTPHIEUTRA)
                         .ThenInclude(ct => ct.IDSachNavigation)
                             .ThenInclude(s => s.IDTuaSachNavigation)
+                    .Include(p => p .CTPHIEUTRA)
+                        .ThenInclude(ct => ct.IDTinhTrangTraNavigation)
                     .Where(p => !p.IsDeleted)
                     .ToListAsync();
                 _returns = new ObservableCollection<ReturnViewModel>(

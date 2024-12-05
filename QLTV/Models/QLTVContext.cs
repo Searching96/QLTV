@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using Microsoft.EntityFrameworkCore;
-using System.Configuration;
 
 namespace QLTV.Models;
 
@@ -29,6 +28,8 @@ public partial class QLTVContext : DbContext
     public virtual DbSet<CTPHIEUMUON> CTPHIEUMUON { get; set; }
 
     public virtual DbSet<CTPHIEUTRA> CTPHIEUTRA { get; set; }
+
+    public virtual DbSet<DANHGIA> DANHGIA { get; set; }
 
     public virtual DbSet<DOCGIA> DOCGIA { get; set; }
 
@@ -62,7 +63,7 @@ public partial class QLTVContext : DbContext
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
 #warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see http://go.microsoft.com/fwlink/?LinkId=723263.
-        => optionsBuilder.UseSqlServer(ConfigurationManager.ConnectionStrings["QLTV2"].ConnectionString);
+        => optionsBuilder.UseSqlServer("Server=DESKTOP-LTO7VK3;Database=QLTVten;Trusted_Connection=True;TrustServerCertificate=True;");
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -134,7 +135,6 @@ public partial class QLTVContext : DbContext
             entity.HasKey(e => new { e.IDPhieuMuon, e.IDSach });
 
             entity.Property(e => e.HanTra).HasColumnType("datetime");
-            entity.Property(e => e.TinhTrangMuon).HasMaxLength(100);
 
             entity.HasOne(d => d.IDPhieuMuonNavigation).WithMany(p => p.CTPHIEUMUON)
                 .HasForeignKey(d => d.IDPhieuMuon)
@@ -145,6 +145,11 @@ public partial class QLTVContext : DbContext
                 .HasForeignKey(d => d.IDSach)
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("FK_CTPHIEUMUON_IDSach");
+
+            entity.HasOne(d => d.IDTinhTrangMuonNavigation).WithMany(p => p.CTPHIEUMUON)
+                .HasForeignKey(d => d.IDTinhTrangMuon)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK_CTPHIEUMUON_IDTinhTrangMuon");
         });
 
         modelBuilder.Entity<CTPHIEUTRA>(entity =>
@@ -153,7 +158,6 @@ public partial class QLTVContext : DbContext
 
             entity.Property(e => e.GhiChu).HasMaxLength(200);
             entity.Property(e => e.TienPhat).HasColumnType("decimal(18, 0)");
-            entity.Property(e => e.TinhTrangTra).HasMaxLength(100);
 
             entity.HasOne(d => d.IDPhieuMuonNavigation).WithMany(p => p.CTPHIEUTRA)
                 .HasForeignKey(d => d.IDPhieuMuon)
@@ -169,6 +173,28 @@ public partial class QLTVContext : DbContext
                 .HasForeignKey(d => d.IDSach)
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("FK_CTPHIEUTRA_IDSach");
+
+            entity.HasOne(d => d.IDTinhTrangTraNavigation).WithMany(p => p.CTPHIEUTRA)
+                .HasForeignKey(d => d.IDTinhTrangTra)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK_CTPHIEUTRA_IDTinhTrangTra");
+        });
+
+        modelBuilder.Entity<DANHGIA>(entity =>
+        {
+            entity.Property(e => e.DanhGia1)
+                .HasColumnType("decimal(4, 2)")
+                .HasColumnName("DanhGia");
+
+            entity.HasOne(d => d.IDPhieuMuonNavigation).WithMany(p => p.DANHGIA)
+                .HasForeignKey(d => d.IDPhieuMuon)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK_DANHGIA_IDPhieuMuon");
+
+            entity.HasOne(d => d.IDSachNavigation).WithMany(p => p.DANHGIA)
+                .HasForeignKey(d => d.IDSach)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK_DANHGIA_IDSach");
         });
 
         modelBuilder.Entity<DOCGIA>(entity =>
@@ -322,6 +348,7 @@ public partial class QLTVContext : DbContext
 
         modelBuilder.Entity<THAMSO>(entity =>
         {
+            entity.Property(e => e.TiLeDenBu).HasColumnType("decimal(4, 2)");
             entity.Property(e => e.TienPhatTraTreMotNgay).HasColumnType("decimal(18, 0)");
         });
 
@@ -331,6 +358,7 @@ public partial class QLTVContext : DbContext
                 .HasMaxLength(7)
                 .IsUnicode(false)
                 .HasComputedColumnSql("('TL'+right('00000'+CONVERT([varchar](5),[ID]),(5)))", true);
+            entity.Property(e => e.MoTa).HasMaxLength(500);
             entity.Property(e => e.TenTheLoai).HasMaxLength(100);
         });
 
@@ -345,13 +373,11 @@ public partial class QLTVContext : DbContext
 
         modelBuilder.Entity<TUASACH>(entity =>
         {
-            entity.Property(e => e.HanMuonToiDa)
-                  .IsRequired()
-                  .HasDefaultValueSql("((2))");
             entity.Property(e => e.BiaSach)
                 .HasMaxLength(500)
                 .IsUnicode(false)
                 .HasDefaultValueSql("('https://upload.wikimedia.org/wikipedia/commons/thumb/a/ac/No_image_available.svg/800px-No_image_available.svg.png')");
+            entity.Property(e => e.HanMuonToiDa).HasDefaultValueSql("((2))");
             entity.Property(e => e.MaTuaSach)
                 .HasMaxLength(7)
                 .IsUnicode(false)

@@ -102,6 +102,10 @@
                     <DataGridTextColumn Header="Tên sách" Binding="{Binding TuaSach}" Width="5*"/>
                     <DataGridTextColumn Header="Tác giả" Binding="{Binding DSTacGia}" Width="4*"/>
                     <DataGridTextColumn Header="Thể loại" Binding="{Binding DSTheLoai}" Width="4*"/>
+                    <DataGridTextColumn Header="Tình trạng" 
+                                    Binding="{Binding Book.IDTinhTrangNavigation.TenTinhTrang}" 
+                                    IsReadOnly="True"
+                                    Width="2*"/>
                     <DataGridTextColumn Header="Hạn mượn tối đa (tuần)" Binding="{Binding HanMuonToiDa}" Width="4*"/>
                     <DataGridTemplateColumn Width="2*">
                         <DataGridTemplateColumn.CellTemplate>
@@ -148,16 +152,20 @@
                                     Binding="{Binding DSTheLoai}" 
                                     IsReadOnly="True"
                                     Width="3*"/>
+                <DataGridTextColumn Header="Tình trạng" 
+                                    Binding="{Binding Book.IDTinhTrangNavigation.TenTinhTrang}" 
+                                    IsReadOnly="True"
+                                    Width="2*"/>
                 <DataGridTextColumn Header="Hạn trả" 
                                     Binding="{Binding CustomReturnDate, StringFormat=dd/MM/yyyy}" 
                                     IsReadOnly="True"
                                     Width="3*"/>
-                <DataGridTemplateColumn Header="Số ngày mượn" Width="2*">
+                <DataGridTemplateColumn Header="Số tuần mượn" Width="2*">
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate>
                             <Grid>
                                 <TextBlock
-                                Text="{Binding CustomBorrowDays}" />
+                                Text="{Binding CustomBorrowWeeks}" />
                                 <materialDesign:PackIcon Kind="AlertCircleOutline" Grid.Row="0" Grid.Column="2"
                                     Style="{StaticResource Warning}"
                                     HorizontalAlignment="Right" VerticalAlignment="Center"
@@ -178,7 +186,7 @@
                                     materialDesign:ValidationAssist.HorizontalAlignment="Right"
                                     Padding="0"
                                     Width="Auto"
-                                    Text = "{Binding CustomBorrowDays, UpdateSourceTrigger=PropertyChanged, ValidatesOnDataErrors=True}"
+                                    Text = "{Binding CustomBorrowWeeks, UpdateSourceTrigger=PropertyChanged, ValidatesOnDataErrors=True}"
                                 />
                                 <materialDesign:PackIcon Kind="AlertCircleOutline"
                                     Style="{StaticResource Warning}"

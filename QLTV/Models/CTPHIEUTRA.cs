@@ -15,7 +15,7 @@ public partial class CTPHIEUTRA
 
     public decimal TienPhat { get; set; }
 
-    public string TinhTrangTra { get; set; } = null!;
+    public int IDTinhTrangTra { get; set; }
 
     public string GhiChu { get; set; } = null!;
 
@@ -24,4 +24,6 @@ public partial class CTPHIEUTRA
     public virtual PHIEUTRA IDPhieuTraNavigation { get; set; } = null!;
 
     public virtual SACH IDSachNavigation { get; set; } = null!;
+
+    public virtual TINHTRANG IDTinhTrangTraNavigation { get; set; } = null!;
 }
