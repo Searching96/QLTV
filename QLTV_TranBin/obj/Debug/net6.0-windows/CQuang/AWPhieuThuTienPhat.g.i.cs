@@ -119,7 +119,7 @@ namespace QLTV_TranBin.CQuang {
                 return;
             }
             _contentLoaded = true;
-            System.Uri resourceLocater = new System.Uri("/QLTV_TranBin;component/cquang/awphieuthutienphat.xaml", System.UriKind.Relative);
+            System.Uri resourceLocater = new System.Uri("/QLTV_TranBin;V1.0.0.0;component/cquang/awphieuthutienphat.xaml", System.UriKind.Relative);
             
             #line 1 "..\..\..\..\CQuang\AWPhieuThuTienPhat.xaml"
             System.Windows.Application.LoadComponent(this, resourceLocater);

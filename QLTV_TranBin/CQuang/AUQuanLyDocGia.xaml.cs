@@ -769,9 +769,45 @@ namespace QLTV_TranBin.CQuang
             }
         }
 
+        private void ClearReader_Click(object sender, RoutedEventArgs e)
+        {
+            ClearInputs();
+            RefreshReadersTab();
+        }
+
+        private void ClearReaderType_Click(object sender, RoutedEventArgs e)
+        {
+            ClearReaderTypeInputs();
+            RefreshReaderTypesTab();
+        }
+
         private void ClearPenalty_Click(object sender, RoutedEventArgs e)
         {
             ClearPenaltyInputs();
+            RefreshPenaltyReceiptsTab();
+        }
+
+        private void RefreshReadersTab()
+        {
+            Readers.Clear();
+            LoadReadersData();
+            ReadersDataGrid.Items.Refresh();
+            TenTaiKhoanComboBox.SelectedItem = null;
+            TenLoaiDocGiaComboBox.SelectedItem = null;
+        }
+
+        private void RefreshReaderTypesTab()
+        {
+            ReaderTypes.Clear();
+            LoadReaderTypesData();
+            ReaderTypesDataGrid.Items.Refresh();
+        }
+
+        private void RefreshPenaltyReceiptsTab()
+        {
+            PenaltyReceipts.Clear();
+            LoadPenaltyReceiptsData();
+            PenaltyReceiptsDataGrid.Items.Refresh();
         }
 
         private void PrintPenaltyReceipt_Click(object sender, RoutedEventArgs e)

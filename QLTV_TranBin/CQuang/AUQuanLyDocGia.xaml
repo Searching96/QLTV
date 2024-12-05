@@ -175,6 +175,7 @@
                                 <Button Content="Thêm" Padding="10,5" Margin="0,0,5,0" Click="AddReader_Click"/>
                                 <Button Content="Cập nhật" Padding="10,5" Margin="0,0,5,0" Click="UpdateReader_Click"/>
                                 <Button Content="Xóa" Padding="10,5" Margin="0,0,5,0" Click="DeleteReader_Click"/>
+                                <Button Content="Làm mới" Padding="10,5" Margin="0,0,5,0" Click="ClearReader_Click"/>
                             </StackPanel>
                         </Grid>
                     </Border>
@@ -298,6 +299,7 @@ Click="OpenExportMenu_Click">
                                 <Button Content="Thêm" Padding="10,5" Margin="0,0,5,0" Click="AddReaderType_Click"/>
                                 <Button Content="Cập nhật" Padding="10,5" Margin="0,0,5,0" Click="UpdateReaderType_Click"/>
                                 <Button Content="Xóa" Padding="10,5" Margin="0,0,5,0" Click="DeleteReaderType_Click"/>
+                                <Button Content="Làm mới" Padding="10,5" Margin="0,0,5,0" Click="ClearReaderType_Click"/>
                             </StackPanel>
                         </Grid>
                     </Border>
@@ -436,7 +438,7 @@ Click="OpenExportMenu_Click">
                                 <Button Content="Tạo Phiếu Thu" Padding="10,5" Margin="0,0,5,0" Click="CreatePenaltyReceipt_Click"/>
                                 <Button Content="Xóa" Padding="10,5" Margin="0,0,5,0" Click="DeletePenalty_Click"/>
                                 <Button Content="Sửa" Padding="10,5" Margin="0,0,5,0" Click="EditPenalty_Click"/>
-                                <Button Content="Clear" Padding="10,5" Margin="0,0,5,0" Click="ClearPenalty_Click"/>
+                                <Button Content="Làm mới" Padding="10,5" Margin="0,0,5,0" Click="ClearPenalty_Click"/>
                                 <Button Content="In Phiếu Thu" Padding="10,5" Margin="0,0,5,0" Click="PrintPenaltyReceipt_Click"/>
                             </StackPanel>
                         </Grid>

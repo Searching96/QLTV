@@ -21,7 +21,7 @@ namespace QLTV_TranBin.CQuang
     /// </summary>
     public partial class AWPhieuThuTienPhat : Window
     {
-        private readonly QLTV2Context _context = new QLTV2Context(); // Khởi tạo _context
+        private readonly QLTV2Context _context = new QLTV2Context(); 
 
         public AWPhieuThuTienPhat(PHIEUTHUTIENPHAT receipt)
         {
