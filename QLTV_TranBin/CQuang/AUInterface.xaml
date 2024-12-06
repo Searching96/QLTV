@@ -3,8 +3,8 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
         Title="Library Management System"
-        Height="700" 
-        Width="1000"
+        Height="820" 
+        Width="1280" 
         WindowStartupLocation="CenterScreen"
         TextElement.Foreground="{DynamicResource MaterialDesignBody}"
         Background="{DynamicResource MaterialDesignPaper}"
@@ -28,7 +28,7 @@
     </Window.Resources>
 
     <materialDesign:DialogHost Identifier="RootDialog">
-        <Grid>
+        <Grid Background="White">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="250"/>
                 <ColumnDefinition Width="*"/>
@@ -118,6 +118,16 @@
                                 <TextBlock Text="Quản Lý Tài Khoản"/>
                             </StackPanel>
                         </Button>
+                        <Button Margin="0,150,0,0"  x:Name="btnLogOut" Click="btnLogOut_Click" Style="{StaticResource MenuButtonStyle}">
+
+                            <StackPanel Orientation="Horizontal">
+                                <materialDesign:PackIcon Kind="Logout" 
+                                   Width="24" 
+                                   Height="24" 
+                                   Margin="0,0,12,0"/>
+                                <TextBlock Text="Đăng Xuất" VerticalAlignment="Center"/>
+                            </StackPanel>
+                        </Button>
                     </StackPanel>
                 </DockPanel>
             </Grid>
@@ -162,8 +172,8 @@
                 </Grid>
 
                 <Frame Grid.Row="1" 
-                       x:Name="MainFrame" 
-                       NavigationUIVisibility="Hidden"/>
+                       x:Name="MainFrame" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"
+                       NavigationUIVisibility="Hidden" />
             </Grid>
         </Grid>
     </materialDesign:DialogHost>

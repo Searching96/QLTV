@@ -49,6 +49,9 @@
     <Compile Update="UCTrangChuUser.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Update="UQuanLyDocGia.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Update="UserScreen.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -94,6 +97,9 @@
       <SubType>Designer</SubType>
     </Page>
     <Page Update="UCTrangChuUser.xaml">
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="UQuanLyDocGia.xaml">
       <SubType>Designer</SubType>
     </Page>
     <Page Update="UserScreen.xaml">

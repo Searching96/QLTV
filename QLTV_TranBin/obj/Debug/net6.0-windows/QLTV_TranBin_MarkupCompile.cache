@@ -4,17 +4,17 @@
 winexe
 C#
 .cs
-D:\Web\QLTV\QLTV_TranBin\obj\Debug\net6.0-windows\
+E:\Repos_DoAn\QLTV_TranBin\QLTV_TranBin\obj\Debug\net6.0-windows\
 QLTV_TranBin
 none
 false
 TRACE;DEBUG;NET;NET6_0;NETCOREAPP
-D:\Web\QLTV\QLTV_TranBin\App.xaml
-15-982292095
+E:\Repos_DoAn\QLTV_TranBin\QLTV_TranBin\App.xaml
+171959484934
 
-451043443714
-252108600411
-BaoCaoThongKe.xaml;ChiTietTaiKhoan.xaml;CQuang\AUInterface.xaml;CQuang\AUQuanLyDocGia.xaml;CQuang\AWPhieuThuTienPhat.xaml;CQuang\AWThemDocGia.xaml;CreateAccount.xaml;LoginScreen.xaml;MainScreen.xaml;QuanLyTaiKhoan.xaml;ResetPassword.xaml;SignInScreen.xaml;UCChiTietSach.xaml;UCTrangChuUser.xaml;UserScreen.xaml;
+49559720437
+252136899804
+BaoCaoThongKe.xaml;ChiTietTaiKhoan.xaml;CQuang\AUInterface.xaml;CQuang\AUQuanLyDocGia.xaml;CQuang\AWPhieuThuTienPhat.xaml;CQuang\AWThemDocGia.xaml;CreateAccount.xaml;LoginScreen.xaml;MainScreen.xaml;QuanLyTaiKhoan.xaml;ResetPassword.xaml;SignInScreen.xaml;UCChiTietSach.xaml;UCTrangChuUser.xaml;UQuanLyDocGia.xaml;UserScreen.xaml;WUserWindow.xaml;
 
 False
 

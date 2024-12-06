@@ -9,6 +9,7 @@ namespace QLTV_TranBin.GridViewModels
 {
     public class AccountViewModel : INotifyPropertyChanged
     {
+        public int ID { get; set; }
         public string? MaTaiKhoan { get; set; }
         public string? TenNguoiDung {  get; set; }
         public string? GioiTinh {  get; set; }   

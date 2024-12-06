@@ -50,7 +50,7 @@ namespace QLTV_TranBin
                     }
                     else
                     {
-                        UserScreen us = new UserScreen();
+                        WUserWindow us = new WUserWindow();
                         us.Show();
                     }
                     this.Close();

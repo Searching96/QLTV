@@ -1,0 +1,238 @@
+﻿<Window x:Class="QLTV_TranBin.WUserWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+        xmlns:local="clr-namespace:QLTV_TranBin"
+        mc:Ignorable="d"
+        Title="WUserWindow" WindowStartupLocation="CenterScreen"  Height="720" Width="1080">
+    <Border  CornerRadius="30" Background="White" >
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="0.2*"/>
+                <RowDefinition/>
+            </Grid.RowDefinitions>
+            <Grid Grid.Row="0">
+                <StackPanel Orientation="Horizontal" HorizontalAlignment="Center"  Width="1060">
+
+                    <Button x:Name="btnTrangChu" Height="100" Width="300" Margin="10,0" Foreground="Orange" 
+                    Style="{StaticResource MaterialDesignFlatButton}" 
+                    Click="btnTrangChu_Click">
+                        <StackPanel Orientation="Horizontal">
+                            <materialDesign:PackIcon Kind="Home" Width="75" Height="75" Margin="5" />
+                            <TextBlock Text="Trang chủ" FontSize="40" VerticalAlignment="Center"/>
+                        </StackPanel>
+                    </Button>
+
+                    <TextBox x:Name="tbBookFilter" BorderBrush="Orange"
+                         Style="{StaticResource MaterialDesignOutlinedTextBox}" 
+                         Width="300" Height="60" 
+                         TextChanged="tbBookFilter_TextChanged" 
+                         materialDesign:HintAssist.Hint="Tìm kiếm sách"/>
+                                        
+                        <Grid>
+                        
+                            <Button x:Name="btnThongBao" Height="100" Width="125" Margin="10,0" Foreground="Orange" 
+                            Style="{StaticResource MaterialDesignFlatButton}" 
+                            Click="btnThongBao_Click">
+                            <StackPanel Orientation="Vertical">
+                                <materialDesign:Badged HorizontalAlignment="Center"
+                                    Badge="{Binding ThongBaoList.ThongBao.Count}" 
+
+                                    BadgeColorZoneMode="SecondaryMid">
+                                <materialDesign:PackIcon Kind="Bell" Width="30" Height="30" Margin="5"  />
+                                </materialDesign:Badged>
+                                <TextBlock Text="Thông báo" FontSize="16" VerticalAlignment="Center"/>
+                            </StackPanel>
+                        </Button>
+
+
+                        <Popup x:Name="popupThongBao" PlacementTarget="{Binding ElementName=btnThongBao}" 
+       Placement="Bottom" StaysOpen="False" Width="320">
+                            <Border Background="{DynamicResource MaterialDesignPaper}" 
+            BorderBrush="{DynamicResource MaterialDesignDivider}" 
+            BorderThickness="1" Padding="10" CornerRadius="5">
+                                <ScrollViewer VerticalScrollBarVisibility="Auto" MaxHeight="400">
+                                    <ItemsControl ItemsSource="{Binding ThongBaoList.ThongBao}">
+                                        <ItemsControl.ItemTemplate>
+                                            <DataTemplate>
+                                                <Border BorderBrush="{DynamicResource MaterialDesignDivider}" 
+                    BorderThickness="0 0 0 1" Padding="5">
+                                                    <StackPanel Orientation="Horizontal" Margin="5">
+                                                        <!-- Biểu tượng trong hình tròn -->
+                                                        <Grid Width="30" Height="30" Margin="0,0,10,0">
+                                                            <!-- Vẽ hình tròn -->
+                                                            <Ellipse Fill="{DynamicResource PrimaryHueLightBrush}" 
+                 Stroke="{DynamicResource PrimaryHueDarkBrush}" 
+                 StrokeThickness="1"/>
+                                                            <!-- Biểu tượng Material Design -->
+                                                            <materialDesign:PackIcon Kind="{Binding Icon}" 
+                                 Width="20" Height="20" 
+                                 HorizontalAlignment="Center" 
+                                 VerticalAlignment="Center" 
+                                 Foreground="{DynamicResource PrimaryTextColor}" />
+                                                        </Grid>
+                                                        <!-- Nội dung thông báo -->
+                                                        <StackPanel>
+                                                            <TextBlock Text="{Binding Title}" 
+                   FontWeight="Bold" 
+                   Foreground="{DynamicResource PrimaryTextColor}" />
+                                                            <TextBlock Text="{Binding Message}" MaxWidth="230" 
+                   TextWrapping="Wrap" 
+                   Foreground="{DynamicResource SecondaryTextColor}" />
+                                                        </StackPanel>
+                                                    </StackPanel>
+                                                </Border>
+                                            </DataTemplate>
+                                        </ItemsControl.ItemTemplate>
+                                    </ItemsControl>
+                                </ScrollViewer>
+                            </Border>
+                        </Popup>
+
+                    </Grid>
+                    
+
+                    <Button x:Name="btnSachMuon" Height="100" Width="125" Foreground="Orange" Margin="10,0"
+    Style="{StaticResource MaterialDesignFlatButton}" 
+    Click="btnSachMuon_Click">
+                        <StackPanel Orientation="Vertical">
+                            <materialDesign:PackIcon Kind="Book" Width="30" Height="30" Margin="5" HorizontalAlignment="Center" />
+                            <TextBlock Text="Sách mượn" FontSize="16" VerticalAlignment="Center"/>
+                        </StackPanel>
+                    </Button>
+
+                    <StackPanel>
+                        <!-- Nút Tài Khoản -->
+                        <Button x:Name="btnTaiKhoan" Height="100" Width="125" Margin="10,10" Foreground="Orange"  
+            Style="{StaticResource MaterialDesignFlatButton}" 
+            Click="btnTaiKhoan_Click">
+                            <StackPanel Orientation="Vertical">
+                                <materialDesign:PackIcon Kind="Account" Width="30" Height="30" Margin="5" HorizontalAlignment="Center" />
+                                <TextBlock Text="Tài khoản" FontSize="16" VerticalAlignment="Center"/>
+                            </StackPanel>
+                        </Button>
+
+                        <!-- Popup -->
+                        <Popup x:Name="popupTaiKhoan" StaysOpen="False" PlacementTarget="{Binding ElementName=btnTaiKhoan}" Placement="Bottom">
+                            <Border Background="White"  BorderBrush="Gray" BorderThickness="1" Padding="5">
+                                <StackPanel >
+                                    <!-- Nút Chi Tiết -->
+                                    <Button Content="Chi tiết" Width="100" Margin="5" Click="ChiTiet_Click"/>
+                                    <!-- Nút Đăng Xuất -->
+                                    <Button Content="Đăng xuất" Width="100" Margin="5" Click="DangXuat_Click"/>
+                                </StackPanel>
+                            </Border>
+                        </Popup>
+                    </StackPanel>
+
+                </StackPanel>
+            </Grid>
+            <TabControl x:Name="MainTabControl" Margin="10" Grid.Row="1">
+                <TabControl.Resources>
+                    <!-- Style cho TabItem -->
+                    <Style TargetType="{x:Type TabItem}">
+                        <!-- Template để thay đổi giao diện tổng thể của TabItem -->
+                        <Setter Property="Template">
+                            <Setter.Value>
+                                <ControlTemplate TargetType="{x:Type TabItem}">
+                                    <Grid>
+                                        <!-- Border TabItem -->
+                                        <Border x:Name="Border"
+                    CornerRadius="10,10,0,0"
+                    Background="Transparent"
+                    BorderThickness="0,0,0,3">
+                                            <!-- Nội dung Header của TabItem -->
+                                            <ContentPresenter x:Name="ContentSite"
+                                  VerticalAlignment="Center"
+                                  HorizontalAlignment="Left"
+                                  ContentSource="Header"
+                                  Margin="10,2"/>
+                                        </Border>
+                                    </Grid>
+                                    <!-- Trigger thay đổi màu khi Tab được chọn -->
+                                    <ControlTemplate.Triggers>
+                                        <Trigger Property="IsSelected" Value="True">
+                                            <Setter TargetName="Border" Property="Background" Value="Orange"/>
+                                        </Trigger>
+                                    </ControlTemplate.Triggers>
+                                </ControlTemplate>
+                            </Setter.Value>
+                        </Setter>
+
+                        <!-- Giao diện cho Header -->
+                        <Setter Property="HeaderTemplate">
+                            <Setter.Value>
+                                <DataTemplate>
+                                    <Grid Height="45" HorizontalAlignment="Stretch" VerticalAlignment="Center">
+                                        <!-- Cột định nghĩa các phần tử bên trong Header -->
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="Auto" />
+                                            <ColumnDefinition Width="*" />
+                                            <ColumnDefinition Width="Auto" />
+                                        </Grid.ColumnDefinitions>
+
+                                        <!-- PackIcon Shape -->
+                                        <materialDesign:PackIcon
+                Grid.Column="0"
+                Kind="Shape"
+                Foreground="DimGray"
+                Width="16"
+                Height="16"
+                VerticalAlignment="Center"
+                Margin="0,0,5,0" />
+
+                                        <!-- TextBlock hiển thị tên tab -->
+                                        <TextBlock Grid.Column="1"
+                       FontSize="15"
+                       Text="{Binding}" 
+                       FontWeight="Bold" 
+                       Foreground="DimGray"
+                       VerticalAlignment="Center" 
+                       HorizontalAlignment="Left" 
+                       Margin="0,0,5,0" />
+
+                                        <!-- Button đóng tab -->
+                                        <Button Grid.Column="2"
+                    Click="CloseTab_Click"
+                    VerticalAlignment="Center"
+                    HorizontalAlignment="Right" 
+                    Background="Transparent"
+                    Padding="0">
+                                            <Button.Template>
+                                                <ControlTemplate>
+                                                    <Border x:Name="border"
+                                BorderThickness="0" 
+                                Background="Transparent" 
+                                Width="20" 
+                                Height="20" 
+                                CornerRadius="10">
+                                                        <materialDesign:PackIcon
+                                Kind="Close" Height="15" Width="15"
+                                Foreground="Red"
+                                VerticalAlignment="Center"
+                                HorizontalAlignment="Center" />
+                                                    </Border>
+                                                    <ControlTemplate.Triggers>
+                                                        <Trigger Property="IsMouseOver" Value="True">
+                                                            <Setter TargetName="border" Property="Background" Value="#77808080" />
+                                                        </Trigger>
+                                                    </ControlTemplate.Triggers>
+                                                </ControlTemplate>
+                                            </Button.Template>
+                                        </Button>
+                                    </Grid>
+                                </DataTemplate>
+                            </Setter.Value>
+                        </Setter>
+                    </Style>
+                </TabControl.Resources>
+
+                <TabItem Header="Trang Chủ">
+                    <!--<local:UCTrangChuUser x:Name="ucTrangChuUser"/>-->
+                </TabItem>
+            </TabControl>
+        </Grid>
+    </Border>
+</Window>

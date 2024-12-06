@@ -87,7 +87,7 @@ namespace QLTV_TranBin
                     }
                     else
                     {
-                        UserScreen us= new UserScreen();
+                        WUserWindow us= new WUserWindow();
                         us.Show();
                     }    
                     var parentWindow = Window.GetWindow(this) as LoginScreen;
@@ -115,7 +115,7 @@ namespace QLTV_TranBin
                     }
                     else
                     {
-                        UserScreen us = new UserScreen();
+                        WUserWindow us = new WUserWindow();
                         us.Show();
                     }
                     var parentWindow = Window.GetWindow(this) as LoginScreen;

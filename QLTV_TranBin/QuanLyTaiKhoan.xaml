@@ -7,7 +7,7 @@
             xmlns:Icon="http://metro.mahapps.com/winfx/xaml/iconpacks"
              xmlns:local="clr-namespace:QLTV_TranBin"
              mc:Ignorable="d" 
-             d:DesignHeight="820" d:DesignWidth="860" >
+             d:DesignHeight="800" d:DesignWidth="860" >
     
     <Grid Background="White">
         <Grid.RowDefinitions>
@@ -15,17 +15,105 @@
             <!-- Cho phép TabControl co giãn -->
         </Grid.RowDefinitions>
         <TabControl x:Name="tcQLTK" Margin="10">
-            <TabControl.ItemTemplate>
-                <DataTemplate>
-                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Stretch">
-                        <TextBlock Text="{Binding Header}" VerticalAlignment="Center" />
-                        <Button Click="CloseTab_Click" Content="X" Foreground="Red"
-                                Background="Black" BorderBrush="Transparent">
-                            
-                        </Button>
-                    </StackPanel>
-                </DataTemplate>
-            </TabControl.ItemTemplate>
+            <TabControl.Resources>
+                <!-- Style cho TabItem -->
+                <Style TargetType="{x:Type TabItem}">
+                    <!-- Template để thay đổi giao diện tổng thể của TabItem -->
+                    <Setter Property="Template">
+                        <Setter.Value>
+                            <ControlTemplate TargetType="{x:Type TabItem}">
+                                <Grid>
+                                    <!-- Border TabItem -->
+                                    <Border x:Name="Border"
+                                    CornerRadius="10,10,0,0"
+                                    Background="Transparent"
+                                    BorderThickness="0,0,0,3">
+                                                                        <!-- Nội dung Header của TabItem -->
+                                            <ContentPresenter x:Name="ContentSite"
+                                                  VerticalAlignment="Center"
+                                                  HorizontalAlignment="Left"
+                                                  ContentSource="Header"
+                                                  Margin="10,2"/>
+                                    </Border>
+                                </Grid>
+                                <!-- Trigger thay đổi màu khi Tab được chọn -->
+                                <ControlTemplate.Triggers>
+                                    <Trigger Property="IsSelected" Value="True">
+                                        <Setter TargetName="Border" Property="Background" Value="LightBlue" />
+                                    </Trigger>
+                                </ControlTemplate.Triggers>
+                            </ControlTemplate>
+                        </Setter.Value>
+                    </Setter>
+
+                    <!-- Giao diện cho Header -->
+                    <Setter Property="HeaderTemplate">
+                        <Setter.Value>
+                            <DataTemplate>
+                                <Grid Height="45" HorizontalAlignment="Stretch" VerticalAlignment="Center">
+                                    <!-- Cột định nghĩa các phần tử bên trong Header -->
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="Auto" />
+                                        <ColumnDefinition Width="*" />
+                                        <ColumnDefinition Width="Auto" />
+                                    </Grid.ColumnDefinitions>
+
+                                    <!-- PackIcon Shape -->
+                                    <materialDesign:PackIcon
+                                    Grid.Column="0"
+                                    Kind="Shape"
+                                    Foreground="DimGray"
+                                    Width="16"
+                                    Height="16"
+                                    VerticalAlignment="Center"
+                                    Margin="0,0,5,0" />
+
+                                    <!-- TextBlock hiển thị tên tab -->
+                                    <TextBlock Grid.Column="1"
+                                       FontSize="15"
+                                       Text="{Binding}" 
+                                       FontWeight="Bold" 
+                                       Foreground="DimGray"
+                                       VerticalAlignment="Center" 
+                                       HorizontalAlignment="Left" 
+                                       Margin="0,0,5,0" />
+
+                                                                    <!-- Button đóng tab -->
+                                                                    <Button Grid.Column="2"
+                                    Click="CloseTab_Click"
+                                    VerticalAlignment="Center"
+                                    HorizontalAlignment="Right" 
+                                    Background="Transparent"
+                                    Padding="0">
+                                                                        <Button.Template>
+                                                                            <ControlTemplate>
+                                                                                <Border x:Name="border"
+                                                BorderThickness="0" 
+                                                Background="Transparent" 
+                                                Width="20" 
+                                                Height="20" 
+                                                CornerRadius="10">
+                                                                                    <materialDesign:PackIcon
+                                                Kind="Close" Height="15" Width="15"
+                                                Foreground="Red"
+                                                VerticalAlignment="Center"
+                                                HorizontalAlignment="Center" />
+                                                </Border>
+                                                <ControlTemplate.Triggers>
+                                                    <Trigger Property="IsMouseOver" Value="True">
+                                                        <Setter TargetName="border" Property="Background" Value="#77808080" />
+                                                    </Trigger>
+                                                </ControlTemplate.Triggers>
+                                            </ControlTemplate>
+                                        </Button.Template>
+                                    </Button>
+                                </Grid>
+                            </DataTemplate>
+                        </Setter.Value>
+                    </Setter>
+                </Style>
+            </TabControl.Resources>
+
 
 
 
@@ -48,7 +136,7 @@
                         </Grid.ColumnDefinitions>
 
                         <TextBlock x:Name="txtds" Text="Danh sách tài khoản" Margin="10,10"
-                        FontWeight="Bold" FontSize="40"/>
+                        FontWeight="Bold" FontSize="38"/>
                         <Grid Grid.Column="2">
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition/>
