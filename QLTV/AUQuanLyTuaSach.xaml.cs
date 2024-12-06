@@ -109,6 +109,9 @@ namespace QLTV
                 _isSearchMode = false;
                 _currentPage = 1;
 
+                // Hủy nút select all
+                cbxSelectAll.IsChecked = false;
+
                 // Áp dụng phân trang
                 ApplyPaging();
             }
@@ -158,6 +161,9 @@ namespace QLTV
                 // Đánh dấu đang ở chế độ tìm kiếm
                 _isSearchMode = true;
                 _currentPage = 1;
+
+                // Hủy nút select all
+                cbxSelectAll.IsChecked = false;
 
                 // Áp dụng phân trang
                 ApplyPaging();
@@ -314,7 +320,7 @@ namespace QLTV
 
         private void SelectAll_Unchecked(object sender, RoutedEventArgs e)
         {
-            var lstTuaSach = dgTuaSach.ItemsSource as ObservableCollection<TuaSachViewModel>;
+            var lstTuaSach = _fullDataSource;
             if (lstTuaSach != null)
             {
                 foreach (var tuaSach in lstTuaSach)
