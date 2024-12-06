@@ -525,10 +525,10 @@ namespace QLTV
 
         private void btnSelectAll_Checked(object sender, RoutedEventArgs e)
         {
-            var tacGiaList = dgTacGia.ItemsSource as List<TacGiaViewModel>;
-            if (tacGiaList != null)
+            var lstTacGia = dgTacGia.ItemsSource as List<TacGiaViewModel>;
+            if (lstTacGia != null)
             {
-                foreach (var tacGia in tacGiaList)
+                foreach (var tacGia in lstTacGia)
                 {
                     tacGia.IsSelected = true;
                 }
@@ -537,10 +537,10 @@ namespace QLTV
         }
         private void btnSelectAll_Unchecked(object sender, RoutedEventArgs e)
         {
-            var tacGiaList = dgTacGia.ItemsSource as List<TacGiaViewModel>;
-            if (tacGiaList != null)
+            var lstTacGia = dgTacGia.ItemsSource as List<TacGiaViewModel>;
+            if (lstTacGia != null)
             {
-                foreach (var tacGia in tacGiaList)
+                foreach (var tacGia in lstTacGia)
                 {
                     tacGia.IsSelected = false;
                 }

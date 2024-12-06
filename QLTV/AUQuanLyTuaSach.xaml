@@ -317,7 +317,7 @@
                     </DataGridTemplateColumn.Header>
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate>
-                            <CheckBox Checked="RowCheckBox_Checked" Unchecked="RowCheckBox_Unchecked"/>
+                            <CheckBox IsChecked="{Binding IsSelected}"/>
                         </DataTemplate>
                     </DataGridTemplateColumn.CellTemplate>
                 </DataGridTemplateColumn>

@@ -23,6 +23,9 @@ using System.Net.Http;
 using System.Text.Json;
 using System.Windows.Media.Imaging;
 using Microsoft.Identity.Client;
+using System.ComponentModel;
+using System.Runtime.CompilerServices;
+using static QLTV.AUQuanLyTacGia;
 
 namespace QLTV
 {
@@ -35,13 +38,13 @@ namespace QLTV
         public static readonly Thickness ErrorIconMargin = new Thickness(0, 0, 5, 10);
         public List<string> lstSelectedMaTuaSach = new List<string>();
         private ObservableCollection<TuaSachViewModel> _dsTuaSach;
-        private List<TuaSachViewModel> _fullDataSource; // Nguồn dữ liệu đầy đủ
+        private ObservableCollection<TuaSachViewModel> _fullDataSource; // Nguồn dữ liệu đầy đủ
         private int _currentPage = 1;
         private int _itemsPerPage = 10;
         private int _totalItems = 0;
         private bool _isSearchMode = false; // Cờ để phân biệt chế độ
 
-        public class TuaSachViewModel
+        public class TuaSachViewModel : INotifyPropertyChanged
         {
             public string MaTuaSach { get; set; }
             public string TenTuaSach { get; set; }
@@ -49,12 +52,32 @@ namespace QLTV
             public int HanMuonToiDa { get; set; }
             public string DSTacGia { get; set; }
             public string DSTheLoai { get; set; }
+            private bool _isSelected;
+            public bool IsSelected
+            {
+                get => _isSelected;
+                set
+                {
+                    if (_isSelected != value)
+                    {
+                        _isSelected = value;
+                        OnPropertyChanged();
+                    }
+                }
+            }
+
+            public event PropertyChangedEventHandler PropertyChanged;
+
+            protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)
+            {
+                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+            }
         }
 
         public AUQuanLyTuaSach()
         {
             InitializeComponent();
-            ExcelPackage.LicenseContext = LicenseContext.NonCommercial;
+            ExcelPackage.LicenseContext = OfficeOpenXml.LicenseContext.NonCommercial;
             _dsTuaSach = new ObservableCollection<TuaSachViewModel>();
             LoadTuaSach(true);
         }
@@ -64,7 +87,7 @@ namespace QLTV
             using (var context = new QLTVContext())
             {
                 // Truy vấn cơ sở dữ liệu gốc
-                _fullDataSource = context.TUASACH
+                var data = context.TUASACH
                     .Where(ts => !ts.IsDeleted)
                     .Select(ts => new TuaSachViewModel
                     {
@@ -78,6 +101,9 @@ namespace QLTV
                             .Select(ts_tl => ts_tl.IDTheLoaiNavigation.TenTheLoai))
                     })
                     .ToList();
+
+                // Initialize _fullDataSource as an ObservableCollection
+                _fullDataSource = new ObservableCollection<TuaSachViewModel>(data);
 
                 // Reset trạng thái
                 _isSearchMode = false;
@@ -103,7 +129,7 @@ namespace QLTV
             using (var context = new QLTVContext())
             {
                 // Truy vấn cơ sở dữ liệu để lấy tất cả các tựa sách
-                _fullDataSource = context.TUASACH
+                var data = context.TUASACH
                     .Where(ts => !ts.IsDeleted)
                     .Select(ts => new TuaSachViewModel
                     {
@@ -125,6 +151,9 @@ namespace QLTV
                         true
                     )
                     .ToList();
+
+                // Initialize _fullDataSource as an ObservableCollection
+                _fullDataSource = new ObservableCollection<TuaSachViewModel>(data);
 
                 // Đánh dấu đang ở chế độ tìm kiếm
                 _isSearchMode = true;
@@ -272,28 +301,25 @@ namespace QLTV
 
         private void SelectAll_Checked(object sender, RoutedEventArgs e)
         {
-            foreach (var item in dgTuaSach.Items)
+            var lstTuaSach = _fullDataSource;
+            MessageBox.Show(lstTuaSach.Count.ToString());
+            if (lstTuaSach != null)
             {
-                var row = dgTuaSach.ItemContainerGenerator.ContainerFromItem(item) as DataGridRow;
-                if (row != null) 
+                foreach (var tuaSach in lstTuaSach)
                 {
-                    var cbx = GetCheckBox(row);
-                    if (cbx != null && !cbx.IsChecked.GetValueOrDefault())
-                        cbx.IsChecked = true;
+                    tuaSach.IsSelected = true;
                 }
             }
         }
 
         private void SelectAll_Unchecked(object sender, RoutedEventArgs e)
         {
-            foreach (var item in dgTuaSach.Items)
+            var lstTuaSach = dgTuaSach.ItemsSource as ObservableCollection<TuaSachViewModel>;
+            if (lstTuaSach != null)
             {
-                var row = dgTuaSach.ItemContainerGenerator.ContainerFromItem(item) as DataGridRow;
-                if (row != null)
+                foreach (var tuaSach in lstTuaSach)
                 {
-                    var cbx = GetCheckBox(row);
-                    if (cbx != null && cbx.IsChecked.GetValueOrDefault())
-                        cbx.IsChecked = false;
+                    tuaSach.IsSelected = false;
                 }
             }
         }
