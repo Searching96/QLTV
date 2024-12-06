@@ -173,7 +173,7 @@
                                     AcceptsReturn="False"
                                     Style="{StaticResource MaterialDesignOutlinedTextBox}"
                                     Foreground="{DynamicResource SecondaryHueMidBrush}"
-                                    materialDesign:ValidationAssist.HorizontalAlignment="Center"
+                                    materialDesign:ValidationAssist.HorizontalAlignment="Left"
                                     Padding="0"
                                     materialDesign:ValidationAssist.Background="Transparent"
                                     Margin="0,0,0,15"
