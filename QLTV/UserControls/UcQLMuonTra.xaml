@@ -61,13 +61,14 @@
                     <!-- Borrowing DataGrid -->
                     <DataGrid x:Name="dgBorrowings" Grid.Row="1" AutoGenerateColumns="False" 
                               IsReadOnly="True" SelectionMode="Single" Grid.ColumnSpan="2"
-                              RowStyle="{StaticResource DataGridRowExpand}"
+                              Style="{StaticResource MaterialDesignDataGrid}"
+                              materialDesign:DataGridAssist.CellPadding="5"
                               SelectionUnit="FullRow">
                         <DataGrid.Columns>
                             <materialDesign:DataGridTextColumn Header="Mã phiếu" Binding="{Binding phieuMuon.MaPhieuMuon}"/>
                             <materialDesign:DataGridTextColumn Header="Độc giả" Binding="{Binding phieuMuon.IDDocGiaNavigation.IDTaiKhoanNavigation.TenTaiKhoan}"/>
                             <materialDesign:DataGridTextColumn Header="Ngày mượn" Binding="{Binding phieuMuon.NgayMuon, StringFormat=dd/MM/yyyy}"/>
-                            <DataGridTemplateColumn Header="Thao tác">
+                            <DataGridTemplateColumn Header="Thao tác" IsReadOnly="True">
                                 <DataGridTemplateColumn.CellTemplate>
                                     <DataTemplate>
                                         <StackPanel Orientation="Horizontal">
@@ -90,7 +91,11 @@
                         </DataGrid.Columns>
                         <DataGrid.RowDetailsTemplate>
                             <DataTemplate>
-                                <DataGrid ItemsSource="{Binding ctPhieuMuon}" AutoGenerateColumns="False" IsReadOnly="True" Margin="30,0,0,0">
+                                <DataGrid ItemsSource="{Binding ctPhieuMuon}" 
+                                          AutoGenerateColumns="False" 
+                                          IsReadOnly="True" 
+                                          Margin="30,0,0,0"
+                                          Style="{StaticResource MaterialDesignDataGrid}">
                                     <DataGrid.Columns>
                                         <materialDesign:DataGridTextColumn Header="Mã sách" Binding="{Binding IDSachNavigation.MaSach}"/>
                                         <materialDesign:DataGridTextColumn Header="Tên sách" Binding="{Binding IDSachNavigation.IDTuaSachNavigation.TenTuaSach}"/>
@@ -127,17 +132,17 @@
                                 Foreground="White" Background="Transparent" Width="20" Height="20"/>
                         </Button>
                     </StackPanel>
-
                     <!-- Returning DataGrid -->
                     <DataGrid x:Name="dgReturns" Grid.Row="1" AutoGenerateColumns="False" 
                               IsReadOnly="True" SelectionMode="Single"
-                              RowStyle="{StaticResource DataGridRowExpand}"
+                              Style="{StaticResource MaterialDesignDataGrid}"
+                              materialDesign:DataGridAssist.CellPadding="5"
                               SelectionUnit="FullRow">
                         <DataGrid.Columns>
                             <DataGridTextColumn Header="Mã phiếu" Binding="{Binding phieuTra.MaPhieuTra}"/>
                             <DataGridTextColumn Header="Độc giả" Binding="{Binding DocGia}"/>
                             <DataGridTextColumn Header="Ngày trả" Binding="{Binding phieuTra.NgayTra, StringFormat=dd/MM/yyyy}"/>
-                            <DataGridTemplateColumn Header="Thao tác">
+                            <DataGridTemplateColumn Header="Thao tác" IsReadOnly="True">
                                 <DataGridTemplateColumn.CellTemplate>
                                     <DataTemplate>
                                         <StackPanel Orientation="Horizontal">
@@ -162,7 +167,11 @@
                         </DataGrid.Columns>
                         <DataGrid.RowDetailsTemplate>
                             <DataTemplate>
-                                <DataGrid ItemsSource="{Binding ctPhieuTra}" AutoGenerateColumns="False" IsReadOnly="True" Margin="30,0,0,0">
+                                <DataGrid ItemsSource="{Binding ctPhieuTra}" 
+                                          AutoGenerateColumns="False" 
+                                          IsReadOnly="True" 
+                                          Margin="30,0,0,0"
+                                          Style="{StaticResource MaterialDesignDataGrid}">
                                     <DataGrid.Columns>
                                         <materialDesign:DataGridTextColumn Header="Mã sách" Binding="{Binding IDSachNavigation.MaSach}"/>
                                         <materialDesign:DataGridTextColumn Header="Tên sách" Binding="{Binding IDSachNavigation.IDTuaSachNavigation.TenTuaSach}"/>

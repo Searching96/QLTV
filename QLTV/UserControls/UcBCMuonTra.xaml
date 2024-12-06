@@ -30,7 +30,7 @@
                     <DataGrid x:Name="dgBorrowingReports"
                               AutoGenerateColumns="False"
                               Grid.Row="1"
-                              RowStyle="{StaticResource DataGridRowExpand}"
+                              Style="{StaticResource MaterialDesignDataGrid}"
                               IsReadOnly="True"
                               SelectionMode="Single"
                               HorizontalAlignment="Stretch"
@@ -38,7 +38,7 @@
                         <DataGrid.Columns>
                             <DataGridTextColumn Header="Tháng" Binding="{Binding Month, StringFormat=MM/yyyy}"/>
                             <DataGridTextColumn Header="Tổng số lượt mượn" Binding="{Binding TongSoLuotMuon}"/>
-                            <DataGridTemplateColumn Header="Thao tác">
+                            <DataGridTemplateColumn Header="Thao tác" IsReadOnly="True">
                                 <DataGridTemplateColumn.CellTemplate>
                                     <DataTemplate>
                                         <StackPanel Orientation="Horizontal">
@@ -57,7 +57,7 @@
                         <DataGrid.RowDetailsTemplate>
                             <DataTemplate>
                                 <DataGrid ItemsSource="{Binding DSBCMuonSach}" AutoGenerateColumns="False"
-                                          RowStyle="{StaticResource DataGridRowExpand}"
+                                          Style="{StaticResource MaterialDesignDataGrid}"
                                           IsReadOnly="True" SelectionMode="Single"
                                           Margin="30,0,0,0"
                                           HorizontalAlignment="Stretch"
@@ -65,7 +65,7 @@
                                     <DataGrid.Columns>
                                         <DataGridTextColumn Header="Mã báo cáo" Binding="{Binding BCMuonSach.MaBCMuonSach}"/>
                                         <DataGridTextColumn Header="Ngày" Binding="{Binding BCMuonSach.Thang, StringFormat=dd/MM/yyyy}"/>
-                                        <DataGridTemplateColumn Header="Thao tác">
+                                        <DataGridTemplateColumn Header="Thao tác" IsReadOnly="True">
                                             <DataGridTemplateColumn.CellTemplate>
                                                 <DataTemplate>
                                                     <StackPanel Orientation="Horizontal">
@@ -86,8 +86,7 @@
                                             <DataGrid ItemsSource="{Binding BCMuonSach.CTBCMUONSACH}"
                                                       AutoGenerateColumns="False"
                                                       IsReadOnly="True" Margin="30,0,0,0"
-                                                      HorizontalAlignment="Stretch"
-                                                      VerticalAlignment="Stretch">
+                                                      Style="{StaticResource MaterialDesignDataGrid}">
                                                 <DataGrid.Columns>
                                                     <DataGridTextColumn Header="Mã thể loại" Binding="{Binding IDTheLoaiNavigation.MaTheLoai}"/>
                                                     <DataGridTextColumn Header="Tên thể loại" Binding="{Binding IDTheLoaiNavigation.TenTheLoai}"/>
@@ -138,7 +137,7 @@
                     <DataGrid x:Name="dgLateReturnReports"
                               AutoGenerateColumns="False"
                               Grid.Row="1"
-                              RowStyle="{StaticResource DataGridRowExpand}"
+                              Style="{StaticResource MaterialDesignDataGrid}"
                               IsReadOnly="True"
                               SelectionMode="Single"
                               HorizontalAlignment="Stretch"
@@ -147,7 +146,7 @@
                             <DataGridTextColumn Header="Mã báo cáo" Binding="{Binding BCTraTre.MaBCTraTre}"/>
                             <DataGridTextColumn Header="Ngày" Binding="{Binding BCTraTre.Ngay, StringFormat=MM/yyyy}"/>
                             <DataGridTextColumn Header="Tổng số lượt trả trễ" Binding="{Binding BCTraTre.TongSoLuotTraTre}"/>
-                            <DataGridTemplateColumn Header="Thao tác">
+                            <DataGridTemplateColumn Header="Thao tác" IsReadOnly="True">
                                 <DataGridTemplateColumn.CellTemplate>
                                     <DataTemplate>
                                         <StackPanel Orientation="Horizontal">
@@ -167,7 +166,7 @@
                             <DataTemplate>
                                 <DataGrid ItemsSource="{Binding BCTraTre.CTBCTRATRE}"
                                           AutoGenerateColumns="False" IsReadOnly="True" Margin="0,0,0,10"
-                                          RowStyle="{StaticResource DataGridRowExpand}"
+                                          Style="{StaticResource MaterialDesignDataGrid}"
                                           HorizontalAlignment="Stretch"
                                           VerticalAlignment="Stretch">
                                     <DataGrid.Columns>

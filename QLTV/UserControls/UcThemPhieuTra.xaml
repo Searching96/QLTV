@@ -43,8 +43,7 @@
                       AutoGenerateColumns="False"
                       CanUserAddRows="False"
                       Margin="0,0,0,10"
-                      VerticalContentAlignment="Center"
-                      HorizontalContentAlignment="Center">
+                      Style="{StaticResource MaterialDesignDataGrid}">
                 <DataGrid.Columns>
                     <DataGridCheckBoxColumn Header="Chọn" 
                                           Binding="{Binding IsSelected, UpdateSourceTrigger=PropertyChanged}"/>
@@ -76,17 +75,18 @@
         </Grid>
         <!-- Buttons -->
         <StackPanel Grid.Row="3" Orientation="Horizontal" HorizontalAlignment="Right">
-            <Button Style="{StaticResource MaterialDesignRaisedButton}" ToolTip="Lưu" Width="100" Margin="0,0,10,0" Click="btnSave_Click">
-                <materialDesign:PackIcon Kind="BookArrowUpOutline"
-                        HorizontalAlignment="Center" VerticalAlignment="Center"
-                        Foreground="White" Background="Transparent" Width="20" Height="20"
-                        ToolTipService.InitialShowDelay="0"/>
+            <Button Style="{StaticResource MaterialDesignRaisedButton}" 
+                    Content="Lưu" 
+                    Width="100" 
+                    Margin="0,0,10,0" 
+                    Foreground="White"
+                    Click="btnSave_Click">
             </Button>
-            <Button Style="{StaticResource MaterialDesignRaisedButton}" ToolTip="Hủy" Width="100" Click="btnCancel_Click">
-                <materialDesign:PackIcon Kind="CancelCircleOutline"
-                        HorizontalAlignment="Center" VerticalAlignment="Center"
-                        Foreground="White" Background="Transparent" Width="20" Height="20"
-                        ToolTipService.InitialShowDelay="0"/>
+            <Button Style="{StaticResource MaterialDesignRaisedButton}" 
+                    Content="Hủy" 
+                    Width="100" 
+                    Foreground="White"
+                    Click="btnCancel_Click">
             </Button>
         </StackPanel>
     </Grid>

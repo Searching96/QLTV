@@ -29,7 +29,6 @@
                     <Run Text="Độc giả : " />
                     <Run Text="{Binding phieuMuon.IDDocGiaNavigation.IDTaiKhoanNavigation.TenTaiKhoan}"/>
                 </TextBlock>
-                   
             </StackPanel>
         </Grid>
     </Border>
