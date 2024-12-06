@@ -37,6 +37,7 @@ namespace QLTV
     {
         public static readonly Thickness DisplayElementMargin = new Thickness(0, 0, 0, 10);
         public static readonly Thickness ErrorIconMargin = new Thickness(0, 0, 5, 10);
+
         public List<string> lstSelectedMaTuaSach = new List<string>();
         private ObservableCollection<TuaSachViewModel> _dsTuaSach;
         private ObservableCollection<TuaSachViewModel> _fullDataSource; // Nguồn dữ liệu đầy đủ
@@ -171,6 +172,11 @@ namespace QLTV
             }
         }
 
+        private void btnTimKiem_Click(object sender, RoutedEventArgs e)
+        {
+            PerformSearch();
+        }
+
         private void ApplyPaging()
         {
             if (_fullDataSource == null || _fullDataSource.Count == 0)
@@ -223,11 +229,6 @@ namespace QLTV
 
             if (btnPrevious != null) btnPrevious.IsEnabled = _currentPage > 1;
             if (btnNext != null) btnNext.IsEnabled = _currentPage < totalPages;
-        }
-
-        private void btnTimKiem_Click(object sender, RoutedEventArgs e)
-        {
-            PerformSearch();
         }
 
         private void btnPrevious_Click(object sender, RoutedEventArgs e)
@@ -300,7 +301,7 @@ namespace QLTV
             }
         }
 
-        private void SelectAll_Checked(object sender, RoutedEventArgs e)
+        private void cbxSelectAll_Checked(object sender, RoutedEventArgs e)
         {
             var lstTuaSach = _fullDataSource;
             MessageBox.Show(lstTuaSach.Count.ToString());
@@ -313,7 +314,7 @@ namespace QLTV
             }
         }
 
-        private void SelectAll_Unchecked(object sender, RoutedEventArgs e)
+        private void cbxSelectAll_Unchecked(object sender, RoutedEventArgs e)
         {
             var lstTuaSach = _fullDataSource;
             if (lstTuaSach != null)
@@ -986,6 +987,7 @@ namespace QLTV
                                 MessageBoxButton.OK, MessageBoxImage.Information);
 
                             LoadTuaSach();
+                            tbxThongTinTimKiem.Text = "";
                         }
                         catch (Exception ex)
                         {

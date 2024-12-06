@@ -312,8 +312,8 @@
                 <DataGridTemplateColumn Width="50">
                     <DataGridTemplateColumn.Header>
                         <CheckBox x:Name="cbxSelectAll" Content=""
-                                  Checked="SelectAll_Checked"
-                                  Unchecked="SelectAll_Unchecked" />
+                                  Checked="cbxSelectAll_Checked"
+                                  Unchecked="cbxSelectAll_Unchecked" />
                     </DataGridTemplateColumn.Header>
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate>

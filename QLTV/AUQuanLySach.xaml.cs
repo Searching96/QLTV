@@ -25,6 +25,9 @@ using System.Globalization;
 using MaterialDesignThemes.Wpf;
 using System.Collections.ObjectModel;
 using System.Net.WebSockets;
+using System.ComponentModel;
+using System.Runtime.CompilerServices;
+using Microsoft.IdentityModel.Tokens;
 
 namespace QLTV
 {
@@ -34,13 +37,15 @@ namespace QLTV
     public partial class AUQuanLySach : UserControl
     {
         private bool isUpdatingText = false;
-        private List<SachViewModel> _fullDataSource;
+        public List<string> lstSelectedMaSach = new List<string>();
         private ObservableCollection<SachViewModel> _dsSach;
+        private ObservableCollection<SachViewModel> _fullDataSource;
         private int _currentPage = 1;
         private int _itemsPerPage = 10;
+        private int _totalItems = 0;
         private bool _isSearchMode = false;
 
-        public class SachViewModel
+        public class SachViewModel : INotifyPropertyChanged
         {
             public string MaSach { get; set; }
             public string TuaSach { get; set; }
@@ -51,21 +56,42 @@ namespace QLTV
             public string NgayNhap { get; set; }
             public decimal TriGia { get; set; }
             public string TinhTrang { get; set; }
+            private bool _isSelected;
+
+            public bool IsSelected
+            {
+                get => _isSelected;
+                set
+                {
+                    if (_isSelected != value)
+                    {
+                        _isSelected = value;
+                        OnPropertyChanged();
+                    }
+                }
+            }
+
+            public event PropertyChangedEventHandler PropertyChanged;
+
+            protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)
+            {
+                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+            }
         }
 
         public AUQuanLySach()
         {
             InitializeComponent();
-            ExcelPackage.LicenseContext = LicenseContext.NonCommercial;
+            ExcelPackage.LicenseContext = OfficeOpenXml.LicenseContext.NonCommercial;
             _dsSach = new ObservableCollection<SachViewModel>();
-            LoadSach();
+            LoadSach(true);
         }
 
         private void LoadSach(bool isInitialLoad = false)
         {
             using (var context = new QLTVContext())
             {
-                _fullDataSource = context.SACH
+                var data = context.SACH
                     .Where(s => !s.IsDeleted && !s.IDTuaSachNavigation.IsDeleted)
                     .Select(s => new SachViewModel
                     {
@@ -83,13 +109,18 @@ namespace QLTV
                     })
                     .ToList();
 
+                _fullDataSource = new ObservableCollection<SachViewModel>(data);
+
                 _isSearchMode = false;
                 _currentPage = 1;
+
+                cbxSelectAll.IsChecked = false;
+
                 ApplyPaging();
             }
         }
 
-        private void btnTimKiem_Click(object sender, RoutedEventArgs e)
+        private void PerformSearch()
         {
             string searchTerm = NormalizeString(tbxThongTinTimKiem.Text.Trim().ToLower());
             string selectedProperty = ((ComboBoxItem)cbbThuocTinhTimKiem.SelectedItem)?.Content.ToString();
@@ -102,7 +133,7 @@ namespace QLTV
 
             using (var context = new QLTVContext())
             {
-                _fullDataSource = context.SACH
+                var data = context.SACH
                     .Where(s => !s.IsDeleted && !s.IDTuaSachNavigation.IsDeleted)
                     .Select(s => new SachViewModel
                     {
@@ -129,17 +160,27 @@ namespace QLTV
                     )
                     .ToList();
 
+                _fullDataSource = new ObservableCollection<SachViewModel>(data);
+
                 _isSearchMode = true;
                 _currentPage = 1;
+
+                cbxSelectAll.IsChecked = false;
+
                 ApplyPaging();
             }
+        }
+
+        private void btnTimKiem_Click(object sender, RoutedEventArgs e)
+        {
+            PerformSearch();
         }
 
         private void ApplyPaging()
         {
             if (_fullDataSource == null || _fullDataSource.Count == 0)
             {
-                dgSach.ItemsSource = new ObservableCollection<dynamic>();
+                dgSach.ItemsSource = new ObservableCollection<SachViewModel>();
                 UpdatePageInfo(0);
                 return;
             }
@@ -197,6 +238,82 @@ namespace QLTV
             {
                 _currentPage++;
                 ApplyPaging();
+            }
+        }
+
+        private DataGridRow GetRow(CheckBox cbx)
+        {
+            var dgRow = VisualTreeHelper.GetParent(cbx) as FrameworkElement;
+            while (dgRow != null && !(dgRow is DataGridRow))
+                dgRow = VisualTreeHelper.GetParent(dgRow) as FrameworkElement;
+            return dgRow as DataGridRow;
+        }
+
+        private CheckBox GetCheckBox(FrameworkElement element)
+        {
+            if (element == null) return null;
+
+            for (int i = 0; i < VisualTreeHelper.GetChildrenCount(element); i++)
+            {
+                var child = VisualTreeHelper.GetChild(element, i) as FrameworkElement;
+                if (child is CheckBox checkBox)
+                {
+                    return checkBox; // Tìm thấy CheckBox
+                }
+                else
+                {
+                    var result = GetCheckBox(child); // Đệ quy tìm sâu hơn
+                    if (result != null)
+                        return result;
+                }
+            }
+            return null;
+        }
+
+        private void cbxSelectRow_Checked(object sender, RoutedEventArgs e)
+        {
+            var cbx = sender as CheckBox;
+            var row = GetRow(cbx);
+            if (row != null)
+            {
+                var sach = row.Item as SachViewModel;
+                sach.IsSelected = true;
+            }
+        }
+
+        private void cbxSelectRow_Unchecked(object sender, RoutedEventArgs e)
+        {
+            var cbx = sender as CheckBox;
+            var row = GetRow(cbx);
+            if (row != null)
+            {
+                var sach = row.Item as SachViewModel;
+                sach.IsSelected = false;
+            }
+        }
+
+        private void cbxSelectAll_Checked(object sender, RoutedEventArgs e)
+        {
+            var lstSach = _fullDataSource;
+            MessageBox.Show(lstSach.Count.ToString());
+            if (lstSach != null)
+            {
+                foreach (var sach in lstSach)
+                {
+                    sach.IsSelected = true;
+                }
+            }
+        }
+
+        private void cbxSelectAll_Unchecked(object sender, RoutedEventArgs e)
+        {
+            var lstSach = _fullDataSource;
+            if (lstSach != null)
+            {
+                foreach (var sach in lstSach)
+                {
+                    sach.IsSelected = false;
+                }
             }
         }
 
@@ -835,26 +952,68 @@ namespace QLTV
             ).Normalize(NormalizationForm.FormC).ToLower();
         }
 
-        //private void dpNgayNhap_SelectedDateChanged(object sender, SelectionChangedEventArgs e)
-        //{
-        //    if (isUpdatingText) return;
+        private void btnXoaChon_Click(object sender, RoutedEventArgs e)
+        {
+            lstSelectedMaSach = _fullDataSource
+                .Where(s => s.IsSelected)
+                .Select(s => s.MaSach)
+                .ToList();
 
-        //    if (dpNgayNhap.SelectedDate.HasValue)
-        //    {
-        //        isUpdatingText = true;  // Đánh dấu là đang cập nhật text
-        //        dpNgayNhap.Text = dpNgayNhap.SelectedDate.Value.ToString("dd/MM/yyyy");
-        //        isUpdatingText = false; // Đặt lại flag sau khi cập nhật
-        //    }
-        //}
+            if (lstSelectedMaSach.IsNullOrEmpty())
+            {
+                MessageBox.Show("Chưa chọn sách để xóa.", "Thông báo",
+                    MessageBoxButton.OK, MessageBoxImage.Information);
+                return;
+            }
 
-        //private void dpNgayNhap_CalendarOpened(object sender, RoutedEventArgs e)
-        //{
-        //    var datePicker = sender as DatePicker;
+            MessageBoxResult mbrXacNhan = MessageBox.Show(
+                $"Bạn có chắc chắn muốn xóa {lstSelectedMaSach.Count} sách đã chọn?",
+                "Xác nhận xóa",
+                MessageBoxButton.YesNo,
+                MessageBoxImage.Warning);
 
-        //    if (datePicker != null && DateTime.TryParseExact(datePicker.Text, "dd/MM/yyyy", null, System.Globalization.DateTimeStyles.None, out DateTime parsedDate))
-        //    {
-        //        datePicker.DisplayDate = parsedDate; // Đặt DisplayDate thành ngày đã phân tích
-        //    }
-        //}
+            if (mbrXacNhan == MessageBoxResult.Yes)
+            {
+                using (var context = new QLTVContext())
+                {
+                    using (var transaction = context.Database.BeginTransaction()) // Đảm bảo đồng bộ các thao tác
+                    {
+                        try
+                        {
+                            foreach (var maSach in lstSelectedMaSach)
+                            {
+                                var sachToDelete = context.SACH
+                                    .FirstOrDefault(s => s.MaSach== maSach);
+
+                                if (sachToDelete != null)
+                                {
+                                    sachToDelete.IsDeleted = true;
+
+                                    var tuaSach = context.TUASACH
+                                        .FirstOrDefault(ts => ts.ID == sachToDelete.IDTuaSach);
+                                    if (tuaSach != null)
+                                        tuaSach.SoLuong--;
+                                }
+                            }
+
+                            // Lưu tất cả thay đổi trong một giao dịch
+                            context.SaveChanges();
+                            transaction.Commit(); // Commit giao dịch
+
+                            MessageBox.Show($"Đã xóa thành công các sách được chọn.", "Thông báo",
+                                MessageBoxButton.OK, MessageBoxImage.Information);
+
+                            LoadSach();
+                            tbxThongTinTimKiem.Text = "";
+                        }
+                        catch (Exception ex)
+                        {
+                            transaction.Rollback(); // Rollback giao dịch nếu có lỗi
+                            MessageBox.Show($"Có lỗi xảy ra: {ex.Message}", "Lỗi", MessageBoxButton.OK, MessageBoxImage.Error);
+                        }
+                    }
+                }
+            }
+        }
     }
 }
