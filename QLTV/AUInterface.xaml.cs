@@ -17,7 +17,8 @@ namespace QLTV
 
         private void Dashboard_Click(object sender, RoutedEventArgs e)
         {
-            MessageBox.Show("Dashboard");
+            AWRatingWindow ratingWindow = new AWRatingWindow(4);
+            ratingWindow.Show();
         }
 
         private void ReaderManagement_Click(object sender, RoutedEventArgs e)

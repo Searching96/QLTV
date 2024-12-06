@@ -22,4 +22,6 @@ public partial class PHIEUMUON
     public virtual ICollection<CTPHIEUTRA> CTPHIEUTRA { get; set; } = new List<CTPHIEUTRA>();
 
     public virtual DOCGIA IDDocGiaNavigation { get; set; } = null!;
+    public virtual ICollection<DANHGIA> DANHGIA { get; set; } = new List<DANHGIA>(); // Thêm thuộc tính này
+
 }

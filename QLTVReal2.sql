@@ -91,6 +91,29 @@ create table [TUASACH]
     [IsDeleted] bit not null
 )
 
+create table [DOCGIA]
+(
+    [ID] int identity(1, 1) constraint [PK_DOCGIA] primary key,
+    [MaDocGia] as ('DG' + right('00000' + cast([ID] as varchar(5)), 5)) persisted,
+    [IDTaiKhoan] int not null, -- FK
+    [IDLoaiDocGia] int not null, -- FK
+    [NgayLapThe] date not null,
+    [NgayHetHan] date not null,
+    [TongNo] decimal(18, 0) not null,
+    [GioiThieu] nvarchar(500) not null -- bo cung duoc
+)
+
+create table [PHIEUMUON]
+(
+    [ID] int identity(1, 1) constraint [PK_PHIEUMUON] primary key,
+    [MaPhieuMuon] as ('PM' + right('00000' + cast ([ID] as varchar(5)), 5)) persisted,
+    [IDDocGia] int not null, -- FK
+    [NgayMuon] datetime not null,
+    [IsPending] bit not null, -- kiem tra sau 3 ngay ma IsPending van bang 1 thi IsDeleted = 1
+    [IsDeleted] bit not null
+    -- IsPending = 0/1 xu ly tren code chu ko set default 
+)
+
 create table [TUASACH_TACGIA]
 (
     [IDTuaSach] int not null,
@@ -104,6 +127,8 @@ create table [TUASACH_THELOAI]
     [IDTheLoai] int not null,
     constraint [PK_TUASACH_THELOAI] primary key([IDTuaSach], [IDTheLoai])
 )
+
+
 
 create table [TINHTRANG]
 (
@@ -131,16 +156,7 @@ create table [SACH]
     [IsDeleted] bit not null
 )
 
-create table [PHIEUMUON]
-(
-    [ID] int identity(1, 1) constraint [PK_PHIEUMUON] primary key,
-    [MaPhieuMuon] as ('PM' + right('00000' + cast ([ID] as varchar(5)), 5)) persisted,
-    [IDDocGia] int not null, -- FK
-    [NgayMuon] datetime not null,
-    [IsPending] bit not null, -- kiem tra sau 3 ngay ma IsPending van bang 1 thi IsDeleted = 1
-    [IsDeleted] bit not null
-    -- IsPending = 0/1 xu ly tren code chu ko set default 
-)
+
 
 create table [CTPHIEUMUON]
 (
@@ -220,6 +236,14 @@ create table [THAMSO]
     [ID] int identity(1, 1) constraint [PK_THAMSO] primary key,
     [TuoiToiThieu] int not null,
     [TienPhatTraTreMotNgay] decimal(18, 0) not null
+)
+
+create table [DANHGIA]
+(
+	[ID] int identity(1,1) constraint [PK_DANHGIA] primary key,
+	[IDSach] int not null,
+	[IDPhieuMuon] int not null,
+	[DanhGia] decimal(4, 2) not null
 )
 
 

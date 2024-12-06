@@ -32,4 +32,6 @@ public partial class SACH
     public virtual TINHTRANG IDTinhTrangNavigation { get; set; } = null!;
 
     public virtual TUASACH IDTuaSachNavigation { get; set; } = null!;
+    public virtual ICollection<DANHGIA> DANHGIA { get; set; } = new List<DANHGIA>(); // Thêm thuộc tính này
+
 }

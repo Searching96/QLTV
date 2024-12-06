@@ -15,6 +15,7 @@ public partial class QLTVContext : DbContext
         : base(options)
     {
     }
+    public virtual DbSet<DANHGIA> DANHGIA { get; set; }
 
     public virtual DbSet<ADMIN> ADMIN { get; set; }
 
@@ -61,6 +62,7 @@ public partial class QLTVContext : DbContext
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
+
         modelBuilder.Entity<ADMIN>(entity =>
         {
             entity.Property(e => e.MaAdmin)
@@ -377,6 +379,21 @@ public partial class QLTVContext : DbContext
                     {
                         j.HasKey("IDTuaSach", "IDTheLoai");
                     });
+        });
+
+        modelBuilder.Entity<DANHGIA>(entity =>
+        {
+            entity.Property(e => e.DanhGia).HasColumnType("decimal(4, 2)");
+
+            entity.HasOne(d => d.IDPhieuMuonNavigation).WithMany(p => p.DANHGIA)
+                .HasForeignKey(d => d.IDPhieuMuon)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK_DANHGIA_IDPhieuMuon");
+
+            entity.HasOne(d => d.IDSachNavigation).WithMany(p => p.DANHGIA)
+                .HasForeignKey(d => d.IDSach)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK_DANHGIA_IDSach");
         });
 
         OnModelCreatingPartial(modelBuilder);

@@ -172,14 +172,6 @@ namespace QLTV
                 return;
             }
 
-            // Kiểm tra ngày hết hạn phải sau ngày lập thẻ ít nhất 1 năm
-            if (ngayHetHan <= dpNgayLapThe.SelectedDate.Value.AddYears(1))
-            {
-                icNgayLapTheError.ToolTip = "Ngày Hết Hạn phải sau Ngày Lập Thẻ ít nhất 1 năm";
-                icNgayLapTheError.Visibility = Visibility.Visible;
-                return;
-            }
-
             // Nếu hợp lệ, ẩn thông báo lỗi
             icNgayLapTheError.Visibility = Visibility.Collapsed;
         }

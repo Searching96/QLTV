@@ -107,7 +107,8 @@ namespace QLTV
 
         private void Dashboard_Click(object sender, RoutedEventArgs e)
         {
-            MessageBox.Show("Dashboard");
+            AWRatingWindow ratingWindow = new AWRatingWindow(4);
+            ratingWindow.Show();
         }
 
         private void ReaderManagement_Click(object sender, RoutedEventArgs e)
@@ -906,7 +907,82 @@ namespace QLTV
         // Import and Export 
         private void ImportExcel_Click(object sender, RoutedEventArgs e)
         {
-            
+            try
+            {
+                OpenFileDialog openFileDialog = new OpenFileDialog();
+                openFileDialog.Filter = "Excel Files|*.xlsx";
+
+                if (openFileDialog.ShowDialog() == true)
+                {
+                    var filePath = openFileDialog.FileName;
+
+                    using (var package = new ExcelPackage(new FileInfo(filePath)))
+                    {
+                        var worksheet = package.Workbook.Worksheets[0]; // Lấy sheet đầu tiên
+
+                        // Bỏ qua dòng tiêu đề
+                        int row = 2;
+
+                        while (worksheet.Cells[row, 2].Value != null) // Đọc đến khi gặp dòng trống
+                        {
+                            // Lấy dữ liệu từ các cột tương ứng, bắt đầu từ cột thứ 2
+                            string tenTaiKhoan = worksheet.Cells[row, 2].Value?.ToString();
+                            string tenLoaiDocGia = worksheet.Cells[row, 3].Value?.ToString();
+
+                            // Xử lý ngày tháng, kiểm tra giá trị "0" hoặc trống
+                            DateTime ngayLapThe;
+                            if (!DateTime.TryParseExact(worksheet.Cells[row, 4].Value?.ToString(), "dd/MM/yyyy", CultureInfo.InvariantCulture, DateTimeStyles.None, out ngayLapThe))
+                            {
+                                MessageBox.Show($"Lỗi khi chuyển đổi ngày lập thẻ tại dòng {row}. Vui lòng kiểm tra lại định dạng (dd/MM/yyyy).", "Lỗi", MessageBoxButton.OK, MessageBoxImage.Error);
+                                continue; // Bỏ qua dòng này và tiếp tục với dòng tiếp theo
+                            }
+
+                            DateTime ngayHetHan;
+                            if (!DateTime.TryParseExact(worksheet.Cells[row, 5].Value?.ToString(), "dd/MM/yyyy", CultureInfo.InvariantCulture, DateTimeStyles.None, out ngayHetHan))
+                            {
+                                MessageBox.Show($"Lỗi khi chuyển đổi ngày hết hạn tại dòng {row}. Vui lòng kiểm tra lại định dạng (dd/MM/yyyy).", "Lỗi", MessageBoxButton.OK, MessageBoxImage.Error);
+                                continue;
+                            }
+
+                            decimal tongNo = decimal.Parse(worksheet.Cells[row, 6].Value?.ToString());
+                            string gioiThieu = worksheet.Cells[row, 7].Value?.ToString();
+
+                            // Tìm ID tương ứng trong database
+                            var taiKhoan = _context.TAIKHOAN.FirstOrDefault(tk => tk.TenTaiKhoan == tenTaiKhoan);
+                            var loaiDocGia = _context.LOAIDOCGIA.FirstOrDefault(ldg => ldg.TenLoaiDocGia == tenLoaiDocGia);
+
+                            if (taiKhoan == null || loaiDocGia == null)
+                            {
+                                MessageBox.Show($"Tên tài khoản hoặc tên loại độc giả không hợp lệ tại dòng {row}. Vui lòng kiểm tra lại dữ liệu Excel.", "Lỗi", MessageBoxButton.OK, MessageBoxImage.Error);
+                                continue; // Dừng import nếu có lỗi
+                            }
+
+                            // Tạo độc giả mới
+                            var newReader = new DOCGIA
+                            {
+                                IDTaiKhoan = taiKhoan.ID,
+                                IDLoaiDocGia = loaiDocGia.ID,
+                                NgayLapThe = ngayLapThe,
+                                NgayHetHan = ngayHetHan,
+                                TongNo = tongNo,
+                                GioiThieu = gioiThieu
+                            };
+
+                            _context.DOCGIA.Add(newReader);
+                            _context.SaveChanges();
+
+                            row++;
+                        }
+
+                        LoadReadersData(); // Cập nhật lại DataGrid
+                        MessageBox.Show("Nhập dữ liệu từ Excel thành công!", "Thông báo", MessageBoxButton.OK, MessageBoxImage.Information);
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Lỗi khi nhập dữ liệu: {ex.Message}", "Lỗi", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
         }
 
         private void ExportExcel_Click(object sender, RoutedEventArgs e)
