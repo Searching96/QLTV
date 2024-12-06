@@ -43,8 +43,9 @@
     <Grid Background="White" Margin="0, 0, 0, 5">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
-            <RowDefinition Height="100*"/>
+            <RowDefinition Height="Auto"/>
             <RowDefinition Height="800*"/>
+            <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
 
         <Grid>
@@ -231,24 +232,40 @@
                   SelectionUnit="FullRow" IsReadOnly="false" AutoGenerateColumns="False"
                   SelectionChanged="dgTacGia_SelectionChanged">
             <DataGrid.Columns>
-                <!-- Cột Checkbox "Select All" ở header -->
                 <DataGridTemplateColumn Width="50">
                     <DataGridTemplateColumn.Header>
-                        <CheckBox x:Name="cbxSelectAll" Checked="btnSelectAll_Checked" Unchecked="btnSelectAll_Unchecked" />
+                        <CheckBox x:Name="cbxSelectAll" Content=""
+                                  Checked="cbxSelectAll_Checked"
+                                  Unchecked="cbxSelectAll_Unchecked" />
                     </DataGridTemplateColumn.Header>
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate>
-                            <CheckBox IsChecked="{Binding IsSelected}" />
+                            <CheckBox IsChecked="{Binding IsSelected}"
+                                      Checked="cbxSelectRow_Checked"
+                                      Unchecked="cbxSelectRow_Unchecked"/>
                         </DataTemplate>
                     </DataGridTemplateColumn.CellTemplate>
                 </DataGridTemplateColumn>
 
                 <!-- Các cột thông tin khác -->
-                <DataGridTextColumn Header="Mã Tác Giả:" Width="*" Binding="{Binding MaTacGia}"/>
-                <DataGridTextColumn Header="Tên Tác Giả:" Width="*" Binding="{Binding TenTacGia}"/>
-                <DataGridTextColumn Header="Năm Sinh:" Width="*" Binding="{Binding NamSinh}"/>
-                <DataGridTextColumn Header="Quốc Tịch:" Width="*" Binding="{Binding QuocTich}"/>
+                <DataGridTextColumn Header="Mã Tác Giả:" Width="*" Binding="{Binding MaTacGia, Mode=OneWay}" IsReadOnly="True"/>
+                <DataGridTextColumn Header="Tên Tác Giả:" Width="*" Binding="{Binding TenTacGia, Mode=OneWay}" IsReadOnly="True"/>
+                <DataGridTextColumn Header="Năm Sinh:" Width="*" Binding="{Binding NamSinh, Mode=OneWay}" IsReadOnly="True"/>
+                <DataGridTextColumn Header="Quốc Tịch:" Width="*" Binding="{Binding QuocTich, Mode=OneWay}" IsReadOnly="True"/>
             </DataGrid.Columns>
         </DataGrid>
+
+        <StackPanel Orientation="Horizontal" Grid.Row="3" 
+                    HorizontalAlignment="Center" VerticalAlignment="Bottom">
+            <Button Click="btnPrevious_Click" Width="20" Height="20" Padding="0">
+                <materialDesign:PackIcon Kind="ChevronLeft"/>
+            </Button>
+
+            <TextBlock x:Name="tbxPageNumber" VerticalAlignment="Center" Margin="5"/>
+
+            <Button Click="btnNext_Click" Width="20" Height="20" Padding="0">
+                <materialDesign:PackIcon Kind="ChevronRight"/>
+            </Button>
+        </StackPanel>
     </Grid>
 </UserControl>

@@ -1,6 +1,7 @@
 ﻿using MaterialDesignThemes.Wpf;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Internal;
+using Microsoft.IdentityModel.Tokens;
 using Microsoft.Win32;
 using OfficeOpenXml;
 using OfficeOpenXml.Style;
@@ -35,14 +36,13 @@ namespace QLTV
     /// </summary>
     public partial class AUQuanLyTacGia : UserControl
     {
-        private List<TacGiaViewModel> _fullDataSource; // Nguồn dữ liệu đầy đủ
-
-        public AUQuanLyTacGia()
-        {
-            InitializeComponent();
-            ExcelPackage.LicenseContext = OfficeOpenXml.LicenseContext.NonCommercial;
-            LoadTacGia();
-        }
+        public List<string> lstSelectedMaTacGia = new List<string>();
+        private ObservableCollection<TacGiaViewModel> _dsTacGia;
+        private ObservableCollection<TacGiaViewModel> _fullDataSource; // Nguồn dữ liệu đầy đủ
+        private int _currentPage = 1;
+        private int _itemsPerPage = 12;
+        private int _totalItems = 0;
+        private bool _isSearchMode = false; // Cờ để phân biệt chế độ
 
         public class TacGiaViewModel : INotifyPropertyChanged
         {
@@ -50,7 +50,6 @@ namespace QLTV
             public string TenTacGia { get; set; }
             public int NamSinh { get; set; }
             public string QuocTich { get; set; }
-
             private bool _isSelected;
             public bool IsSelected
             {
@@ -73,11 +72,19 @@ namespace QLTV
             }
         }
 
+        public AUQuanLyTacGia()
+        {
+            InitializeComponent();
+            ExcelPackage.LicenseContext = OfficeOpenXml.LicenseContext.NonCommercial;
+            _dsTacGia = new ObservableCollection<TacGiaViewModel>();
+            LoadTacGia();
+        }
+
         private void LoadTacGia()
         {
             using (var context = new QLTVContext())
             {
-                List<TacGiaViewModel> dsTacGia = context.TACGIA
+                var data = context.TACGIA
                     .Where(tg => !tg.IsDeleted)
                     .Select(tg => new TacGiaViewModel
                     {
@@ -88,7 +95,219 @@ namespace QLTV
                     })
                     .ToList();
 
-                dgTacGia.ItemsSource = dsTacGia;
+                _fullDataSource = new ObservableCollection<TacGiaViewModel>(data);
+
+                _isSearchMode = false;
+                _currentPage = 1;
+
+                cbxSelectAll.IsChecked = false;
+
+                ApplyPaging();
+            }
+        }
+
+        private void PerformSearch()
+        {
+            string searchTerm = NormalizeString(tbxThongTinTimKiem.Text.Trim().ToLower());
+            string selectedProperty = ((ComboBoxItem)cbbThuocTinhTimKiem.SelectedItem)?.Content.ToString();
+
+            // Kiểm tra nếu không có gì được chọn
+            if (string.IsNullOrEmpty(selectedProperty))
+            {
+                MessageBox.Show("Vui lòng chọn thuộc tính tìm kiếm", "Thông báo", MessageBoxButton.OK, MessageBoxImage.Warning);
+                return;
+            }
+
+            using (var context = new QLTVContext())
+            {
+                var data = context.TACGIA
+                    .Where(tg => !tg.IsDeleted)
+                    .Select(tg => new TacGiaViewModel
+                    {
+                        MaTacGia = tg.MaTacGia,
+                        TenTacGia = tg.TenTacGia,
+                        NamSinh = tg.NamSinh,
+                        QuocTich = tg.QuocTich
+                    })
+                    .AsEnumerable() // Chuyển về IEnumerable để lọc trên máy khách
+                    .Where(tg =>
+                        selectedProperty == "Tên Tác Giả" ?
+                            NormalizeString(tg.TenTacGia).Contains(searchTerm) :
+                        selectedProperty == "Năm Sinh" ?
+                            (int.TryParse(searchTerm, out int searchYear) && tg.NamSinh == searchYear) :
+                        selectedProperty == "Quốc Tịch" ?
+                            NormalizeString(tg.QuocTich).Contains(searchTerm) :
+                        true
+                    )
+                    .ToList();
+
+                // Initialize _fullDataSource as an ObservableCollection
+                _fullDataSource = new ObservableCollection<TacGiaViewModel>(data);
+
+                // Đánh dấu đang ở chế độ tìm kiếm
+                _isSearchMode = true;
+                _currentPage = 1;
+
+                // Hủy nút select all
+                cbxSelectAll.IsChecked = false;
+
+                // Áp dụng phân trang
+                ApplyPaging();
+            }
+        }
+
+
+        private void btnTimKiem_Click(object sender, RoutedEventArgs e)
+        {
+            PerformSearch();
+        }
+
+        private void ApplyPaging()
+        {
+            if (_fullDataSource == null || _fullDataSource.Count == 0)
+            {
+                // Không có dữ liệu
+                _dsTacGia.Clear();
+                UpdatePageInfo(0);
+                return;
+            }
+
+            // Tính toán phân trang
+            int totalItems = _fullDataSource.Count;
+            int totalPages = (int)Math.Ceiling((double)totalItems / _itemsPerPage);
+
+            // Lấy dữ liệu cho trang hiện tại
+            var pageData = _fullDataSource
+                .Skip((_currentPage - 1) * _itemsPerPage)
+                .Take(_itemsPerPage)
+                .ToList();
+
+            // Cập nhật ObservableCollection
+            _dsTacGia.Clear();
+            foreach (var item in pageData)
+            {
+                _dsTacGia.Add(item);
+            }
+
+            // Cập nhật DataGrid
+            dgTacGia.ItemsSource = _dsTacGia;
+
+            // Cập nhật thông tin trang
+            UpdatePageInfo(totalItems);
+        }
+
+        private void UpdatePageInfo(int totalItems)
+        {
+            int totalPages = (int)Math.Ceiling((double)totalItems / _itemsPerPage);
+            var tbxPageNumber = (TextBlock)FindName("tbxPageNumber");
+
+            if (tbxPageNumber != null)
+            {
+                tbxPageNumber.Text = totalItems > 0
+                    ? $"Trang {_currentPage}/{totalPages} (Tổng: {totalItems} kết quả)"
+                    : "Không có kết quả";
+            }
+
+            // Kiểm soát trạng thái nút
+            var btnPrevious = (Button)FindName("btnPrevious");
+            var btnNext = (Button)FindName("btnNext");
+
+            if (btnPrevious != null) btnPrevious.IsEnabled = _currentPage > 1;
+            if (btnNext != null) btnNext.IsEnabled = _currentPage < totalPages;
+        }
+
+        private void btnPrevious_Click(object sender, RoutedEventArgs e)
+        {
+            if (_currentPage > 1)
+            {
+                _currentPage--;
+                ApplyPaging();
+            }
+        }
+
+        private void btnNext_Click(object sender, RoutedEventArgs e)
+        {
+            int totalPages = (int)Math.Ceiling((double)_fullDataSource.Count / _itemsPerPage);
+            if (_currentPage < totalPages)
+            {
+                _currentPage++;
+                ApplyPaging();
+            }
+        }
+
+        private DataGridRow GetRow(CheckBox cbx)
+        {
+            var dgRow = VisualTreeHelper.GetParent(cbx) as FrameworkElement;
+            while (dgRow != null && !(dgRow is DataGridRow))
+                dgRow = VisualTreeHelper.GetParent(dgRow) as FrameworkElement;
+            return dgRow as DataGridRow;
+        }
+
+        private CheckBox GetCheckBox(FrameworkElement element)
+        {
+            if (element == null) return null;
+
+            for (int i = 0; i < VisualTreeHelper.GetChildrenCount(element); i++)
+            {
+                var child = VisualTreeHelper.GetChild(element, i) as FrameworkElement;
+                if (child is CheckBox checkBox)
+                {
+                    return checkBox; // Tìm thấy CheckBox
+                }
+                else
+                {
+                    var result = GetCheckBox(child); // Đệ quy tìm sâu hơn
+                    if (result != null)
+                        return result;
+                }
+            }
+            return null;
+        }
+
+        private void cbxSelectRow_Checked(object sender, RoutedEventArgs e)
+        {
+            var cbx = sender as CheckBox;
+            var row = GetRow(cbx);
+            if (row != null)
+            {
+                var tacGia = row.Item as TacGiaViewModel;
+                tacGia.IsSelected = true;
+            }
+        }
+
+        private void cbxSelectRow_Unchecked(object sender, RoutedEventArgs e)
+        {
+            var cbx = sender as CheckBox;
+            var row = GetRow(cbx);
+            if (row != null)
+            {
+                var tacGia = row.Item as TacGiaViewModel;
+                tacGia.IsSelected = false;
+            }
+        }
+
+        private void cbxSelectAll_Checked(object sender, RoutedEventArgs e)
+        {
+            var lstTacGia = _fullDataSource;
+            MessageBox.Show(lstTacGia.Count.ToString());
+            if (lstTacGia != null)
+            {
+                foreach (var tacGia in lstTacGia)
+                {
+                    tacGia.IsSelected = true;
+                }
+            }
+        }
+
+        private void cbxSelectAll_Unchecked(object sender, RoutedEventArgs e)
+        {
+            var lstTacGia = _fullDataSource;
+            if (lstTacGia != null)
+            {
+                foreach (var tacGia in lstTacGia)
+                {
+                    tacGia.IsSelected = false;
+                }
             }
         }
 
@@ -254,54 +473,6 @@ namespace QLTV
                     .Where(c => CharUnicodeInfo.GetUnicodeCategory(c) != UnicodeCategory.NonSpacingMark)
                     .ToArray()
             ).Normalize(NormalizationForm.FormC).ToLower();
-        }
-
-        private void btnTimKiem_Click(object sender, RoutedEventArgs e)
-        {
-            string searchTerm = NormalizeString(tbxThongTinTimKiem.Text.Trim().ToLower());
-            string selectedProperty = ((ComboBoxItem)cbbThuocTinhTimKiem.SelectedItem)?.Content.ToString();
-
-            // Kiểm tra nếu không có gì được chọn
-            if (string.IsNullOrEmpty(selectedProperty))
-            {
-                MessageBox.Show("Vui lòng chọn thuộc tính tìm kiếm", "Thông báo", MessageBoxButton.OK, MessageBoxImage.Warning);
-                return;
-            }
-
-            using (var context = new QLTVContext())
-            {
-                var query = context.TACGIA
-                    .Where(tg => !tg.IsDeleted)
-                    .Select(tg => new
-                    {
-                        tg.MaTacGia,
-                        tg.TenTacGia,
-                        tg.NamSinh,
-                        tg.QuocTich,
-                    })
-                    .AsEnumerable() // Chuyển về IEnumerable để lọc trên máy khách
-                    .ToList();
-
-                // Lọc theo thuộc tính tìm kiếm được chọn
-                if (selectedProperty == "Tên Tác Giả")
-                {
-                    query = query.Where(tg => NormalizeString(tg.TenTacGia).Contains(NormalizeString(searchTerm))).ToList();
-                }
-                else if (selectedProperty == "Năm Sinh")
-                {
-                    int namSinh;
-                    if (!int.TryParse(searchTerm, out namSinh))
-                        MessageBox.Show("Năm sinh phải là số nguyên", "Lỗi", MessageBoxButton.OK, MessageBoxImage.Warning);
-                    query = query.Where(tg => tg.NamSinh == namSinh).ToList();
-                }
-                else if (selectedProperty == "Quốc Tịch")
-                {
-                    query = query.Where(tg => NormalizeString(tg.QuocTich).Contains(NormalizeString(searchTerm))).ToList();
-                }
-
-                // Cập nhật ItemsSource cho DataGrid
-                dgTacGia.ItemsSource = query;
-            }
         }
 
         private void ExportDataGridToExcel()
@@ -551,14 +722,15 @@ namespace QLTV
         private void btnXoaChon_Click(object sender, RoutedEventArgs e)
         {
             // Lấy danh sách các tác giả được chọn
-            List<TacGiaViewModel> dsTacGia = dgTacGia.ItemsSource as List<TacGiaViewModel>;
-            var lstSelectedMaTacGia = dsTacGia.Where(tg => tg.IsSelected)
+            lstSelectedMaTacGia = _fullDataSource
+                .Where(tg => tg.IsSelected)
                 .Select(tg => tg.MaTacGia)
                 .ToList();
 
-            if (lstSelectedMaTacGia.Count == 0)
+            if (lstSelectedMaTacGia.IsNullOrEmpty())
             {
-                MessageBox.Show("Chưa chọn tác giả để xóa.", "Thông báo", MessageBoxButton.OK, MessageBoxImage.Information);
+                MessageBox.Show("Chưa chọn tác giả để xóa.", "Thông báo", 
+                    MessageBoxButton.OK, MessageBoxImage.Information);
                 return;
             }
 
@@ -597,6 +769,7 @@ namespace QLTV
                                 MessageBoxButton.OK, MessageBoxImage.Information);
 
                             LoadTacGia();
+                            tbxThongTinTimKiem.Text = "";
                         }
                         catch (Exception ex)
                         {
