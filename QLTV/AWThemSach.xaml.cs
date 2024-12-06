@@ -354,5 +354,10 @@ namespace QLTV
             if (cbbTuaSach.SelectedItem != null)
                 icTuaSachError.Visibility = Visibility.Collapsed;
         }
+
+        private void btnThoat_Click(object sender, RoutedEventArgs e)
+        {
+            this.Close();
+        }
     }
 }

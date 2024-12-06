@@ -171,5 +171,10 @@ namespace QLTV
 
             icQuocTichError.Visibility = Visibility.Collapsed;
         }
+
+        private void btnThoat_Click(object sender, RoutedEventArgs e)
+        {
+            this.Close();
+        }
     }
 }

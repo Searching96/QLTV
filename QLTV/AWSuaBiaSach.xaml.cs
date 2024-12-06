@@ -40,25 +40,44 @@ namespace QLTV
 
         public async Task<string> GetBookCoverUrlAsync(string tuaSach)
         {
-            string apiKey = "AIzaSyDRuxWjyIOb0Vy2JVEaJEQxXNc70ijJJUg";     
+            string apiKey = "AIzaSyDRuxWjyIOb0Vy2JVEaJEQxXNc70ijJJUg";
             string url = $"https://www.googleapis.com/books/v1/volumes?q=intitle:{Uri.EscapeDataString(tuaSach)}&key={apiKey}";
 
-            using HttpClient client = new HttpClient();
-            var response = await client.GetStringAsync(url);
-            using JsonDocument document = JsonDocument.Parse(response);
-            var root = document.RootElement;
-
-            if (root.TryGetProperty("items", out JsonElement items) && items.GetArrayLength() > 0)
+            try
             {
-                var volumeInfo = items[0].GetProperty("volumeInfo");
-                if (volumeInfo.TryGetProperty("imageLinks", out JsonElement imageLinks) &&
-                    imageLinks.TryGetProperty("thumbnail", out JsonElement thumbnail))
-                {
-                    return thumbnail.GetString() ?? "No cover available";
-                }
-            }
+                using HttpClient client = new HttpClient();
+                var response = await client.GetStringAsync(url);
 
-            return "No cover available";
+                using JsonDocument document = JsonDocument.Parse(response);
+                var root = document.RootElement;
+
+                if (root.TryGetProperty("items", out JsonElement items) && items.GetArrayLength() > 0)
+                {
+                    var volumeInfo = items[0].GetProperty("volumeInfo");
+                    if (volumeInfo.TryGetProperty("imageLinks", out JsonElement imageLinks) &&
+                        imageLinks.TryGetProperty("thumbnail", out JsonElement thumbnail))
+                    {
+                        return thumbnail.GetString() ?? "No cover available";
+                    }
+                }
+
+                return "No cover available";
+            }
+            catch (HttpRequestException)
+            {
+                MessageBox.Show("Server ảnh đang bị lỗi. Vui lòng thử lại sau.", "Lỗi", MessageBoxButton.OK, MessageBoxImage.Error);
+                return "No cover available";
+            }
+            catch (JsonException)
+            {
+                MessageBox.Show("Đã xảy ra lỗi khi phân tích dữ liệu từ máy chủ.", "Lỗi", MessageBoxButton.OK, MessageBoxImage.Error);
+                return "No cover available";
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Đã xảy ra lỗi: {ex.Message}", "Lỗi", MessageBoxButton.OK, MessageBoxImage.Error);
+                return "No cover available";
+            }
         }
 
         private async Task<bool> IsImageUrlValid(string url)

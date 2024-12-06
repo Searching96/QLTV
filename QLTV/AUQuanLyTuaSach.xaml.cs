@@ -476,6 +476,7 @@ namespace QLTV
                 tbxDSTheLoai.Text = "";
                 tbxSoLuong.Text = "";
                 tbxHanMuonToiDa.Text = "";
+                imgBiaSach.Source = null;
             }
         }
 

@@ -46,12 +46,12 @@
     
     <Grid>
         <Grid.RowDefinitions>
-            <RowDefinition Height="1*"/>
+            <RowDefinition Height="Auto"/>
             <RowDefinition Height="4*"/>
-            <RowDefinition Height="1*"/>
+            <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
 
-        <TextBlock Text="Thêm Tác Giả" Grid.Row="0" FontSize="24"
+        <TextBlock Text="Thêm Tác Giả" Grid.Row="0" FontSize="26" Margin="10"
                    FontWeight="Bold" HorizontalAlignment="Center"
                    VerticalAlignment="Center"/>
         
@@ -98,8 +98,12 @@
                                      Style="{StaticResource ErrorIcon}"
                                      Margin="{x:Static local:AWThemTuaSach.ErrorIconMargin}"/>
         </Grid>
-        
-        <Button x:Name="btnThem" Grid.Row="2" Content="Thêm" Margin="0, 5, 0, 5"
-                HorizontalAlignment="Center" Click="btnThem_Click"/>
+
+        <DockPanel Grid.Row="2">
+            <Button x:Name="btnThoat" Content="Thoát" Click="btnThoat_Click" DockPanel.Dock="Right"
+                    Margin="0, 5, 10, 5" Width="85" HorizontalAlignment="Right"/>
+            <Button x:Name="btnThem" Content="Thêm" Click="btnThem_Click" DockPanel.Dock="Right"
+                    Margin="0, 5, 10, 5" Width="85" HorizontalAlignment="Right"/>
+        </DockPanel>
     </Grid>
 </Window>

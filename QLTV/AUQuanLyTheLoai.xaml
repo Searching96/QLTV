@@ -55,7 +55,7 @@
             </Grid.RowDefinitions>
 
             <TextBlock Grid.Row="0" Text="Thông Tin Thể Loại" FontSize="26"
-                       FontWeight="Bold" HorizontalAlignment="Left" Margin="5"/>
+                       FontWeight="Bold" HorizontalAlignment="Left" Margin="10, 5"/>
 
             <!--Section hien thi the loai duoc chon-->
             <Grid Grid.Row="1">
