@@ -330,12 +330,6 @@ namespace QLTV
             }
         }
 
-        //private void btnShow_Click(object sender, RoutedEventArgs e)
-        //{
-        //    string selectedItems = string.Join(", ", lstSelectedMaTuaSach);
-        //    MessageBox.Show($"Các mã tựa sách đã chọn: {selectedItems}", "Thông báo");
-        //}
-
         private void btnThemTuaSach_Click(object sender, RoutedEventArgs e)
         {
             AWThemTuaSach awThemTuaSach = new AWThemTuaSach();
