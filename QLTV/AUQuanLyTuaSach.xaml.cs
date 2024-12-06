@@ -26,6 +26,7 @@ using Microsoft.Identity.Client;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using static QLTV.AUQuanLyTacGia;
+using Microsoft.IdentityModel.Tokens;
 
 namespace QLTV
 {
@@ -277,31 +278,25 @@ namespace QLTV
             return null;
         }
 
-        private void RowCheckBox_Checked(object sender, RoutedEventArgs e)
+        private void cbxSelectRow_Checked(object sender, RoutedEventArgs e)
         {
             var cbx = sender as CheckBox;
             var row = GetRow(cbx);
             if (row != null)
             {
-                var tuaSach = row.Item as dynamic;
-                if (tuaSach != null && !lstSelectedMaTuaSach.Contains(tuaSach.MaTuaSach))
-                {
-                    lstSelectedMaTuaSach.Add(tuaSach.MaTuaSach);
-                }
+                var tuaSach = row.Item as TuaSachViewModel;
+                tuaSach.IsSelected = true;
             }
         }
 
-        private void RowCheckBox_Unchecked(object sender, RoutedEventArgs e)
+        private void cbxSelectRow_Unchecked(object sender, RoutedEventArgs e)
         {
             var cbx = sender as CheckBox;
             var row = GetRow(cbx);
             if (row != null)
             {
-                var tuaSach = row.Item as dynamic;
-                if (tuaSach != null && lstSelectedMaTuaSach.Contains(tuaSach.MaTuaSach))
-                {
-                    lstSelectedMaTuaSach.Remove(tuaSach.MaTuaSach);
-                }
+                var tuaSach = row.Item as TuaSachViewModel;
+                tuaSach.IsSelected = false;
             }
         }
 
@@ -931,7 +926,12 @@ namespace QLTV
 
         private void btnXoaChon_Click(object sender, RoutedEventArgs e)
         {
-            if (lstSelectedMaTuaSach.Count == 0)
+            lstSelectedMaTuaSach = _fullDataSource
+                .Where(ts => ts.IsSelected)
+                .Select(ts => ts.MaTuaSach)
+                .ToList();
+
+            if (lstSelectedMaTuaSach.IsNullOrEmpty())
             {
                 MessageBox.Show("Chưa chọn tựa sách để xóa.", "Thông báo", 
                     MessageBoxButton.OK, MessageBoxImage.Information);
