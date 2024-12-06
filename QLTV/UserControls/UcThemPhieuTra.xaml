@@ -63,10 +63,9 @@
                     <materialDesign:DataGridComboBoxColumn Header="Tình trạng trả"
                                       x:Name="colTinhTrangTra"
                                       DisplayMemberPath="TenTinhTrang"
-                                      SelectedValuePath=""
                                       materialDesign:ValidationAssist.HorizontalAlignment="Right"
                                       materialDesign:ValidationAssist.UsePopup="True"
-                                      materialDesign:ValidationAssist.PopupPlacement="Bottom"
+                                      materialDesign:ValidationAssist.PopupPlacement="MousePoint"
                                       SelectedValueBinding="{Binding TinhTrangTra, UpdateSourceTrigger=PropertyChanged, ValidatesOnDataErrors=True}" />
                     <materialDesign:DataGridTextColumn Header="Ghi chú"
                                       Foreground="{DynamicResource SecondaryHueMidBrush}"

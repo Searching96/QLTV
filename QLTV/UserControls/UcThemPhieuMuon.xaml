@@ -44,12 +44,7 @@
             </ComboBox>
             <materialDesign:PackIcon Kind="AlertCircleOutline"
                                      x:Name="icDocGiaError"
-                        Style="{StaticResource Warning}"
-                        Grid.Column="1"
-                        HorizontalAlignment="Left" VerticalAlignment="Center"
-                        Visibility="Collapsed"
-                        Foreground="Red" Background="Transparent" Width="20" Height="20"
-                        ToolTipService.InitialShowDelay="0" />
+                        Style="{StaticResource Warning}"/>
         </Grid>
         <!-- Search Section -->
         <StackPanel Grid.Row="2" Margin="0,0,0,10">
@@ -90,24 +85,18 @@
                       AutoGenerateColumns="False" 
                       SelectionMode="Extended"
                       IsReadOnly="True"
-                      VerticalContentAlignment="Center"
-                      HorizontalContentAlignment="Center">
-                <DataGrid.CellStyle>
-                    <Style TargetType="DataGridCell">
-                        <Setter Property="VerticalContentAlignment" Value="Center" />
-                    </Style>
-                </DataGrid.CellStyle>
+                      Padding="0">
                 <DataGrid.Columns>
                     <DataGridTextColumn Header="Mã sách" Binding="{Binding MaSach}" Width="2*"/>
-                    <DataGridTextColumn Header="Tên sách" Binding="{Binding TuaSach}" Width="5*"/>
-                    <DataGridTextColumn Header="Tác giả" Binding="{Binding DSTacGia}" Width="4*"/>
-                    <DataGridTextColumn Header="Thể loại" Binding="{Binding DSTheLoai}" Width="4*"/>
+                    <DataGridTextColumn Header="Tên sách" Binding="{Binding TuaSach}" Width="4*"/>
+                    <DataGridTextColumn Header="Tác giả" Binding="{Binding DSTacGia}" Width="3*"/>
+                    <DataGridTextColumn Header="Thể loại" Binding="{Binding DSTheLoai}" Width="3*"/>
                     <DataGridTextColumn Header="Tình trạng" 
                                     Binding="{Binding Book.IDTinhTrangNavigation.TenTinhTrang}" 
                                     IsReadOnly="True"
                                     Width="2*"/>
                     <DataGridTextColumn Header="Hạn mượn tối đa (tuần)" Binding="{Binding HanMuonToiDa}" Width="4*"/>
-                    <DataGridTemplateColumn Width="2*">
+                    <DataGridTemplateColumn Width="Auto">
                         <DataGridTemplateColumn.CellTemplate>
                             <DataTemplate>
                                 <Button ToolTip="Chọn" 
@@ -132,10 +121,15 @@
         <DataGrid Grid.Row="5" x:Name="dgSelectedBooks" 
                   AutoGenerateColumns="False" 
                   Margin="0,0,0,10"
+                  Padding="0"
                   CanUserAddRows="False">
             <DataGrid.CellStyle>
-                <Style TargetType="DataGridCell">
-                    <Setter Property="VerticalContentAlignment" Value="Center" />
+                <Style TargetType="DataGridCell" BasedOn="{StaticResource MaterialDesignDataGridCell}">
+                    <Setter Property="Padding" Value="5,15,5,0"/>
+                    <!--<Setter Property="VerticalAlignment" Value="Stretch"/>
+                    <Setter Property="HorizontalAlignment" Value="Stretch"/>
+                    <Setter Property="HorizontalContentAlignment" Value="Center"/>
+                    <Setter Property="VerticalContentAlignment" Value="Center"/>-->
                 </Style>
             </DataGrid.CellStyle>
             <DataGrid.Columns>
@@ -143,7 +137,7 @@
                 <DataGridTextColumn Header="Tên sách" 
                                     Binding="{Binding IDTuaSachNavigation.TenTuaSach}" 
                                     IsReadOnly="True"
-                                    Width="4*"/>
+                                    Width="3*"/>
                 <DataGridTextColumn Header="Tác giả" 
                                     Binding="{Binding DSTacGia}" 
                                     Width="3*"
@@ -165,40 +159,33 @@
                         <DataTemplate>
                             <Grid>
                                 <TextBlock
-                                Text="{Binding CustomBorrowWeeks}" />
-                                <materialDesign:PackIcon Kind="AlertCircleOutline" Grid.Row="0" Grid.Column="2"
-                                    Style="{StaticResource Warning}"
-                                    HorizontalAlignment="Right" VerticalAlignment="Center"
-                                    Foreground="Red" Background="Transparent" Width="20" Height="20"
-                                    ToolTipService.InitialShowDelay="0"
-                            />
+                                Text="{Binding CustomBorrowWeeks}"
+                                    Margin="0,0,0,15"
+                                    Padding="5,0,0,0"/>
+                                <!--<materialDesign:PackIcon Style="{StaticResource Warning}"/>-->
                             </Grid>
                         </DataTemplate>
                     </DataGridTemplateColumn.CellTemplate>
                     <DataGridTemplateColumn.CellEditingTemplate>
                         <DataTemplate>
-
-                            <Grid>
+                            <Grid >
                                 <TextBox
                                     AcceptsReturn="False"
                                     Style="{StaticResource MaterialDesignOutlinedTextBox}"
                                     Foreground="{DynamicResource SecondaryHueMidBrush}"
-                                    materialDesign:ValidationAssist.HorizontalAlignment="Right"
+                                    materialDesign:ValidationAssist.HorizontalAlignment="Center"
                                     Padding="0"
-                                    Width="Auto"
+                                    materialDesign:ValidationAssist.Background="Transparent"
+                                    Margin="0,0,0,15"
                                     Text = "{Binding CustomBorrowWeeks, UpdateSourceTrigger=PropertyChanged, ValidatesOnDataErrors=True}"
                                 />
-                                <materialDesign:PackIcon Kind="AlertCircleOutline"
-                                    Style="{StaticResource Warning}"
-                                    HorizontalAlignment="Right" VerticalAlignment="Center"
-                                    Foreground="Red" Background="White" Width="20" Height="20"
-                                    ToolTipService.InitialShowDelay="0"
-                            />
+                                <!--<materialDesign:PackIcon Kind="AlertCircleOutline"
+                                    Style="{StaticResource Warning}"/>-->
                             </Grid>
                         </DataTemplate>
                     </DataGridTemplateColumn.CellEditingTemplate>
                 </DataGridTemplateColumn>
-                <DataGridTemplateColumn Width="2*">
+                <DataGridTemplateColumn Width="Auto">
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate>
                             <Button ToolTip="Xóa" Click="btnRemoveBook_Click">

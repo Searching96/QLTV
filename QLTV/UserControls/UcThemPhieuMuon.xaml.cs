@@ -13,6 +13,7 @@ using System.Globalization;
 using System.Text;
 using System.Windows.Media;
 using System.Runtime.CompilerServices;
+using Microsoft.IdentityModel.Tokens;
 
 namespace QLTV.UserControls
 {
@@ -28,7 +29,7 @@ namespace QLTV.UserControls
         private class BookWithCustomDate : INotifyPropertyChanged, IDataErrorInfo
         {
             private BookDisplayItem _bookItem;
-            private int _CustomBorrowWeeks;
+            private string _CustomBorrowWeeks;
             private DateTime _customReturnDate;
 
             public SACH Book
@@ -65,7 +66,7 @@ namespace QLTV.UserControls
                 get => _bookItem.DSTacGia;
             }
 
-            public int CustomBorrowWeeks
+            public string CustomBorrowWeeks
             {
                 get => _CustomBorrowWeeks;
                 set
@@ -105,16 +106,27 @@ namespace QLTV.UserControls
                 {
                     if (columnName == nameof(CustomBorrowWeeks))
                     {
-                        if (CustomBorrowWeeks <= 0)
+                        if(string.IsNullOrWhiteSpace(CustomBorrowWeeks))
                         {
                             isValid = false;
-                            return "Số tuần mượn phải lớn hơn 0.";
+                            return "Thầy Dũng đẹp trai";
                         }
 
-                        if (CustomBorrowWeeks > Book.IDTuaSachNavigation.HanMuonToiDa)
+                        if(!int.TryParse(CustomBorrowWeeks,out int a))
                         {
                             isValid = false;
-                            return $"Số tuần mượn không thể vượt quá {Book.IDTuaSachNavigation.HanMuonToiDa}.";
+                            return "Nhập số nguyên";
+                        }
+                        if (a <= 0)
+                        {
+                            isValid = false;
+                            return "Tối thiểu 1.";
+                        }
+
+                        if (a > Book.IDTuaSachNavigation.HanMuonToiDa)
+                        {
+                            isValid = false;
+                            return $"Tối đa {Book.IDTuaSachNavigation.HanMuonToiDa}.";
                         }
                         isValid = true;
                         return null;
@@ -132,7 +144,12 @@ namespace QLTV.UserControls
 
             private void UpdateCustomReturnDate()
             {
-                CustomReturnDate = DateTime.Now.AddDays(CustomBorrowWeeks > 0 ? CustomBorrowWeeks * 7 : Book.IDTuaSachNavigation.HanMuonToiDa * 7);
+                if (!int.TryParse(CustomBorrowWeeks, out int a))
+                {
+                    CustomReturnDate = DateTime.Now.AddDays(Book.IDTuaSachNavigation.HanMuonToiDa * 7);
+                    return;
+                }    
+                CustomReturnDate = DateTime.Now.AddDays(a * 7);
             }
 
             public event PropertyChangedEventHandler PropertyChanged;
@@ -147,7 +164,7 @@ namespace QLTV.UserControls
                     books.Select(book => new BookWithCustomDate
                     {
                         Book = book,
-                        CustomBorrowWeeks = book.IDTuaSachNavigation.HanMuonToiDa
+                        CustomBorrowWeeks = book.IDTuaSachNavigation.HanMuonToiDa.ToString()
                     })
                 );
             }
@@ -329,7 +346,7 @@ namespace QLTV.UserControls
                 var bookWithDate = new BookWithCustomDate 
                 { 
                     BookItem = book,
-                    CustomBorrowWeeks = book.Book.IDTuaSachNavigation.HanMuonToiDa
+                    CustomBorrowWeeks = book.Book.IDTuaSachNavigation.HanMuonToiDa.ToString()
                 };
                 dsSach.Remove(book);
                 _allBooks.Remove(book.Book);
