@@ -14,7 +14,7 @@
             <Setter Property="Padding" Value="5.5"/>
             <Setter Property="Height" Value="Auto"/>
             <Setter Property="materialDesign:HintAssist.FloatingScale" Value="0.8"/>
-        </Style>
+        </Style>   
 
         <Style x:Key="ErrorIcon" TargetType="materialDesign:PackIcon">
             <Setter Property="Kind" Value="AlertCircleOutline"/>
