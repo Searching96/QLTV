@@ -230,7 +230,8 @@
 
         <DataGrid x:Name="dgTacGia" Grid.Row="2" SelectionMode="Single"
                   SelectionUnit="FullRow" IsReadOnly="false" AutoGenerateColumns="False"
-                  SelectionChanged="dgTacGia_SelectionChanged">
+                  SelectionChanged="dgTacGia_SelectionChanged"
+                  CanUserAddRows="False">
             <DataGrid.Columns>
                 <DataGridTemplateColumn Width="50">
                     <DataGridTemplateColumn.Header>

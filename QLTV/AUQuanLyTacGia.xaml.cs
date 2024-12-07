@@ -40,7 +40,7 @@ namespace QLTV
         private ObservableCollection<TacGiaViewModel> _dsTacGia;
         private ObservableCollection<TacGiaViewModel> _fullDataSource; // Nguồn dữ liệu đầy đủ
         private int _currentPage = 1;
-        private int _itemsPerPage = 12;
+        private int _itemsPerPage = 10;
         private int _totalItems = 0;
         private bool _isSearchMode = false; // Cờ để phân biệt chế độ
 
