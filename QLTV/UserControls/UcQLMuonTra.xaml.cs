@@ -135,7 +135,7 @@ namespace QLTV.UserControls
                     .Include(p => p.CTPHIEUTRA)
                         .ThenInclude(ct => ct.IDSachNavigation)
                             .ThenInclude(s => s.IDTuaSachNavigation)
-                    .Include(p => p .CTPHIEUTRA)
+                    .Include(p => p.CTPHIEUTRA)
                         .ThenInclude(ct => ct.IDTinhTrangTraNavigation)
                     .Where(p => !p.IsDeleted)
                     .ToListAsync();
@@ -166,7 +166,7 @@ namespace QLTV.UserControls
                 WindowStartupLocation = WindowStartupLocation.CenterScreen,
                 ResizeMode = ResizeMode.CanResizeWithGrip
             };
-            
+
             if (window.ShowDialog() == true)
             {
                 LoadData();
@@ -192,7 +192,7 @@ namespace QLTV.UserControls
             var borrowViewModel = ((FrameworkElement)sender).DataContext as BorrowViewModel;
             if (borrowViewModel == null) return;
 
-            if (MessageBox.Show("Bạn có chắc muốn xóa phiếu mượn này?", "Xác nhận", 
+            if (MessageBox.Show("Bạn có chắc muốn xóa phiếu mượn này?", "Xác nhận",
                 MessageBoxButton.YesNo, MessageBoxImage.Question) == MessageBoxResult.Yes)
             {
                 try
@@ -216,7 +216,7 @@ namespace QLTV.UserControls
                 }
                 catch (Exception ex)
                 {
-                    MessageBox.Show($"Lỗi khi xóa phiếu mượn: {ex.Message}", "Lỗi", 
+                    MessageBox.Show($"Lỗi khi xóa phiếu mượn: {ex.Message}", "Lỗi",
                         MessageBoxButton.OK, MessageBoxImage.Error);
                 }
             }
@@ -233,7 +233,7 @@ namespace QLTV.UserControls
                 WindowStartupLocation = WindowStartupLocation.CenterScreen,
                 ResizeMode = ResizeMode.NoResize
             };
-            
+
             if (window.ShowDialog() == true)
             {
                 LoadData();
@@ -245,7 +245,7 @@ namespace QLTV.UserControls
             var returnViewModel = ((FrameworkElement)sender).DataContext as ReturnViewModel;
             if (returnViewModel == null) return;
 
-            if (MessageBox.Show("Bạn có chắc muốn xóa phiếu trả này?", "Xác nhận", 
+            if (MessageBox.Show("Bạn có chắc muốn xóa phiếu trả này?", "Xác nhận",
                 MessageBoxButton.YesNo, MessageBoxImage.Question) == MessageBoxResult.Yes)
             {
                 try
@@ -269,7 +269,7 @@ namespace QLTV.UserControls
                 }
                 catch (Exception ex)
                 {
-                    MessageBox.Show($"Lỗi khi xóa phiếu trả: {ex.Message}", "Lỗi", 
+                    MessageBox.Show($"Lỗi khi xóa phiếu trả: {ex.Message}", "Lỗi",
                         MessageBoxButton.OK, MessageBoxImage.Error);
                 }
             }

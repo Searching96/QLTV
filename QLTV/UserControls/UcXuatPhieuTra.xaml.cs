@@ -1,37 +1,50 @@
 ﻿using QLTV.Models;
+using System;
+using System.Collections.Generic;
 using System.IO.Packaging;
 using System.IO;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Data;
+using System.Windows.Documents;
+using System.Windows.Input;
+using System.Windows.Media;
+using System.Windows.Media.Imaging;
+using System.Windows.Navigation;
+using System.Windows.Shapes;
 using System.Windows.Xps;
 using System.Windows.Xps.Packaging;
 
 namespace QLTV.UserControls
 {
     /// <summary>
-    /// Interaction logic for UcXuatPhieuMuon.xaml
+    /// Interaction logic for UcXuatPhieuTra.xaml
     /// </summary>
-    /// 
-
-    public partial class UcXuatPhieuMuon : UserControl
+    public partial class UcXuatPhieuTra : UserControl
     {
-        PHIEUMUON phieuMuon;
+        PHIEUTRA phieuTra;
 
-        public UcXuatPhieuMuon(PHIEUMUON _phieuMuon)
+        public UcXuatPhieuTra(PHIEUTRA _phieuTra)
         {
             InitializeComponent();
-            phieuMuon = _phieuMuon;
-            int count = phieuMuon.CTPHIEUMUON.Count();
+            phieuTra = _phieuTra;
+            int count = phieuTra.CTPHIEUTRA.Count();
+            decimal TongTienPhat = int.Parse(phieuTra.CTPHIEUTRA.Sum(pt => pt.TienPhat).ToString());
+            string DocGia = _phieuTra.CTPHIEUTRA.First().IDPhieuMuonNavigation.IDDocGiaNavigation.IDTaiKhoanNavigation.TenTaiKhoan;
+            tb_DocGia.Text = $"Độc giả : {DocGia}";
             tb_SLSach.Text = $"Số lượng sách : {count}";
-            DataContext = phieuMuon;
+            tb_TongTienPhat.Text = $"Tổng tiền phạt : {TongTienPhat} (VND)";
+            DataContext = phieuTra;
         }
-
         private void btnInPhieu_Click(object sender, RoutedEventArgs e)
         {
             // Show save file dialog
             Microsoft.Win32.SaveFileDialog dlg = new Microsoft.Win32.SaveFileDialog
             {
-                FileName = phieuMuon.MaPhieuMuon, // Default file name
+                FileName = phieuTra.MaPhieuTra, // Default file name
                 DefaultExt = ".pdf",  // Default file extension
                 Filter = "PDF documents (.pdf)|*.pdf" // Filter files by extension
             };
@@ -56,7 +69,7 @@ namespace QLTV.UserControls
                                 XpsDocumentWriter writer = XpsDocument.CreateXpsDocumentWriter(doc);
 
                                 // This is your WPF Window or Visual to be converted
-                                writer.Write(PhieuMuonContent);
+                                writer.Write(PhieuTraContent);
                             }
                         }
 
@@ -73,7 +86,7 @@ namespace QLTV.UserControls
                         }
                     }
 
-                    MessageBox.Show("Đã lưu phiếu mượn.", "Thành công", MessageBoxButton.OK, MessageBoxImage.Information);
+                    MessageBox.Show("Đã lưu phiếu trả.", "Thành công", MessageBoxButton.OK, MessageBoxImage.Information);
                 }
                 catch (Exception ex)
                 {

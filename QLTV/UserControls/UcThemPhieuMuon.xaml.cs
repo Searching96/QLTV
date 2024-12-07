@@ -106,13 +106,13 @@ namespace QLTV.UserControls
                 {
                     if (columnName == nameof(CustomBorrowWeeks))
                     {
-                        if(string.IsNullOrWhiteSpace(CustomBorrowWeeks))
+                        if (string.IsNullOrWhiteSpace(CustomBorrowWeeks))
                         {
                             isValid = false;
                             return "Thầy Dũng đẹp trai";
                         }
 
-                        if(!int.TryParse(CustomBorrowWeeks,out int a))
+                        if (!int.TryParse(CustomBorrowWeeks, out int a))
                         {
                             isValid = false;
                             return "Nhập số nguyên";
@@ -148,7 +148,7 @@ namespace QLTV.UserControls
                 {
                     CustomReturnDate = DateTime.Now.AddDays(Book.IDTuaSachNavigation.HanMuonToiDa * 7);
                     return;
-                }    
+                }
                 CustomReturnDate = DateTime.Now.AddDays(a * 7);
             }
 
@@ -183,8 +183,8 @@ namespace QLTV.UserControls
         public UcThemPhieuMuon()
         {
             InitializeComponent();
-            _context = new ();
-            _selectedBooks = new ();
+            _context = new();
+            _selectedBooks = new();
             dgSelectedBooks.ItemsSource = _selectedBooks;
             LoadData();
         }
@@ -218,7 +218,7 @@ namespace QLTV.UserControls
                     .Where(s => !s.IsDeleted && s.IsAvailable == true)
                     .ToListAsync());
 
-                dsSach = new ObservableCollection<BookDisplayItem>( _allBooks.Select(s => new BookDisplayItem
+                dsSach = new ObservableCollection<BookDisplayItem>(_allBooks.Select(s => new BookDisplayItem
                 {
                     Book = s,
                     MaSach = s.MaSach,
@@ -238,7 +238,7 @@ namespace QLTV.UserControls
                     .Include(d => d.PHIEUMUON)
                         .ThenInclude(pm => pm.CTPHIEUTRA)
                     .ToListAsync();
-                
+
                 dgAvailableBooks.ItemsSource = dsSach;
 
                 viewSource = new CollectionViewSource();
@@ -343,15 +343,15 @@ namespace QLTV.UserControls
 
             if (!_selectedBooks.Any(b => b.Book.ID == book.Book.ID))
             {
-                var bookWithDate = new BookWithCustomDate 
-                { 
+                var bookWithDate = new BookWithCustomDate
+                {
                     BookItem = book,
                     CustomBorrowWeeks = book.Book.IDTuaSachNavigation.HanMuonToiDa.ToString()
                 };
                 dsSach.Remove(book);
                 _allBooks.Remove(book.Book);
                 BookSearch(txtSearchBook.Text);
-                
+
                 _selectedBooks.Add(bookWithDate);
             }
         }
@@ -525,8 +525,8 @@ namespace QLTV.UserControls
         }
 
         private void cboDocGia_SelectionChanged(object sender, SelectionChangedEventArgs e)
-       {
-           var docGia = (sender as ComboBox).SelectedItem as DOCGIA;
+        {
+            var docGia = (sender as ComboBox).SelectedItem as DOCGIA;
             if (docGia == null) return;
             DocGiaValidation(docGia);
         }
@@ -549,4 +549,4 @@ namespace QLTV.UserControls
             return true;
         }
     }
-} 
+}

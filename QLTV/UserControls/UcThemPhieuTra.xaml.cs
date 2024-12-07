@@ -236,12 +236,13 @@ namespace QLTV.UserControls
                     TienPhat = 0
                 };
 
-                var returnDetail = new ReturnDetailModel {
+                var returnDetail = new ReturnDetailModel
+                {
                     IsSelected = true,
                     CTPhieuTra = ctpt,
                     CTPhieuMuon = ctpm
                 };
-                
+
                 _returnDetails.Add(returnDetail);
             }
             dgBooks.ItemsSource = _returnDetails;
@@ -263,7 +264,7 @@ namespace QLTV.UserControls
                 return;
             }
 
-            if(selectedBooks.Any(b => !b.IsValid))
+            if (selectedBooks.Any(b => !b.IsValid))
             {
                 MessageBox.Show("Vui lòng nhập các tình trạng trả hợp lệ", "Thông báo", MessageBoxButton.OK, MessageBoxImage.Warning);
                 return;
@@ -360,18 +361,28 @@ namespace QLTV.UserControls
 
                 // Update borrow ticket status
 
-                foreach(var pm in selectedReader.PHIEUMUON.ToList())
+                foreach (var pm in selectedReader.PHIEUMUON.ToList())
 
-                if (pm.CTPHIEUMUON.All(ct => _returnDetails.Select(ctpm => ctpm.CTPhieuMuon).ToList().Contains(ct) && 
-                                                    pm.CTPHIEUMUON.All(r => _returnDetails.First(rd => rd.CTPhieuMuon == ct).IsSelected)))
-                {
-                    pm.IsPending = false;
-                    _context.PHIEUMUON.Update(pm);
-                }
+                    if (pm.CTPHIEUMUON.All(ct => _returnDetails.Select(ctpm => ctpm.CTPhieuMuon).ToList().Contains(ct) &&
+                                                        pm.CTPHIEUMUON.All(r => _returnDetails.First(rd => rd.CTPhieuMuon == ct).IsSelected)))
+                    {
+                        pm.IsPending = false;
+                        _context.PHIEUMUON.Update(pm);
+                    }
 
                 await _context.SaveChangesAsync();
                 MessageBox.Show("Thêm phiếu trả thành công!", "Thông báo", MessageBoxButton.OK, MessageBoxImage.Information);
                 Window.GetWindow(this).DialogResult = true;
+                var window = new Window
+                {
+                    Content = new UcXuatPhieuTra(phieuTra),
+                    Width = 480,
+                    Height = 600,
+                    WindowStyle = WindowStyle.None,
+                    WindowStartupLocation = WindowStartupLocation.CenterScreen,
+                    ResizeMode = ResizeMode.CanResizeWithGrip
+                };
+                window.ShowDialog();
                 Window.GetWindow(this)?.Close();
 
             }

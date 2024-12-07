@@ -1,46 +1,57 @@
 ﻿<UserControl x:Class="QLTV.UserControls.UcQLMuonTra"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
-             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:local="clr-namespace:QLTV.UserControls"
-             mc:Ignorable="d" 
-             d:DesignHeight="720" d:DesignWidth="1080">
+             mc:Ignorable="d"
+             d:DesignHeight="720"
+             d:DesignWidth="1080">
     <Grid>
         <TabControl HorizontalContentAlignment="Left">
             <!-- Borrowing Tab -->
             <TabItem Header="Mượn sách">
                 <Grid Margin="10">
                     <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="Auto"/>
-                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="*" />
                     </Grid.ColumnDefinitions>
                     <Grid.RowDefinitions>
-                        <RowDefinition Height="Auto"/>
-                        <RowDefinition Height="*"/>
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="*" />
                     </Grid.RowDefinitions>
 
                     <!-- Search and Add Section -->
-                    <Grid Grid.Row="0" Grid.ColumnSpan="2">
+                    <Grid Grid.Row="0"
+                          Grid.ColumnSpan="2">
                         <Grid.ColumnDefinitions>
-                            <ColumnDefinition/>
-                            <ColumnDefinition/>
+                            <ColumnDefinition />
+                            <ColumnDefinition />
                         </Grid.ColumnDefinitions>
-                        <StackPanel Orientation="Horizontal" Margin="0,0,0,10" Grid.ColumnSpan="1">
-                            <TextBox x:Name="txtSearchBorrow" Width="200" Margin="0,0,10,0" 
-                                 Style="{StaticResource MaterialDesignOutlinedTextBox}"
-                                 materialDesign:HintAssist.Hint="Tìm kiếm phiếu mượn"
-                                 materialDesign:HintAssist.FloatingScale="1"
-                                 TextChanged="txtSearchBorrow_TextChanged"/>
-                            <Button x:Name="btnAddBorrow" ToolTip="Thêm phiếu mượn" Click="btnAddBorrow_Click"
+                        <StackPanel Orientation="Horizontal"
+                                    Margin="0,0,0,10"
+                                    Grid.ColumnSpan="1">
+                            <TextBox x:Name="txtSearchBorrow"
+                                     Width="200"
+                                     Margin="0,0,10,0"
+                                     Style="{StaticResource MaterialDesignOutlinedTextBox}"
+                                     materialDesign:HintAssist.Hint="Tìm kiếm phiếu mượn"
+                                     materialDesign:HintAssist.FloatingScale="1"
+                                     TextChanged="txtSearchBorrow_TextChanged" />
+                            <Button x:Name="btnAddBorrow"
+                                    ToolTip="Thêm phiếu mượn"
+                                    Click="btnAddBorrow_Click"
                                     Style="{StaticResource MaterialDesignRaisedButton}"
                                     ToolTipService.InitialShowDelay="0"
-                                Height="50">
+                                    Height="50">
                                 <materialDesign:PackIcon Kind="BookMultipleAdd"
-                                HorizontalAlignment="Center" VerticalAlignment="Center"
-                                Foreground="White" Background="Transparent" Width="20" Height="20"
-                                />
+                                                         HorizontalAlignment="Center"
+                                                         VerticalAlignment="Center"
+                                                         Foreground="White"
+                                                         Background="Transparent"
+                                                         Width="20"
+                                                         Height="20" />
                             </Button>
                         </StackPanel>
                         <ComboBox Style="{StaticResource ModernComboBox}"
@@ -52,37 +63,53 @@
                                   materialDesign:HintAssist.Hint="Tình trạng phiếu mượn"
                                   materialDesign:HintAssist.FloatingScale="0.8"
                                   SelectionChanged="cboLoc_SelectionChanged">
-                            <ComboBoxItem Name="All" IsSelected="True">Tất cả</ComboBoxItem>
+                            <ComboBoxItem Name="All"
+                                          IsSelected="True">Tất cả</ComboBoxItem>
                             <ComboBoxItem Name="Returned">Đã trả hết</ComboBoxItem>
                             <ComboBoxItem Name="NotReturned">Chưa trả hết</ComboBoxItem>
                         </ComboBox>
                     </Grid>
 
                     <!-- Borrowing DataGrid -->
-                    <DataGrid x:Name="dgBorrowings" Grid.Row="1" AutoGenerateColumns="False" 
-                              IsReadOnly="True" SelectionMode="Single" Grid.ColumnSpan="2"
+                    <DataGrid x:Name="dgBorrowings"
+                              Grid.Row="1"
+                              AutoGenerateColumns="False"
+                              IsReadOnly="True"
+                              SelectionMode="Single"
+                              Grid.ColumnSpan="2"
                               Style="{StaticResource MaterialDesignDataGrid}"
                               materialDesign:DataGridAssist.CellPadding="5"
                               SelectionUnit="FullRow">
                         <DataGrid.Columns>
-                            <materialDesign:DataGridTextColumn Header="Mã phiếu" Binding="{Binding phieuMuon.MaPhieuMuon}"/>
-                            <materialDesign:DataGridTextColumn Header="Độc giả" Binding="{Binding phieuMuon.IDDocGiaNavigation.IDTaiKhoanNavigation.TenTaiKhoan}"/>
-                            <materialDesign:DataGridTextColumn Header="Ngày mượn" Binding="{Binding phieuMuon.NgayMuon, StringFormat=dd/MM/yyyy}"/>
-                            <DataGridTemplateColumn Header="Thao tác" IsReadOnly="True">
+                            <materialDesign:DataGridTextColumn Header="Mã phiếu"
+                                                               Binding="{Binding phieuMuon.MaPhieuMuon}" />
+                            <materialDesign:DataGridTextColumn Header="Độc giả"
+                                                               Binding="{Binding phieuMuon.IDDocGiaNavigation.IDTaiKhoanNavigation.TenTaiKhoan}" />
+                            <materialDesign:DataGridTextColumn Header="Ngày mượn"
+                                                               Binding="{Binding phieuMuon.NgayMuon, StringFormat=dd/MM/yyyy}" />
+                            <DataGridTemplateColumn Header="Thao tác"
+                                                    IsReadOnly="True">
                                 <DataGridTemplateColumn.CellTemplate>
                                     <DataTemplate>
                                         <StackPanel Orientation="Horizontal">
-                                            <ToggleButton
-                                                Style="{StaticResource MaterialDesignRaisedToggleButton}"
-                                                Width="52"
-                                                IsChecked="{Binding IsExpanded, Mode=TwoWay}" 
-                                                ToolTip="Chi tiết"
-                                                ToolTipService.InitialShowDelay="0"
-                                                Click="btnViewDetail_Click" Margin="0,0,5,0"/>
-                                            <Button ToolTipService.InitialShowDelay="0" ToolTip="Xóa" Click="btnDeleteBorrow_Click" Style="{StaticResource MaterialDesignRaisedButton}">
+                                            <ToggleButton Style="{StaticResource MaterialDesignRaisedToggleButton}"
+                                                          Width="52"
+                                                          IsChecked="{Binding IsExpanded, Mode=TwoWay}"
+                                                          ToolTip="Chi tiết"
+                                                          ToolTipService.InitialShowDelay="0"
+                                                          Click="btnViewDetail_Click"
+                                                          Margin="0,0,5,0" />
+                                            <Button ToolTipService.InitialShowDelay="0"
+                                                    ToolTip="Xóa"
+                                                    Click="btnDeleteBorrow_Click"
+                                                    Style="{StaticResource MaterialDesignRaisedButton}">
                                                 <materialDesign:PackIcon Kind="BookRemoveOutline"
-                                                HorizontalAlignment="Center" VerticalAlignment="Center"
-                                                Foreground="White" Background="Transparent" Width="20" Height="20"/>
+                                                                         HorizontalAlignment="Center"
+                                                                         VerticalAlignment="Center"
+                                                                         Foreground="White"
+                                                                         Background="Transparent"
+                                                                         Width="20"
+                                                                         Height="20" />
                                             </Button>
                                         </StackPanel>
                                     </DataTemplate>
@@ -91,16 +118,20 @@
                         </DataGrid.Columns>
                         <DataGrid.RowDetailsTemplate>
                             <DataTemplate>
-                                <DataGrid ItemsSource="{Binding ctPhieuMuon}" 
-                                          AutoGenerateColumns="False" 
-                                          IsReadOnly="True" 
+                                <DataGrid ItemsSource="{Binding ctPhieuMuon}"
+                                          AutoGenerateColumns="False"
+                                          IsReadOnly="True"
                                           Margin="30,0,0,0"
                                           Style="{StaticResource MaterialDesignDataGrid}">
                                     <DataGrid.Columns>
-                                        <materialDesign:DataGridTextColumn Header="Mã sách" Binding="{Binding IDSachNavigation.MaSach}"/>
-                                        <materialDesign:DataGridTextColumn Header="Tên sách" Binding="{Binding IDSachNavigation.IDTuaSachNavigation.TenTuaSach}"/>
-                                        <materialDesign:DataGridTextColumn Header="Hạn trả" Binding="{Binding HanTra, StringFormat=dd/MM/yyyy}"/>
-                                        <materialDesign:DataGridTextColumn Header="Tình trạng" Binding="{Binding IDTinhTrangMuonNavigation.TenTinhTrang}"/>
+                                        <materialDesign:DataGridTextColumn Header="Mã sách"
+                                                                           Binding="{Binding IDSachNavigation.MaSach}" />
+                                        <materialDesign:DataGridTextColumn Header="Tên sách"
+                                                                           Binding="{Binding IDSachNavigation.IDTuaSachNavigation.TenTuaSach}" />
+                                        <materialDesign:DataGridTextColumn Header="Hạn trả"
+                                                                           Binding="{Binding HanTra, StringFormat=dd/MM/yyyy}" />
+                                        <materialDesign:DataGridTextColumn Header="Tình trạng"
+                                                                           Binding="{Binding IDTinhTrangMuonNavigation.TenTinhTrang}" />
                                     </DataGrid.Columns>
                                 </DataGrid>
                             </DataTemplate>
@@ -113,52 +144,74 @@
             <TabItem Header="Trả sách">
                 <Grid Margin="10">
                     <Grid.RowDefinitions>
-                        <RowDefinition Height="Auto"/>
-                        <RowDefinition Height="*"/>
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="*" />
                     </Grid.RowDefinitions>
 
                     <!-- Search and Add Section -->
-                    <StackPanel Grid.Row="0" Orientation="Horizontal" Margin="0,0,0,10">
-                        <TextBox x:Name="txtSearchReturn" Width="200" Margin="0,0,10,0" 
+                    <StackPanel Grid.Row="0"
+                                Orientation="Horizontal"
+                                Margin="0,0,0,10">
+                        <TextBox x:Name="txtSearchReturn"
+                                 Width="200"
+                                 Margin="0,0,10,0"
                                  Style="{StaticResource MaterialDesignOutlinedTextBox}"
                                  materialDesign:HintAssist.Hint="Tìm kiếm phiếu trả..."
                                  TextChanged="txtSearchReturn_TextChanged"
-                                 materialDesign:HintAssist.FloatingScale="1"/>
-                        <Button x:Name="btnAddReturn" ToolTip="Thêm phiếu trả" 
-                                Click="btnAddReturn_Click" Height="50"
+                                 materialDesign:HintAssist.FloatingScale="1" />
+                        <Button x:Name="btnAddReturn"
+                                ToolTip="Thêm phiếu trả"
+                                Click="btnAddReturn_Click"
+                                Height="50"
                                 ToolTipService.InitialShowDelay="0">
                             <materialDesign:PackIcon Kind="BookMinusMultiple"
-                                HorizontalAlignment="Center" VerticalAlignment="Center"
-                                Foreground="White" Background="Transparent" Width="20" Height="20"/>
+                                                     HorizontalAlignment="Center"
+                                                     VerticalAlignment="Center"
+                                                     Foreground="White"
+                                                     Background="Transparent"
+                                                     Width="20"
+                                                     Height="20" />
                         </Button>
                     </StackPanel>
                     <!-- Returning DataGrid -->
-                    <DataGrid x:Name="dgReturns" Grid.Row="1" AutoGenerateColumns="False" 
-                              IsReadOnly="True" SelectionMode="Single"
+                    <DataGrid x:Name="dgReturns"
+                              Grid.Row="1"
+                              AutoGenerateColumns="False"
+                              IsReadOnly="True"
+                              SelectionMode="Single"
                               Style="{StaticResource MaterialDesignDataGrid}"
                               materialDesign:DataGridAssist.CellPadding="5"
                               SelectionUnit="FullRow">
                         <DataGrid.Columns>
-                            <DataGridTextColumn Header="Mã phiếu" Binding="{Binding phieuTra.MaPhieuTra}"/>
-                            <DataGridTextColumn Header="Độc giả" Binding="{Binding DocGia}"/>
-                            <DataGridTextColumn Header="Ngày trả" Binding="{Binding phieuTra.NgayTra, StringFormat=dd/MM/yyyy}"/>
-                            <DataGridTemplateColumn Header="Thao tác" IsReadOnly="True">
+                            <DataGridTextColumn Header="Mã phiếu"
+                                                Binding="{Binding phieuTra.MaPhieuTra}" />
+                            <DataGridTextColumn Header="Độc giả"
+                                                Binding="{Binding DocGia}" />
+                            <DataGridTextColumn Header="Ngày trả"
+                                                Binding="{Binding phieuTra.NgayTra, StringFormat=dd/MM/yyyy}" />
+                            <DataGridTemplateColumn Header="Thao tác"
+                                                    IsReadOnly="True">
                                 <DataGridTemplateColumn.CellTemplate>
                                     <DataTemplate>
                                         <StackPanel Orientation="Horizontal">
-                                            <ToggleButton
-                                                Style="{StaticResource MaterialDesignRaisedToggleButton}"
-                                                Width="52"
-                                                IsChecked="{Binding IsExpanded, Mode=TwoWay}" 
-                                                ToolTip="Chi tiết"
-                                                ToolTipService.InitialShowDelay="0"
-                                                Click="btnViewDetail_Click" Margin="0,0,5,0"/>
-                                            <Button ToolTip="Xóa" Click="btnDeleteReturn_Click" 
+                                            <ToggleButton Style="{StaticResource MaterialDesignRaisedToggleButton}"
+                                                          Width="52"
+                                                          IsChecked="{Binding IsExpanded, Mode=TwoWay}"
+                                                          ToolTip="Chi tiết"
+                                                          ToolTipService.InitialShowDelay="0"
+                                                          Click="btnViewDetail_Click"
+                                                          Margin="0,0,5,0" />
+                                            <Button ToolTip="Xóa"
+                                                    Click="btnDeleteReturn_Click"
                                                     Style="{StaticResource MaterialDesignRaisedButton}"
                                                     ToolTipService.InitialShowDelay="0">
                                                 <materialDesign:PackIcon Kind="BookRemoveOutline"
-                                                HorizontalAlignment="Center" VerticalAlignment="Center"
-                                                Foreground="White" Background="Transparent" Width="20" Height="20"/>
+                                                                         HorizontalAlignment="Center"
+                                                                         VerticalAlignment="Center"
+                                                                         Foreground="White"
+                                                                         Background="Transparent"
+                                                                         Width="20"
+                                                                         Height="20" />
                                             </Button>
                                         </StackPanel>
                                     </DataTemplate>
@@ -167,18 +220,24 @@
                         </DataGrid.Columns>
                         <DataGrid.RowDetailsTemplate>
                             <DataTemplate>
-                                <DataGrid ItemsSource="{Binding ctPhieuTra}" 
-                                          AutoGenerateColumns="False" 
-                                          IsReadOnly="True" 
+                                <DataGrid ItemsSource="{Binding ctPhieuTra}"
+                                          AutoGenerateColumns="False"
+                                          IsReadOnly="True"
                                           Margin="30,0,0,0"
                                           Style="{StaticResource MaterialDesignDataGrid}">
                                     <DataGrid.Columns>
-                                        <materialDesign:DataGridTextColumn Header="Mã sách" Binding="{Binding IDSachNavigation.MaSach}"/>
-                                        <materialDesign:DataGridTextColumn Header="Tên sách" Binding="{Binding IDSachNavigation.IDTuaSachNavigation.TenTuaSach}"/>
-                                        <materialDesign:DataGridTextColumn Header="Số ngày mượn" Binding="{Binding SoNgayMuon}"/>
-                                        <materialDesign:DataGridTextColumn Header="Tiền phạt" Binding="{Binding TienPhat, StringFormat=N0}"/>
-                                        <materialDesign:DataGridTextColumn Header="Tình trạng" Binding="{Binding IDTinhTrangTraNavigation.TenTinhTrang}"/>
-                                        <materialDesign:DataGridTextColumn Header="Ghi chú" Binding="{Binding GhiChu}"/>
+                                        <materialDesign:DataGridTextColumn Header="Mã sách"
+                                                                           Binding="{Binding IDSachNavigation.MaSach}" />
+                                        <materialDesign:DataGridTextColumn Header="Tên sách"
+                                                                           Binding="{Binding IDSachNavigation.IDTuaSachNavigation.TenTuaSach}" />
+                                        <materialDesign:DataGridTextColumn Header="Số ngày mượn"
+                                                                           Binding="{Binding SoNgayMuon}" />
+                                        <materialDesign:DataGridTextColumn Header="Tiền phạt"
+                                                                           Binding="{Binding TienPhat, StringFormat=N0}" />
+                                        <materialDesign:DataGridTextColumn Header="Tình trạng"
+                                                                           Binding="{Binding IDTinhTrangTraNavigation.TenTinhTrang}" />
+                                        <materialDesign:DataGridTextColumn Header="Ghi chú"
+                                                                           Binding="{Binding GhiChu}" />
                                     </DataGrid.Columns>
                                 </DataGrid>
                             </DataTemplate>

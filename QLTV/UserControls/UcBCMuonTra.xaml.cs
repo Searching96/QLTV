@@ -106,7 +106,7 @@ namespace QLTV.UserControls
             }
         }
 
-        public int TongSoLuotMuon => (DSBCMuonSach.Sum(bc => bc.BCMuonSach.TongSoLuotMuon)/2);
+        public int TongSoLuotMuon => (DSBCMuonSach.Sum(bc => bc.BCMuonSach.TongSoLuotMuon) / 2);
 
         private bool _isExpanded;
         public bool IsExpanded
@@ -169,7 +169,7 @@ namespace QLTV.UserControls
 
                 _borrowReports = new ObservableCollection<DSBCMuonSachModel>(
                     borrowReports
-                    //Nhóm theo tháng + năm
+                        //Nhóm theo tháng + năm
                         .GroupBy(bc => new { bc.Thang.Year, bc.Thang.Month })
                         .Select(g =>
                         {
