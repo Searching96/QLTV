@@ -232,6 +232,11 @@
                   SelectionUnit="FullRow" IsReadOnly="false" AutoGenerateColumns="False"
                   SelectionChanged="dgTacGia_SelectionChanged"
                   CanUserAddRows="False">
+            <DataGrid.Resources>
+                <Style TargetType="DataGridColumnHeader" BasedOn="{StaticResource ResourceKey=MaterialDesignDataGridColumnHeader}">
+                    <Setter Property="FontWeight" Value="Bold"/>
+                </Style>
+            </DataGrid.Resources>
             <DataGrid.Columns>
                 <DataGridTemplateColumn Width="50">
                     <DataGridTemplateColumn.Header>

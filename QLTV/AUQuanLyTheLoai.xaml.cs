@@ -194,6 +194,8 @@ namespace QLTV
 
         private void btnLamMoi_Click(object sender, RoutedEventArgs e)
         {
+            icTenTheLoaiError.Visibility = Visibility.Collapsed;
+            icMoTaError.Visibility = Visibility.Collapsed;
             LoadTheLoai();
         }
 

@@ -307,6 +307,11 @@
                   SelectionUnit="FullRow" IsReadOnly="True" AutoGenerateColumns="False"
                   SelectionChanged="dgTuaSach_SelectionChanged"
                   materialDesign:DataGridAssist.CornerRadius="4" HorizontalAlignment="Stretch">
+            <DataGrid.Resources>
+                <Style TargetType="DataGridColumnHeader" BasedOn="{StaticResource ResourceKey=MaterialDesignDataGridColumnHeader}">
+                    <Setter Property="FontWeight" Value="Bold"/>
+                </Style>
+            </DataGrid.Resources>
             <DataGrid.Columns>
                 <!-- Cột CheckBox -->
                 <DataGridTemplateColumn Width="50">

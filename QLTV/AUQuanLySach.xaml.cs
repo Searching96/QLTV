@@ -28,6 +28,10 @@ using System.Net.WebSockets;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using Microsoft.IdentityModel.Tokens;
+using System.Windows.Controls.Primitives;
+using static QLTV.AUQuanLySach;
+using System.Windows.Markup;
+using System.Security.Policy;
 
 namespace QLTV
 {
@@ -40,10 +44,18 @@ namespace QLTV
         public List<string> lstSelectedMaSach = new List<string>();
         private ObservableCollection<SachViewModel> _dsSach;
         private ObservableCollection<SachViewModel> _fullDataSource;
+        private ObservableCollection<SearchCondition> _searchConditions = new ObservableCollection<SearchCondition>();
         private int _currentPage = 1;
         private int _itemsPerPage = 10;
         private int _totalItems = 0;
         private bool _isSearchMode = false;
+        private bool _useAns = true;
+        private string _searchMode = "AND";
+
+        public class SearchCondition
+        {
+            public string ConditionText { get; set; }
+        }
 
         public class SachViewModel : INotifyPropertyChanged
         {
@@ -79,12 +91,182 @@ namespace QLTV
             }
         }
 
+        private void ToggleSearchMode_Checked(object sender, RoutedEventArgs e)
+        {
+            _searchMode = "AND";
+            var toggleButton = sender as ToggleButton;
+            if (toggleButton != null)
+            {
+                toggleButton.Content = "AND";
+            }
+        }
+
+        private void ToggleSearchMode_Unchecked(object sender, RoutedEventArgs e)
+        {
+            _searchMode = "OR";
+            var toggleButton = sender as ToggleButton;
+            if (toggleButton != null)
+            {
+                toggleButton.Content = "OR";
+            }
+        }
+
+        private void tgbUseAns_Unchecked(object sender, RoutedEventArgs e)
+        {
+            _useAns = false;
+            tgbUseAns.Content = "NoAns";
+            if (_searchConditions.Count > 0)
+                _searchConditions.RemoveAt(0);
+        }
+
+        private void tgbUseAns_Checked(object sender, RoutedEventArgs e)
+        {
+            _useAns = true;
+            tgbUseAns.Content = "UseAns";
+            _searchConditions.Insert(0, new SearchCondition { ConditionText = "ANS" });
+        }
+
+        // Mở/tắt Popup
+        private void btnOpenQuery_Click(object sender, RoutedEventArgs e)
+        {
+            puAdvancedSearch.IsOpen = !puAdvancedSearch.IsOpen;
+        }
+
+        // Thêm điều kiện mới
+        private void AddCondition_Click(object sender, RoutedEventArgs e)
+        {
+            _searchConditions.Add(new SearchCondition { ConditionText = "Điều kiện mới" });
+        }
+
+        // Xóa điều kiện
+        private void DeleteCondition_Click(object sender, RoutedEventArgs e)
+        {
+            var button = sender as Button;
+            var condition = button?.Tag as SearchCondition;
+
+            if (condition != null && _searchConditions.Contains(condition))
+            {
+                _searchConditions.Remove(condition);
+            }
+        }
+
+        private void btnAddQuery_Click(object sender, RoutedEventArgs e)
+        {
+            string conditionText = tbxThongTinTim.Text.Trim();
+            string selectedProperty = ((ComboBoxItem)cbbThuocTinhTim.SelectedItem)?.Content.ToString();
+
+            if (string.IsNullOrEmpty(conditionText) || string.IsNullOrEmpty(selectedProperty))
+            {
+                MessageBox.Show("Vui lòng điền từ khóa và thuộc tính!", "Thông báo", MessageBoxButton.OK, MessageBoxImage.Warning);
+                return;
+            }
+
+            string newCondition = $"{selectedProperty} = {conditionText}";
+
+            // Add the new condition to the collection
+            _searchConditions.Add(new SearchCondition { ConditionText = newCondition });
+
+            // Optionally, clear the TextBox and ComboBox for next input
+            tbxThongTinTim.Clear();
+        }
+
+        public void PerformAdvanceSearch()
+        {
+            if (_searchConditions.IsNullOrEmpty())
+            {
+                MessageBox.Show("Hãy thêm truy vấn", "Thông báo",
+                    MessageBoxButton.OK, MessageBoxImage.Warning);
+                return;  // Exit if there are no search conditions
+            }
+
+            using (var context = new QLTVContext())
+            {
+                IQueryable<SachViewModel> querySource;
+                List<SachViewModel> result;
+                int startIndex;
+
+                // Choose the query source based on whether we use the in-memory data or the database
+                if (_useAns)
+                {
+                    querySource = _fullDataSource.AsQueryable();
+                    startIndex = 1;
+                }
+                else
+                {
+                    querySource = context.SACH
+                        .Where(s => !s.IsDeleted && !s.IDTuaSachNavigation.IsDeleted)
+                        .Select(s => new SachViewModel
+                        {
+                            MaSach = s.MaSach,
+                            TuaSach = s.IDTuaSachNavigation.TenTuaSach,
+                            DSTacGia = string.Join(", ", s.IDTuaSachNavigation.TUASACH_TACGIA
+                                .Select(ts_tg => ts_tg.IDTacGiaNavigation.TenTacGia)),
+                            DSTheLoai = string.Join(", ", s.IDTuaSachNavigation.TUASACH_THELOAI
+                                .Select(ts_tl => ts_tl.IDTheLoaiNavigation.TenTheLoai)),
+                            NhaXuatBan = s.NhaXuatBan,
+                            NamXuatBan = s.NamXuatBan,
+                            NgayNhap = s.NgayNhap.ToString("dd/MM/yyyy"),
+                            TriGia = s.TriGia,
+                            TinhTrang = s.IDTinhTrangNavigation.TenTinhTrang
+                        });
+                    startIndex = 0;
+                }
+
+                // Initialize the result as an empty list to ensure proper materialization before applying any logic
+                result = (_searchMode == "AND") ? _fullDataSource.ToList() : new List<SachViewModel>();
+
+                // Loop through each search condition
+                foreach (var condition in _searchConditions.Skip(startIndex))
+                {
+                    // Split the condition into property and value (e.g., "Tựa Sách = 'some title'")
+                    var conditionParts = condition.ConditionText.Split(new[] { " = " }, StringSplitOptions.None);
+                    if (conditionParts.Length != 2) continue;  // Skip invalid conditions
+
+                    string selectedProperty = conditionParts[0].Trim();
+                    string conditionText = conditionParts[1].Trim('\''); // Remove surrounding quotes from the value
+
+                    // Apply AsEnumerable() before calling NormalizeString for AND conditions
+                    var filteredQuery = querySource.AsEnumerable().Where(s =>
+                        selectedProperty == "Tựa Sách" ? NormalizeString(s.TuaSach).Contains(NormalizeString(conditionText)) :
+                        selectedProperty == "Tác Giả" ? NormalizeString(s.DSTacGia).Contains(NormalizeString(conditionText)) :
+                        selectedProperty == "Thể Loại" ? NormalizeString(s.DSTheLoai).Contains(NormalizeString(conditionText)) :
+                        selectedProperty == "Nhà Xuất Ban" ? NormalizeString(s.NhaXuatBan).Contains(NormalizeString(conditionText)) :
+                        selectedProperty == "Tình Trạng" ? NormalizeString(s.TinhTrang).Contains(NormalizeString(conditionText)) :
+                        true
+                    ).ToList(); // Ensure that the query is evaluated in memory
+
+                    // Combine the results based on search mode (AND/OR)
+                    if (_searchMode == "AND")
+                    {
+                        // Use Intersect only with in-memory query results
+                        result = result.Intersect(filteredQuery, new SachViewModelComparer()).ToList();
+                    }
+                    else
+                    {
+                        result = result.Concat(filteredQuery).Distinct().ToList();
+                    }
+                }
+
+                // Convert result back to ObservableCollection to update the UI
+                _fullDataSource = new ObservableCollection<SachViewModel>(result);
+
+                // Set the flags for paging and search mode
+                _isSearchMode = true;
+                _currentPage = 1;
+                cbxSelectAll.IsChecked = false;
+
+                // Apply pagination
+                ApplyPaging();
+            }
+        }
+
         public AUQuanLySach()
         {
             InitializeComponent();
             ExcelPackage.LicenseContext = OfficeOpenXml.LicenseContext.NonCommercial;
             _dsSach = new ObservableCollection<SachViewModel>();
             LoadSach(true);
+            ictSearchConditions.ItemsSource = _searchConditions;
         }
 
         private void LoadSach(bool isInitialLoad = false)
@@ -120,10 +302,15 @@ namespace QLTV
             }
         }
 
+        private void btnAdvanceSearch_Click(object sender, RoutedEventArgs e)
+        {
+            PerformAdvanceSearch();
+        }
+
         private void PerformSearch()
         {
-            string searchTerm = NormalizeString(tbxThongTinTimKiem.Text.Trim().ToLower());
-            string selectedProperty = ((ComboBoxItem)cbbThuocTinhTimKiem.SelectedItem)?.Content.ToString();
+            string searchTerm = NormalizeString(tbxThongTinTim.Text.Trim().ToLower());
+            string selectedProperty = ((ComboBoxItem)cbbThuocTinhTim.SelectedItem)?.Content.ToString();
 
             if (string.IsNullOrEmpty(selectedProperty))
             {
@@ -573,6 +760,10 @@ namespace QLTV
 
         private void btnLamMoi_Click(object sender, RoutedEventArgs e)
         {
+            icNhaXuatBanError.Visibility = Visibility.Collapsed;
+            icNamXuatBanError.Visibility = Visibility.Collapsed;
+            icNgayNhapError.Visibility = Visibility.Collapsed;
+            icTriGiaError.Visibility = Visibility.Collapsed;
             LoadSach();
         }
 
@@ -820,6 +1011,7 @@ namespace QLTV
 
         private void dpNgayNhap_Loaded(object sender, RoutedEventArgs e)
         {
+
             // Tìm TextBox bên trong DatePicker
             var textBox = (dpNgayNhap.Template.FindName("PART_TextBox", dpNgayNhap) as TextBox);
             if (textBox != null)
@@ -1004,7 +1196,7 @@ namespace QLTV
                                 MessageBoxButton.OK, MessageBoxImage.Information);
 
                             LoadSach();
-                            tbxThongTinTimKiem.Text = "";
+                            tbxThongTinTim.Text = "";
                         }
                         catch (Exception ex)
                         {
@@ -1013,6 +1205,73 @@ namespace QLTV
                         }
                     }
                 }
+            }
+        }
+
+        public class SachViewModelComparer : IEqualityComparer<SachViewModel>
+        {
+            public bool Equals(SachViewModel x, SachViewModel y)
+            {
+                if (x == null || y == null)
+                    return false;
+
+                return x.MaSach == y.MaSach;  // or any other unique identifier
+            }
+
+            public int GetHashCode(SachViewModel obj)
+            {
+                if (obj == null)
+                    return 0;
+
+                return obj.MaSach.GetHashCode();  // or any other unique identifier
+            }
+        }
+
+        private void btnNhapSua_Click(object sender, RoutedEventArgs e)
+        {
+            puSuaHangLoat.IsOpen = !puSuaHangLoat.IsOpen;
+        }
+
+        private void btnSuaNhieu_Click(object sender, RoutedEventArgs e)
+        {
+            List<string> lstMaSachToEdit = _fullDataSource
+                .Where(s => s.IsSelected)
+                .Select(s => s.MaSach)
+                .ToList();
+
+            using (var context = new QLTVContext())
+            {
+                foreach (var maSach in lstMaSachToEdit)
+                {
+                    var sachToEdit = context.SACH
+                        .Where(s => s.MaSach == maSach)
+                        .FirstOrDefault();
+
+                    sachToEdit.NhaXuatBan = tbxGiaTriSua.Text;
+                }
+
+                context.SaveChanges();
+            }
+
+            LoadSach();
+        }
+
+        private void btnNhapSua_LayoutUpdated(object sender, EventArgs e)
+        {
+            if (puSuaHangLoat.IsOpen)
+            {
+                puSuaHangLoat.HorizontalOffset += 1;
+                puSuaHangLoat.HorizontalOffset -= 1;
+            }
+        }
+
+        private void btnOpenQuery_LayoutUpdated(object sender, EventArgs e)
+        {
+            if (puAdvancedSearch.IsOpen)
+            {
+                // Force the Popup to reposition
+                puAdvancedSearch.HorizontalOffset += 1; // Temporarily change the offset
+                puAdvancedSearch.HorizontalOffset -= 1; // Restore the offset
             }
         }
     }

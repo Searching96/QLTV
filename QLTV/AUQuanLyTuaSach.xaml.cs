@@ -636,6 +636,10 @@ namespace QLTV
 
         private void btnLamMoi_Click(object sender, RoutedEventArgs e)
         {
+            icTenTuaSachError.Visibility = Visibility.Collapsed;
+            icDSTacGiaError.Visibility = Visibility.Collapsed;
+            icDSTheLoaiError.Visibility = Visibility.Collapsed;
+            icHanMuonToiDaError.Visibility = Visibility.Collapsed;
             LoadTuaSach();
         }
 

@@ -191,6 +191,11 @@
         <DataGrid x:Name="dgTheLoai" Grid.Row="2" SelectionMode="Single"
                   SelectionUnit="FullRow" IsReadOnly="true" AutoGenerateColumns="False"
                   SelectionChanged="dgTheLoai_SelectionChanged">
+            <DataGrid.Resources>
+                <Style TargetType="DataGridColumnHeader" BasedOn="{StaticResource ResourceKey=MaterialDesignDataGridColumnHeader}">
+                    <Setter Property="FontWeight" Value="Bold"/>
+                </Style>
+            </DataGrid.Resources>
             <DataGrid.Columns>
                 <DataGridTextColumn Header="Mã Thể Loại:" Width="*" Binding="{Binding MaTheLoai}"/>
                 <DataGridTextColumn Header="Tên Thể Loại:" Width="*" Binding="{Binding TenTheLoai}"/>

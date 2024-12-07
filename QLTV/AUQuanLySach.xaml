@@ -4,6 +4,7 @@
              xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:controls="clr-namespace:System.Windows.Controls;assembly=PresentationFramework"
              xmlns:local="clr-namespace:QLTV"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
@@ -77,7 +78,7 @@
 
                 <Border x:Name="bdBiaSach" Visibility="Visible"
                         Grid.Row="0" Grid.Column="0" Grid.RowSpan="3"
-                        Width="75" Height="118" Margin="5, 0"
+                        Width="75" Height="118" Margin="0, 0, 0, 10"
                         BorderBrush="Black" BorderThickness="1"
                         VerticalAlignment="Top" HorizontalAlignment="Center">
                     <Image x:Name="imgBiaSach"
@@ -240,12 +241,150 @@
                     <materialDesign:PackIcon Kind="DeleteSweep" Width="24" Height="24"/>
                 </Button>
 
+                <Grid Width="Auto"
+                      HorizontalAlignment="Right"
+                      DockPanel.Dock="Right">
+                    <!-- Nút mở Popup -->
+                    <Button x:Name="btnOpenQuery"
+                            VerticalAlignment="Center"
+                            HorizontalAlignment="Right"
+                            ToolTip="Truy vấn nâng cao"
+                            Margin="5, 0, 5, 0"
+                            Click="btnOpenQuery_Click"
+                            Width="30"
+                            Padding="0"
+                            LayoutUpdated="btnOpenQuery_LayoutUpdated">
+                        <materialDesign:PackIcon Kind="Filter" Width="24" Height="24"/>
+                    </Button>
+
+                    <!-- Popup hiển thị truy vấn -->
+                    <Popup x:Name="puAdvancedSearch"
+                           Placement="Top"
+                           PlacementTarget="{Binding ElementName=btnOpenQuery}"
+                           StaysOpen="True"
+                           HorizontalOffset="0"
+                           VerticalOffset="-5"
+                           Width="Auto">
+                        <Border Background="White" Padding="10" CornerRadius="5" BorderBrush="Gray" BorderThickness="2" Width="350">
+                            <StackPanel>
+                                <DockPanel>
+                                    <TextBlock Text="Điều kiện tìm kiếm" FontWeight="Bold" FontSize="18" DockPanel.Dock="Left" VerticalAlignment="Center"/>
+                                    <ToggleButton x:Name="toggleSearchMode"
+                                                  VerticalAlignment="Center"
+                                                  HorizontalAlignment="Right"
+                                                  DockPanel.Dock="Right"
+                                                  Width="50"
+                                                  Background="LightGray"
+                                                  IsChecked="True"
+                                                  Checked="ToggleSearchMode_Checked"
+                                                  Unchecked="ToggleSearchMode_Unchecked"
+                                                  Content="AND"/>
+                                    <ToggleButton x:Name="tgbUseAns"
+                                                  VerticalAlignment="Center"
+                                                  HorizontalAlignment="Right"
+                                                  DockPanel.Dock="Right"
+                                                  Margin="0, 0, 20, 0"
+                                                  Width="50"
+                                                  Background="LightGray"
+                                                  IsChecked="True"
+                                                  Checked="tgbUseAns_Checked"
+                                                  Unchecked="tgbUseAns_Unchecked"
+                                                  Content="UseAns"/>
+                                </DockPanel>
+
+
+
+                                <!-- ScrollViewer bọc ItemsControl -->
+                                <ScrollViewer VerticalScrollBarVisibility="Auto" MaxHeight="140" MinHeight="100">
+                                    <ItemsControl x:Name="ictSearchConditions">
+                                        <ItemsControl.ItemTemplate>
+                                            <DataTemplate>
+                                                <StackPanel Orientation="Horizontal" Margin="0,5">
+                                                    <TextBox Text="{Binding ConditionText, Mode=TwoWay}" Width="200" Margin="0,0,5,0" />
+                                                    <Button Click="DeleteCondition_Click" Tag="{Binding}" Padding="0" Width="25">
+                                                        <materialDesign:PackIcon Kind="Delete"/>
+                                                    </Button>
+                                                </StackPanel>
+                                            </DataTemplate>
+                                        </ItemsControl.ItemTemplate>
+                                    </ItemsControl>
+                                </ScrollViewer>
+
+                                <Button x:Name="btnAdvanceSearch"
+                                        HorizontalAlignment="Left"
+                                        Content="Tìm Kiếm"
+                                        Margin="0, 0, 0, 0" 
+                                        Width="100"
+                                        Click="btnAdvanceSearch_Click"
+                                        Padding="0"/>
+                            </StackPanel>
+                        </Border>
+                    </Popup>
+                </Grid>
+
+                <Grid Width="Auto"
+                      HorizontalAlignment="Right"
+                      DockPanel.Dock="Right">
+                    <Button x:Name="btnNhapSua"
+                            VerticalAlignment="Center"
+                            HorizontalAlignment="Right"
+                            ToolTip="Nhập thông tin để sửa hàng loạt"
+                            Margin="5, 0, 0, 0"
+                            Click="btnNhapSua_Click"
+                            Width="30"
+                            Padding="0"
+                            LayoutUpdated="btnNhapSua_LayoutUpdated">
+                        <materialDesign:PackIcon Kind="FileDocumentEdit" Width="24" Height="24"/>
+                    </Button>
+
+                    <!-- Popup hiển thị truy vấn -->
+                    <Popup x:Name="puSuaHangLoat"
+                           Placement="Top"
+                           PlacementTarget="{Binding ElementName=btnNhapSua}"
+                           StaysOpen="True"
+                           HorizontalOffset="0"
+                           VerticalOffset="-5"
+                           Width="Auto">
+                        <Border Background="White" Padding="10" CornerRadius="5" Width="Auto" BorderBrush="Gray" BorderThickness="2">
+                            <StackPanel Orientation="Horizontal">
+                                <TextBox x:Name="tbxGiaTriSua" Grid.Column="1" VerticalAlignment="Center"
+                                         Style="{StaticResource DataDisplayTextBox}"
+                                         Padding="7.7"
+                                         Width="250"
+                                         materialDesign:HintAssist.Hint="Giá Trị"
+                                         materialDesign:HintAssist.FloatingScale="0.8"/>
+                                <ComboBox x:Name="cbbThuocTinhSua" Grid.Column="2" 
+                                          VerticalAlignment="Center"
+                                          Style="{StaticResource ModernComboBox}"
+                                          Padding="7.7"
+                                          Width="120"
+                                          materialDesign:HintAssist.Hint="Thuộc Tính"
+                                          materialDesign:HintAssist.FloatingScale="0.8">
+                                    <ComboBoxItem Content="Tựa Sách"/>
+                                    <ComboBoxItem Content="Tác Giả"/>
+                                    <ComboBoxItem Content="Thể Loại"/>
+                                    <ComboBoxItem Content="Nhà Xuất Bản"/>
+                                    <ComboBoxItem Content="Tình Trạng"/>
+                                </ComboBox>
+                                <Button x:Name="btnSuaNhieu" 
+                                        ToolTip="Sửa" 
+                                        Click="btnSuaNhieu_Click"
+                                        Width="30"
+                                        Padding="0">
+                                    <materialDesign:PackIcon Kind="EditCircleOutline" Width="24" Height="24"/>
+                                </Button>
+                            </StackPanel>
+                        </Border>
+                    </Popup>
+                </Grid>
+
+
                 <materialDesign:SplitButton VerticalAlignment="Center"
-                                                HorizontalAlignment="Right"
-                                                DockPanel.Dock="Right"
-                                                Margin="0, 0, 2.5, 0" 
-                                                Padding="0"
-                                                ToolTip="Nhập/Xuất">
+                                            HorizontalAlignment="Right"
+                                            DockPanel.Dock="Right"
+                                            Margin="0, 0, 0, 0" 
+                                            Padding="0"
+                                            ToolTip="Nhập/Xuất">
                     <materialDesign:PackIcon Kind="MicrosoftExcel" Width="24" Height="24"/>
                     <materialDesign:SplitButton.PopupContent>
                         <StackPanel>
@@ -276,20 +415,21 @@
                     <ColumnDefinition Width="2.5*"/>
                     <ColumnDefinition Width="1*"/>
                     <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="Auto"/>
                 </Grid.ColumnDefinitions>
 
                 <TextBlock Text="Tìm Kiếm:" Grid.Column="0" FontSize="14" VerticalAlignment="Center"/>
 
-                <TextBox x:Name="tbxThongTinTimKiem" Grid.Column="1" VerticalAlignment="Center"
+                <TextBox x:Name="tbxThongTinTim" Grid.Column="1" VerticalAlignment="Center"
                          Style="{StaticResource DataDisplayTextBox}"
-                         Padding="7.5"
+                         Padding="7.6"
                          materialDesign:HintAssist.Hint="Từ Khóa"
                          materialDesign:HintAssist.FloatingScale="0.8"/>
 
-                <ComboBox x:Name="cbbThuocTinhTimKiem" Grid.Column="2" 
+                <ComboBox x:Name="cbbThuocTinhTim" Grid.Column="2" 
                           VerticalAlignment="Center"
                           Style="{StaticResource ModernComboBox}"
-                          Padding="7.5"
+                          Padding="7.6"
                           materialDesign:HintAssist.Hint="Thuộc Tính"
                           materialDesign:HintAssist.FloatingScale="0.8">
                     <ComboBoxItem Content="Tựa Sách"/>
@@ -302,12 +442,20 @@
                 <Button x:Name="btnTimKiem" Grid.Column="3" Click="btnTimKiem_Click" Padding="0" Width="25">
                     <materialDesign:PackIcon Kind="Magnify" Width="22" Height="22"/>
                 </Button>
+                <Button x:Name="btnAddQuery" Grid.Column="4" Click="btnAddQuery_Click" Padding="0" Width="25">
+                    <materialDesign:PackIcon Kind="PlusThick" Width="22" Height="22"/>
+                </Button>
             </Grid>
         </Grid>
 
         <DataGrid x:Name="dgSach" Grid.Row="2" SelectionMode="Single"
                   SelectionUnit="FullRow" IsReadOnly="true" AutoGenerateColumns="False"
                   SelectionChanged="dgSach_SelectionChanged">
+            <DataGrid.Resources>
+                <Style TargetType="DataGridColumnHeader" BasedOn="{StaticResource ResourceKey=MaterialDesignDataGridColumnHeader}">
+                    <Setter Property="FontWeight" Value="Bold"/>
+                </Style>
+            </DataGrid.Resources>
             <DataGrid.Columns>
                 <DataGridTemplateColumn Width="50">
                     <DataGridTemplateColumn.Header>
