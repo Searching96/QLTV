@@ -32,7 +32,7 @@ namespace QLTV.UserControls
             InitializeComponent();
             phieuTra = _phieuTra;
             int count = phieuTra.CTPHIEUTRA.Count();
-            decimal TongTienPhat = int.Parse(phieuTra.CTPHIEUTRA.Sum(pt => pt.TienPhat).ToString());
+            decimal TongTienPhat = phieuTra.CTPHIEUTRA.Sum(pt => pt.TienPhat);
             string DocGia = _phieuTra.CTPHIEUTRA.First().IDPhieuMuonNavigation.IDDocGiaNavigation.IDTaiKhoanNavigation.TenTaiKhoan;
             tb_DocGia.Text = $"Độc giả : {DocGia}";
             tb_SLSach.Text = $"Số lượng sách : {count}";

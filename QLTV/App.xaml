@@ -7,7 +7,9 @@
     <Application.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
-                <materialDesign:BundledTheme BaseTheme="Light" PrimaryColor="LightBlue" SecondaryColor="Indigo" />
+                <materialDesign:BundledTheme BaseTheme="Light"
+                                             PrimaryColor="LightBlue"
+                                             SecondaryColor="Indigo" />
                 <ResourceDictionary Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesignTheme.Shadows.xaml" />
                 <ResourceDictionary Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesign2.Defaults.xaml" />
             </ResourceDictionary.MergedDictionaries>
@@ -18,149 +20,296 @@
             <KeyTime x:Key="ExpandKeyTime">0:0:0.250</KeyTime>
             <KeyTime x:Key="CollapseKeyTime">0:0:0.200</KeyTime>
 
-            <Style x:Key="DataDisplayTextBox" TargetType="TextBox" BasedOn="{StaticResource MaterialDesignOutlinedTextBox}">
-                <Setter Property="Padding" Value="5.5"/>
-                <Setter Property="Height" Value="Auto"/>
-                <Setter Property="materialDesign:HintAssist.FloatingScale" Value="0.8"/>
+            <Style x:Key="DataDisplayTextBox"
+                   TargetType="TextBox"
+                   BasedOn="{StaticResource MaterialDesignOutlinedTextBox}">
+                <Setter Property="Padding"
+                        Value="5.5" />
+                <Setter Property="Height"
+                        Value="Auto" />
+                <Setter Property="materialDesign:HintAssist.FloatingScale"
+                        Value="0.8" />
             </Style>
 
-            <Style x:Key="ModernComboBox" TargetType="ComboBox" BasedOn="{StaticResource MaterialDesignOutlinedComboBox}">
-                <Setter Property="Margin" Value="1"/>
-                <Setter Property="materialDesign:HintAssist.FloatingScale" Value="0.8"/>
-                <Setter Property="Padding" Value="8"/>
+            <Style x:Key="ModernComboBox"
+                   TargetType="ComboBox"
+                   BasedOn="{StaticResource MaterialDesignOutlinedComboBox}">
+                <Setter Property="Margin"
+                        Value="1" />
+                <Setter Property="materialDesign:HintAssist.FloatingScale"
+                        Value="0.8" />
+                <Setter Property="Padding"
+                        Value="8" />
             </Style>
 
-            <Style x:Key="ModernDatePicker" TargetType="DatePicker" BasedOn="{StaticResource MaterialDesignOutlinedDatePicker}">
-                <Setter Property="Margin" Value="1"/>
-                <Setter Property="materialDesign:HintAssist.FloatingScale" Value="0.8"/>
-                <Setter Property="Padding" Value="7.5"/>
+            <Style x:Key="ModernDatePicker"
+                   TargetType="DatePicker"
+                   BasedOn="{StaticResource MaterialDesignOutlinedDatePicker}">
+                <Setter Property="Margin"
+                        Value="1" />
+                <Setter Property="materialDesign:HintAssist.FloatingScale"
+                        Value="0.8" />
+                <Setter Property="Padding"
+                        Value="7.5" />
             </Style>
-            <Style x:Key="Warning" TargetType="materialDesign:PackIcon">
-                <Setter Property="HorizontalAlignment" Value="Right"/>
-                <Setter Property="VerticalAlignment" Value="Center"/>
-                <Setter Property ="Foreground" Value="Red"/>
-                <Setter Property="Background" Value="Transparent"/>
-                <Setter Property="Width" Value="20"/>
-                <Setter Property="Height" Value="20"/>
-                <Setter Property="Margin" Value="10"/>
-                <Setter Property="ToolTipService.InitialShowDelay" Value="0"/>
-                <Setter Property="Background" Value="Transparent"/>
+            <Style x:Key="Warning"
+                   TargetType="materialDesign:PackIcon">
+                <Setter Property="HorizontalAlignment"
+                        Value="Right" />
+                <Setter Property="VerticalAlignment"
+                        Value="Center" />
+                <Setter Property="Foreground"
+                        Value="Red" />
+                <Setter Property="Background"
+                        Value="Transparent" />
+                <Setter Property="Width"
+                        Value="20" />
+                <Setter Property="Height"
+                        Value="20" />
+                <Setter Property="Margin"
+                        Value="10" />
+                <Setter Property="ToolTipService.InitialShowDelay"
+                        Value="0" />
+                <Setter Property="Background"
+                        Value="Transparent" />
                 <Style.Triggers>
-                    <DataTrigger Binding="{Binding isValid}" Value="true">
-                        <Setter Property="Visibility" Value="Hidden"/>
+                    <DataTrigger Binding="{Binding isValid}"
+                                 Value="true">
+                        <Setter Property="Visibility"
+                                Value="Hidden" />
                     </DataTrigger>
                 </Style.Triggers>
             </Style>
 
-            <Style TargetType="DataGridRow" BasedOn="{StaticResource MaterialDesignDataGridRow}">
-                <Setter Property="DetailsVisibility" Value="Collapsed" />
+            <Style TargetType="DataGridRow"
+                   BasedOn="{StaticResource MaterialDesignDataGridRow}">
+                <Setter Property="DetailsVisibility"
+                        Value="Collapsed" />
                 <Style.Triggers>
-                    <DataTrigger Binding="{Binding IsExpanded}" Value="True">
-                        <Setter Property="DetailsVisibility" Value="Visible"/>
+                    <DataTrigger Binding="{Binding IsExpanded}"
+                                 Value="True">
+                        <Setter Property="DetailsVisibility"
+                                Value="Visible" />
                     </DataTrigger>
-                    <DataTrigger Binding="{Binding IsExpanded}" Value="False">
-                        <Setter Property="DetailsVisibility" Value="Collapsed"/>
+                    <DataTrigger Binding="{Binding IsExpanded}"
+                                 Value="False">
+                        <Setter Property="DetailsVisibility"
+                                Value="Collapsed" />
                     </DataTrigger>
                 </Style.Triggers>
             </Style>
 
-            <Style TargetType="{x:Type DataGridCell}" BasedOn="{StaticResource MaterialDesignDataGridCell}">
-                <Setter Property="VerticalContentAlignment" Value="Stretch" />
-                <Setter Property="HorizontalContentAlignment" Value="Stretch" />
-                <Setter Property="HorizontalAlignment" Value="Stretch"/>
-                <Setter Property="VerticalAlignment" Value="Stretch"/>
+            <Style TargetType="{x:Type DataGridCell}"
+                   BasedOn="{StaticResource MaterialDesignDataGridCell}">
+                <Setter Property="VerticalContentAlignment"
+                        Value="Stretch" />
+                <Setter Property="HorizontalContentAlignment"
+                        Value="Stretch" />
+                <Setter Property="HorizontalAlignment"
+                        Value="Stretch" />
+                <Setter Property="VerticalAlignment"
+                        Value="Stretch" />
+                <Setter Property="Padding" Value="10 10 10 0" />
             </Style>
 
-            <Style TargetType="{x:Type DataGridColumnHeader}" BasedOn="{StaticResource MaterialDesignDataGridColumnHeader}">
-                <Setter Property="VerticalContentAlignment" Value="Stretch" />
-                <Setter Property="HorizontalContentAlignment" Value="Stretch" />
-                <Setter Property="HorizontalAlignment" Value="Stretch"/>
-                <Setter Property="VerticalAlignment" Value="Stretch"/>
-                <Setter Property="FontWeight" Value="Bold" />
+            <Style TargetType="{x:Type DataGridColumnHeader}"
+                   BasedOn="{StaticResource MaterialDesignDataGridColumnHeader}">
+                <Setter Property="VerticalContentAlignment"
+                        Value="Stretch" />
+                <Setter Property="HorizontalContentAlignment"
+                        Value="Left" />
+                <Setter Property="HorizontalAlignment"
+                        Value="Stretch" />
+                <Setter Property="VerticalAlignment"
+                        Value="Stretch" />
+                <Setter Property="FontWeight"
+                        Value="Bold" />
+                <Setter Property="Padding"
+                        Value="10 4 10 4" />
             </Style>
 
-            <Style TargetType="DataGrid" BasedOn="{StaticResource MaterialDesignDataGrid}">
-                <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
-                <Setter Property="VerticalContentAlignment" Value="Center"/>
-                <Setter Property="RowStyle" Value="{StaticResource MaterialDesignDataGridRow}"/>
-                <Setter Property="CellStyle" Value="{StaticResource MaterialDesignDataGridCell}"/>
-                <Setter Property="RowHeaderStyle" Value="{StaticResource MaterialDesignDataGridColumnHeader}"/>
-                <Setter Property="materialDesign:DataGridAssist.ColumnHeaderPadding" Value="4 2 4 2"/>
-                <Setter Property="materialDesign:DataGridAssist.CellPadding" Value="4 0 4 0"/>
+            <Style TargetType="DataGrid"
+                   BasedOn="{StaticResource MaterialDesignDataGrid}">
+                <Setter Property="HorizontalContentAlignment"
+                        Value="Stretch" />
+                <Setter Property="VerticalContentAlignment"
+                        Value="Center" />
+                <Setter Property="RowStyle"
+                        Value="{StaticResource MaterialDesignDataGridRow}" />
+                <Setter Property="CellStyle"
+                        Value="{StaticResource MaterialDesignDataGridCell}" />
+                <Setter Property="RowHeaderStyle"
+                        Value="{StaticResource MaterialDesignDataGridColumnHeader}" />
+                <!--<Setter Property="materialDesign:DataGridAssist.CellPadding"
+                        Value="4 0 4 0" />-->
             </Style>
 
-            <Style x:Key="MaterialDesignRaisedToggleButton" TargetType="{x:Type ToggleButton}" BasedOn="{StaticResource MaterialDesignRaisedButton}">
-                <Setter Property="Background" Value="{DynamicResource MaterialDesign.Brush.Primary}" />
-                <Setter Property="BorderBrush" Value="{DynamicResource MaterialDesign.Brush.Primary}" />
-                <Setter Property="BorderThickness" Value="1" />
-                <Setter Property="Foreground" Value="{DynamicResource MaterialDesign.Brush.Primary.Foreground}" />
-                <Setter Property="Height" Value="32" />
-                <Setter Property="Padding" Value="16,4,16,4" />
-                <Setter Property="HorizontalContentAlignment" Value="Center" />
-                <Setter Property="VerticalContentAlignment" Value="Center" />
+            <Style x:Key="MaterialDesignIconButton"
+                   TargetType="{x:Type Button}"
+                   BasedOn="{StaticResource MaterialDesignRaisedButton}">
+                <Setter Property="Background"
+                        Value="{DynamicResource MaterialDesign.Brush.Primary}" />
+                <Setter Property="BorderBrush"
+                        Value="{DynamicResource MaterialDesign.Brush.Primary}" />
+                <Setter Property="BorderThickness"
+                        Value="1" />
+                <Setter Property="Foreground"
+                        Value="{DynamicResource MaterialDesign.Brush.Primary.Foreground}" />
+                <Setter Property="Height"
+                        Value="32" />
+                <Setter Property="Width"
+                        Value="52" />
+                <Setter Property="Padding"
+                        Value="16,0,16,0" />
+                <Setter Property="Margin"
+                        Value="5,-5,5,5" />
+                <Setter Property="HorizontalContentAlignment"
+                        Value="Center" />
+                <Setter Property="VerticalContentAlignment"
+                        Value="Center" />
+                <Setter Property="ToolTipService.InitialShowDelay"
+                        Value="0" />
+                <Setter Property="Template">
+                    <Setter.Value>
+                        <ControlTemplate TargetType="{x:Type Button}">
+                            <Border x:Name="border"
+                                    Background="{TemplateBinding Background}"
+                                    BorderBrush="{TemplateBinding BorderBrush}"
+                                    BorderThickness="{TemplateBinding BorderThickness}"
+                                    CornerRadius="{Binding Path=(materialDesign:ButtonAssist.CornerRadius), RelativeSource={RelativeSource TemplatedParent}}"
+                                    Effect="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=(materialDesign:ElevationAssist.Elevation), Converter={x:Static materialDesign:ShadowConverter.Instance}}">
+                                <ContentControl HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
+                                                VerticalAlignment="{TemplateBinding VerticalContentAlignment}">
+                                    <ContentControl.Content>
+                                        <materialDesign:PackIcon Kind="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=Tag}"
+                                                                 Width="20"
+                                                                 Height="20"
+                                                                 Foreground="White"
+                                                                 VerticalAlignment="Center"
+                                                                 HorizontalAlignment="Center"
+                                                                 RenderTransformOrigin="0.5,0.5">
+                                        </materialDesign:PackIcon>
+                                    </ContentControl.Content>
+                                </ContentControl>
+                            </Border>
+                            <ControlTemplate.Triggers>
+                                <Trigger Property="IsMouseOver"
+                                         Value="True">
+                                    <Setter TargetName="border"
+                                            Property="materialDesign:ShadowAssist.Darken"
+                                            Value="True" />
+                                </Trigger>
+                                <Trigger Property="IsKeyboardFocused"
+                                         Value="True">
+                                    <Setter TargetName="border"
+                                            Property="materialDesign:ShadowAssist.Darken"
+                                            Value="True" />
+                                </Trigger>
+                                <Trigger Property="IsEnabled"
+                                         Value="False">
+                                    <Setter Property="Opacity"
+                                            Value="0.38" />
+                                </Trigger>
+                            </ControlTemplate.Triggers>
+                        </ControlTemplate>
+                    </Setter.Value>
+                </Setter>
+            </Style>
+
+
+            <Style x:Key="MaterialDesignRaisedToggleButton"
+                   TargetType="{x:Type ToggleButton}"
+                   BasedOn="{StaticResource MaterialDesignRaisedButton}">
+                <Setter Property="Background"
+                        Value="{DynamicResource MaterialDesign.Brush.Primary}" />
+                <Setter Property="BorderBrush"
+                        Value="{DynamicResource MaterialDesign.Brush.Primary}" />
+                <Setter Property="BorderThickness"
+                        Value="1" />
+                <Setter Property="Foreground"
+                        Value="{DynamicResource MaterialDesign.Brush.Primary.Foreground}" />
+                <Setter Property="Height"
+                        Value="32" />
+                <Setter Property="Width"
+                        Value="52" />
+                <Setter Property="Padding"
+                        Value="16,0,16,0" />
+                <Setter Property="Margin"
+                        Value="5,-5,5,5" />
+                <Setter Property="HorizontalContentAlignment"
+                        Value="Center" />
+                <Setter Property="VerticalContentAlignment"
+                        Value="Center" />
                 <Setter Property="Template">
                     <Setter.Value>
                         <ControlTemplate TargetType="{x:Type ToggleButton}">
                             <Border x:Name="border"
-                        Background="{TemplateBinding Background}"
-                        BorderBrush="{TemplateBinding BorderBrush}"
-                        BorderThickness="{TemplateBinding BorderThickness}"
-                        CornerRadius="{Binding Path=(materialDesign:ButtonAssist.CornerRadius), RelativeSource={RelativeSource TemplatedParent}}"
-                        Effect="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=(materialDesign:ElevationAssist.Elevation), Converter={x:Static materialDesign:ShadowConverter.Instance}}">
+                                    Background="{TemplateBinding Background}"
+                                    BorderBrush="{TemplateBinding BorderBrush}"
+                                    BorderThickness="{TemplateBinding BorderThickness}"
+                                    CornerRadius="{Binding Path=(materialDesign:ButtonAssist.CornerRadius), RelativeSource={RelativeSource TemplatedParent}}"
+                                    Effect="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=(materialDesign:ElevationAssist.Elevation), Converter={x:Static materialDesign:ShadowConverter.Instance}}">
                                 <VisualStateManager.VisualStateGroups>
                                     <VisualStateGroup x:Name="CheckStates">
                                         <!-- Checked State -->
                                         <VisualState x:Name="Checked">
                                             <Storyboard>
-                                                <DoubleAnimationUsingKeyFrames
-                                        Storyboard.TargetName="iconTransform"
-                                        Storyboard.TargetProperty="Angle">
-                                                    <EasingDoubleKeyFrame
-                                            KeyTime="0:0:0.2"
-                                            Value="180" />
+                                                <DoubleAnimationUsingKeyFrames Storyboard.TargetName="iconTransform"
+                                                                               Storyboard.TargetProperty="Angle">
+                                                    <EasingDoubleKeyFrame KeyTime="0:0:0.2"
+                                                                          Value="180" />
                                                 </DoubleAnimationUsingKeyFrames>
                                             </Storyboard>
                                         </VisualState>
                                         <!-- Unchecked State -->
                                         <VisualState x:Name="Unchecked">
                                             <Storyboard>
-                                                <DoubleAnimationUsingKeyFrames
-                                        Storyboard.TargetName="iconTransform"
-                                        Storyboard.TargetProperty="Angle">
-                                                    <EasingDoubleKeyFrame
-                                            KeyTime="0:0:0.2"
-                                            Value="0" />
+                                                <DoubleAnimationUsingKeyFrames Storyboard.TargetName="iconTransform"
+                                                                               Storyboard.TargetProperty="Angle">
+                                                    <EasingDoubleKeyFrame KeyTime="0:0:0.2"
+                                                                          Value="0" />
                                                 </DoubleAnimationUsingKeyFrames>
                                             </Storyboard>
                                         </VisualState>
                                     </VisualStateGroup>
                                 </VisualStateManager.VisualStateGroups>
-                                <materialDesign:PackIcon
-                                    x:Name="icon"
-                                    Kind="ChevronDown"
-                                    Width="20"
-                                    Height="20"
-                                    Foreground="White"
-                                    VerticalAlignment="Center"
-                                    HorizontalAlignment="Center"
-                                    RenderTransformOrigin="0.5,0.5">
+                                <materialDesign:PackIcon x:Name="icon"
+                                                         Kind="ChevronDown"
+                                                         Width="20"
+                                                         Height="20"
+                                                         Foreground="White"
+                                                         VerticalAlignment="Center"
+                                                         HorizontalAlignment="Center"
+                                                         RenderTransformOrigin="0.5,0.5">
                                     <materialDesign:PackIcon.RenderTransform>
-                                        <RotateTransform x:Name="iconTransform" Angle="0" />
+                                        <RotateTransform x:Name="iconTransform"
+                                                         Angle="0" />
                                     </materialDesign:PackIcon.RenderTransform>
                                 </materialDesign:PackIcon>
                             </Border>
                             <ControlTemplate.Triggers>
-                                <Trigger Property="IsMouseOver" Value="True">
-                                    <Setter TargetName="border" Property="materialDesign:ShadowAssist.Darken" Value="True" />
+                                <Trigger Property="IsMouseOver"
+                                         Value="True">
+                                    <Setter TargetName="border"
+                                            Property="materialDesign:ShadowAssist.Darken"
+                                            Value="True" />
                                 </Trigger>
-                                <Trigger Property="IsKeyboardFocused" Value="True">
-                                    <Setter TargetName="border" Property="materialDesign:ShadowAssist.Darken" Value="True" />
+                                <Trigger Property="IsKeyboardFocused"
+                                         Value="True">
+                                    <Setter TargetName="border"
+                                            Property="materialDesign:ShadowAssist.Darken"
+                                            Value="True" />
                                 </Trigger>
-                                <Trigger Property="IsEnabled" Value="False">
-                                    <Setter Property="Opacity" Value="0.38" />
+                                <Trigger Property="IsEnabled"
+                                         Value="False">
+                                    <Setter Property="Opacity"
+                                            Value="0.38" />
                                 </Trigger>
-                                <Trigger Property="IsChecked" Value="True">
-                                    <Setter TargetName="border" Property="Background" Value="{DynamicResource MaterialDesign.Brush.Primary.Dark}" />
+                                <Trigger Property="IsChecked"
+                                         Value="True">
+                                    <Setter TargetName="border"
+                                            Property="Background"
+                                            Value="{DynamicResource MaterialDesign.Brush.Primary.Dark}" />
                                 </Trigger>
                             </ControlTemplate.Triggers>
                         </ControlTemplate>

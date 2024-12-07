@@ -131,16 +131,9 @@
                             <DataTemplate>
                                 <Button ToolTip="Chọn"
                                         Click="btnSelectBook_Click"
-                                        DataContext="{Binding}">
-                                    <materialDesign:PackIcon Kind="BookAdd"
-                                                             HorizontalAlignment="Center"
-                                                             VerticalAlignment="Center"
-                                                             Foreground="White"
-                                                             Background="Transparent"
-                                                             Width="20"
-                                                             Height="20"
-                                                             ToolTipService.InitialShowDelay="0" />
-                                </Button>
+                                        Tag="BookPlusOutline"
+                                        Style="{StaticResource MaterialDesignIconButton}"
+                                        DataContext="{Binding}" />
                             </DataTemplate>
                         </DataGridTemplateColumn.CellTemplate>
                     </DataGridTemplateColumn>
@@ -218,16 +211,9 @@
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate>
                             <Button ToolTip="Xóa"
-                                    Click="btnRemoveBook_Click">
-                                <materialDesign:PackIcon Kind="BookRemove"
-                                                         HorizontalAlignment="Center"
-                                                         VerticalAlignment="Center"
-                                                         Foreground="White"
-                                                         Background="Transparent"
-                                                         Width="20"
-                                                         Height="20"
-                                                         ToolTipService.InitialShowDelay="0" />
-                            </Button>
+                                    Click="btnRemoveBook_Click"
+                                    Tag="BookRemoveOutline"
+                                    Style="{StaticResource MaterialDesignIconButton}" />
                         </DataTemplate>
                     </DataGridTemplateColumn.CellTemplate>
                 </DataGridTemplateColumn>

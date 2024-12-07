@@ -50,6 +50,7 @@
                       AutoGenerateColumns="False"
                       CanUserAddRows="False"
                       Margin="0,0,0,10"
+                      materialDesign:DataGridAssist.CellPadding="0,0,10,0"
                       Style="{StaticResource MaterialDesignDataGrid}">
                 <DataGrid.Columns>
                     <DataGridCheckBoxColumn Header="Chọn"

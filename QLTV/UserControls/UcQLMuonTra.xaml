@@ -39,20 +39,12 @@
                                      materialDesign:HintAssist.Hint="Tìm kiếm phiếu mượn"
                                      materialDesign:HintAssist.FloatingScale="1"
                                      TextChanged="txtSearchBorrow_TextChanged" />
-                            <Button x:Name="btnAddBorrow"
-                                    ToolTip="Thêm phiếu mượn"
+                            <Button ToolTip="Thêm phiếu mượn"
                                     Click="btnAddBorrow_Click"
-                                    Style="{StaticResource MaterialDesignRaisedButton}"
-                                    ToolTipService.InitialShowDelay="0"
-                                    Height="50">
-                                <materialDesign:PackIcon Kind="BookMultipleAdd"
-                                                         HorizontalAlignment="Center"
-                                                         VerticalAlignment="Center"
-                                                         Foreground="White"
-                                                         Background="Transparent"
-                                                         Width="20"
-                                                         Height="20" />
-                            </Button>
+                                    Style="{StaticResource MaterialDesignIconButton}"
+                                    Height="50"
+                                    Tag="BookMultipleAdd"
+                                    Margin="0"/>
                         </StackPanel>
                         <ComboBox Style="{StaticResource ModernComboBox}"
                                   x:Name="cboLoc"
@@ -93,23 +85,14 @@
                                     <DataTemplate>
                                         <StackPanel Orientation="Horizontal">
                                             <ToggleButton Style="{StaticResource MaterialDesignRaisedToggleButton}"
-                                                          Width="52"
                                                           IsChecked="{Binding IsExpanded, Mode=TwoWay}"
                                                           ToolTip="Chi tiết"
                                                           ToolTipService.InitialShowDelay="0"
-                                                          Click="btnViewDetail_Click"
-                                                          Margin="0,0,5,0" />
-                                            <Button ToolTipService.InitialShowDelay="0"
-                                                    ToolTip="Xóa"
+                                                          Click="btnViewDetail_Click"/>
+                                            <Button ToolTip="Xóa"
                                                     Click="btnDeleteBorrow_Click"
-                                                    Style="{StaticResource MaterialDesignRaisedButton}">
-                                                <materialDesign:PackIcon Kind="BookRemoveOutline"
-                                                                         HorizontalAlignment="Center"
-                                                                         VerticalAlignment="Center"
-                                                                         Foreground="White"
-                                                                         Background="Transparent"
-                                                                         Width="20"
-                                                                         Height="20" />
+                                                    Style="{StaticResource MaterialDesignIconButton}"
+                                                    Tag="BookRemoveOutline">
                                             </Button>
                                         </StackPanel>
                                     </DataTemplate>
@@ -159,19 +142,12 @@
                                  materialDesign:HintAssist.Hint="Tìm kiếm phiếu trả..."
                                  TextChanged="txtSearchReturn_TextChanged"
                                  materialDesign:HintAssist.FloatingScale="1" />
-                        <Button x:Name="btnAddReturn"
+                        <Button Style="{StaticResource MaterialDesignIconButton}"
+                                Height="50"
+                                Margin="0"
                                 ToolTip="Thêm phiếu trả"
                                 Click="btnAddReturn_Click"
-                                Height="50"
-                                ToolTipService.InitialShowDelay="0">
-                            <materialDesign:PackIcon Kind="BookMinusMultiple"
-                                                     HorizontalAlignment="Center"
-                                                     VerticalAlignment="Center"
-                                                     Foreground="White"
-                                                     Background="Transparent"
-                                                     Width="20"
-                                                     Height="20" />
-                        </Button>
+                                Tag="BookMinusMultiple" />
                     </StackPanel>
                     <!-- Returning DataGrid -->
                     <DataGrid x:Name="dgReturns"
@@ -198,21 +174,12 @@
                                                           Width="52"
                                                           IsChecked="{Binding IsExpanded, Mode=TwoWay}"
                                                           ToolTip="Chi tiết"
-                                                          ToolTipService.InitialShowDelay="0"
-                                                          Click="btnViewDetail_Click"
-                                                          Margin="0,0,5,0" />
+                                                          Click="btnViewDetail_Click"/>
                                             <Button ToolTip="Xóa"
                                                     Click="btnDeleteReturn_Click"
-                                                    Style="{StaticResource MaterialDesignRaisedButton}"
-                                                    ToolTipService.InitialShowDelay="0">
-                                                <materialDesign:PackIcon Kind="BookRemoveOutline"
-                                                                         HorizontalAlignment="Center"
-                                                                         VerticalAlignment="Center"
-                                                                         Foreground="White"
-                                                                         Background="Transparent"
-                                                                         Width="20"
-                                                                         Height="20" />
-                                            </Button>
+                                                    Style="{StaticResource MaterialDesignIconButton}"
+                                                    ToolTipService.InitialShowDelay="0"
+                                                    Tag="BookRemoveOutline" />
                                         </StackPanel>
                                     </DataTemplate>
                                 </DataGridTemplateColumn.CellTemplate>
