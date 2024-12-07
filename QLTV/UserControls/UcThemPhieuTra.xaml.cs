@@ -373,6 +373,7 @@ namespace QLTV.UserControls
                 MessageBox.Show("Thêm phiếu trả thành công!", "Thông báo", MessageBoxButton.OK, MessageBoxImage.Information);
                 Window.GetWindow(this).DialogResult = true;
                 Window.GetWindow(this)?.Close();
+
             }
             catch (Exception ex)
             {

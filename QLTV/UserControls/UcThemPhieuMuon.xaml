@@ -44,6 +44,7 @@
                 </ComboBox>
                 <materialDesign:PackIcon Kind="AlertCircleOutline"
                                      x:Name="icDocGiaError"
+                                         Visibility="Collapsed"
                         Style="{StaticResource Warning}"/>
             </StackPanel>
         </Grid>

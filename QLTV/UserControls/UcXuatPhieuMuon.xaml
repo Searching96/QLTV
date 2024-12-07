@@ -6,29 +6,69 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:QLTV.UserControls"
              mc:Ignorable="d" 
-             d:DesignHeight="600" d:DesignWidth="300">
+             d:DesignHeight="800" d:DesignWidth="350">
     <Border Background="White">
-        <Grid Background="Transparent" Margin="25">
+        <Grid Background="Transparent">
             <Grid.RowDefinitions>
-                <RowDefinition Height="Auto"/>
                 <RowDefinition Height="*"/>
+                <RowDefinition Height="Auto"/>
             </Grid.RowDefinitions>
-            <StackPanel Grid.Row="0">
-                <TextBlock
-                   Grid.Row="0"
-                   Background="Transparent"
-                   Foreground="Black"
-                   HorizontalAlignment="Center"
-                   FontFamily="pack://application:,,,/Fonts/#Ticketing"
-                   VerticalAlignment="Center"
-                   FontSize="25"
-                   FontWeight="Medium"
-                   Text="PHIẾU MƯỢN"/>
-                <Separator Grid.Row="0" VerticalAlignment="Bottom"/>
-                <TextBlock Style="{StaticResource MaterialDesignBody1TextBlock}">
-                    <Run Text="Độc giả : " />
-                    <Run Text="{Binding phieuMuon.IDDocGiaNavigation.IDTaiKhoanNavigation.TenTaiKhoan}"/>
-                </TextBlock>
+            <Grid Grid.Row="0" x:Name="PhieuMuonContent" Margin="25">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="*"/>
+                </Grid.RowDefinitions>
+                <StackPanel Grid.Row="0" >
+                    <TextBlock
+                           Grid.Row="0"
+                           Background="Transparent"
+                           Foreground="Black"
+                           HorizontalAlignment="Center"
+                           VerticalAlignment="Center"
+                           FontSize="25"
+                           FontWeight="Medium"
+                           Text="PHIẾU MƯỢN"/>
+                    <Separator Grid.Row="0" VerticalAlignment="Bottom"/>
+                    <TextBlock Style="{StaticResource MaterialDesignBody1TextBlock}">
+                        <Run Text="Độc giả : " />
+                        <Run Text="{Binding IDDocGiaNavigation.IDTaiKhoanNavigation.TenTaiKhoan}"/>
+                    </TextBlock>
+                    <TextBlock Style="{StaticResource MaterialDesignBody1TextBlock}">
+                        <Run Text="Ngày mượn : " />
+                        <Run Text="{Binding NgayMuon, StringFormat={}{0:dd/MM/yyyy hh:mm:ss}}"/>
+                    </TextBlock>
+                    <TextBlock x:Name="tb_SLSach" Style="{StaticResource MaterialDesignBody1TextBlock}">
+                    </TextBlock>
+                </StackPanel>
+                <DataGrid ItemsSource="{Binding CTPHIEUMUON}" 
+                          AutoGenerateColumns="False" 
+                          IsReadOnly="True" 
+                          BorderThickness="2"
+                          BorderBrush="Gray"
+                          Grid.Row="1"
+                          materialDesign:DataGridAssist.CellPadding="5"
+                          Style="{StaticResource MaterialDesignDataGrid}">
+                    <DataGrid.Columns>
+                        <materialDesign:DataGridTextColumn Header="Tên sách" 
+                                           Binding="{Binding IDSachNavigation.IDTuaSachNavigation.TenTuaSach}"
+                                           Width="Auto"/>
+                        <materialDesign:DataGridTextColumn Header="Tình trạng" Binding="{Binding IDTinhTrangMuonNavigation.TenTinhTrang}"
+                                           Width="Auto"/>
+                        <materialDesign:DataGridTextColumn Header="Hạn trả" Binding="{Binding HanTra, StringFormat=dd/MM/yyyy}"
+                                           Width="Auto"/>
+                    </DataGrid.Columns>
+                </DataGrid>
+            </Grid>
+
+            <StackPanel Grid.Row="1" Orientation="Horizontal" HorizontalAlignment="Right" Margin="10,-20,10,10">
+                <Button Margin="5,5,5,0"
+                        Content="In phiếu"
+                        Foreground="White"
+                        Click="btnInPhieu_Click"/>
+                <Button Margin="5,5,5,0"
+                        Content="Thoát"
+                        Foreground="White"
+                        Click="btnThoat_Click"/>
             </StackPanel>
         </Grid>
     </Border>

@@ -484,6 +484,17 @@ namespace QLTV.UserControls
                 await _context.SaveChangesAsync();
                 MessageBox.Show("Thêm phiếu mượn thành công!", "Thông báo", MessageBoxButton.OK, MessageBoxImage.Information);
                 Window.GetWindow(this).DialogResult = true;
+                var window = new Window
+                {
+                    Title = "In phiếu mượn",
+                    Content = new UcXuatPhieuMuon(phieuMuon),
+                    Width = 350,
+                    Height = 600,
+                    WindowStyle = WindowStyle.None,
+                    WindowStartupLocation = WindowStartupLocation.CenterScreen,
+                    ResizeMode = ResizeMode.CanResizeWithGrip
+                };
+                window.ShowDialog();
                 Window.GetWindow(this)?.Close();
             }
             catch (Exception ex)

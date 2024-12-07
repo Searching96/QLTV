@@ -65,26 +65,27 @@
             </Style>
 
             <Style TargetType="{x:Type DataGridCell}" BasedOn="{StaticResource MaterialDesignDataGridCell}">
-                <Setter Property="VerticalContentAlignment" Value="Center" />
-                <Setter Property="HorizontalContentAlignment" Value="Center" />
-                <Setter Property="HorizontalAlignment" Value="Center"/>
-                <Setter Property="VerticalAlignment" Value="Center"/>
+                <Setter Property="VerticalContentAlignment" Value="Stretch" />
+                <Setter Property="HorizontalContentAlignment" Value="Stretch" />
+                <Setter Property="HorizontalAlignment" Value="Stretch"/>
+                <Setter Property="VerticalAlignment" Value="Stretch"/>
             </Style>
 
             <Style TargetType="{x:Type DataGridColumnHeader}" BasedOn="{StaticResource MaterialDesignDataGridColumnHeader}">
-                <Setter Property="VerticalContentAlignment" Value="Center" />
-                <Setter Property="HorizontalContentAlignment" Value="Center" />
-                <Setter Property="HorizontalAlignment" Value="Center"/>
-                <Setter Property="VerticalAlignment" Value="Center"/>
+                <Setter Property="VerticalContentAlignment" Value="Stretch" />
+                <Setter Property="HorizontalContentAlignment" Value="Stretch" />
+                <Setter Property="HorizontalAlignment" Value="Stretch"/>
+                <Setter Property="VerticalAlignment" Value="Stretch"/>
             </Style>
 
             <Style TargetType="DataGrid" BasedOn="{StaticResource MaterialDesignDataGrid}">
-                <Setter Property="HorizontalContentAlignment" Value="Center"/>
+                <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
                 <Setter Property="VerticalContentAlignment" Value="Center"/>
                 <Setter Property="RowStyle" Value="{StaticResource MaterialDesignDataGridRow}"/>
                 <Setter Property="CellStyle" Value="{StaticResource MaterialDesignDataGridCell}"/>
                 <Setter Property="RowHeaderStyle" Value="{StaticResource MaterialDesignDataGridColumnHeader}"/>
-                <Setter Property="materialDesign:DataGridAssist.CellPadding" Value="5"/>
+                <Setter Property="materialDesign:DataGridAssist.ColumnHeaderPadding" Value="4 2 4 2"/>
+                <Setter Property="materialDesign:DataGridAssist.CellPadding" Value="4 0 4 0"/>
             </Style>
 
             <Style x:Key="MaterialDesignRaisedToggleButton" TargetType="{x:Type ToggleButton}" BasedOn="{StaticResource MaterialDesignRaisedButton}">
