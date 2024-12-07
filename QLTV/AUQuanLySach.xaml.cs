@@ -132,12 +132,6 @@ namespace QLTV
             puAdvancedSearch.IsOpen = !puAdvancedSearch.IsOpen;
         }
 
-        // Thêm điều kiện mới
-        private void AddCondition_Click(object sender, RoutedEventArgs e)
-        {
-            _searchConditions.Add(new SearchCondition { ConditionText = "Điều kiện mới" });
-        }
-
         // Xóa điều kiện
         private void DeleteCondition_Click(object sender, RoutedEventArgs e)
         {
@@ -161,7 +155,7 @@ namespace QLTV
                 return;
             }
 
-            string newCondition = $"{selectedProperty} = {conditionText}";
+            string newCondition = $"{selectedProperty}: {conditionText}";
 
             // Add the new condition to the collection
             _searchConditions.Add(new SearchCondition { ConditionText = newCondition });
@@ -220,7 +214,7 @@ namespace QLTV
                 foreach (var condition in _searchConditions.Skip(startIndex))
                 {
                     // Split the condition into property and value
-                    var conditionParts = condition.ConditionText.Split(new[] { " = " }, StringSplitOptions.None);
+                    var conditionParts = condition.ConditionText.Split(new[] { ": " }, StringSplitOptions.None);
                     if (conditionParts.Length != 2) continue;  // Skip invalid conditions
 
                     string selectedProperty = conditionParts[0].Trim();
@@ -1389,12 +1383,12 @@ namespace QLTV
                             if (tinhTrangHopLe.Contains(editValue))
                             {
                                 // Tìm ID của trạng thái
-                                var tinhTrangEntity = context.TINHTRANG
-                                    .FirstOrDefault(t => t.TenTinhTrang == editValue);
+                                var tinhTrang = context.TINHTRANG
+                                    .FirstOrDefault(tt => tt.TenTinhTrang == editValue);
 
-                                if (tinhTrangEntity != null)
+                                if (tinhTrang != null)
                                 {
-                                    sachToEdit.IDTinhTrang = tinhTrangEntity.ID;
+                                    sachToEdit.IDTinhTrang = tinhTrang.ID;
                                 }
                                 else
                                 {
