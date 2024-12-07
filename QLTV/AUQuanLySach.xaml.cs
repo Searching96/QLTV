@@ -186,6 +186,7 @@ namespace QLTV
                 int startIndex;
 
                 // Choose the query source based on whether we use the in-memory data or the database
+                MessageBox.Show($"_useAns value: {_useAns}", "Debug Information");
                 if (_useAns)
                 {
                     querySource = _fullDataSource.AsQueryable();
@@ -213,25 +214,81 @@ namespace QLTV
                 }
 
                 // Initialize the result as an empty list to ensure proper materialization before applying any logic
-                result = (_searchMode == "AND") ? _fullDataSource.ToList() : new List<SachViewModel>();
+                result = (_searchMode == "AND") ? querySource.ToList() : new List<SachViewModel>();
 
                 // Loop through each search condition
                 foreach (var condition in _searchConditions.Skip(startIndex))
                 {
-                    // Split the condition into property and value (e.g., "Tựa Sách = 'some title'")
+                    // Split the condition into property and value
                     var conditionParts = condition.ConditionText.Split(new[] { " = " }, StringSplitOptions.None);
                     if (conditionParts.Length != 2) continue;  // Skip invalid conditions
 
                     string selectedProperty = conditionParts[0].Trim();
                     string conditionText = conditionParts[1].Trim('\''); // Remove surrounding quotes from the value
 
+                    // Variables for date parsing
+                    DateTime? searchDate = null;
+                    string comparisonOperator = "=";
+
+                    // Special handling for date searches
+                    if (selectedProperty == "Ngày Nhập")
+                    {
+                        // Check for comparison operators
+                        if (conditionText.StartsWith(">=") || conditionText.StartsWith("<=") ||
+                            conditionText.StartsWith(">") || conditionText.StartsWith("<") ||
+                            conditionText.StartsWith("="))
+                        {
+                            // Extract comparison operator
+                            comparisonOperator = conditionText.Substring(0, 2);
+                            if (comparisonOperator != ">=" && comparisonOperator != "<=")
+                            {
+                                comparisonOperator = conditionText.Substring(0, 1);
+                            }
+
+                            // Remove operator from the date string
+                            conditionText = conditionText.Substring(comparisonOperator.Length).Trim();
+                        }
+
+                        // Thêm nhiều format ngày để parse
+                        string[] dateFormats = new[] {
+                            "d/M/yyyy",
+                            "dd/MM/yyyy",
+                            "d/M/yy",
+                            "dd/MM/yy",
+                            "d-M-yyyy",
+                            "dd-MM-yyyy",
+                            "d-M-yy",
+                            "dd-MM-yy"
+                        };
+
+                        if (!DateTime.TryParseExact(conditionText.Trim(), dateFormats,
+                            System.Globalization.CultureInfo.InvariantCulture,
+                            System.Globalization.DateTimeStyles.None, out DateTime parsedDate))
+                        {
+                            MessageBox.Show("Vui lòng nhập ngày hợp lệ theo các định dạng: dd/MM/yyyy, d/M/yyyy, v.v.",
+                                "Thông báo", MessageBoxButton.OK, MessageBoxImage.Warning);
+                            return;
+                        }
+                        searchDate = parsedDate;
+                    }
+
                     // Apply AsEnumerable() before calling NormalizeString for AND conditions
                     var filteredQuery = querySource.AsEnumerable().Where(s =>
                         selectedProperty == "Tựa Sách" ? NormalizeString(s.TuaSach).Contains(NormalizeString(conditionText)) :
                         selectedProperty == "Tác Giả" ? NormalizeString(s.DSTacGia).Contains(NormalizeString(conditionText)) :
                         selectedProperty == "Thể Loại" ? NormalizeString(s.DSTheLoai).Contains(NormalizeString(conditionText)) :
-                        selectedProperty == "Nhà Xuất Ban" ? NormalizeString(s.NhaXuatBan).Contains(NormalizeString(conditionText)) :
+                        selectedProperty == "Nhà Xuất Bản" ? NormalizeString(s.NhaXuatBan).Contains(NormalizeString(conditionText)) :
                         selectedProperty == "Tình Trạng" ? NormalizeString(s.TinhTrang).Contains(NormalizeString(conditionText)) :
+                        selectedProperty == "Ngày Nhập" && searchDate.HasValue
+                            ? comparisonOperator switch
+                            {
+                                ">=" => DateTime.ParseExact(s.NgayNhap, "dd/MM/yyyy", null) >= searchDate.Value,
+                                "<=" => DateTime.ParseExact(s.NgayNhap, "dd/MM/yyyy", null) <= searchDate.Value,
+                                ">" => DateTime.ParseExact(s.NgayNhap, "dd/MM/yyyy", null) > searchDate.Value,
+                                "<" => DateTime.ParseExact(s.NgayNhap, "dd/MM/yyyy", null) < searchDate.Value,
+                                "=" => DateTime.ParseExact(s.NgayNhap, "dd/MM/yyyy", null) == searchDate.Value,
+                                _ => false
+                            } :
                         true
                     ).ToList(); // Ensure that the query is evaluated in memory
 
@@ -309,13 +366,35 @@ namespace QLTV
 
         private void PerformSearch()
         {
-            string searchTerm = NormalizeString(tbxThongTinTim.Text.Trim().ToLower());
+            string searchTerm = tbxThongTinTim.Text.Trim();
             string selectedProperty = ((ComboBoxItem)cbbThuocTinhTim.SelectedItem)?.Content.ToString();
 
             if (string.IsNullOrEmpty(selectedProperty))
             {
                 MessageBox.Show("Vui lòng chọn thuộc tính tìm kiếm", "Thông báo", MessageBoxButton.OK, MessageBoxImage.Warning);
                 return;
+            }
+
+            DateTime? searchDate = null;
+            string comparisonOperator = null;
+
+            // Xử lý tìm kiếm theo Ngày Nhập với điều kiện
+            if (selectedProperty == "Ngày Nhập")
+            {
+                // Kiểm tra cú pháp so sánh (e.g., ">= 1/1/2024", "<= 31/12/2023")
+                if (searchTerm.StartsWith(">=") || searchTerm.StartsWith("<=") || searchTerm.StartsWith(">") || searchTerm.StartsWith("<") || searchTerm.StartsWith("="))
+                {
+                    comparisonOperator = searchTerm.Split(' ')[0]; // Lấy toán tử so sánh
+                    searchTerm = searchTerm.Substring(comparisonOperator.Length).Trim(); // Loại bỏ toán tử khỏi chuỗi
+                }
+
+                // Parse chuỗi thành DateTime
+                if (!DateTime.TryParseExact(searchTerm, "d/M/yyyy", null, System.Globalization.DateTimeStyles.None, out DateTime parsedDate))
+                {
+                    MessageBox.Show("Vui lòng nhập ngày hợp lệ theo định dạng dd/MM/yyyy hoặc sử dụng so sánh như '>= 1/1/2024'", "Thông báo", MessageBoxButton.OK, MessageBoxImage.Warning);
+                    return;
+                }
+                searchDate = parsedDate;
             }
 
             using (var context = new QLTVContext())
@@ -338,11 +417,21 @@ namespace QLTV
                     })
                     .AsEnumerable()
                     .Where(s =>
-                        selectedProperty == "Tựa Sách" ? NormalizeString(s.TuaSach).Contains(searchTerm) :
-                        selectedProperty == "Tác Giả" ? NormalizeString(s.DSTacGia).Contains(searchTerm) :
-                        selectedProperty == "Thể Loại" ? NormalizeString(s.DSTheLoai).Contains(searchTerm) :
-                        selectedProperty == "Nhà Xuất Bản" ? NormalizeString(s.NhaXuatBan).Contains(searchTerm) :
-                        selectedProperty == "Tình Trạng" ? NormalizeString(s.TinhTrang).Contains(searchTerm) :
+                        selectedProperty == "Tựa Sách" ? NormalizeString(s.TuaSach).Contains(NormalizeString(searchTerm)) :
+                        selectedProperty == "Tác Giả" ? NormalizeString(s.DSTacGia).Contains(NormalizeString(searchTerm)) :
+                        selectedProperty == "Thể Loại" ? NormalizeString(s.DSTheLoai).Contains(NormalizeString(searchTerm)) :
+                        selectedProperty == "Nhà Xuất Bản" ? NormalizeString(s.NhaXuatBan).Contains(NormalizeString(searchTerm)) :
+                        selectedProperty == "Tình Trạng" ? NormalizeString(s.TinhTrang).Contains(NormalizeString(searchTerm)) :
+                        selectedProperty == "Ngày Nhập" && searchDate.HasValue
+                            ? comparisonOperator switch
+                            {
+                                ">=" => DateTime.ParseExact(s.NgayNhap, "dd/MM/yyyy", null) >= searchDate.Value,
+                                "<=" => DateTime.ParseExact(s.NgayNhap, "dd/MM/yyyy", null) <= searchDate.Value,
+                                ">" => DateTime.ParseExact(s.NgayNhap, "dd/MM/yyyy", null) > searchDate.Value,
+                                "<" => DateTime.ParseExact(s.NgayNhap, "dd/MM/yyyy", null) < searchDate.Value,
+                                "=" => DateTime.ParseExact(s.NgayNhap, "dd/MM/yyyy", null) == searchDate.Value,
+                                _ => false
+                            } :
                         true
                     )
                     .ToList();
@@ -1234,10 +1323,18 @@ namespace QLTV
 
         private void btnSuaNhieu_Click(object sender, RoutedEventArgs e)
         {
+            // Danh sách các trạng thái tình trạng hợp lệ
+            string[] tinhTrangHopLe = {
+                "Mới", "Hỏng nhẹ", "Hỏng vưa", "Hỏng nặng", "Hỏng hoàn toàn", "Mất"
+            };
+
             List<string> lstMaSachToEdit = _fullDataSource
                 .Where(s => s.IsSelected)
                 .Select(s => s.MaSach)
                 .ToList();
+
+            string selectedProperty = ((ComboBoxItem)cbbThuocTinhSua.SelectedItem)?.Content.ToString();
+            string editValue = tbxGiaTriSua.Text.Trim();
 
             using (var context = new QLTVContext())
             {
@@ -1247,13 +1344,88 @@ namespace QLTV
                         .Where(s => s.MaSach == maSach)
                         .FirstOrDefault();
 
-                    sachToEdit.NhaXuatBan = tbxGiaTriSua.Text;
+                    if (sachToEdit == null) continue;
+
+                    switch (selectedProperty)
+                    {
+                        case "Nhà Xuất Bản":
+                            sachToEdit.NhaXuatBan = editValue;
+                            break;
+
+                        case "Trị Giá":
+                            // Kiểm tra giá trị là số
+                            if (decimal.TryParse(editValue, out decimal triGia))
+                            {
+                                sachToEdit.TriGia = triGia;
+                            }
+                            else
+                            {
+                                MessageBox.Show($"Giá trị Trị Giá không hợp lệ",
+                                    "Lỗi", MessageBoxButton.OK, MessageBoxImage.Warning);
+                                return;
+                            }
+                            break;
+
+                        case "Ngày Nhập":
+                            // Kiểm tra định dạng ngày
+                            if (DateTime.TryParseExact(editValue,
+                                new[] { "dd/MM/yyyy", "d/M/yyyy", "dd-MM-yyyy", "d-M-yyyy" },
+                                System.Globalization.CultureInfo.InvariantCulture,
+                                System.Globalization.DateTimeStyles.None,
+                                out DateTime ngayNhap))
+                            {
+                                sachToEdit.NgayNhap = ngayNhap;
+                            }
+                            else
+                            {
+                                MessageBox.Show($"Ngày Nhập không hợp lệ. Sử dụng định dạng dd/MM/yyyy",
+                                    "Lỗi", MessageBoxButton.OK, MessageBoxImage.Warning);
+                                return;
+                            }
+                            break;
+
+                        case "Tình Trạng":
+                            // Kiểm tra giá trị Tình Trạng có hợp lệ không
+                            if (tinhTrangHopLe.Contains(editValue))
+                            {
+                                // Tìm ID của trạng thái
+                                var tinhTrangEntity = context.TINHTRANG
+                                    .FirstOrDefault(t => t.TenTinhTrang == editValue);
+
+                                if (tinhTrangEntity != null)
+                                {
+                                    sachToEdit.IDTinhTrang = tinhTrangEntity.ID;
+                                }
+                                else
+                                {
+                                    MessageBox.Show($"Không tìm thấy trạng thái {editValue} trong hệ thống",
+                                        "Lỗi", MessageBoxButton.OK, MessageBoxImage.Warning);
+                                    return;
+                                }
+                            }
+                            else
+                            {
+                                MessageBox.Show($"Trạng thái '{editValue}' không hợp lệ. Chọn một trong các giá trị: " +
+                                    string.Join(", ", tinhTrangHopLe),
+                                    "Lỗi", MessageBoxButton.OK, MessageBoxImage.Warning);
+                                return;
+                            }
+                            break;
+                    }
                 }
 
-                context.SaveChanges();
+                // Lưu các thay đổi
+                try
+                {
+                    context.SaveChanges();
+                    LoadSach(); // Tải lại dữ liệu
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show($"Lỗi khi lưu thay đổi: {ex.Message}",
+                        "Lỗi", MessageBoxButton.OK, MessageBoxImage.Error);
+                }
             }
-
-            LoadSach();
         }
 
         private void btnNhapSua_LayoutUpdated(object sender, EventArgs e)

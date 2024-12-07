@@ -360,10 +360,9 @@
                                           Width="120"
                                           materialDesign:HintAssist.Hint="Thuộc Tính"
                                           materialDesign:HintAssist.FloatingScale="0.8">
-                                    <ComboBoxItem Content="Tựa Sách"/>
-                                    <ComboBoxItem Content="Tác Giả"/>
-                                    <ComboBoxItem Content="Thể Loại"/>
                                     <ComboBoxItem Content="Nhà Xuất Bản"/>
+                                    <ComboBoxItem Content="Ngày Nhập"/>
+                                    <ComboBoxItem Content="Trị Giá"/>
                                     <ComboBoxItem Content="Tình Trạng"/>
                                 </ComboBox>
                                 <Button x:Name="btnSuaNhieu" 
@@ -435,6 +434,7 @@
                     <ComboBoxItem Content="Tựa Sách"/>
                     <ComboBoxItem Content="Tác Giả"/>
                     <ComboBoxItem Content="Thể Loại"/>
+                    <ComboBoxItem Content="Ngày Nhập"/>
                     <ComboBoxItem Content="Nhà Xuất Bản"/>
                     <ComboBoxItem Content="Tình Trạng"/>
                 </ComboBox>
