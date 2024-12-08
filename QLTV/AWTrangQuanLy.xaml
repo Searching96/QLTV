@@ -24,7 +24,7 @@
         
         <!--Thanh Menu ben trai-->
         <DockPanel Grid.Row="1" Grid.Column="0" Margin="0, 5, 0, 0" 
-                   Background="{x:Static local:App.PrimaryColor}">
+                   Background="{x:Static local:App.AdminPriColor}">
             <TextBlock Text="Quản Lý Thư Viện" DockPanel.Dock="Top" Foreground="White" HorizontalAlignment="Stretch" 
                        FontSize="14" FontWeight="Bold" Margin="5, 25, 0, 10" TextAlignment="Center"/>
             <TextBlock Text="Admin" DockPanel.Dock="Top" Foreground="White"

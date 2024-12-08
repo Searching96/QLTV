@@ -1,4 +1,5 @@
-﻿using System.Text;
+﻿using MaterialDesignColors;
+using System.Text;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
@@ -25,6 +26,11 @@ namespace QLTV
         {
             AUFnQuanLySach qls = new AUFnQuanLySach();
             ADMainContent.Content = qls;
+            //// Lấy mã màu từ SolidColorBrush
+            //var primaryBrush = (SolidColorBrush)App.AdminPriColor;
+            //string colorCode = primaryBrush.Color.ToString(); // Trả về mã màu dạng #RRGGBB hoặc #AARRGGBB
+
+            //MessageBox.Show($"PrimaryColor: {colorCode}");
         }
     }
 }

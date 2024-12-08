@@ -1,0 +1,51 @@
+﻿<Window x:Class="QLTV.User.UWTrangDocGia"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:QLTV.User"
+        xmlns:qltv="clr-namespace:QLTV"
+        mc:Ignorable="d"
+        Title="UWTrangDocGia" Height="750" Width="1250"
+        WindowStartupLocation="CenterScreen">
+    <Grid>
+        <Grid Background="{x:Static qltv:App.BgColor}">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="0.2*"/>
+                <ColumnDefinition Width="1*"/>
+            </Grid.ColumnDefinitions>
+
+            <!--Tieu de-->
+            <StackPanel Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2">
+
+            </StackPanel>
+
+            <!--Thanh Menu ben trai-->
+            <DockPanel Grid.Row="1" Grid.Column="0" Margin="0, 5, 0, 0" 
+                   Background="{x:Static qltv:App.UserPriColor}">
+                <TextBlock Text="Quản Lý Thư Viện" DockPanel.Dock="Top" HorizontalAlignment="Stretch" 
+                       FontSize="14" FontWeight="Bold" Margin="5, 25, 0, 10" TextAlignment="Center"/>
+                <TextBlock Text="User" DockPanel.Dock="Top"
+                       FontSize="14" FontWeight="Bold" TextAlignment="Center"/>
+
+                <Separator Margin="25" DockPanel.Dock="top" Background="DodgerBlue" Height="1"/>
+
+                <!--Button dieu huong-->
+                <StackPanel DockPanel.Dock="Top">
+                    <Button x:Name="btnFnMuonSach" Content="Mượn Sách" Background="DodgerBlue" 
+                            Click="btnFnMuonSach_Click"/>
+                </StackPanel>
+            </DockPanel>
+
+            <!--Main Content-->
+            <Grid Grid.Row="1" Grid.Column="1" Margin="5, 5, 0, 0">
+                <Frame x:Name="USMainContent" NavigationUIVisibility="Hidden"/>
+            </Grid>
+        </Grid>
+    </Grid>
+</Window>

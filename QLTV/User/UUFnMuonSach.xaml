@@ -1,0 +1,200 @@
+﻿<UserControl x:Class="QLTV.User.UUFnMuonSach"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+             xmlns:local="clr-namespace:QLTV.User"
+             xmlns:qltv="clr-namespace:QLTV"
+             mc:Ignorable="d" 
+             d:DesignHeight="450" d:DesignWidth="800">
+    <Grid Background="White">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+        <!-- Search Section -->
+        <StackPanel Grid.Row="2"
+                    Margin="0,0,0,10">
+            <TextBlock Text="Tìm kiếm sách:"
+                       Margin="0,0,0,5" />
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="Auto" />
+                </Grid.ColumnDefinitions>
+
+                <TextBox x:Name="txtSearchBook"
+                         Style="{StaticResource MaterialDesignOutlinedTextBox}"
+                         materialDesign:HintAssist.Hint="Nhập thông tin sách"
+                         TextChanged="txtSearchBook_TextChanged"
+                         Margin="0,0,10,0" />
+
+                <ComboBox Grid.Column="1"
+                          x:Name="cboSearchType"
+                          Width="120"
+                          SelectedIndex="0"
+                          Style="{StaticResource MaterialDesignOutlinedComboBox}">
+                    <ComboBoxItem Content="Tất cả" />
+                    <ComboBoxItem Content="Mã sách" />
+                    <ComboBoxItem Content="Tên sách" />
+                    <ComboBoxItem Content="Thể loại" />
+                    <ComboBoxItem Content="Tác giả" />
+                </ComboBox>
+            </Grid>
+        </StackPanel>
+
+        <!-- Available Books -->
+        <Grid Grid.Row="3"
+              Margin="0,0,0,10">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="*" />
+            </Grid.RowDefinitions>
+
+            <TextBlock Text="Sách có sẵn:"
+                       FontWeight="Bold" />
+            <DataGrid Grid.Row="1"
+                      x:Name="dgAvailableBooks"
+                      AutoGenerateColumns="False"
+                      SelectionMode="Extended"
+                      IsReadOnly="True"
+                      Style="{StaticResource MaterialDesignDataGrid}">
+                <DataGrid.Columns>
+                    <DataGridTextColumn Header="Mã sách"
+                                        Binding="{Binding MaSach}"
+                                        Width="2*" />
+                    <DataGridTextColumn Header="Tên sách"
+                                        Binding="{Binding TuaSach}"
+                                        Width="4*" />
+                    <DataGridTextColumn Header="Tác giả"
+                                        Binding="{Binding DSTacGia}"
+                                        Width="3*" />
+                    <DataGridTextColumn Header="Thể loại"
+                                        Binding="{Binding DSTheLoai}"
+                                        Width="3*" />
+                    <DataGridTextColumn Header="Tình trạng"
+                                        Binding="{Binding Book.IDTinhTrangNavigation.TenTinhTrang}"
+                                        IsReadOnly="True"
+                                        Width="2*" />
+                    <DataGridTextColumn Header="Tuần Mượn Tối Đa"
+                                        Binding="{Binding HanMuonToiDa}"
+                                        Width="4*" />
+                    <DataGridTemplateColumn Header="Thao tác"
+                                            Width="Auto"
+                                            IsReadOnly="True">
+                        <DataGridTemplateColumn.CellTemplate>
+                            <DataTemplate>
+                                <Button ToolTip="Chọn" Padding="0"
+                                        Click="btnSelectBook_Click">
+                                    <materialDesign:PackIcon Kind="BookPlusOutline"/>
+                                </Button>
+                            </DataTemplate>
+                        </DataGridTemplateColumn.CellTemplate>
+                    </DataGridTemplateColumn>
+                </DataGrid.Columns>
+            </DataGrid>
+        </Grid>
+
+        <!-- Selected Books Header -->
+        <TextBlock Grid.Row="4"
+                   Text="Sách đã chọn:"
+                   FontWeight="Bold"
+                   Margin="0,0,0,5" />
+
+        <!-- Selected Books -->
+        <DataGrid Grid.Row="5"
+                  x:Name="dgSelectedBooks"
+                  AutoGenerateColumns="False"
+                  Margin="0,0,0,10"
+                  Style="{StaticResource MaterialDesignDataGrid}"
+                  CanUserAddRows="False">
+            <DataGrid.Columns>
+                <DataGridTextColumn Header="Mã sách"
+                                    Binding="{Binding MaSach}"
+                                    IsReadOnly="True"
+                                    Width="2*" />
+                <DataGridTextColumn Header="Tên sách"
+                                    Binding="{Binding IDTuaSachNavigation.TenTuaSach}"
+                                    IsReadOnly="True"
+                                    Width="3*" />
+                <materialDesign:DataGridTextColumn Header="Tác giả"
+                                                   Binding="{Binding DSTacGia}"
+                                                   Width="3*"
+                                                   IsReadOnly="True" />
+                <DataGridTextColumn Header="Thể loại"
+                                    Binding="{Binding DSTheLoai}"
+                                    IsReadOnly="True"
+                                    Width="3*" />
+                <DataGridTextColumn Header="Tình trạng"
+                                    Binding="{Binding Book.IDTinhTrangNavigation.TenTinhTrang}"
+                                    IsReadOnly="True"
+                                    Width="2*" />
+                <DataGridTextColumn Header="Hạn trả"
+                                    Binding="{Binding CustomReturnDate, StringFormat=dd/MM/yyyy}"
+                                    IsReadOnly="True"
+                                    Width="3*" />
+                <DataGridTemplateColumn Header="Số tuần mượn"
+                                        Width="2*">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <Grid>
+                                <TextBlock Text="{Binding CustomBorrowWeeks}" />
+                                <!--<materialDesign:PackIcon Style="{StaticResource Warning}"/>-->
+                            </Grid>
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                    <DataGridTemplateColumn.CellEditingTemplate>
+                        <DataTemplate>
+                            <Grid>
+                                <TextBox AcceptsReturn="False"
+                                         Style="{StaticResource MaterialDesignOutlinedTextBox}"
+                                         Foreground="{DynamicResource SecondaryHueMidBrush}"
+                                         materialDesign:ValidationAssist.HorizontalAlignment="Left"
+                                         Padding="7"
+                                         materialDesign:ValidationAssist.Background="Transparent"
+                                         Text="{Binding CustomBorrowWeeks, UpdateSourceTrigger=PropertyChanged, ValidatesOnDataErrors=True}" />
+                                <!--<materialDesign:PackIcon Kind="AlertCircleOutline"
+                                    Style="{StaticResource Warning}"/>-->
+                            </Grid>
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellEditingTemplate>
+                </DataGridTemplateColumn>
+                <DataGridTemplateColumn Header="Thao tác"
+                                        Width="Auto"
+                                        IsReadOnly="True">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <Button ToolTip="Xóa" Padding="0"
+                                    Click="btnRemoveBook_Click">
+                                <materialDesign:PackIcon Kind="BookRemoveOutline"/>
+                            </Button>
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
+            </DataGrid.Columns>
+        </DataGrid>
+
+        <!-- Buttons -->
+        <StackPanel Grid.Row="6"
+                    Orientation="Horizontal"
+                    HorizontalAlignment="Right">
+            <Button Content="Lưu"
+                    Width="100"
+                    Margin="0,0,10,0"
+                    Click="btnSave_Click"
+                    Foreground="White">
+            </Button>
+            <Button Content="Hủy"
+                    Width="100"
+                    Click="btnCancel_Click"
+                    Foreground="White">
+            </Button>
+        </StackPanel>
+    </Grid>
+</UserControl>

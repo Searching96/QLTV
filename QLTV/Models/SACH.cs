@@ -29,6 +29,8 @@ public partial class SACH
 
     public virtual ICollection<CTPHIEUTRA> CTPHIEUTRA { get; set; } = new List<CTPHIEUTRA>();
 
+    public virtual ICollection<DANHGIA> DANHGIA { get; set; } = new List<DANHGIA>();
+
     public virtual TINHTRANG IDTinhTrangNavigation { get; set; } = null!;
 
     public virtual TUASACH IDTuaSachNavigation { get; set; } = null!;

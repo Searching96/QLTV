@@ -1,0 +1,560 @@
+﻿using MaterialDesignColors;
+using Microsoft.EntityFrameworkCore;
+using QLTV.Models;
+using System;
+using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.ComponentModel;
+using System.Globalization;
+using System.Linq;
+using System.Security.Cryptography;
+using System.Text;
+using System.Threading.Tasks;
+using System.Windows;
+using System.Windows.Controls;
+using System.Windows.Data;
+using System.Windows.Documents;
+using System.Windows.Input;
+using System.Windows.Media;
+using System.Windows.Media.Imaging;
+using System.Windows.Navigation;
+using System.Windows.Shapes;
+using System.Xml.Linq;
+
+namespace QLTV.User
+{
+    /// <summary>
+    /// Interaction logic for UUFnMuonSach.xaml
+    /// </summary>
+    public partial class UUFnMuonSach : UserControl
+    {
+        private readonly QLTVContext _context;
+        private ObservableCollection<SACH> _allBooks;
+        private ObservableCollection<SachCoSanViewModel> dsSach;
+        private IEnumerable<SachCoSanViewModel> filteredBooks;
+        private ObservableCollection<SachDaChonViewModel> _selectedBooks;
+        private CollectionViewSource viewSource;
+        
+        private class SachCoSanViewModel
+        {
+            public SACH? OSach { get; set; }
+            public string MaSach { get; set; }
+            public string TuaSach { get; set; }
+            public string DSTacGia { get; set; }
+            public string DSTheLoai { get; set; }
+            public int HanMuonToiDa { get; set; }
+        }
+        
+        private class SachDaChonViewModel : INotifyPropertyChanged, IDataErrorInfo
+        {
+            private SachCoSanViewModel _oSachVm;
+            private string _soTuanMuon;
+            private DateTime _ngayTra;
+
+            public SachCoSanViewModel OSachVM
+            {
+                get => _oSachVm;
+                set
+                {
+                    _oSachVm = value;
+                    OnPropertyChanged(nameof(_oSachVm));
+                    OnPropertyChanged(nameof(SachCoSanViewModel.DSTacGia));
+                    OnPropertyChanged(nameof(SachCoSanViewModel.DSTheLoai));
+                }
+            }
+
+            public SACH OSach
+            {
+                get => _oSachVm.OSach;
+                set
+                {
+                    _oSachVm.OSach = value;
+                    OnPropertyChanged(nameof(OSachVM));
+                    OnPropertyChanged(nameof(MaSach));
+                    OnPropertyChanged(nameof(IDTuaSachNavigation));
+                }
+            }
+
+            public string DSTheLoai
+            {
+                get => _oSachVm.DSTheLoai;
+            }
+
+            public string DSTacGia
+            {
+                get => _oSachVm.DSTacGia;
+            }
+
+            public string SoTuanMuon
+            {
+                get => _soTuanMuon;
+                set
+                {
+                    _soTuanMuon = value;
+                    UpdateNgayTra();
+                    OnPropertyChanged(nameof(SoTuanMuon));
+                }
+            }
+
+            public DateTime NgayTra
+            {
+                get => _ngayTra;
+                set
+                {
+                    _ngayTra = value;
+                    OnPropertyChanged(nameof(NgayTra));
+                }
+            }
+
+            private bool _isValid = true;
+
+            public bool isValid
+            {
+                get => _isValid;
+                set
+                {
+                    _isValid = value;
+                    OnPropertyChanged(nameof(isValid));
+                }
+            }
+
+
+            string IDataErrorInfo.this[string columnName]
+            {
+                get
+                {
+                    if (columnName == nameof(SoTuanMuon))
+                    {
+                        if (string.IsNullOrWhiteSpace(SoTuanMuon))
+                        {
+                            isValid = false;
+                            return "Thầy Dũng đẹp trai";
+                        }
+
+                        if (!int.TryParse(SoTuanMuon, out int a))
+                        {
+                            isValid = false;
+                            return "Nhập số nguyên";
+                        }
+                        if (a <= 0)
+                        {
+                            isValid = false;
+                            return "Tối thiểu 1.";
+                        }
+
+                        if (a > OSach.IDTuaSachNavigation.HanMuonToiDa)
+                        {
+                            isValid = false;
+                            return $"Tối đa {OSach.IDTuaSachNavigation.HanMuonToiDa}.";
+                        }
+                        isValid = true;
+                        return null;
+                    }
+                    return null;
+                }
+            }
+
+            public string MaSach => OSach.MaSach;
+            public TUASACH IDTuaSachNavigation => OSach.IDTuaSachNavigation;
+
+            public int ID => OSach.ID;
+
+            public string Error => throw new NotImplementedException();
+
+            private void UpdateNgayTra()
+            {
+                if (!int.TryParse(SoTuanMuon, out int a))
+                {
+                    NgayTra = DateTime.Now.AddDays(OSach.IDTuaSachNavigation.HanMuonToiDa * 7);
+                    return;
+                }
+                NgayTra = DateTime.Now.AddDays(a * 7);
+            }
+
+            public event PropertyChangedEventHandler PropertyChanged;
+            protected virtual void OnPropertyChanged(string propertyName)
+            {
+                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+            }
+
+            // ?????
+            public static ObservableCollection<SachDaChonViewModel> FromBookWithGenresList(List<SACH> books)
+            {
+                return new ObservableCollection<SachDaChonViewModel>(
+                    books.Select(book => new SachDaChonViewModel
+                    {
+                        OSach = book,
+                        SoTuanMuon = book.IDTuaSachNavigation.HanMuonToiDa.ToString()
+                    })
+                );
+            }
+        }
+
+
+
+        public UUFnMuonSach()
+        {
+            InitializeComponent();
+            _context = new();
+            _selectedBooks = new();
+            dgSelectedBooks.ItemsSource = _selectedBooks;
+            LoadData();
+        }
+
+        private string ConvertToUnsigned(string text)
+        {
+            if (string.IsNullOrEmpty(text))
+                return text;
+
+            return new string(
+                text.Trim()
+                    .ToLower()
+                    .Normalize(NormalizationForm.FormD)
+                    .Where(c => CharUnicodeInfo.GetUnicodeCategory(c) != UnicodeCategory.NonSpacingMark)
+                    .ToArray()
+            ).Normalize(NormalizationForm.FormC);
+        }
+
+        private async void LoadData()
+        {
+            try
+            {
+                _allBooks = new ObservableCollection<SACH>(await _context.SACH
+                     .Include(s => s.IDTuaSachNavigation)
+                         .ThenInclude(ts => ts.TUASACH_THELOAI)
+                             .ThenInclude(ts_tl => ts_tl.IDTheLoaiNavigation)
+                     .Include(s => s.IDTuaSachNavigation)
+                         .ThenInclude(ts => ts.TUASACH_TACGIA)
+                             .ThenInclude(ts_tg => ts_tg.IDTacGiaNavigation)
+                     .Include(s => s.IDTinhTrangNavigation)
+                     .Where(s => !s.IsDeleted && s.IsAvailable == true)
+                     .ToListAsync());
+
+                dsSach = new ObservableCollection<SachCoSanViewModel>(_allBooks.Select(s => new SachCoSanViewModel
+                {
+                    OSach = s,
+                    MaSach = s.MaSach,
+                    TuaSach = s.IDTuaSachNavigation.TenTuaSach,
+                    DSTacGia = string.Join(", ", s.IDTuaSachNavigation.TUASACH_TACGIA
+                        .Select(ts_tg => ts_tg.IDTacGiaNavigation.TenTacGia)),
+                    DSTheLoai = string.Join(", ", s.IDTuaSachNavigation.TUASACH_THELOAI
+                        .Select(ts_tl => ts_tl.IDTheLoaiNavigation.TenTheLoai)),
+                    HanMuonToiDa = s.IDTuaSachNavigation.HanMuonToiDa
+                }).ToList());
+
+                dgAvailableBooks.ItemsSource = dsSach;
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Lỗi khi tải dữ liệu: {ex.Message}", "Lỗi", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
+        }
+
+        private void TimSach(string search)
+        {
+            if (_allBooks == null) return;
+
+            var searchText = ConvertToUnsigned(search);
+            var searchType = ((ComboBoxItem)cboSearchType.SelectedItem).Content.ToString();
+
+            filteredBooks = dsSach;
+
+            if (!string.IsNullOrEmpty(searchText))
+            {
+                switch (searchType)
+                {
+                    case "Mã sách":
+                        filteredBooks = filteredBooks.Where(s =>
+                            ConvertToUnsigned(s.OSach.MaSach).Contains(searchText));
+                        break;
+
+                    case "Tên sách":
+                        filteredBooks = filteredBooks.Where(s =>
+                            ConvertToUnsigned(s.OSach.IDTuaSachNavigation.TenTuaSach).Contains(searchText));
+                        break;
+
+                    case "Thể loại":
+                        filteredBooks = filteredBooks.Where(s =>
+                            s.OSach.IDTuaSachNavigation.TUASACH_THELOAI
+                                .Select(ts_tl => ts_tl.IDTheLoaiNavigation.TenTheLoai)
+                                .Any(tenTheLoai => ConvertToUnsigned(tenTheLoai).Contains(searchText)));
+                        break;
+
+                    case "Tác giả":
+                        filteredBooks = filteredBooks.Where(s =>
+                            s.OSach.IDTuaSachNavigation.TUASACH_TACGIA
+                                .Select(ts_tg => ts_tg.IDTacGiaNavigation.TenTacGia.ToLower())
+                                .Any(tenTacGia => ConvertToUnsigned(tenTacGia).Contains(searchText)));
+                        break;
+
+                    default: // "Tất cả"
+                        filteredBooks = filteredBooks.Where(s =>
+                            ConvertToUnsigned(s.OSach.MaSach).Contains(searchText) ||
+                            ConvertToUnsigned(s.OSach.IDTuaSachNavigation.TenTuaSach).Contains(searchText) ||
+                            s.OSach.IDTuaSachNavigation.TUASACH_THELOAI
+                                .Select(ts_tl => ts_tl.IDTheLoaiNavigation.TenTheLoai)
+                                .Any(tenTheLoai => ConvertToUnsigned(tenTheLoai).Contains(searchText)) ||
+                            s.OSach.IDTuaSachNavigation.TUASACH_TACGIA
+                                .Select(ts_tg => ts_tg.IDTacGiaNavigation.TenTacGia.ToLower())
+                                .Any(tenTacGia => ConvertToUnsigned(tenTacGia).Contains(searchText)));
+                        break;
+                }
+            }
+
+            // Convert filtered books to display format using the concrete type
+
+            dgAvailableBooks.ItemsSource = filteredBooks;
+        }
+
+        private void txtSearchBook_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            TimSach(txtSearchBook.Text);
+        }
+
+        private void btnSelectBook_Click(object sender, RoutedEventArgs e)
+        {
+            var sachDuocChon = ((Button)sender).DataContext as SachCoSanViewModel;
+            if (sachDuocChon?.OSach == null) return;
+
+            // Kiểm tra trạng thái sách trước khi chọn
+            if (sachDuocChon.OSach.IsAvailable == false)
+            {
+                MessageBox.Show("Sách này đã được chọn hoặc mượn.", "Thông báo", MessageBoxButton.OK, MessageBoxImage.Warning);
+                return;
+            }
+
+            try
+            {
+                // Sử dụng lock để đảm bảo tính đồng bộ
+                lock (_selectedBooks)
+                {
+                    if (!_selectedBooks.Any(sb => sb.OSach.ID == sachDuocChon.OSach.ID))
+                    {
+                        // Đánh dấu sách là không khả dụng
+                        sachDuocChon.OSach.IsAvailable = false;
+                        var sachDaChon = new SachDaChonViewModel
+                        {
+                            OSachVM = sachDuocChon,
+                            SoTuanMuon = sachDuocChon.OSach.IDTuaSachNavigation.HanMuonToiDa.ToString()
+                        };
+
+                        // Thay đổi trạng thái một cách an toàn
+                        var tempDsSach = new ObservableCollection<SachCoSanViewModel>(dsSach);
+                        tempDsSach.Remove(sachDuocChon);
+                        dsSach = tempDsSach;
+
+                        var tempAllBooks = new ObservableCollection<SACH>(_allBooks);
+                        tempAllBooks.Remove(sachDuocChon.OSach);
+                        _allBooks = tempAllBooks;
+
+                        TimSach(txtSearchBook.Text);
+                        _selectedBooks.Add(sachDaChon);
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                // Khôi phục trạng thái nếu có lỗi
+                sachDuocChon.OSach.IsAvailable = true;
+                MessageBox.Show($"Lỗi khi chọn sách: {ex.Message}", "Lỗi", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
+        }
+
+        private void btnRemoveBook_Click(object sender, RoutedEventArgs e)
+        {
+            var sachDuocChon = ((Button)sender).DataContext as SachDaChonViewModel;
+            if (sachDuocChon?.OSachVM?.OSach == null) return;
+
+            try
+            {
+                // Sử dụng lock để đảm bảo tính đồng bộ
+                lock (_selectedBooks)
+                {
+                    // Khôi phục trạng thái sách
+                    sachDuocChon.OSachVM.OSach.IsAvailable = true;
+                    _selectedBooks.Remove(sachDuocChon);
+
+                    // Thay đổi trạng thái một cách an toàn
+                    var tempDsSach = new ObservableCollection<SachCoSanViewModel>(dsSach);
+                    tempDsSach.Add(sachDuocChon.OSachVM);
+                    dsSach = tempDsSach;
+
+                    var tempAllBooks = new ObservableCollection<SACH>(_allBooks);
+                    tempAllBooks.Add(sachDuocChon.OSachVM.OSach);
+                    _allBooks = tempAllBooks;
+
+                    TimSach(txtSearchBook.Text);
+                }
+            }
+            catch (Exception ex)
+            {
+                // Xử lý lỗi nếu có
+                MessageBox.Show($"Lỗi khi xóa sách: {ex.Message}", "Lỗi", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
+        }
+
+        private async void btnSave_Click(object sender, RoutedEventArgs e)
+        {
+            if (_selectedBooks.Count == 0)
+            {
+                MessageBox.Show("Vui lòng chọn ít nhất một cuốn sách.", "Thông báo", MessageBoxButton.OK, MessageBoxImage.Warning);
+                return;
+            }
+
+            if (_selectedBooks.Any(b => !b.isValid))
+            {
+                MessageBox.Show("Vui lòng chọn số ngày mượn hợp lệ.", "Thông báo", MessageBoxButton.OK, MessageBoxImage.Warning);
+                return;
+            }
+
+            try
+            {
+                // Tạo mới phiếu mượn
+                var phieuMuon = new PHIEUMUON
+                {
+                    IDDocGia = _context.DOCGIA
+                        .Select(dg => dg.ID)
+                        .FirstOrDefault(),
+                    NgayMuon = DateTime.Now,
+                    MaPhieuMuon = GenerateNewBorrowCode(), // Tạo mã phiếu mượn mới
+                    IsPending = true
+                };
+
+                _context.PHIEUMUON.Add(phieuMuon);
+                await _context.SaveChangesAsync();  // Lưu phiếu mượn
+
+                var ctPhieuMuonList = new List<CTPHIEUMUON>();
+
+                foreach (var sachDaChon in _selectedBooks)
+                {
+                    var ctPhieuMuon = new CTPHIEUMUON
+                    {
+                        IDPhieuMuon = phieuMuon.ID,
+                        IDSach = sachDaChon.ID,
+                        HanTra = sachDaChon.NgayTra,
+                        IDTinhTrangMuon = sachDaChon.OSach.IDTinhTrang
+                    };
+                    ctPhieuMuonList.Add(ctPhieuMuon);
+
+                    sachDaChon.OSach.IsAvailable = false;
+                }
+
+                _context.CTPHIEUMUON.AddRange(ctPhieuMuonList);  // Thêm các chi tiết phiếu mượn
+                await _context.SaveChangesAsync();  // Lưu thay đổi chi tiết phiếu mượn
+
+                // Update BCMUONSACH
+                var Today = DateTime.Now;
+                var bcMuonSach = await _context.BCMUONSACH
+                    .FirstOrDefaultAsync(bc => bc.Thang == Today);
+
+                if (bcMuonSach == null)
+                {
+                    bcMuonSach = new BCMUONSACH
+                    {
+                        Thang = Today,
+                        TongSoLuotMuon = _selectedBooks.Count
+                    };
+                    _context.BCMUONSACH.Add(bcMuonSach);
+                }
+                else
+                {
+                    bcMuonSach.TongSoLuotMuon += _selectedBooks.Count;
+                }
+
+                await _context.SaveChangesAsync();  // Lưu báo cáo mượn sách
+
+                // Update CTBCMUONSACH
+                var theLoaiGroups = _selectedBooks
+                    .SelectMany(b => b.OSach.IDTuaSachNavigation.TUASACH_THELOAI.Select(ts_tl => ts_tl.IDTheLoaiNavigation))
+                    .GroupBy(tl => tl.ID)
+                    .Select(g => new { TheLoaiId = g.Key, Count = g.Count() });
+
+                var ctBcMuonSachList = new List<CTBCMUONSACH>();
+
+                foreach (var group in theLoaiGroups)
+                {
+                    var ctBcMuonSach = await _context.CTBCMUONSACH
+                        .FirstOrDefaultAsync(ct => ct.IDBCMuonSach == bcMuonSach.ID && ct.IDTheLoai == group.TheLoaiId);
+
+                    if (ctBcMuonSach == null)
+                    {
+                        ctBcMuonSach = new CTBCMUONSACH
+                        {
+                            IDBCMuonSach = bcMuonSach.ID,
+                            IDTheLoai = group.TheLoaiId,
+                            SoLuotMuon = group.Count
+                        };
+                        ctBcMuonSachList.Add(ctBcMuonSach);
+                    }
+                    else
+                    {
+                        ctBcMuonSach.SoLuotMuon += group.Count;
+                    }
+                }
+
+                _context.CTBCMUONSACH.AddRange(ctBcMuonSachList);  // Thêm chi tiết báo cáo mượn sách theo thể loại
+                await _context.SaveChangesAsync();  // Lưu thay đổi báo cáo mượn sách theo thể loại
+
+                // Update TiLe for all CTBCMUONSACH entries of this report
+                var allCtBcMuonSach = await _context.CTBCMUONSACH
+                    .Where(ct => ct.IDBCMuonSach == bcMuonSach.ID)
+                    .ToListAsync();
+
+                foreach (var ct in allCtBcMuonSach)
+                {
+                    ct.TiLe = (float)ct.SoLuotMuon / bcMuonSach.TongSoLuotMuon;
+                }
+
+                await _context.SaveChangesAsync();  // Lưu tỷ lệ cho các chi tiết báo cáo mượn sách
+
+                MessageBox.Show("Thêm phiếu mượn thành công!", "Thông báo", MessageBoxButton.OK, MessageBoxImage.Information);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Lỗi khi lưu phiếu mượn: {ex.Message}", "Lỗi", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
+        }
+
+
+        private string GenerateNewBorrowCode()
+        {
+            var lastCode = _context.PHIEUMUON
+                .OrderByDescending(p => p.MaPhieuMuon)
+                .Select(p => p.MaPhieuMuon)
+                .FirstOrDefault();
+
+            if (string.IsNullOrEmpty(lastCode))
+            {
+                return "PM0001";
+            }
+
+            int number = int.Parse(lastCode.Substring(2)) + 1;
+            return $"PM{number:D4}";
+        }
+
+        private async void btnCancel_Click(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+                // Đặt lại trạng thái IsAvailable của sách đã chọn về true
+                foreach (var sach in _selectedBooks)
+                {
+                    if (!sach.OSach?.IsAvailable ?? false)
+                    {
+                        sach.OSach.IsAvailable = true;
+                    }
+                }
+
+                // Cập nhật trạng thái trong cơ sở dữ liệu (nếu cần)
+                await _context.SaveChangesAsync();
+
+                // Đóng cửa sổ
+                Window.GetWindow(this)?.Close();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Lỗi khi hủy: {ex.Message}", "Lỗi", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
+        }
+    }
+}
