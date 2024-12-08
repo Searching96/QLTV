@@ -549,7 +549,7 @@ namespace QLTV.User
                 await _context.SaveChangesAsync();
 
                 // Đóng cửa sổ
-                Window.GetWindow(this)?.Close();
+                _selectedBooks.Clear();
             }
             catch (Exception ex)
             {
