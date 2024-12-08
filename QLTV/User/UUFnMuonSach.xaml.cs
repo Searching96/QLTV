@@ -316,52 +316,65 @@ namespace QLTV.User
             var sachDuocChon = ((Button)sender).DataContext as SachCoSanViewModel;
             if (sachDuocChon?.OSach == null) return;
 
-
-            // Kiểm tra trạng thái sách trước khi chọn
-            if (!_context.SACH.Find(sachDuocChon.OSach.ID)?.IsAvailable ?? false)
+            using (var context = new QLTVContext())
             {
-                MessageBox.Show("Sách này đã được chọn hoặc mượn.", "Thông báo", MessageBoxButton.OK, MessageBoxImage.Warning);
-                return;
-            }
+                var maSach = sachDuocChon.OSach.MaSach;
+                var sach = context.SACH
+                    .Where(s => s.MaSach == maSach)
+                    .FirstOrDefault();
 
-            try
-            {
-                // Sử dụng lock để đảm bảo tính đồng bộ
-                lock (_selectedBooks)
+                if (sach == null) return;
+
+                // Kiểm tra trạng thái sách trước khi chọn
+                if (!sach.IsAvailable ?? true)
                 {
-                    if (!_selectedBooks.Any(sb => sb.OSach.ID == sachDuocChon.OSach.ID))
+                    MessageBox.Show("Sách này đã được chọn hoặc mượn.", "Thông báo", MessageBoxButton.OK, MessageBoxImage.Warning);
+                    return;
+                }
+                else
+                {
+                    MessageBox.Show("huhu");
+                }
+
+                try
+                {
+                    // Sử dụng lock để đảm bảo tính đồng bộ
+                    lock (context.SACH)
                     {
-                        // Đánh dấu sách là không khả dụng
-                        var sach = _context.SACH.Find(sachDuocChon.OSach.ID);
-                        sach.IsAvailable = false;
-                        _context.SaveChangesAsync();
-
-                        var sachDaChon = new SachDaChonViewModel
+                        if (!_selectedBooks.Any(sb => sb.OSach.ID == sachDuocChon.OSach.ID))
                         {
-                            OSachVM = sachDuocChon,
-                            SoTuanMuon = sachDuocChon.OSach.IDTuaSachNavigation.HanMuonToiDa.ToString()
-                        };
+                            // Đánh dấu sách là không khả dụng
+                            sach.IsAvailable = false;
+                            context.Update(sach);
+                            context.SaveChangesAsync();
 
-                        // Thay đổi trạng thái một cách an toàn
-                        var tempDsSach = new ObservableCollection<SachCoSanViewModel>(dsSach);
-                        tempDsSach.Remove(sachDuocChon);
-                        dsSach = tempDsSach;
+                            var sachDaChon = new SachDaChonViewModel
+                            {
+                                OSachVM = sachDuocChon,
+                                SoTuanMuon = sachDuocChon.OSach.IDTuaSachNavigation.HanMuonToiDa.ToString()
+                            };
 
-                        var tempAllBooks = new ObservableCollection<SACH>(_allBooks);
-                        tempAllBooks.Remove(sachDuocChon.OSach);
-                        _allBooks = tempAllBooks;
+                            // Thay đổi trạng thái một cách an toàn
+                            var tempDsSach = new ObservableCollection<SachCoSanViewModel>(dsSach);
+                            tempDsSach.Remove(sachDuocChon);
+                            dsSach = tempDsSach;
 
-                        TimSach(txtSearchBook.Text);
-                        _selectedBooks.Add(sachDaChon);
+                            var tempAllBooks = new ObservableCollection<SACH>(_allBooks);
+                            tempAllBooks.Remove(sachDuocChon.OSach);
+                            _allBooks = tempAllBooks;
+
+                            TimSach(txtSearchBook.Text);
+                            _selectedBooks.Add(sachDaChon);
+                        }
                     }
                 }
-            }
-            catch (Exception ex)
-            {
-                // Khôi phục trạng thái nếu có lỗi
-                _context.SACH.Find(sachDuocChon.OSach.ID).IsAvailable = true;
-                _context.SaveChangesAsync();
-                MessageBox.Show($"Lỗi khi chọn sách: {ex.Message}", "Lỗi", MessageBoxButton.OK, MessageBoxImage.Error);
+                catch (Exception ex)
+                {
+                    // Khôi phục trạng thái nếu có lỗi
+                    context.SACH.Find(sachDuocChon.OSach.ID).IsAvailable = true;
+                    context.SaveChangesAsync();
+                    MessageBox.Show($"Lỗi khi chọn sách: {ex.Message}", "Lỗi", MessageBoxButton.OK, MessageBoxImage.Error);
+                }
             }
         }
 
@@ -373,11 +386,12 @@ namespace QLTV.User
             try
             {
                 // Sử dụng lock để đảm bảo tính đồng bộ
-                lock (_selectedBooks)
+                lock (_context.SACH)
                 {
                     // Khôi phục trạng thái sách
                     var sach = _context.SACH.Find(sachDuocChon.OSach.ID);
                     sach.IsAvailable = true;
+                    _context.Update(sach);
                     _context.SaveChangesAsync();
                     _selectedBooks.Remove(sachDuocChon);
 

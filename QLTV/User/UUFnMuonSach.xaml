@@ -132,11 +132,11 @@
                                     IsReadOnly="True"
                                     Width="3*" />
                 <DataGridTextColumn Header="Tình trạng"
-                                    Binding="{Binding Book.IDTinhTrangNavigation.TenTinhTrang}"
+                                    Binding="{Binding OSach.IDTinhTrangNavigation.TenTinhTrang}"
                                     IsReadOnly="True"
                                     Width="2*" />
                 <DataGridTextColumn Header="Hạn trả"
-                                    Binding="{Binding CustomReturnDate, StringFormat=dd/MM/yyyy}"
+                                    Binding="{Binding NgayTra, StringFormat=dd/MM/yyyy}"
                                     IsReadOnly="True"
                                     Width="3*" />
                 <DataGridTemplateColumn Header="Số tuần mượn"
@@ -144,7 +144,7 @@
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate>
                             <Grid>
-                                <TextBlock Text="{Binding CustomBorrowWeeks}" />
+                                <TextBlock Text="{Binding SoTuanMuon}" />
                                 <!--<materialDesign:PackIcon Style="{StaticResource Warning}"/>-->
                             </Grid>
                         </DataTemplate>
