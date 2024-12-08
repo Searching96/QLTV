@@ -1,192 +1,162 @@
+using Microsoft.EntityFrameworkCore;
 using QLTV.Models;
-using System;
 using System.Collections.ObjectModel;
-using System.Linq;
+using System.ComponentModel;
+using System.Globalization;
+using System.Runtime.CompilerServices;
+using System.Text;
 using System.Windows;
 using System.Windows.Controls;
-using Microsoft.EntityFrameworkCore;
-using System.ComponentModel;
-using System.Windows.Input;
-using System.Text.RegularExpressions;
 using System.Windows.Data;
-using System.Globalization;
-using System.Text;
-using System.Windows.Media;
-using System.Runtime.CompilerServices;
-using Microsoft.IdentityModel.Tokens;
 
 namespace QLTV.UserControls
 {
-    public partial class UcThemPhieuMuon : UserControl
+    public class BookViewModel : INotifyPropertyChanged, IDataErrorInfo
     {
-        private readonly QLTVContext _context;
-        private ObservableCollection<SACH> _allBooks;
-        private ObservableCollection<BookDisplayItem> dsSach;
-        private IEnumerable<BookDisplayItem> filteredBooks;
-        private ObservableCollection<BookWithCustomDate> _selectedBooks;
-        private CollectionViewSource viewSource;
-
-        private class BookWithCustomDate : INotifyPropertyChanged, IDataErrorInfo
+        private SACH book;
+        public SACH Book
         {
-            private BookDisplayItem _bookItem;
-            private string _CustomBorrowWeeks;
-            private DateTime _customReturnDate;
-
-            public SACH Book
+            get => book;
+            set
             {
-                get => _bookItem.Book;
-                set
+                book = value;
+                OnPropertyChanged();
+            }
+        }
+
+        public string DSTheLoai => string.Join(", ", book.IDTuaSachNavigation.TUASACH_TACGIA
+                    .Select(ts_tg => ts_tg.IDTacGiaNavigation.TenTacGia));
+
+        public string DSTacGia => string.Join(", ", book.IDTuaSachNavigation.TUASACH_THELOAI
+                    .Select(ts_tl => ts_tl.IDTheLoaiNavigation.TenTheLoai));
+
+        private string _CustomBorrowWeeks;
+        public string CustomBorrowWeeks
+        {
+            get => _CustomBorrowWeeks;
+            set
+            {
+                _CustomBorrowWeeks = value;
+                UpdateCustomReturnDate();
+                OnPropertyChanged(nameof(CustomBorrowWeeks));
+            }
+        }
+
+        private DateTime _CustomReturnDate;
+        public DateTime CustomReturnDate
+        {
+            get => _CustomReturnDate;
+            set
+            {
+                _CustomReturnDate = value;
+                OnPropertyChanged(nameof(CustomReturnDate));
+            }
+        }
+
+        private bool _isValid = true;
+
+        public bool isValid
+        {
+            get => _isValid;
+            set
+            {
+                _isValid = value;
+                OnPropertyChanged(nameof(isValid));
+            }
+        }
+
+        string IDataErrorInfo.this[string columnName]
+        {
+            get
+            {
+                if (columnName == nameof(CustomBorrowWeeks))
                 {
-                    _bookItem.Book = value;
-                    OnPropertyChanged(nameof(Book));
-                    OnPropertyChanged(nameof(MaSach));
-                    OnPropertyChanged(nameof(IDTuaSachNavigation));
-                }
-            }
-
-            public BookDisplayItem BookItem
-            {
-                get => _bookItem;
-                set
-                {
-                    _bookItem = value;
-                    OnPropertyChanged(nameof(_bookItem));
-                    OnPropertyChanged(nameof(BookDisplayItem.DSTacGia));
-                    OnPropertyChanged(nameof(BookDisplayItem.DSTheLoai));
-                }
-            }
-
-            public string DSTheLoai
-            {
-                get => _bookItem.DSTheLoai;
-            }
-
-            public string DSTacGia
-            {
-                get => _bookItem.DSTacGia;
-            }
-
-            public string CustomBorrowWeeks
-            {
-                get => _CustomBorrowWeeks;
-                set
-                {
-                    _CustomBorrowWeeks = value;
-                    UpdateCustomReturnDate();
-                    OnPropertyChanged(nameof(CustomBorrowWeeks));
-                }
-            }
-
-            public DateTime CustomReturnDate
-            {
-                get => _customReturnDate;
-                set
-                {
-                    _customReturnDate = value;
-                    OnPropertyChanged(nameof(CustomReturnDate));
-                }
-            }
-
-            private bool _isValid = true;
-
-            public bool isValid
-            {
-                get => _isValid;
-                set
-                {
-                    _isValid = value;
-                    OnPropertyChanged(nameof(isValid));
-                }
-            }
-
-
-            string IDataErrorInfo.this[string columnName]
-            {
-                get
-                {
-                    if (columnName == nameof(CustomBorrowWeeks))
+                    if (string.IsNullOrWhiteSpace(CustomBorrowWeeks))
                     {
-                        if (string.IsNullOrWhiteSpace(CustomBorrowWeeks))
-                        {
-                            isValid = false;
-                            return "Thầy Dũng đẹp trai";
-                        }
-
-                        if (!int.TryParse(CustomBorrowWeeks, out int a))
-                        {
-                            isValid = false;
-                            return "Nhập số nguyên";
-                        }
-                        if (a <= 0)
-                        {
-                            isValid = false;
-                            return "Tối thiểu 1.";
-                        }
-
-                        if (a > Book.IDTuaSachNavigation.HanMuonToiDa)
-                        {
-                            isValid = false;
-                            return $"Tối đa {Book.IDTuaSachNavigation.HanMuonToiDa}.";
-                        }
-                        isValid = true;
-                        return null;
+                        isValid = false;
+                        return "Thầy Dũng đẹp trai";
                     }
+
+                    if (!int.TryParse(CustomBorrowWeeks, out int a))
+                    {
+                        isValid = false;
+                        return "Nhập số nguyên";
+                    }
+                    if (a <= 0)
+                    {
+                        isValid = false;
+                        return "Tối thiểu 1.";
+                    }
+
+                    if (a > Book.IDTuaSachNavigation.HanMuonToiDa)
+                    {
+                        isValid = false;
+                        return $"Tối đa {Book.IDTuaSachNavigation.HanMuonToiDa}.";
+                    }
+                    isValid = true;
                     return null;
                 }
-            }
-
-            public string MaSach => Book.MaSach;
-            public TUASACH IDTuaSachNavigation => Book.IDTuaSachNavigation;
-
-            public int ID => Book.ID;
-
-            public string Error => throw new NotImplementedException();
-
-            private void UpdateCustomReturnDate()
-            {
-                if (!int.TryParse(CustomBorrowWeeks, out int a))
-                {
-                    CustomReturnDate = DateTime.Now.AddDays(Book.IDTuaSachNavigation.HanMuonToiDa * 7);
-                    return;
-                }
-                CustomReturnDate = DateTime.Now.AddDays(a * 7);
-            }
-
-            public event PropertyChangedEventHandler PropertyChanged;
-            protected virtual void OnPropertyChanged(string propertyName)
-            {
-                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
-            }
-
-            public static ObservableCollection<BookWithCustomDate> FromBookWithGenresList(List<SACH> books)
-            {
-                return new ObservableCollection<BookWithCustomDate>(
-                    books.Select(book => new BookWithCustomDate
-                    {
-                        Book = book,
-                        CustomBorrowWeeks = book.IDTuaSachNavigation.HanMuonToiDa.ToString()
-                    })
-                );
+                return null;
             }
         }
 
-        private class BookDisplayItem
+        public string MaSach => Book.MaSach;
+        public string TuaSach => IDTuaSachNavigation.TenTuaSach;
+        public int HanMuonToiDa => IDTuaSachNavigation.HanMuonToiDa;
+
+        public TUASACH IDTuaSachNavigation => Book.IDTuaSachNavigation;
+
+        public int ID => Book.ID;
+
+        public string Error => throw new NotImplementedException();
+
+        private void UpdateCustomReturnDate()
         {
-            public SACH Book { get; set; }
-            public string MaSach { get; set; }
-            public string TuaSach { get; set; }
-            public string DSTacGia { get; set; }
-            public string DSTheLoai { get; set; }
-            public int HanMuonToiDa { get; set; }
+            if (!int.TryParse(CustomBorrowWeeks, out int a))
+            {
+                CustomReturnDate = DateTime.Now.AddDays(Book.IDTuaSachNavigation.HanMuonToiDa * 7);
+                return;
+            }
+            CustomReturnDate = DateTime.Now.AddDays(a * 7);
         }
+
+        public event PropertyChangedEventHandler? PropertyChanged;
+        protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)
+        {
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+        }
+    }
+
+    public partial class UcThemPhieuMuon : UserControl
+    {
+        private ObservableCollection<BookViewModel> dsSach;
+        private IEnumerable<BookViewModel> filteredBooks;
+        private ObservableCollection<BookViewModel> _selectedBooks;
+        private CollectionViewSource viewSource;
+        public bool isClosing = false;
 
         public UcThemPhieuMuon()
         {
             InitializeComponent();
-            _context = new();
             _selectedBooks = new();
             dgSelectedBooks.ItemsSource = _selectedBooks;
             LoadData();
+            this.Loaded += UcThemPhieuMuon_Loaded;
+        }
+
+        private void UcThemPhieuMuon_Loaded(object sender, RoutedEventArgs e)
+        {
+            var window = Window.GetWindow(this);
+            if (window != null)
+            {
+                window.Closing += UcThemPhieuMuon_Closing;
+            }
+        }
+
+        private void UcThemPhieuMuon_Closing(object sender, CancelEventArgs e)
+        {
+            isClosing = true;
+            btnCancel_Click(sender, new RoutedEventArgs());
         }
 
         private string ConvertToUnsigned(string text)
@@ -203,69 +173,82 @@ namespace QLTV.UserControls
             ).Normalize(NormalizationForm.FormC);
         }
 
+        private async Task LoadBookData()
+        {
+            try
+            {
+                using (var context = new QLTVContext())
+                {
+                    dsSach = new ObservableCollection<BookViewModel>(
+                        await context.SACH
+                        .Include(s => s.IDTuaSachNavigation)
+                            .ThenInclude(ts => ts.TUASACH_THELOAI)
+                                .ThenInclude(ts_tl => ts_tl.IDTheLoaiNavigation)
+                        .Include(s => s.IDTuaSachNavigation)
+                            .ThenInclude(ts => ts.TUASACH_TACGIA)
+                                .ThenInclude(ts_tg => ts_tg.IDTacGiaNavigation)
+                        .Include(s => s.IDTinhTrangNavigation)
+                        .Where(s => !s.IsDeleted && s.IsAvailable == true)
+                        .Select(s => new BookViewModel
+                        {
+                            Book = s,
+                            CustomBorrowWeeks = s.IDTuaSachNavigation.HanMuonToiDa.ToString()
+                        }).ToListAsync());
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Lỗi khi tải dữ liệu: {ex.Message}", "Lỗi", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
+            finally
+            {
+                dgAvailableBooks.ItemsSource = dsSach;
+            }
+        }
+
         private async void LoadData()
         {
             try
             {
-                _allBooks = new ObservableCollection<SACH>(await _context.SACH
-                    .Include(s => s.IDTuaSachNavigation)
-                        .ThenInclude(ts => ts.TUASACH_THELOAI)
-                            .ThenInclude(ts_tl => ts_tl.IDTheLoaiNavigation)
-                    .Include(s => s.IDTuaSachNavigation)
-                        .ThenInclude(ts => ts.TUASACH_TACGIA)
-                            .ThenInclude(ts_tg => ts_tg.IDTacGiaNavigation)
-                    .Include(s => s.IDTinhTrangNavigation)
-                    .Where(s => !s.IsDeleted && s.IsAvailable == true)
-                    .ToListAsync());
-
-                dsSach = new ObservableCollection<BookDisplayItem>(_allBooks.Select(s => new BookDisplayItem
+                using (var context = new QLTVContext())
                 {
-                    Book = s,
-                    MaSach = s.MaSach,
-                    TuaSach = s.IDTuaSachNavigation.TenTuaSach,
-                    DSTacGia = string.Join(", ", s.IDTuaSachNavigation.TUASACH_TACGIA
-                        .Select(ts_tg => ts_tg.IDTacGiaNavigation.TenTacGia)),
-                    DSTheLoai = string.Join(", ", s.IDTuaSachNavigation.TUASACH_THELOAI
-                        .Select(ts_tl => ts_tl.IDTheLoaiNavigation.TenTheLoai)),
-                    HanMuonToiDa = s.IDTuaSachNavigation.HanMuonToiDa
-                }).ToList());
+                    LoadBookData();
 
-                var docGia = await _context.DOCGIA
-                    .Include(d => d.IDTaiKhoanNavigation)
-                    .Include(d => d.IDLoaiDocGiaNavigation)
-                    .Include(d => d.PHIEUMUON)
-                        .ThenInclude(pm => pm.CTPHIEUMUON)
-                    .Include(d => d.PHIEUMUON)
-                        .ThenInclude(pm => pm.CTPHIEUTRA)
-                    .ToListAsync();
+                    var docGia = await context.DOCGIA
+                        .Include(d => d.IDTaiKhoanNavigation)
+                        .Include(d => d.IDLoaiDocGiaNavigation)
+                        .Include(d => d.PHIEUMUON)
+                            .ThenInclude(pm => pm.CTPHIEUMUON)
+                        .Include(d => d.PHIEUMUON)
+                            .ThenInclude(pm => pm.CTPHIEUTRA)
+                        .ToListAsync();
 
-                dgAvailableBooks.ItemsSource = dsSach;
+                    viewSource = new CollectionViewSource();
+                    viewSource.Source = docGia;
+                    cboDocGia.ItemsSource = viewSource.View;
 
-                viewSource = new CollectionViewSource();
-                viewSource.Source = docGia;
-                cboDocGia.ItemsSource = viewSource.View;
-
-                var textBox = cboDocGia.Template.FindName("PART_EditableTextBox", cboDocGia) as TextBox;
-                if (textBox != null)
-                {
-                    textBox.TextChanged += (sender, args) =>
+                    var textBox = cboDocGia.Template.FindName("PART_EditableTextBox", cboDocGia) as TextBox;
+                    if (textBox != null)
                     {
-                        var searchText = ConvertToUnsigned(textBox.Text);
-                        viewSource.View.Filter = item =>
+                        textBox.TextChanged += (sender, args) =>
                         {
-                            if (string.IsNullOrEmpty(searchText))
-                                return true;
-                            var docGia = item as DOCGIA;
-                            if (docGia != null)
+                            var searchText = ConvertToUnsigned(textBox.Text);
+                            viewSource.View.Filter = item =>
                             {
-                                var itemText = ConvertToUnsigned(docGia.IDTaiKhoanNavigation.TenTaiKhoan.ToString());
-                                return itemText.Contains(searchText, StringComparison.OrdinalIgnoreCase);
-                            }
-                            return false;
+                                if (string.IsNullOrEmpty(searchText))
+                                    return true;
+                                var docGia = item as DOCGIA;
+                                if (docGia != null)
+                                {
+                                    var itemText = ConvertToUnsigned(docGia.IDTaiKhoanNavigation.TenTaiKhoan.ToString());
+                                    return itemText.Contains(searchText, StringComparison.OrdinalIgnoreCase);
+                                }
+                                return false;
+                            };
+                            cboDocGia.IsDropDownOpen = true;
                         };
-                        cboDocGia.IsDropDownOpen = true;
                     };
-                };
+                }
             }
             catch (Exception ex)
             {
@@ -275,7 +258,7 @@ namespace QLTV.UserControls
 
         private void BookSearch(string search)
         {
-            if (_allBooks == null) return;
+            if (dsSach == null) return;
 
             var searchText = ConvertToUnsigned(search);
             var searchType = ((ComboBoxItem)cboSearchType.SelectedItem).Content.ToString();
@@ -288,36 +271,36 @@ namespace QLTV.UserControls
                 {
                     case "Mã sách":
                         filteredBooks = filteredBooks.Where(s =>
-                            ConvertToUnsigned(s.Book.MaSach).Contains(searchText));
+                            ConvertToUnsigned(s.MaSach).Contains(searchText));
                         break;
 
                     case "Tên sách":
                         filteredBooks = filteredBooks.Where(s =>
-                            ConvertToUnsigned(s.Book.IDTuaSachNavigation.TenTuaSach).Contains(searchText));
+                            ConvertToUnsigned(s.IDTuaSachNavigation.TenTuaSach).Contains(searchText));
                         break;
 
                     case "Thể loại":
                         filteredBooks = filteredBooks.Where(s =>
-                            s.Book.IDTuaSachNavigation.TUASACH_THELOAI
+                            s.IDTuaSachNavigation.TUASACH_THELOAI
                                 .Select(ts_tl => ts_tl.IDTheLoaiNavigation.TenTheLoai)
                                 .Any(tenTheLoai => ConvertToUnsigned(tenTheLoai).Contains(searchText)));
                         break;
 
                     case "Tác giả":
                         filteredBooks = filteredBooks.Where(s =>
-                            s.Book.IDTuaSachNavigation.TUASACH_TACGIA
+                            s.IDTuaSachNavigation.TUASACH_TACGIA
                                 .Select(ts_tg => ts_tg.IDTacGiaNavigation.TenTacGia.ToLower())
                                 .Any(tenTacGia => ConvertToUnsigned(tenTacGia).Contains(searchText)));
                         break;
 
                     default: // "Tất cả"
                         filteredBooks = filteredBooks.Where(s =>
-                            ConvertToUnsigned(s.Book.MaSach).Contains(searchText) ||
-                            ConvertToUnsigned(s.Book.IDTuaSachNavigation.TenTuaSach).Contains(searchText) ||
-                            s.Book.IDTuaSachNavigation.TUASACH_THELOAI
+                            ConvertToUnsigned(s.MaSach).Contains(searchText) ||
+                            ConvertToUnsigned(s.IDTuaSachNavigation.TenTuaSach).Contains(searchText) ||
+                            s.IDTuaSachNavigation.TUASACH_THELOAI
                                 .Select(ts_tl => ts_tl.IDTheLoaiNavigation.TenTheLoai)
                                 .Any(tenTheLoai => ConvertToUnsigned(tenTheLoai).Contains(searchText)) ||
-                            s.Book.IDTuaSachNavigation.TUASACH_TACGIA
+                            s.IDTuaSachNavigation.TUASACH_TACGIA
                                 .Select(ts_tg => ts_tg.IDTacGiaNavigation.TenTacGia.ToLower())
                                 .Any(tenTacGia => ConvertToUnsigned(tenTacGia).Contains(searchText)));
                         break;
@@ -336,46 +319,65 @@ namespace QLTV.UserControls
 
         private void btnSelectBook_Click(object sender, RoutedEventArgs e)
         {
-            var book = ((Button)sender).DataContext as BookDisplayItem;
-            if (book == null) return;
-
-            if (!DocGiaValidation(cboDocGia.SelectedItem as DOCGIA)) return;
-
-            if (!_selectedBooks.Any(b => b.Book.ID == book.Book.ID))
+            try
             {
-                var bookWithDate = new BookWithCustomDate
+                using (var context = new QLTVContext())
                 {
-                    BookItem = book,
-                    CustomBorrowWeeks = book.Book.IDTuaSachNavigation.HanMuonToiDa.ToString()
-                };
-                dsSach.Remove(book);
-                _allBooks.Remove(book.Book);
-                BookSearch(txtSearchBook.Text);
+                    var book = ((Button)sender).DataContext as BookViewModel;
+                    if (book == null) return;
 
-                _selectedBooks.Add(bookWithDate);
+                    if (!DocGiaValidation(cboDocGia.SelectedItem as DOCGIA)) return;
+
+                    if (!_selectedBooks.Any(b => b.Book.ID == book.Book.ID) && book.Book.IsAvailable == true)
+                    {
+                        book.Book.IsAvailable = false;
+                        context.Update(book.Book);
+                        context.SaveChanges();
+                        _selectedBooks.Add(book);
+                    }
+                }
             }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Lỗi khi chọn sách: {ex.Message}", "Lỗi", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
+            finally
+            {
+                LoadBookData();
+                BookSearch(txtSearchBook.Text);
+            }
+
         }
 
         private void btnRemoveBook_Click(object sender, RoutedEventArgs e)
         {
-            var bookWithDate = ((Button)sender).DataContext as BookWithCustomDate;
-            if (bookWithDate != null && bookWithDate.Book != null)
+            try
             {
-                _selectedBooks.Remove(bookWithDate);
-                dsSach.Add(bookWithDate.BookItem);
+                using (var context = new QLTVContext())
+                {
+                    var book = ((Button)sender).DataContext as BookViewModel;
+                    if (book != null && book.Book != null)
+                    {
+                        book.Book.IsAvailable = true;
+                        context.Update(book.Book);
+                        context.SaveChanges();
+                        _selectedBooks.Remove(book);
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Lỗi khi xóa sách: {ex.Message}", "Lỗi", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
+            finally
+            {
+                LoadBookData();
                 BookSearch(txtSearchBook.Text);
-                _allBooks.Add(bookWithDate.BookItem.Book);
             }
         }
 
         private async void btnSave_Click(object sender, RoutedEventArgs e)
         {
-            if (cboDocGia.SelectedItem == null)
-            {
-                MessageBox.Show("Vui lòng chọn độc giả.", "Thông báo", MessageBoxButton.OK, MessageBoxImage.Warning);
-                return;
-            }
-
             if (cboDocGia.SelectedItem == null)
             {
                 MessageBox.Show("Vui lòng chọn độc giả.", "Thông báo", MessageBoxButton.OK, MessageBoxImage.Warning);
@@ -396,106 +398,115 @@ namespace QLTV.UserControls
 
             try
             {
-                var phieuMuon = new PHIEUMUON
+                using (var context = new QLTVContext())
                 {
-                    IDDocGia = (int)cboDocGia.SelectedValue,
-                    NgayMuon = DateTime.Now,
-                    MaPhieuMuon = GenerateNewBorrowCode(),
-                    IsPending = true
-                };
-
-                _context.PHIEUMUON.Add(phieuMuon);
-                await _context.SaveChangesAsync();
-
-                foreach (var bookWithDate in _selectedBooks)
-                {
-                    var ctPhieuMuon = new CTPHIEUMUON
+                    context.ChangeTracker.Clear();
+                    var phieuMuon = new PHIEUMUON
                     {
-                        IDPhieuMuon = phieuMuon.ID,
-                        IDSach = bookWithDate.ID,
-                        HanTra = bookWithDate.CustomReturnDate,
-                        IDTinhTrangMuon = bookWithDate.Book.IDTinhTrang
+                        IDDocGia = (int)cboDocGia.SelectedValue,
+                        NgayMuon = DateTime.Now
                     };
-                    _context.CTPHIEUMUON.Add(ctPhieuMuon);
 
-                    bookWithDate.Book.IsAvailable = false;
-                }
+                    context.PHIEUMUON.Add(phieuMuon);
+                    await context.SaveChangesAsync();
 
-                // Update BCMUONSACH
-                var Today = DateTime.Now;
-                var bcMuonSach = await _context.BCMUONSACH
-                    .FirstOrDefaultAsync(bc => bc.Thang == Today);
-
-                if (bcMuonSach == null)
-                {
-                    bcMuonSach = new BCMUONSACH
+                    foreach (var bookWithDate in _selectedBooks)
                     {
-                        Thang = Today,
-                        TongSoLuotMuon = _selectedBooks.Count
-                    };
-                    _context.BCMUONSACH.Add(bcMuonSach);
-                }
-                else
-                {
-                    bcMuonSach.TongSoLuotMuon += _selectedBooks.Count;
-                }
-
-                await _context.SaveChangesAsync();
-
-                // Update CTBCMUONSACH
-                var theLoaiGroups = _selectedBooks
-                    .SelectMany(b => b.Book.IDTuaSachNavigation.TUASACH_THELOAI.Select(ts_tl => ts_tl.IDTheLoaiNavigation))
-                    .GroupBy(tl => tl.ID)
-                    .Select(g => new { TheLoaiId = g.Key, Count = g.Count() });
-
-                foreach (var group in theLoaiGroups)
-                {
-                    var ctBcMuonSach = await _context.CTBCMUONSACH
-                        .FirstOrDefaultAsync(ct => ct.IDBCMuonSach == bcMuonSach.ID && ct.IDTheLoai == group.TheLoaiId);
-
-                    if (ctBcMuonSach == null)
-                    {
-                        ctBcMuonSach = new CTBCMUONSACH
+                        var ctPhieuMuon = new CTPHIEUMUON
                         {
-                            IDBCMuonSach = bcMuonSach.ID,
-                            IDTheLoai = group.TheLoaiId,
-                            SoLuotMuon = group.Count
+                            IDPhieuMuon = phieuMuon.ID,
+                            IDSach = bookWithDate.ID,
+                            HanTra = bookWithDate.CustomReturnDate,
+                            IDTinhTrangMuon = bookWithDate.Book.IDTinhTrang
                         };
-                        _context.CTBCMUONSACH.Add(ctBcMuonSach);
+                        context.CTPHIEUMUON.Add(ctPhieuMuon);
+
+                        bookWithDate.Book.IsAvailable = false;
+                    }
+
+                    // Update BCMUONSACH
+                    var Today = DateTime.Now;
+                    var bcMuonSach = await context.BCMUONSACH
+                        .FirstOrDefaultAsync(bc => bc.Thang == Today);
+
+                    if (bcMuonSach == null)
+                    {
+                        bcMuonSach = new BCMUONSACH
+                        {
+                            Thang = Today,
+                            TongSoLuotMuon = _selectedBooks.Count
+                        };
+                        context.BCMUONSACH.Add(bcMuonSach);
                     }
                     else
                     {
-                        ctBcMuonSach.SoLuotMuon += group.Count;
+                        bcMuonSach.TongSoLuotMuon += _selectedBooks.Count;
                     }
+
+                    await context.SaveChangesAsync();
+
+                    // Update CTBCMUONSACH
+                    var theLoaiGroups = _selectedBooks
+                        .SelectMany(b => b.Book.IDTuaSachNavigation.TUASACH_THELOAI.Select(ts_tl => ts_tl.IDTheLoaiNavigation))
+                        .GroupBy(tl => tl.ID)
+                        .Select(g => new { TheLoaiId = g.Key, Count = g.Count() });
+
+                    foreach (var group in theLoaiGroups)
+                    {
+                        var ctBcMuonSach = await context.CTBCMUONSACH
+                            .FirstOrDefaultAsync(ct => ct.IDBCMuonSach == bcMuonSach.ID && ct.IDTheLoai == group.TheLoaiId);
+
+                        if (ctBcMuonSach == null)
+                        {
+                            ctBcMuonSach = new CTBCMUONSACH
+                            {
+                                IDBCMuonSach = bcMuonSach.ID,
+                                IDTheLoai = group.TheLoaiId,
+                                SoLuotMuon = group.Count
+                            };
+                            context.CTBCMUONSACH.Add(ctBcMuonSach);
+                        }
+                        else
+                        {
+                            ctBcMuonSach.SoLuotMuon += group.Count;
+                        }
+                    }
+
+                    await context.SaveChangesAsync();
+
+                    // Update TiLe for all CTBCMUONSACH entries of this report
+                    var allCtBcMuonSach = await context.CTBCMUONSACH
+                        .Where(ct => ct.IDBCMuonSach == bcMuonSach.ID)
+                        .ToListAsync();
+
+                    foreach (var ct in allCtBcMuonSach)
+                    {
+                        ct.TiLe = (float)ct.SoLuotMuon / bcMuonSach.TongSoLuotMuon;
+                    }
+
+                    await context.SaveChangesAsync();
+                    phieuMuon = context.PHIEUMUON
+                        .Include(pm => pm.CTPHIEUMUON)
+                            .ThenInclude(ct => ct.IDSachNavigation)
+                                .ThenInclude(s => s.IDTuaSachNavigation)
+                        .Include(pm => pm.IDDocGiaNavigation)
+                            .ThenInclude(dg => dg.IDTaiKhoanNavigation)
+                        .FirstOrDefault(pm => pm.ID == phieuMuon.ID);
+                    MessageBox.Show("Thêm phiếu mượn thành công!", "Thông báo", MessageBoxButton.OK, MessageBoxImage.Information);
+                    var window = new Window
+                    {
+                        Title = "In phiếu mượn",
+                        Content = new UcXuatPhieuMuon(phieuMuon),
+                        Width = 350,
+                        Height = 600,
+                        WindowStyle = WindowStyle.None,
+                        WindowStartupLocation = WindowStartupLocation.CenterScreen,
+                        ResizeMode = ResizeMode.CanResizeWithGrip
+                    };
+                    window.ShowDialog();
+                    Window.GetWindow(this).DialogResult = true;
+                    Window.GetWindow(this)?.Close();
                 }
-
-                await _context.SaveChangesAsync();
-
-                // Update TiLe for all CTBCMUONSACH entries of this report
-                var allCtBcMuonSach = await _context.CTBCMUONSACH
-                    .Where(ct => ct.IDBCMuonSach == bcMuonSach.ID)
-                    .ToListAsync();
-
-                foreach (var ct in allCtBcMuonSach)
-                {
-                    ct.TiLe = (float)ct.SoLuotMuon / bcMuonSach.TongSoLuotMuon;
-                }
-
-                await _context.SaveChangesAsync();
-                MessageBox.Show("Thêm phiếu mượn thành công!", "Thông báo", MessageBoxButton.OK, MessageBoxImage.Information);
-                Window.GetWindow(this).DialogResult = true;
-                var window = new Window
-                {
-                    Title = "In phiếu mượn",
-                    Content = new UcXuatPhieuMuon(phieuMuon),
-                    Width = 350,
-                    Height = 600,
-                    WindowStyle = WindowStyle.None,
-                    WindowStartupLocation = WindowStartupLocation.CenterScreen,
-                    ResizeMode = ResizeMode.CanResizeWithGrip
-                };
-                window.ShowDialog();
-                Window.GetWindow(this)?.Close();
             }
             catch (Exception ex)
             {
@@ -503,25 +514,35 @@ namespace QLTV.UserControls
             }
         }
 
-        private string GenerateNewBorrowCode()
-        {
-            var lastCode = _context.PHIEUMUON
-                .OrderByDescending(p => p.MaPhieuMuon)
-                .Select(p => p.MaPhieuMuon)
-                .FirstOrDefault();
-
-            if (string.IsNullOrEmpty(lastCode))
-            {
-                return "PM0001";
-            }
-
-            int number = int.Parse(lastCode.Substring(2)) + 1;
-            return $"PM{number:D4}";
-        }
-
         private void btnCancel_Click(object sender, RoutedEventArgs e)
         {
-            Window.GetWindow(this)?.Close();
+            if(Window.GetWindow(this).DialogResult == true)
+            {
+                return;
+            }
+            try
+            {
+                using (var context = new QLTVContext())
+                {
+                    foreach (var book in _selectedBooks)
+                    {
+                        context.ChangeTracker.Clear();
+                        book.Book.IsAvailable = true;
+                        context.Update(book.Book);
+                    }
+                    context.SaveChanges();
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Lỗi khi hủy bỏ: {ex.Message}", "Lỗi", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
+            finally
+            {
+                if (!isClosing)
+                    Window.GetWindow(this)?.Close();
+                Window.GetWindow(this).DialogResult = false;
+            }
         }
 
         private void cboDocGia_SelectionChanged(object sender, SelectionChangedEventArgs e)

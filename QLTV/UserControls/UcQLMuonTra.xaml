@@ -116,6 +116,13 @@
                                         <materialDesign:DataGridTextColumn Header="Tình trạng"
                                                                            Binding="{Binding IDTinhTrangMuonNavigation.TenTinhTrang}" />
                                     </DataGrid.Columns>
+                                    <DataGrid.CellStyle>
+                                        <Style TargetType="DataGridCell"
+                                               BasedOn="{StaticResource MaterialDesignDataGridCell}">
+                                            <Setter Property="Padding"
+                                                    Value="10 10 0 10" />
+                                        </Style>
+                                    </DataGrid.CellStyle>
                                 </DataGrid>
                             </DataTemplate>
                         </DataGrid.RowDetailsTemplate>
@@ -206,6 +213,13 @@
                                         <materialDesign:DataGridTextColumn Header="Ghi chú"
                                                                            Binding="{Binding GhiChu}" />
                                     </DataGrid.Columns>
+                                    <DataGrid.CellStyle>
+                                        <Style TargetType="DataGridCell"
+                                               BasedOn="{StaticResource MaterialDesignDataGridCell}">
+                                            <Setter Property="Padding"
+                                                    Value="10 10 0 10" />
+                                        </Style>
+                                    </DataGrid.CellStyle>
                                 </DataGrid>
                             </DataTemplate>
                         </DataGrid.RowDetailsTemplate>

@@ -79,8 +79,8 @@
                 <DataGrid.CellStyle>
                     <Style TargetType="DataGridCell"
                            BasedOn="{StaticResource MaterialDesignDataGridCell}">
-                        <Setter Property="Margin"
-                                Value="0 -5 0 30" />
+                        <Setter Property="Padding"
+                                Value="10 10 0 5" />
                     </Style>
                 </DataGrid.CellStyle>
             </DataGrid>

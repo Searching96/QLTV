@@ -108,6 +108,13 @@
                                                     <DataGridTextColumn Header="Tỉ lệ"
                                                                         Binding="{Binding TiLe, StringFormat=P2}" />
                                                 </DataGrid.Columns>
+                                                <DataGrid.CellStyle>
+                                                    <Style TargetType="DataGridCell"
+                                                           BasedOn="{StaticResource MaterialDesignDataGridCell}">
+                                                        <Setter Property="Padding"
+                                                                Value="10 10 0 10" />
+                                                    </Style>
+                                                </DataGrid.CellStyle>
                                             </DataGrid>
                                         </DataTemplate>
                                     </DataGrid.RowDetailsTemplate>
@@ -198,6 +205,13 @@
                                         <DataGridTextColumn Header="Số ngày trả trễ"
                                                             Binding="{Binding SoNgayTraTre}" />
                                     </DataGrid.Columns>
+                                    <DataGrid.CellStyle>
+                                        <Style TargetType="DataGridCell"
+                                               BasedOn="{StaticResource MaterialDesignDataGridCell}">
+                                            <Setter Property="Padding"
+                                                    Value="10 10 0 10" />
+                                        </Style>
+                                    </DataGrid.CellStyle>
                                 </DataGrid>
                             </DataTemplate>
                         </DataGrid.RowDetailsTemplate>
