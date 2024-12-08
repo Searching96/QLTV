@@ -332,8 +332,10 @@ namespace QLTV.User
                     if (!_selectedBooks.Any(sb => sb.OSach.ID == sachDuocChon.OSach.ID))
                     {
                         // Đánh dấu sách là không khả dụng
-                        sachDuocChon.OSach.IsAvailable = false;
+                        var sach = _context.SACH.Find(sachDuocChon.OSach.ID);
+                        sach.IsAvailable = false;
                         _context.SaveChangesAsync();
+
                         var sachDaChon = new SachDaChonViewModel
                         {
                             OSachVM = sachDuocChon,
@@ -357,7 +359,8 @@ namespace QLTV.User
             catch (Exception ex)
             {
                 // Khôi phục trạng thái nếu có lỗi
-                sachDuocChon.OSach.IsAvailable = true;
+                _context.SACH.Find(sachDuocChon.OSach.ID).IsAvailable = true;
+                _context.SaveChangesAsync();
                 MessageBox.Show($"Lỗi khi chọn sách: {ex.Message}", "Lỗi", MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
@@ -373,7 +376,8 @@ namespace QLTV.User
                 lock (_selectedBooks)
                 {
                     // Khôi phục trạng thái sách
-                    sachDuocChon.OSachVM.OSach.IsAvailable = true;
+                    var sach = _context.SACH.Find(sachDuocChon.OSach.ID);
+                    sach.IsAvailable = true;
                     _context.SaveChangesAsync();
                     _selectedBooks.Remove(sachDuocChon);
 
@@ -392,6 +396,8 @@ namespace QLTV.User
             catch (Exception ex)
             {
                 // Xử lý lỗi nếu có
+                _context.SACH.Find(sachDuocChon.OSach.ID).IsAvailable = false;
+                _context.SaveChangesAsync();
                 MessageBox.Show($"Lỗi khi xóa sách: {ex.Message}", "Lỗi", MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
@@ -539,11 +545,12 @@ namespace QLTV.User
             try
             {
                 // Đặt lại trạng thái IsAvailable của sách đã chọn về true
-                foreach (var sach in _selectedBooks)
+                foreach (var idSach in _selectedBooks.Select(sb => sb.OSachVM.OSach.ID))
                 {
-                    if (!sach.OSach?.IsAvailable ?? false)
+                    var sach = _context.SACH.Find(idSach);
+                    if (sach.IsAvailable == false)
                     {
-                        sach.OSach.IsAvailable = true;
+                        sach.IsAvailable = true;
                     }
                 }
 
