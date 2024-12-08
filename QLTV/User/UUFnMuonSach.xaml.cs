@@ -316,8 +316,9 @@ namespace QLTV.User
             var sachDuocChon = ((Button)sender).DataContext as SachCoSanViewModel;
             if (sachDuocChon?.OSach == null) return;
 
+
             // Kiểm tra trạng thái sách trước khi chọn
-            if (sachDuocChon.OSach.IsAvailable == false)
+            if (!_context.SACH.Find(sachDuocChon.OSach.ID)?.IsAvailable ?? false)
             {
                 MessageBox.Show("Sách này đã được chọn hoặc mượn.", "Thông báo", MessageBoxButton.OK, MessageBoxImage.Warning);
                 return;
@@ -332,6 +333,7 @@ namespace QLTV.User
                     {
                         // Đánh dấu sách là không khả dụng
                         sachDuocChon.OSach.IsAvailable = false;
+                        _context.SaveChangesAsync();
                         var sachDaChon = new SachDaChonViewModel
                         {
                             OSachVM = sachDuocChon,
@@ -372,6 +374,7 @@ namespace QLTV.User
                 {
                     // Khôi phục trạng thái sách
                     sachDuocChon.OSachVM.OSach.IsAvailable = true;
+                    _context.SaveChangesAsync();
                     _selectedBooks.Remove(sachDuocChon);
 
                     // Thay đổi trạng thái một cách an toàn
@@ -416,7 +419,6 @@ namespace QLTV.User
                         .Select(dg => dg.ID)
                         .FirstOrDefault(),
                     NgayMuon = DateTime.Now,
-                    MaPhieuMuon = GenerateNewBorrowCode(), // Tạo mã phiếu mượn mới
                     IsPending = true
                 };
 
@@ -550,6 +552,7 @@ namespace QLTV.User
 
                 // Đóng cửa sổ
                 _selectedBooks.Clear();
+                LoadData();
             }
             catch (Exception ex)
             {
