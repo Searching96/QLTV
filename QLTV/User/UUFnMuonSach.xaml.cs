@@ -305,7 +305,6 @@ namespace QLTV.User
             using (var context = new QLTVContext())
             {
                 docGia = context.DOCGIA
-                    .Skip(1)
                     .Include(dg => dg.IDLoaiDocGiaNavigation)
                     .Include(dg => dg.PHIEUMUON)
                         .ThenInclude(pm => pm.CTPHIEUMUON)
@@ -314,13 +313,11 @@ namespace QLTV.User
                     .FirstOrDefault();
 
                 int daMuon = docGia.PHIEUMUON.Sum(dg => dg.CTPHIEUMUON.Count - dg.CTPHIEUTRA.Count);
-                MessageBox.Show("Da muon: " + daMuon.ToString());
-                MessageBox.Show($"Muon max: {docGia.IDLoaiDocGiaNavigation.SoSachMuonToiDa}");
-                MessageBox.Show($"Loai: {docGia.IDLoaiDocGiaNavigation.TenLoaiDocGia}");
 
                 if (daMuon + _selectedBooks.Count + 1 > docGia.IDLoaiDocGiaNavigation.SoSachMuonToiDa)
                 {
-                    MessageBox.Show("Muon nhieu vl");
+                    MessageBox.Show("Quá số sách tối đa bạn có thể mượn!", "Thông Báo", 
+                        MessageBoxButton.OK, MessageBoxImage.Exclamation);
                     return;
                 }
 

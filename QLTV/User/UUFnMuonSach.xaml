@@ -21,23 +21,26 @@
         <!-- Search Section -->
         <StackPanel Grid.Row="2"
                     Margin="0,0,0,10">
-            <TextBlock Text="Tìm kiếm sách:"
+            <TextBlock Text="Tìm kiếm sách:" FontSize="16" FontWeight="Bold"
                        Margin="0,0,0,5" />
-            <Grid>
+            <Grid Height="Auto">
                 <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="*" />
                     <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="*" />
                 </Grid.ColumnDefinitions>
 
                 <TextBox x:Name="txtSearchBook"
                          Style="{StaticResource MaterialDesignOutlinedTextBox}"
-                         materialDesign:HintAssist.Hint="Nhập thông tin sách"
+                         materialDesign:HintAssist.Hint="Từ Khóa"
+                         HorizontalAlignment="Left" Padding="12"
                          TextChanged="txtSearchBook_TextChanged"
-                         Margin="0,0,10,0" />
+                         Margin="0,0,0,0" Width="400" Height="Auto"/>
 
                 <ComboBox Grid.Column="1"
                           x:Name="cboSearchType"
-                          Width="120"
+                          materialDesign:HintAssist.Hint="Thuộc Tính"
+                          Width="120" Height="Auto" Padding="12"
+                          HorizontalAlignment="Left"
                           SelectedIndex="0"
                           Style="{StaticResource MaterialDesignOutlinedComboBox}">
                     <ComboBoxItem Content="Tất cả" />
@@ -57,7 +60,7 @@
                 <RowDefinition Height="*" />
             </Grid.RowDefinitions>
 
-            <TextBlock Text="Sách có sẵn:"
+            <TextBlock Text="Sách có sẵn:" FontSize="16"
                        FontWeight="Bold" />
             <DataGrid Grid.Row="1"
                       x:Name="dgAvailableBooks"
@@ -69,9 +72,9 @@
                     <DataGridTextColumn Header="Mã sách"
                                         Binding="{Binding MaSach}"
                                         Width="2*" />
-                    <DataGridTextColumn Header="Tên sách"
+                    <DataGridTextColumn Header="Tựa sách"
                                         Binding="{Binding TuaSach}"
-                                        Width="4*" />
+                                        Width="3*" />
                     <DataGridTextColumn Header="Tác giả"
                                         Binding="{Binding DSTacGia}"
                                         Width="3*" />
@@ -84,7 +87,7 @@
                                         Width="2*" />
                     <DataGridTextColumn Header="Tuần Mượn Tối Đa"
                                         Binding="{Binding HanMuonToiDa}"
-                                        Width="4*" />
+                                        Width="3*" />
                     <DataGridTemplateColumn Header="Thao tác"
                                             Width="Auto"
                                             IsReadOnly="True">
@@ -102,7 +105,7 @@
         </Grid>
 
         <!-- Selected Books Header -->
-        <TextBlock Grid.Row="4"
+        <TextBlock Grid.Row="4" FontSize="16"
                    Text="Sách đã chọn:"
                    FontWeight="Bold"
                    Margin="0,0,0,5" />
@@ -118,19 +121,19 @@
                 <DataGridTextColumn Header="Mã sách"
                                     Binding="{Binding OSach.MaSach}"
                                     IsReadOnly="True"
-                                    Width="2*" />
-                <DataGridTextColumn Header="Tên sách"
+                                    Width="1.5*" />
+                <DataGridTextColumn Header="Tựa sách"
                                     Binding="{Binding IDTuaSachNavigation.TenTuaSach}"
                                     IsReadOnly="True"
-                                    Width="3*" />
+                                    Width="2.5*" />
                 <materialDesign:DataGridTextColumn Header="Tác giả"
                                                    Binding="{Binding DSTacGia}"
-                                                   Width="3*"
+                                                   Width="2*"
                                                    IsReadOnly="True" />
                 <DataGridTextColumn Header="Thể loại"
                                     Binding="{Binding DSTheLoai}"
                                     IsReadOnly="True"
-                                    Width="3*" />
+                                    Width="2*" />
                 <DataGridTextColumn Header="Tình trạng"
                                     Binding="{Binding OSach.IDTinhTrangNavigation.TenTinhTrang}"
                                     IsReadOnly="True"
@@ -138,7 +141,7 @@
                 <DataGridTextColumn Header="Hạn trả"
                                     Binding="{Binding NgayTra, StringFormat=dd/MM/yyyy}"
                                     IsReadOnly="True"
-                                    Width="3*" />
+                                    Width="2*" />
                 <DataGridTemplateColumn Header="Số tuần mượn"
                                         Width="2*">
                     <DataGridTemplateColumn.CellTemplate>
@@ -183,15 +186,19 @@
         <!-- Buttons -->
         <StackPanel Grid.Row="6"
                     Orientation="Horizontal"
+                    VerticalAlignment="Center"
                     HorizontalAlignment="Right">
             <Button Content="Lưu"
                     Width="100"
-                    Margin="0,0,10,0"
+                    Margin="0,0,10,10"
+                    VerticalAlignment="Center"
                     Click="btnSave_Click"
                     Foreground="White">
             </Button>
             <Button Content="Hủy"
                     Width="100"
+                    Margin="0,0,10,10"
+                    VerticalAlignment="Center"
                     Click="btnCancel_Click"
                     Foreground="White">
             </Button>

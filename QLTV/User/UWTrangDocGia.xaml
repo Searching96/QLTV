@@ -39,6 +39,9 @@
                 <StackPanel DockPanel.Dock="Top">
                     <Button x:Name="btnFnMuonSach" Content="Mượn Sách" Background="DodgerBlue" 
                             Click="btnFnMuonSach_Click"/>
+
+                    <Button x:Name="btnFnDisplaySach" Content="Kho Sách" Background="DodgerBlue"
+                            Click="btnFnDisplaySach_Click"/>
                 </StackPanel>
             </DockPanel>
 
