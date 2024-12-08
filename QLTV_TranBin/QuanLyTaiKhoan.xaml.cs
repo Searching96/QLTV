@@ -301,19 +301,35 @@ namespace QLTV_TranBin
                 }
             }
         }
-        private void CloseTab_Click(object sender, RoutedEventArgs e)
-        {
-            var button = sender as Button;
-            var tabItem = button?.DataContext as TabItem;
-            if (tabItem != null)
+        
+            private void CloseTab_Click(object sender, RoutedEventArgs e)
             {
-                var tabControl = tabItem.Parent as TabControl;
-                if (tabControl != null)
+                // Get the button that was clicked
+                var button = sender as System.Windows.Controls.Button;
+
+                // Find the parent TabItem
+                if (button != null)
                 {
-                    tabControl.Items.Remove(tabItem); // Loại bỏ tab khỏi TabControl
+                    var tabItem = FindParent<TabItem>(button);
+
+                    // Remove the TabItem from the TabControl
+                    if (tabItem != null)
+                    {
+                        tcQLTK.Items.Remove(tabItem);
+                    }
                 }
             }
+        private T FindParent<T>(DependencyObject child) where T : DependencyObject
+        {
+            // Search up the visual tree to find the parent of type T
+            var parent = VisualTreeHelper.GetParent(child);
+            while (parent != null && !(parent is T))
+            {
+                parent = VisualTreeHelper.GetParent(parent);
+            }
+            return parent as T;
         }
+
 
         private void btnXoa_Click(object sender, RoutedEventArgs e)
             {

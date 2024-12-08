@@ -102,19 +102,39 @@
                         Style="{StaticResource ErrorIcon}"/>
 
                 <!-- Birthday -->
-                <DatePicker Grid.Row="0" Grid.Column="1" x:Name="dpBirthday" Margin="10,10,10,10" materialDesign:HintAssist.Hint="Sinh nhật"
-                Style="{StaticResource ModernDatePicker}" materialDesign:TextFieldAssist.HasLeadingIcon="True"
-                materialDesign:TextFieldAssist.LeadingIcon="Cake" VerticalContentAlignment="Center"  >
-                    <DatePicker.CalendarStyle>
-                        <Style TargetType="Calendar" BasedOn="{StaticResource MaterialDesignCalendarPortrait}">
-                            <Style.Resources>
-                                <SolidColorBrush x:Key="PrimaryHueMidBrush" Color="Red" />
-                                <SolidColorBrush x:Key="PrimaryHueDarkBrush" Color="Green" />
-                            </Style.Resources>
-                        </Style>
-                    </DatePicker.CalendarStyle>
-                </DatePicker>
-
+                <Grid Grid.Row="0" Grid.Column="1" Margin="10,10,10,10">
+                    <DatePicker  x:Name="dpBirthday"  materialDesign:HintAssist.Hint="Sinh nhật"
+                    Style="{StaticResource ModernDatePicker}" materialDesign:TextFieldAssist.HasLeadingIcon="True"
+                    materialDesign:TextFieldAssist.LeadingIcon="Cake" VerticalContentAlignment="Center"  >
+                        <DatePicker.CalendarStyle>
+                            <Style TargetType="Calendar" BasedOn="{StaticResource MaterialDesignCalendarPortrait}">
+                                <Style.Resources>
+                                    <SolidColorBrush x:Key="PrimaryHueMidBrush" Color="Red" />
+                                    <SolidColorBrush x:Key="PrimaryHueDarkBrush" Color="Green" />
+                                </Style.Resources>
+                            </Style>
+                        </DatePicker.CalendarStyle>
+                    </DatePicker>
+                    <materialDesign:PackIcon x:Name="icSinhNhatError" HorizontalAlignment="Right" Margin="0,0,25,0"  
+>
+                        <!-- Thêm DataTrigger vào Style hiện tại -->
+                        <materialDesign:PackIcon.Style>
+                            <Style TargetType="materialDesign:PackIcon" BasedOn="{StaticResource ErrorIcon}">
+                                <Style.Triggers>
+                                    <!-- Hiển thị khi DatePicker không có ngày được chọn -->
+                                    <DataTrigger Binding="{Binding SelectedDate, ElementName=dpBirthday}" Value="{x:Null}">
+                                        <Setter Property="Visibility" Value="Visible"/>
+                                        <Setter Property="ToolTip" Value="Ngày sinh không được để trống"/>
+                                    </DataTrigger>
+                                    <!-- Ẩn khi DatePicker có ngày được chọn -->
+                                    <DataTrigger Binding="{Binding SelectedDate, ElementName=dpBirthday}">
+                                        <Setter Property="Visibility" Value="Collapsed"/>
+                                    </DataTrigger>
+                                </Style.Triggers>
+                            </Style>
+                        </materialDesign:PackIcon.Style>
+                    </materialDesign:PackIcon>
+                </Grid>
                 <!-- Checkboxes -->
                 <GroupBox Grid.Row="1" Grid.Column="1" Margin="10,10" Header="Loại tài khoản">
                     <Grid >
@@ -134,16 +154,59 @@
               SelectionChanged="cbPhanQuyen_SelectionChanged" Height="50" />
 
                 <!-- Ngày Mở -->
-                <DatePicker Grid.Row="3" Grid.Column="1" x:Name="dpNgayMo" IsEnabled="True" Margin="10,10"
-                materialDesign:HintAssist.Hint="Pick Date" materialDesign:TextFieldAssist.HasClearButton="True"
-               Style="{StaticResource ModernDatePicker}" VerticalContentAlignment="Center" materialDesign:TextFieldAssist.HasLeadingIcon="True" materialDesign:TextFieldAssist.LeadingIcon="OpenInApp" />
-
+                <Grid Grid.Row="3" Grid.Column="1" Margin="10,10">
+                    <DatePicker  x:Name="dpNgayMo" IsEnabled="True" 
+                    materialDesign:HintAssist.Hint="Pick Date" materialDesign:TextFieldAssist.HasClearButton="True"
+                   Style="{StaticResource ModernDatePicker}" VerticalContentAlignment="Center" 
+                                 materialDesign:TextFieldAssist.HasLeadingIcon="True" 
+                                 materialDesign:TextFieldAssist.LeadingIcon="OpenInApp" />
+                    <materialDesign:PackIcon x:Name="icNgayMoError" HorizontalAlignment="Right" Margin="0,0,25,0"  
+>
+                        <!-- Thêm DataTrigger vào Style hiện tại -->
+                        <materialDesign:PackIcon.Style>
+                            <Style TargetType="materialDesign:PackIcon" BasedOn="{StaticResource ErrorIcon}">
+                                <Style.Triggers>
+                                    <!-- Hiển thị khi DatePicker không có ngày được chọn -->
+                                    <DataTrigger Binding="{Binding SelectedDate, ElementName=dpNgayMo}" Value="{x:Null}">
+                                        <Setter Property="Visibility" Value="Visible"/>
+                                        <Setter Property="ToolTip" Value="Ngày mở tài khoản không được để trống"/>
+                                    </DataTrigger>
+                                    <!-- Ẩn khi DatePicker có ngày được chọn -->
+                                    <DataTrigger Binding="{Binding SelectedDate, ElementName=dpNgayMo}">
+                                        <Setter Property="Visibility" Value="Collapsed"/>
+                                    </DataTrigger>
+                                </Style.Triggers>
+                            </Style>
+                        </materialDesign:PackIcon.Style>
+                    </materialDesign:PackIcon>
+                </Grid>
                 <!-- Ngày Đóng -->
-                <DatePicker Grid.Row="4" Grid.Column="1" x:Name="dpNgayDong" IsEnabled="True" Margin="10,10,10,10"
-                materialDesign:HintAssist.Hint="Pick Date" materialDesign:TextFieldAssist.HasClearButton="True"
-                Style="{StaticResource ModernDatePicker}" VerticalContentAlignment="Center" materialDesign:TextFieldAssist.HasLeadingIcon="True" materialDesign:TextFieldAssist.LeadingIcon="CloseBox" />
+                <Grid Grid.Row="4" Grid.Column="1"  Margin="10,10,10,10">
+                    <DatePicker  x:Name="dpNgayDong" IsEnabled="True"
+                    materialDesign:HintAssist.Hint="Pick Date" materialDesign:TextFieldAssist.HasClearButton="True"
+                    Style="{StaticResource ModernDatePicker}" VerticalContentAlignment="Center" materialDesign:TextFieldAssist.HasLeadingIcon="True" materialDesign:TextFieldAssist.LeadingIcon="CloseBox" />
+                    <materialDesign:PackIcon x:Name="icNgayDongError" HorizontalAlignment="Right" Margin="0,0,25,0"  
+>
+                        <!-- Thêm DataTrigger vào Style hiện tại -->
+                        <materialDesign:PackIcon.Style>
+                            <Style TargetType="materialDesign:PackIcon" BasedOn="{StaticResource ErrorIcon}">
+                                <Style.Triggers>
+                                    <!-- Hiển thị khi DatePicker không có ngày được chọn -->
+                                    <DataTrigger Binding="{Binding SelectedDate, ElementName=dpNgayDong}" Value="{x:Null}">
+                                        <Setter Property="Visibility" Value="Visible"/>
+                                        <Setter Property="ToolTip" Value="Ngày đóng tài khoản không được để trống"/>
+                                    </DataTrigger>
+                                    <!-- Ẩn khi DatePicker có ngày được chọn -->
+                                    <DataTrigger Binding="{Binding SelectedDate, ElementName=dpNgayDong}">
+                                        <Setter Property="Visibility" Value="Collapsed"/>
+                                    </DataTrigger>
+                                </Style.Triggers>
+                            </Style>
+                        </materialDesign:PackIcon.Style>
+                    </materialDesign:PackIcon>
+                </Grid>
 
-                
+
                 <!-- Button -->
                 <Button Grid.Row="6" Grid.Column="0" Grid.ColumnSpan="2" x:Name="btnSignUp" Margin="10,10" Content="Create" Foreground="#ffffff" FontSize="18"
             materialDesign:ButtonAssist.CornerRadius="22" Height="45" Width="120" Click="btnSignUp_Click" />

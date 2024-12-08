@@ -165,12 +165,32 @@ namespace QLTV_TranBin
             }
         }
 
-        
+        private bool ValidateInputs()
+        {
+            // Kiểm tra các TextBox
+            if (string.IsNullOrWhiteSpace(txtDiaChi.Text) ||
+                string.IsNullOrWhiteSpace(txtEmail.Text) ||
+                string.IsNullOrWhiteSpace(txtSDT.Text) ||
+                string.IsNullOrWhiteSpace(txtTenNguoiDung.Text) ||
+                string.IsNullOrWhiteSpace(txtGioiTinh.Text) ||
+                !dpNgaySinh.SelectedDate.HasValue ||
+                !dpNgayDangKy.SelectedDate.HasValue ||
+                !dpNgayHetHan.SelectedDate.HasValue ||
+                cbLoaiTaiKhoan.SelectedItem == null)
+            {
+                MessageBox.Show("Vui lòng nhập đầy đủ thông tin!", "Thông báo", MessageBoxButton.OK, MessageBoxImage.Warning);
+                return false;
+            }
+
+            return true;
+        }
 
         private void btnSave_Click(object sender, RoutedEventArgs e)
         {
             try
             {
+                if (!ValidateInputs())
+                    return;
                 using (var context = new QLTV2Context())
                 {
                     // Lấy thông tin từ các TextBox
@@ -341,6 +361,64 @@ namespace QLTV_TranBin
             }
         }
 
+        private void txtTenNguoiDung_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            if (string.IsNullOrWhiteSpace(txtTenNguoiDung.Text))
+            {
+                icFullNameError.ToolTip = "Họ và tên không được để trống!";
+                icFullNameError.Visibility = Visibility.Visible;
+                return;
+            }
 
+            icFullNameError.Visibility = Visibility.Collapsed;
+        }
+
+        private void txtGioiTinh_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            if (string.IsNullOrWhiteSpace(txtGioiTinh.Text) || (txtGioiTinh.Text != "Nam" && txtGioiTinh.Text != "Nữ"))
+            {
+                icGioiTinhError.ToolTip = "Giới tính chỉ là Nam hoặc Nữ và không được bỏ trống!";
+                icGioiTinhError.Visibility = Visibility.Visible;
+                return;
+            }
+
+            icGioiTinhError.Visibility = Visibility.Collapsed;
+        }
+
+        private void txtDiaChi_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            if (string.IsNullOrWhiteSpace(txtDiaChi.Text))
+            {
+                icAddressError.ToolTip = "Địa chỉ không được để trống!";
+                icAddressError.Visibility = Visibility.Visible;
+                return;
+            }
+
+            icAddressError.Visibility = Visibility.Collapsed;
+        }
+
+        private void txtEmail_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            if (string.IsNullOrWhiteSpace(txtEmail.Text))
+            {
+                icEmailError.ToolTip = "Email không được để trống!";
+                icEmailError.Visibility = Visibility.Visible;
+                return;
+            }
+
+            icEmailError.Visibility = Visibility.Collapsed;
+        }
+
+        private void txtSDT_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            if (string.IsNullOrWhiteSpace(txtSDT.Text) || !decimal.TryParse(txtSDT.Text, out decimal result))
+            {
+                icPhoneNumberError.ToolTip = "Số điện thoại chỉ bao gồm số và không được để trống!";
+                icPhoneNumberError.Visibility = Visibility.Visible;
+                return;
+            }
+
+            icPhoneNumberError.Visibility = Visibility.Collapsed;
+        }
     }
 }

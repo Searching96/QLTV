@@ -51,7 +51,9 @@ xmlns:animation="clr-namespace:System.Windows.Media.Animation;assembly=Presentat
 
     </UserControl.Resources>
     <Grid Background="White">
-
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="1*"/>
+        </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
@@ -67,28 +69,28 @@ xmlns:animation="clr-namespace:System.Windows.Media.Animation;assembly=Presentat
                         Color="#DDDDDD"/>
             </Grid.Effect>
 
-            <!--<DockPanel Margin="16,0">
-                <Button Style="{StaticResource MaterialDesignIconButton}" 
-                HorizontalAlignment="Left"
-                Click="ToggleSidebar_Click">
-                    <materialDesign:PackIcon Kind="Menu"/>
-                </Button>
+            <!--<dockpanel margin="16,0">
+                <button style="{staticresource materialdesigniconbutton}" 
+                horizontalalignment="left"
+                click="togglesidebar_click">
+                    <materialdesign:packicon kind="menu"/>
+                </button>
 
-                <TextBlock Text="QUẢN LÝ ĐỘC GIẢ" 
-                   FontSize="24" 
-                   VerticalAlignment="Center"/>
+                <textblock text="quản lý độc giả" 
+                   fontsize="24" 
+                   verticalalignment="center"/>
 
-                <StackPanel DockPanel.Dock="Right" 
-                    Orientation="Horizontal" 
-                    HorizontalAlignment="Right">
-                    <Button Style="{StaticResource MaterialDesignIconButton}">
-                        <materialDesign:PackIcon Kind="Bell"/>
-                    </Button>
-                    <Button Style="{StaticResource MaterialDesignIconButton}">
-                        <materialDesign:PackIcon Kind="Settings"/>
-                    </Button>
-                </StackPanel>
-            </DockPanel>-->
+                <stackpanel dockpanel.dock="right" 
+                    orientation="horizontal" 
+                    horizontalalignment="right">
+                    <button style="{staticresource materialdesigniconbutton}">
+                        <materialdesign:packicon kind="bell"/>
+                    </button>
+                    <button style="{staticresource materialdesigniconbutton}">
+                        <materialdesign:packicon kind="settings"/>
+                    </button>
+                </stackpanel>
+            </dockpanel>-->
         </Grid>
 
         <TabControl Grid.Row="1" Style="{StaticResource MaterialDesignTabControl}" >

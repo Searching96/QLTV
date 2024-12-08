@@ -106,19 +106,104 @@
                     <TextBlock x:Name="txtNgayDong" Text="ngaydong" FontWeight="Bold" Grid.Row="8" Grid.Column="0" VerticalAlignment="Center"/>
 
                     <!-- Content -->
-                    <TextBox x:Name="txtTenNguoiDung" Text="{Binding TenNguoiDung}" Grid.Row="0" Grid.Column="1" VerticalAlignment="Center" IsReadOnly="True"/>
-                    <TextBox x:Name="txtGioiTinh" Text="{Binding GioiTinh}" Grid.Row="1" Grid.Column="1" VerticalAlignment="Center" IsReadOnly="True"/>
-                    <TextBox x:Name="txtDiaChi" Text="{Binding DiaChi}" Grid.Row="2" Grid.Column="1" VerticalAlignment="Center" IsReadOnly="True"/>
-                    <DatePicker x:Name="dpNgaySinh" Text="{Binding NgaySinh}" Grid.Row="3" Grid.Column="1" VerticalAlignment="Center" IsEnabled="False"/>
-                    <TextBox x:Name="txtEmail" Text="{Binding Email}" Grid.Row="4" Grid.Column="1" VerticalAlignment="Center" IsReadOnly="True"/>
-                    <TextBox x:Name="txtSDT" Text="{Binding SDT}" Grid.Row="5" Grid.Column="1" VerticalAlignment="Center" IsReadOnly="True"/>
+                    <Grid Grid.Row="0" Grid.Column="1" >
+                        <TextBox x:Name="txtTenNguoiDung" Text="{Binding TenNguoiDung}"  VerticalAlignment="Center" IsReadOnly="True" TextChanged="txtTenNguoiDung_TextChanged"/>
+                        <materialDesign:PackIcon x:Name="icFullNameError" Grid.Row="0" Margin="0,0,15,0"
+                                                Style="{StaticResource ErrorIcon}"/>
+                    </Grid>
+                    <Grid Grid.Row="1" Grid.Column="1">
+                        <TextBox x:Name="txtGioiTinh" Text="{Binding GioiTinh}"  VerticalAlignment="Bottom" IsReadOnly="True" TextChanged="txtGioiTinh_TextChanged"/>
+                        <materialDesign:PackIcon x:Name="icGioiTinhError" Grid.Row="0" Margin="0,0,15,0"
+                        Style="{StaticResource ErrorIcon}"/>
+                    </Grid>
+                    <Grid Grid.Row="2" Grid.Column="1">
+                        <TextBox x:Name="txtDiaChi" Text="{Binding DiaChi}"  VerticalAlignment="Center" IsReadOnly="True" TextChanged="txtDiaChi_TextChanged"/>
+                        <materialDesign:PackIcon x:Name="icAddressError" Grid.Row="4" Margin="0,0,15,0"
+                                                Style="{StaticResource ErrorIcon}"/>
+                    </Grid>
+                    <Grid Grid.Row="3" Grid.Column="1">
+                        <DatePicker x:Name="dpNgaySinh" Text="{Binding NgaySinh}"  VerticalAlignment="Center" IsEnabled="False"/>
+                        <materialDesign:PackIcon x:Name="icSinhNhatError" HorizontalAlignment="Right" Margin="0,0,25,0"  
+>
+                            <!-- Thêm DataTrigger vào Style hiện tại -->
+                            <materialDesign:PackIcon.Style>
+                                <Style TargetType="materialDesign:PackIcon" BasedOn="{StaticResource ErrorIcon}">
+                                    <Style.Triggers>
+                                        <!-- Hiển thị khi DatePicker không có ngày được chọn -->
+                                        <DataTrigger Binding="{Binding SelectedDate, ElementName=dpNgaySinh}" Value="{x:Null}">
+                                            <Setter Property="Visibility" Value="Visible"/>
+                                            <Setter Property="ToolTip" Value="Ngày sinh không được để trống"/>
+                                        </DataTrigger>
+                                        <!-- Ẩn khi DatePicker có ngày được chọn -->
+                                        <DataTrigger Binding="{Binding SelectedDate, ElementName=dpNgaySinh}">
+                                            <Setter Property="Visibility" Value="Collapsed"/>
+                                        </DataTrigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </materialDesign:PackIcon.Style>
+                        </materialDesign:PackIcon>
+                    </Grid>
+                    <Grid Grid.Row="4" Grid.Column="1">
+                        <TextBox x:Name="txtEmail" Text="{Binding Email}"  VerticalAlignment="Center" IsReadOnly="True" TextChanged="txtEmail_TextChanged"/>
+                        <materialDesign:PackIcon x:Name="icEmailError" Grid.Row="3" Margin="0,0,15,0"
+                                                Style="{StaticResource ErrorIcon}"/>
+                    </Grid>
+                    <Grid Grid.Row="5" Grid.Column="1">
+                        <TextBox x:Name="txtSDT" Text="{Binding SDT}"  VerticalAlignment="Center" IsReadOnly="True" TextChanged="txtSDT_TextChanged"/>
+                        <materialDesign:PackIcon x:Name="icPhoneNumberError" Grid.Row="5" Margin="0,0,15,0"
+                                                Style="{StaticResource ErrorIcon}"/>
+
+                    </Grid>
+                    
                     <ComboBox x:Name="cbLoaiTaiKhoan" Grid.Row="6" Grid.Column="1" 
                               VerticalAlignment="Center" 
                               ItemsSource="{Binding LoaiTaiKhoanItems}" 
                                 
                               IsEnabled="False"/>
-                    <DatePicker x:Name="dpNgayDangKy" Text="{Binding NgayDangKy}" Grid.Row="7" Grid.Column="1" VerticalAlignment="Center" IsEnabled="False"/>
-                    <DatePicker x:Name="dpNgayHetHan" Text="{Binding NgayHetHan}" Grid.Row="8" Grid.Column="1" VerticalAlignment="Center" IsEnabled="False"/>
+                    <Grid Grid.Row="7" Grid.Column="1">
+                        <DatePicker x:Name="dpNgayDangKy" Text="{Binding NgayDangKy}"  VerticalAlignment="Center" IsEnabled="False"/>
+                        <materialDesign:PackIcon x:Name="icNgayMoError" HorizontalAlignment="Right" Margin="0,0,25,0"  
+>
+                            <!-- Thêm DataTrigger vào Style hiện tại -->
+                            <materialDesign:PackIcon.Style>
+                                <Style TargetType="materialDesign:PackIcon" BasedOn="{StaticResource ErrorIcon}">
+                                    <Style.Triggers>
+                                        <!-- Hiển thị khi DatePicker không có ngày được chọn -->
+                                        <DataTrigger Binding="{Binding SelectedDate, ElementName=dpNgayDangKy}" Value="{x:Null}">
+                                            <Setter Property="Visibility" Value="Visible"/>
+                                            <Setter Property="ToolTip" Value="Ngày mở tài khoản không được để trống"/>
+                                        </DataTrigger>
+                                        <!-- Ẩn khi DatePicker có ngày được chọn -->
+                                        <DataTrigger Binding="{Binding SelectedDate, ElementName=dpNgayDangKy}">
+                                            <Setter Property="Visibility" Value="Collapsed"/>
+                                        </DataTrigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </materialDesign:PackIcon.Style>
+                        </materialDesign:PackIcon>
+                    </Grid>
+                    <Grid Grid.Row="8" Grid.Column="1">
+                        <DatePicker x:Name="dpNgayHetHan" Text="{Binding NgayHetHan}"  VerticalAlignment="Center" IsEnabled="False"/>
+                        <materialDesign:PackIcon x:Name="icNgayDongError" HorizontalAlignment="Right" Margin="0,0,25,0"  
+>
+                            <!-- Thêm DataTrigger vào Style hiện tại -->
+                            <materialDesign:PackIcon.Style>
+                                <Style TargetType="materialDesign:PackIcon" BasedOn="{StaticResource ErrorIcon}">
+                                    <Style.Triggers>
+                                        <!-- Hiển thị khi DatePicker không có ngày được chọn -->
+                                        <DataTrigger Binding="{Binding SelectedDate, ElementName=dpNgayHetHan}" Value="{x:Null}">
+                                            <Setter Property="Visibility" Value="Visible"/>
+                                            <Setter Property="ToolTip" Value="Ngày đóng tài khoản không được để trống"/>
+                                        </DataTrigger>
+                                        <!-- Ẩn khi DatePicker có ngày được chọn -->
+                                        <DataTrigger Binding="{Binding SelectedDate, ElementName=dpNgayHetHan}">
+                                            <Setter Property="Visibility" Value="Collapsed"/>
+                                        </DataTrigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </materialDesign:PackIcon.Style>
+                        </materialDesign:PackIcon>
+                    </Grid>
                 </Grid>
             </Grid>
 

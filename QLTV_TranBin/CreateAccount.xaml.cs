@@ -387,7 +387,7 @@ namespace QLTV_TranBin
                 return;
             }
 
-            icUsernameError.Visibility = Visibility.Collapsed;
+            icFullNameError.Visibility = Visibility.Collapsed;
         }
 
 
@@ -417,13 +417,13 @@ namespace QLTV_TranBin
 
         private void txtPhoneNumber_TextChanged(object sender, TextChangedEventArgs e)
         {
-            if (string.IsNullOrWhiteSpace(txtUsername.Text))
+            if (string.IsNullOrWhiteSpace(txtPhoneNumber.Text) || !decimal.TryParse(txtPhoneNumber.Text, out decimal result))
             {
-                icPhoneNumberError.ToolTip = "Số điện thoại không được để trống!";
+                icPhoneNumberError.ToolTip = "Số điện thoại chỉ bao gồm số và không được để trống!";
                 icPhoneNumberError.Visibility = Visibility.Visible;
                 return;
             }
-
+            
             icPhoneNumberError.Visibility = Visibility.Collapsed;
         }
 

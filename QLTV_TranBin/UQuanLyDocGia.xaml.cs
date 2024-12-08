@@ -346,6 +346,10 @@ namespace QLTV_TranBin
 
                 TongNoTextBox.Text = selectedReader.TongNo.ToString();
                 GioiThieu.Text = selectedReader.GioiThieu;
+
+                var tk = _context.TAIKHOAN.FirstOrDefault(tk => tk.ID == selectedReader.IDTaiKhoan);
+                NgayLapTheDatePicker.SelectedDate = tk.NgayMo;
+                NgayHetHanDatePicker.SelectedDate = tk.NgayDong;
             }
         }
 
