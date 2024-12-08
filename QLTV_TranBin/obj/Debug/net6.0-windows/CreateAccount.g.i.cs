@@ -232,7 +232,7 @@ namespace QLTV_TranBin {
                 return;
             }
             _contentLoaded = true;
-            System.Uri resourceLocater = new System.Uri("/QLTV_TranBin;component/createaccount.xaml", System.UriKind.Relative);
+            System.Uri resourceLocater = new System.Uri("/QLTV_TranBin;V1.0.0.0;component/createaccount.xaml", System.UriKind.Relative);
             
             #line 1 "..\..\..\CreateAccount.xaml"
             System.Windows.Application.LoadComponent(this, resourceLocater);

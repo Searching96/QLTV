@@ -31,8 +31,21 @@ namespace QLTV_TranBin.CQuang
             _tenLoaiDocGia = tenLoaiDocGia;
             LoadLoaiDocGia();
 
-            tbxTenTaiKhoan.Text = _tenTaiKhoan;
             cbbTenLoaiDocGia.SelectedItem = _tenLoaiDocGia;
+        }
+
+        private void LoadTenTaiKhoan()
+        {
+            using (var context = new QLTV2Context())
+            {
+                // Lấy danh sách tên tài khoản chưa được sử dụng để tạo độc giả
+                var dsTenTaiKhoan = context.TAIKHOAN
+                    .Where(tk => !context.DOCGIA.Any(dg => dg.IDTaiKhoan == tk.ID))
+                    .Select(tk => tk.TenTaiKhoan)
+                    .ToList();
+
+                cbbTenTaiKhoan.ItemsSource = dsTenTaiKhoan;
+            }
         }
 
         private void LoadLoaiDocGia()
@@ -49,17 +62,13 @@ namespace QLTV_TranBin.CQuang
             // Đăng ký sự kiện TextChanged
         }
 
-        private void tbxTenTaiKhoan_TextChanged(object sender, TextChangedEventArgs e)
+        private void cbbTenTaiKhoan_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            // Kiểm tra tên tài khoản không để trống
-            if (string.IsNullOrWhiteSpace(tbxTenTaiKhoan.Text))
+            // Kiểm tra đã chọn tên tài khoản chưa
+            if (cbbTenTaiKhoan.SelectedItem != null)
             {
-                icTenTaiKhoanError.ToolTip = "Tên Tài Khoản không được để trống";
-                icTenTaiKhoanError.Visibility = Visibility.Visible;
-                return;
+                icTenTaiKhoanError.Visibility = Visibility.Collapsed;
             }
-
-            icTenTaiKhoanError.Visibility = Visibility.Collapsed;
         }
 
         private void cbbTenLoaiDocGia_SelectionChanged(object sender, SelectionChangedEventArgs e)
@@ -117,7 +126,7 @@ namespace QLTV_TranBin.CQuang
             try
             {
                 // Kiểm tra các trường bắt buộc
-                if (string.IsNullOrWhiteSpace(tbxTenTaiKhoan.Text))
+                if (string.IsNullOrWhiteSpace(cbbTenTaiKhoan.Text))
                 {
                     icTenTaiKhoanError.ToolTip = "Tên Tài Khoản không được để trống";
                     icTenTaiKhoanError.Visibility = Visibility.Visible;
@@ -144,7 +153,7 @@ namespace QLTV_TranBin.CQuang
                 }
 
                 // Lấy thông tin từ các trường
-                string tenTaiKhoan = tbxTenTaiKhoan.Text;
+                string tenTaiKhoan = cbbTenTaiKhoan.SelectedItem.ToString(); // Lấy từ SelectedItem
                 string loaiDocGia = cbbTenLoaiDocGia.SelectedItem.ToString();
                 string gioiThieu = tbxGioiThieu.Text;
                 decimal tongNo = decimal.Parse(tbxTongNo.Text);
