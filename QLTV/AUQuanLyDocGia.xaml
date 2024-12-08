@@ -408,13 +408,14 @@ Click="OpenExportMenu_Click">
                                 <RowDefinition Height="Auto"/>
                             </Grid.RowDefinitions>
 
-                            <TextBox Grid.Row="0" Grid.Column="0" Margin="0,5,5,0"
-                         x:Name="MaDocGiaPhat"
-                         Style="{StaticResource ModernTextBox}"
-                         materialDesign:HintAssist.Hint="ID Độc Giả"
-                         materialDesign:TextFieldAssist.HasLeadingIcon="True"
-                         materialDesign:TextFieldAssist.LeadingIcon="Account"
-                         TextChanged="MaDocGiaPhat_TextChanged"/>
+                            <ComboBox Grid.Row="0" Grid.Column="0" Margin="0,5,5,0"
+                              x:Name="TenTaiKhoanPhatComboBox"
+                              Style="{StaticResource ModernComboBox}"
+                              materialDesign:HintAssist.Hint="Tên Tài Khoản"
+                              materialDesign:TextFieldAssist.HasLeadingIcon="True"
+                              materialDesign:TextFieldAssist.LeadingIcon="Account"
+                              IsEditable="True"
+                              ItemsSource="{Binding TenTaiKhoanList}" />
 
                             <DatePicker Grid.Row="0" Grid.Column="1" Margin="0,5,5,0" 
                             x:Name="NgayThuPhat"
@@ -467,7 +468,7 @@ Click="OpenExportMenu_Click">
                             <ColumnDefinition Width="Auto"/>
                         </Grid.ColumnDefinitions>
 
-                        <TextBlock Text="Danh Sách Các Phiếu Thu Tiền Phạt" 
+                        <TextBlock Text="Danh Sách Phiếu Thu Tiền Phạt" 
         FontFamily="Segoe UI"  
         FontSize="24" 
         FontWeight="Bold"
@@ -479,7 +480,7 @@ Click="OpenExportMenu_Click">
                         <TextBox x:Name="TTPSearchTextBox" Grid.Column="2" VerticalAlignment="Center" Style="{StaticResource ModernTextBox}" materialDesign:HintAssist.Hint="Từ Khóa" materialDesign:HintAssist.FloatingScale="0.8" Margin="10,0,3,0" Grid.ColumnSpan="2"/>
 
                         <ComboBox x:Name="TTPSearchCriteriaComboBox" Grid.Column="4" Style="{StaticResource ModernComboBox}" materialDesign:HintAssist.Hint="Thuộc Tính" materialDesign:HintAssist.FloatingScale="0.8">
-                            <ComboBoxItem Content="ID Độc Giả"/>
+                            <ComboBoxItem Content="Tên Tài Khoản"/>
                             <ComboBoxItem Content="Số Tiền Thu"/>
                         </ComboBox>
 
@@ -497,7 +498,7 @@ Click="OpenExportMenu_Click">
                   SelectionChanged="PenaltyReceiptsDataGrid_SelectionChanged" Grid.ColumnSpan="2">
                             <DataGrid.Columns>
                                 <DataGridTextColumn Header="Mã Phiếu Thu" Binding="{Binding MaPTTP}"/>
-                                <DataGridTextColumn Header="ID Độc Giả" Binding="{Binding IDDocGiaNavigation.MaDocGia}"/>
+                                <DataGridTextColumn Header="Tên Tài Khoản" Binding="{Binding IDDocGiaNavigation.IDTaiKhoanNavigation.TenTaiKhoan}"/>
                                 <DataGridTextColumn Header="Ngày Thu" Binding="{Binding NgayThu, StringFormat=\{0:dd/MM/yyyy\}}"/>
                                 <DataGridTextColumn Header="Tổng Nợ" Binding="{Binding IDDocGiaNavigation.TongNo}"/>
                                 <DataGridTextColumn Header="Số Tiền Thu" Binding="{Binding SoTienThu, StringFormat=\{0:N0\}}"/>

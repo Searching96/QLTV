@@ -10,7 +10,6 @@
     <Grid>
         <DataGrid x:Name="BooksDataGrid" AutoGenerateColumns="False" IsReadOnly="True">
             <DataGrid.Columns>
-                <DataGridTextColumn Header="ID" Binding="{Binding ID}" />
                 <DataGridTextColumn Header="Mã Sách" Binding="{Binding IDSachNavigation.MaSach}" />
                 <DataGridTextColumn Header="Tên Sách" Binding="{Binding IDSachNavigation.IDTuaSachNavigation.TenTuaSach}" />
                 <DataGridTextColumn Header="Mã Phiếu Mượn" Binding="{Binding IDPhieuMuonNavigation.MaPhieuMuon}" />

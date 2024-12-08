@@ -67,13 +67,18 @@
                 <RowDefinition Height="Auto"/>
             </Grid.RowDefinitions>
 
-            <TextBox x:Name="tbxTenTaiKhoan" Grid.Row="0"
-         Style="{StaticResource DataDisplayTextBox}"
-         Margin="5"
-         materialDesign:HintAssist.Hint="Tên Tài Khoản"
-         materialDesign:TextFieldAssist.HasLeadingIcon="True"
-         materialDesign:TextFieldAssist.LeadingIcon="Account"
-         TextChanged="tbxTenTaiKhoan_TextChanged"/>
+            <ComboBox x:Name="cbbTenTaiKhoan" Grid.Row="0"
+          Style="{StaticResource ModernComboBox}"
+          Margin="5"
+          materialDesign:HintAssist.Hint="Tên Tài Khoản"
+          materialDesign:TextFieldAssist.HasLeadingIcon="True"
+          materialDesign:TextFieldAssist.LeadingIcon="Account"
+          IsEditable="True" 
+          IsTextSearchEnabled="False" 
+          SelectedValue="{x:Null}" 
+          IsSynchronizedWithCurrentItem="False" 
+          materialDesign:TextFieldAssist.HasClearButton="True"
+          SelectionChanged="cbbTenTaiKhoan_SelectionChanged"/>
 
             <materialDesign:PackIcon x:Name="icTenTaiKhoanError" Grid.Row="0"
                          Style="{StaticResource ErrorIcon}"
