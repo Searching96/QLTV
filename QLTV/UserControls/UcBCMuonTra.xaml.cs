@@ -17,6 +17,8 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using LiveCharts.Wpf;
+using LiveCharts;
 using Microsoft.EntityFrameworkCore;
 using QLTV.Models;
 
@@ -132,6 +134,54 @@ namespace QLTV.UserControls
         }
     }
 
+    public class ChartViewModel : INotifyPropertyChanged
+    {
+        private ObservableCollection<DSBCMuonSachModel> _dsbcMuonSachList;
+        public ObservableCollection<DSBCMuonSachModel> DSBCMuonSachList
+        {
+            get => _dsbcMuonSachList;
+            set
+            {
+                _dsbcMuonSachList = value;
+                OnPropertyChanged();
+                UpdateChartData();
+            }
+        }
+
+        public SeriesCollection ChartValues { get; private set; }
+        public List<string> MonthLabels { get; private set; }
+
+        public ChartViewModel(ObservableCollection<DSBCMuonSachModel> dsBC)
+        {
+
+            DSBCMuonSachList = dsBC;
+            UpdateChartData();
+        }
+
+        private void UpdateChartData()
+        {
+            if (DSBCMuonSachList == null) return;
+            ChartValues = new SeriesCollection();
+            MonthLabels = new List<string>();
+            ChartValues.Clear();
+            ChartValues.Add(new LineSeries
+            {
+                Values = new ChartValues<int>(DSBCMuonSachList.Select(item => item.TongSoLuotMuon))
+            });
+
+            MonthLabels = DSBCMuonSachList.Select(item => item.Month.ToString("MMM yyyy")).ToList();
+            OnPropertyChanged(nameof(ChartValues));
+            OnPropertyChanged(nameof(MonthLabels));
+        }
+
+        public event PropertyChangedEventHandler PropertyChanged;
+
+        protected void OnPropertyChanged(string propertyName = null)
+        {
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+        }
+    }
+
     /// <summary>
     /// Interaction logic for UcBCMuonTra.xaml
     /// </summary>
@@ -230,6 +280,7 @@ namespace QLTV.UserControls
                                 );
                 _filteredBorrowReports = new ObservableCollection<DSBCMuonSachModel>(_borrowReports);
                 dgBorrowingReports.ItemsSource = _filteredBorrowReports;
+                MainChart.DataContext = new ChartViewModel(_filteredBorrowReports);
 
                 // Load late return reports with related data, excluding soft-deleted records
                 var lateReturnReports = await _context.BCTRATRE

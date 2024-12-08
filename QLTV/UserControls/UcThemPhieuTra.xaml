@@ -70,15 +70,19 @@
                     <materialDesign:DataGridComboBoxColumn Header="Tình trạng trả"
                                                            x:Name="colTinhTrangTra"
                                                            DisplayMemberPath="TenTinhTrang"
-                                                           materialDesign:ValidationAssist.HorizontalAlignment="Right"
-                                                           materialDesign:ValidationAssist.UsePopup="True"
-                                                           materialDesign:ValidationAssist.PopupPlacement="MousePoint"
                                                            SelectedValueBinding="{Binding TinhTrangTra, UpdateSourceTrigger=PropertyChanged, ValidatesOnDataErrors=True}" />
                     <materialDesign:DataGridTextColumn Header="Ghi chú"
                                                        Foreground="{DynamicResource SecondaryHueMidBrush}"
                                                        Width="Auto"
                                                        Binding="{Binding GhiChu, UpdateSourceTrigger=PropertyChanged}" />
                 </DataGrid.Columns>
+                <DataGrid.CellStyle>
+                    <Style TargetType="DataGridCell"
+                           BasedOn="{StaticResource MaterialDesignDataGridCell}">
+                        <Setter Property="Margin"
+                                Value="0 -5 0 30" />
+                    </Style>
+                </DataGrid.CellStyle>
             </DataGrid>
         </Grid>
         <!-- Buttons -->
