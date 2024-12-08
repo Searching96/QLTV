@@ -34,6 +34,7 @@ namespace QLTV.User
         private IEnumerable<SachCoSanViewModel> filteredBooks;
         private ObservableCollection<SachDaChonViewModel> _selectedBooks;
         private CollectionViewSource viewSource;
+        private DOCGIA docGia;
         
         private class SachCoSanViewModel
         {
@@ -176,18 +177,6 @@ namespace QLTV.User
             {
                 PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
             }
-
-            // ?????
-            public static ObservableCollection<SachDaChonViewModel> FromBookWithGenresList(List<SACH> books)
-            {
-                return new ObservableCollection<SachDaChonViewModel>(
-                    books.Select(book => new SachDaChonViewModel
-                    {
-                        OSach = book,
-                        SoTuanMuon = book.IDTuaSachNavigation.HanMuonToiDa.ToString()
-                    })
-                );
-            }
         }
 
 
@@ -313,11 +302,31 @@ namespace QLTV.User
 
         private void btnSelectBook_Click(object sender, RoutedEventArgs e)
         {
-            var sachDuocChon = ((Button)sender).DataContext as SachCoSanViewModel;
-            if (sachDuocChon?.OSach == null) return;
-
             using (var context = new QLTVContext())
             {
+                docGia = context.DOCGIA
+                    .Skip(1)
+                    .Include(dg => dg.IDLoaiDocGiaNavigation)
+                    .Include(dg => dg.PHIEUMUON)
+                        .ThenInclude(pm => pm.CTPHIEUMUON)
+                    .Include(dg => dg.PHIEUMUON)
+                        .ThenInclude(pm => pm.CTPHIEUTRA)
+                    .FirstOrDefault();
+
+                int daMuon = docGia.PHIEUMUON.Sum(dg => dg.CTPHIEUMUON.Count - dg.CTPHIEUTRA.Count);
+                MessageBox.Show("Da muon: " + daMuon.ToString());
+                MessageBox.Show($"Muon max: {docGia.IDLoaiDocGiaNavigation.SoSachMuonToiDa}");
+                MessageBox.Show($"Loai: {docGia.IDLoaiDocGiaNavigation.TenLoaiDocGia}");
+
+                if (daMuon + _selectedBooks.Count + 1 > docGia.IDLoaiDocGiaNavigation.SoSachMuonToiDa)
+                {
+                    MessageBox.Show("Muon nhieu vl");
+                    return;
+                }
+
+                var sachDuocChon = ((Button)sender).DataContext as SachCoSanViewModel;
+                if (sachDuocChon?.OSach == null) return;
+
                 var maSach = sachDuocChon.OSach.MaSach;
                 var sach = context.SACH
                     .Where(s => s.MaSach == maSach)
@@ -326,14 +335,11 @@ namespace QLTV.User
                 if (sach == null) return;
 
                 // Kiểm tra trạng thái sách trước khi chọn
-                if (!sach.IsAvailable ?? true)
+                if (!sach.IsAvailable ?? false)
                 {
                     MessageBox.Show("Sách này đã được chọn hoặc mượn.", "Thông báo", MessageBoxButton.OK, MessageBoxImage.Warning);
+                    LoadData();
                     return;
-                }
-                else
-                {
-                    MessageBox.Show("huhu");
                 }
 
                 try
@@ -380,160 +386,173 @@ namespace QLTV.User
 
         private void btnRemoveBook_Click(object sender, RoutedEventArgs e)
         {
-            var sachDuocChon = ((Button)sender).DataContext as SachDaChonViewModel;
-            if (sachDuocChon?.OSachVM?.OSach == null) return;
-
-            try
+            using (var context = new QLTVContext())
             {
-                // Sử dụng lock để đảm bảo tính đồng bộ
-                lock (_context.SACH)
+                var sachDuocChon = ((Button)sender).DataContext as SachDaChonViewModel;
+                if (sachDuocChon?.OSachVM?.OSach == null) return;
+
+                var maSach = sachDuocChon.OSach.MaSach;
+                var sach = context.SACH
+                    .Where(s => s.MaSach == maSach)
+                    .FirstOrDefault();
+
+                if (sach == null) return;
+
+                try
                 {
-                    // Khôi phục trạng thái sách
-                    var sach = _context.SACH.Find(sachDuocChon.OSach.ID);
-                    sach.IsAvailable = true;
-                    _context.Update(sach);
-                    _context.SaveChangesAsync();
-                    _selectedBooks.Remove(sachDuocChon);
+                    // Sử dụng lock để đảm bảo tính đồng bộ
+                    lock (context.SACH)
+                    {
+                        // Khôi phục trạng thái sách
+                        sach.IsAvailable = true;
+                        context.Update(sach);
+                        context.SaveChangesAsync();
+                        _selectedBooks.Remove(sachDuocChon);
 
-                    // Thay đổi trạng thái một cách an toàn
-                    var tempDsSach = new ObservableCollection<SachCoSanViewModel>(dsSach);
-                    tempDsSach.Add(sachDuocChon.OSachVM);
-                    dsSach = tempDsSach;
+                        // Thay đổi trạng thái một cách an toàn
+                        var tempDsSach = new ObservableCollection<SachCoSanViewModel>(dsSach);
+                        tempDsSach.Add(sachDuocChon.OSachVM);
+                        dsSach = tempDsSach;
 
-                    var tempAllBooks = new ObservableCollection<SACH>(_allBooks);
-                    tempAllBooks.Add(sachDuocChon.OSachVM.OSach);
-                    _allBooks = tempAllBooks;
+                        var tempAllBooks = new ObservableCollection<SACH>(_allBooks);
+                        tempAllBooks.Add(sachDuocChon.OSachVM.OSach);
+                        _allBooks = tempAllBooks;
 
-                    TimSach(txtSearchBook.Text);
+                        TimSach(txtSearchBook.Text);
+                    }
                 }
-            }
-            catch (Exception ex)
-            {
-                // Xử lý lỗi nếu có
-                _context.SACH.Find(sachDuocChon.OSach.ID).IsAvailable = false;
-                _context.SaveChangesAsync();
-                MessageBox.Show($"Lỗi khi xóa sách: {ex.Message}", "Lỗi", MessageBoxButton.OK, MessageBoxImage.Error);
+                catch (Exception ex)
+                {
+                    // Xử lý lỗi nếu có
+                    context.SACH.Find(sachDuocChon.OSach.ID).IsAvailable = false;
+                    context.SaveChangesAsync();
+                    MessageBox.Show($"Lỗi khi xóa sách: {ex.Message}", "Lỗi", MessageBoxButton.OK, MessageBoxImage.Error);
+                }
             }
         }
 
         private async void btnSave_Click(object sender, RoutedEventArgs e)
         {
-            if (_selectedBooks.Count == 0)
+            using (var context = new QLTVContext())
             {
-                MessageBox.Show("Vui lòng chọn ít nhất một cuốn sách.", "Thông báo", MessageBoxButton.OK, MessageBoxImage.Warning);
-                return;
-            }
-
-            if (_selectedBooks.Any(b => !b.isValid))
-            {
-                MessageBox.Show("Vui lòng chọn số ngày mượn hợp lệ.", "Thông báo", MessageBoxButton.OK, MessageBoxImage.Warning);
-                return;
-            }
-
-            try
-            {
-                // Tạo mới phiếu mượn
-                var phieuMuon = new PHIEUMUON
+                if (_selectedBooks.Count == 0)
                 {
-                    IDDocGia = _context.DOCGIA
-                        .Select(dg => dg.ID)
-                        .FirstOrDefault(),
-                    NgayMuon = DateTime.Now,
-                    IsPending = true
-                };
+                    MessageBox.Show("Vui lòng chọn ít nhất một cuốn sách.", "Thông báo", MessageBoxButton.OK, MessageBoxImage.Warning);
+                    return;
+                }
 
-                _context.PHIEUMUON.Add(phieuMuon);
-                await _context.SaveChangesAsync();  // Lưu phiếu mượn
-
-                var ctPhieuMuonList = new List<CTPHIEUMUON>();
-
-                foreach (var sachDaChon in _selectedBooks)
+                if (_selectedBooks.Any(b => !b.isValid))
                 {
-                    var ctPhieuMuon = new CTPHIEUMUON
+                    MessageBox.Show("Vui lòng chọn số ngày mượn hợp lệ.", "Thông báo", MessageBoxButton.OK, MessageBoxImage.Warning);
+                    return;
+                }
+
+                try
+                {
+                    // Tạo mới phiếu mượn
+                    var phieuMuon = new PHIEUMUON
                     {
-                        IDPhieuMuon = phieuMuon.ID,
-                        IDSach = sachDaChon.ID,
-                        HanTra = sachDaChon.NgayTra,
-                        IDTinhTrangMuon = sachDaChon.OSach.IDTinhTrang
+                        IDDocGia = context.DOCGIA
+                            .Select(dg => dg.ID)
+                            .FirstOrDefault(),
+                        NgayMuon = DateTime.Now,
+                        IsPending = true
                     };
-                    ctPhieuMuonList.Add(ctPhieuMuon);
 
-                    sachDaChon.OSach.IsAvailable = false;
-                }
+                    context.PHIEUMUON.Add(phieuMuon);
+                    await context.SaveChangesAsync();  // Lưu phiếu mượn
 
-                _context.CTPHIEUMUON.AddRange(ctPhieuMuonList);  // Thêm các chi tiết phiếu mượn
-                await _context.SaveChangesAsync();  // Lưu thay đổi chi tiết phiếu mượn
+                    var ctPhieuMuonList = new List<CTPHIEUMUON>();
 
-                // Update BCMUONSACH
-                var Today = DateTime.Now;
-                var bcMuonSach = await _context.BCMUONSACH
-                    .FirstOrDefaultAsync(bc => bc.Thang == Today);
-
-                if (bcMuonSach == null)
-                {
-                    bcMuonSach = new BCMUONSACH
+                    foreach (var sachDaChon in _selectedBooks)
                     {
-                        Thang = Today,
-                        TongSoLuotMuon = _selectedBooks.Count
-                    };
-                    _context.BCMUONSACH.Add(bcMuonSach);
-                }
-                else
-                {
-                    bcMuonSach.TongSoLuotMuon += _selectedBooks.Count;
-                }
-
-                await _context.SaveChangesAsync();  // Lưu báo cáo mượn sách
-
-                // Update CTBCMUONSACH
-                var theLoaiGroups = _selectedBooks
-                    .SelectMany(b => b.OSach.IDTuaSachNavigation.TUASACH_THELOAI.Select(ts_tl => ts_tl.IDTheLoaiNavigation))
-                    .GroupBy(tl => tl.ID)
-                    .Select(g => new { TheLoaiId = g.Key, Count = g.Count() });
-
-                var ctBcMuonSachList = new List<CTBCMUONSACH>();
-
-                foreach (var group in theLoaiGroups)
-                {
-                    var ctBcMuonSach = await _context.CTBCMUONSACH
-                        .FirstOrDefaultAsync(ct => ct.IDBCMuonSach == bcMuonSach.ID && ct.IDTheLoai == group.TheLoaiId);
-
-                    if (ctBcMuonSach == null)
-                    {
-                        ctBcMuonSach = new CTBCMUONSACH
+                        var ctPhieuMuon = new CTPHIEUMUON
                         {
-                            IDBCMuonSach = bcMuonSach.ID,
-                            IDTheLoai = group.TheLoaiId,
-                            SoLuotMuon = group.Count
+                            IDPhieuMuon = phieuMuon.ID,
+                            IDSach = sachDaChon.ID,
+                            HanTra = sachDaChon.NgayTra,
+                            IDTinhTrangMuon = sachDaChon.OSach.IDTinhTrang
                         };
-                        ctBcMuonSachList.Add(ctBcMuonSach);
+                        ctPhieuMuonList.Add(ctPhieuMuon);
+
+                        sachDaChon.OSach.IsAvailable = false;
+                    }
+
+                    context.CTPHIEUMUON.AddRange(ctPhieuMuonList);  // Thêm các chi tiết phiếu mượn
+                    await context.SaveChangesAsync();  // Lưu thay đổi chi tiết phiếu mượn
+
+                    // Update BCMUONSACH
+                    var Today = DateTime.Now;
+                    var bcMuonSach = await context.BCMUONSACH
+                        .FirstOrDefaultAsync(bc => bc.Thang == Today);
+
+                    if (bcMuonSach == null)
+                    {
+                        bcMuonSach = new BCMUONSACH
+                        {
+                            Thang = Today,
+                            TongSoLuotMuon = _selectedBooks.Count
+                        };
+                        context.BCMUONSACH.Add(bcMuonSach);
                     }
                     else
                     {
-                        ctBcMuonSach.SoLuotMuon += group.Count;
+                        bcMuonSach.TongSoLuotMuon += _selectedBooks.Count;
                     }
+
+                    await context.SaveChangesAsync();  // Lưu báo cáo mượn sách
+
+                    // Update CTBCMUONSACH
+                    var theLoaiGroups = _selectedBooks
+                        .SelectMany(b => b.OSach.IDTuaSachNavigation.TUASACH_THELOAI.Select(ts_tl => ts_tl.IDTheLoaiNavigation))
+                        .GroupBy(tl => tl.ID)
+                        .Select(g => new { TheLoaiId = g.Key, Count = g.Count() });
+
+                    var ctBcMuonSachList = new List<CTBCMUONSACH>();
+
+                    foreach (var group in theLoaiGroups)
+                    {
+                        var ctBcMuonSach = await context.CTBCMUONSACH
+                            .FirstOrDefaultAsync(ct => ct.IDBCMuonSach == bcMuonSach.ID && ct.IDTheLoai == group.TheLoaiId);
+
+                        if (ctBcMuonSach == null)
+                        {
+                            ctBcMuonSach = new CTBCMUONSACH
+                            {
+                                IDBCMuonSach = bcMuonSach.ID,
+                                IDTheLoai = group.TheLoaiId,
+                                SoLuotMuon = group.Count
+                            };
+                            ctBcMuonSachList.Add(ctBcMuonSach);
+                        }
+                        else
+                        {
+                            ctBcMuonSach.SoLuotMuon += group.Count;
+                        }
+                    }
+
+                    context.CTBCMUONSACH.AddRange(ctBcMuonSachList);  // Thêm chi tiết báo cáo mượn sách theo thể loại
+                    await context.SaveChangesAsync();  // Lưu thay đổi báo cáo mượn sách theo thể loại
+
+                    // Update TiLe for all CTBCMUONSACH entries of this report
+                    var allCtBcMuonSach = await context.CTBCMUONSACH
+                        .Where(ct => ct.IDBCMuonSach == bcMuonSach.ID)
+                        .ToListAsync();
+
+                    foreach (var ct in allCtBcMuonSach)
+                    {
+                        ct.TiLe = (float)ct.SoLuotMuon / bcMuonSach.TongSoLuotMuon;
+                    }
+
+                    await context.SaveChangesAsync();  // Lưu tỷ lệ cho các chi tiết báo cáo mượn sách
+
+                    MessageBox.Show("Thêm phiếu mượn thành công!", "Thông báo", MessageBoxButton.OK, MessageBoxImage.Information);
+                    _selectedBooks.Clear();
                 }
-
-                _context.CTBCMUONSACH.AddRange(ctBcMuonSachList);  // Thêm chi tiết báo cáo mượn sách theo thể loại
-                await _context.SaveChangesAsync();  // Lưu thay đổi báo cáo mượn sách theo thể loại
-
-                // Update TiLe for all CTBCMUONSACH entries of this report
-                var allCtBcMuonSach = await _context.CTBCMUONSACH
-                    .Where(ct => ct.IDBCMuonSach == bcMuonSach.ID)
-                    .ToListAsync();
-
-                foreach (var ct in allCtBcMuonSach)
+                catch (Exception ex)
                 {
-                    ct.TiLe = (float)ct.SoLuotMuon / bcMuonSach.TongSoLuotMuon;
+                    MessageBox.Show($"Lỗi khi lưu phiếu mượn: {ex.Message}", "Lỗi", MessageBoxButton.OK, MessageBoxImage.Error);
                 }
-
-                await _context.SaveChangesAsync();  // Lưu tỷ lệ cho các chi tiết báo cáo mượn sách
-
-                MessageBox.Show("Thêm phiếu mượn thành công!", "Thông báo", MessageBoxButton.OK, MessageBoxImage.Information);
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show($"Lỗi khi lưu phiếu mượn: {ex.Message}", "Lỗi", MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
 
@@ -556,28 +575,31 @@ namespace QLTV.User
 
         private async void btnCancel_Click(object sender, RoutedEventArgs e)
         {
-            try
+            using (var context = new QLTVContext())
             {
-                // Đặt lại trạng thái IsAvailable của sách đã chọn về true
-                foreach (var idSach in _selectedBooks.Select(sb => sb.OSachVM.OSach.ID))
+                try
                 {
-                    var sach = _context.SACH.Find(idSach);
-                    if (sach.IsAvailable == false)
+                    // Đặt lại trạng thái IsAvailable của sách đã chọn về true
+                    foreach (var idSach in _selectedBooks.Select(sb => sb.OSachVM.OSach.ID))
                     {
-                        sach.IsAvailable = true;
+                        var sach = context.SACH.Find(idSach);
+                        if (sach.IsAvailable == false)
+                        {
+                            sach.IsAvailable = true;
+                        }
                     }
+
+                    // Cập nhật trạng thái trong cơ sở dữ liệu (nếu cần)
+                    await context.SaveChangesAsync();
+
+                    // Đóng cửa sổ
+                    _selectedBooks.Clear();
+                    LoadData();
                 }
-
-                // Cập nhật trạng thái trong cơ sở dữ liệu (nếu cần)
-                await _context.SaveChangesAsync();
-
-                // Đóng cửa sổ
-                _selectedBooks.Clear();
-                LoadData();
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show($"Lỗi khi hủy: {ex.Message}", "Lỗi", MessageBoxButton.OK, MessageBoxImage.Error);
+                catch (Exception ex)
+                {
+                    MessageBox.Show($"Lỗi khi hủy: {ex.Message}", "Lỗi", MessageBoxButton.OK, MessageBoxImage.Error);
+                }
             }
         }
     }

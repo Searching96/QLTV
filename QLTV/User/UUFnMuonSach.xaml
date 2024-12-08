@@ -79,7 +79,7 @@
                                         Binding="{Binding DSTheLoai}"
                                         Width="3*" />
                     <DataGridTextColumn Header="Tình trạng"
-                                        Binding="{Binding Book.IDTinhTrangNavigation.TenTinhTrang}"
+                                        Binding="{Binding OSach.IDTinhTrangNavigation.TenTinhTrang}"
                                         IsReadOnly="True"
                                         Width="2*" />
                     <DataGridTextColumn Header="Tuần Mượn Tối Đa"
@@ -116,7 +116,7 @@
                   CanUserAddRows="False">
             <DataGrid.Columns>
                 <DataGridTextColumn Header="Mã sách"
-                                    Binding="{Binding MaSach}"
+                                    Binding="{Binding OSach.MaSach}"
                                     IsReadOnly="True"
                                     Width="2*" />
                 <DataGridTextColumn Header="Tên sách"
