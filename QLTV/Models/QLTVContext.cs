@@ -182,7 +182,7 @@ public partial class QLTVContext : DbContext
 
         modelBuilder.Entity<DANHGIA>(entity =>
         {
-            entity.Property(e => e.DanhGia1)
+            entity.Property(e => e.DanhGia)
                 .HasColumnType("decimal(4, 2)")
                 .HasColumnName("DanhGia");
 

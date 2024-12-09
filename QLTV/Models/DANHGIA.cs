@@ -11,7 +11,7 @@ public partial class DANHGIA
 
     public int IDPhieuMuon { get; set; }
 
-    public decimal DanhGia1 { get; set; }
+    public decimal DanhGia { get; set; }
 
     public virtual PHIEUMUON IDPhieuMuonNavigation { get; set; } = null!;
 

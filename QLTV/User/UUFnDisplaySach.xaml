@@ -125,9 +125,42 @@
                 </Popup>
             </Grid>
 
-            <Grid Grid.Row="4" Width="Auto">
-                
-            </Grid>
+            <StackPanel Grid.Column="4" Orientation="Horizontal" VerticalAlignment="Center">
+                <!-- Sort Button -->
+                <Button x:Name="btnSort" Width="30" Click="btnSort_Click" Padding="0">
+                    <materialDesign:PackIcon Kind="Sort"/>
+                </Button>
+
+                <!-- Popup for Sort Options -->
+                <Popup x:Name="puSortOptions" Grid.Row="4"
+                       Placement="Bottom" 
+                       PlacementTarget="{Binding ElementName=btnSort}" 
+                       StaysOpen="False">       
+                    <Border Background="WhiteSmoke" Padding="10">
+                        <StackPanel>
+                            <!-- Sort by Borrow Count -->
+                            <Button Content="Lượt mượn giảm" 
+                                    Style="{StaticResource MaterialDesignOutlinedButton}"
+                                    HorizontalAlignment="Stretch" 
+                                    Padding="5" 
+                                    Click="SortByBorrowCountDesc_Click" />
+
+                            <Button Content="Lượt mượn tăng"
+                                    Style="{StaticResource MaterialDesignOutlinedButton}"
+                                    HorizontalAlignment="Stretch" 
+                                    Padding="5" 
+                                    Click="SortByBorrowCountAsc_Click" />
+                            
+                            <!-- Sort by Rating -->
+                            <Button Content="Đánh giá" 
+                                    Style="{StaticResource MaterialDesignOutlinedButton}"
+                                    HorizontalAlignment="Stretch" 
+                                    Padding="5" 
+                                    Click="SortByRating_Click" />
+                        </StackPanel>
+                    </Border>
+                </Popup>
+            </StackPanel>
         </Grid>
 
         <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto">
@@ -141,28 +174,50 @@
                     <ItemsControl.ItemTemplate>
                         <DataTemplate>
                             <Border BorderBrush="Gray" BorderThickness="1" CornerRadius="5" 
-                                    Margin="10" Padding="5" Width="150">
+                            Margin="10" Padding="5" Width="150">
                                 <StackPanel>
+                                    <!-- Book Cover Image -->
                                     <Image Source="{Binding BiaSach}" 
-                                           Width="120" Height="160"
-                                           Stretch="Uniform"/>
-                                    
-                                    <!--Separator-->
+                                   Width="120" Height="160"
+                                   Stretch="Fill"/>
+
+                                    <!-- Separator -->
                                     <Border BorderBrush="LightGray" BorderThickness="0, 1, 0, 1"
-                                            Margin="0, 5, 0, 5"/>
-                                    
-                                    <!--Grid for name and author-->
+                                    Margin="0, 5, 0, 5"/>
+
+                                    <!-- Grid for book details -->
                                     <Grid>
                                         <Grid.RowDefinitions>
                                             <RowDefinition Height="Auto"/>
                                             <RowDefinition Height="Auto"/>
                                             <RowDefinition Height="Auto"/>
+                                            <RowDefinition Height="Auto"/>
+                                            <RowDefinition Height="Auto"/>
                                         </Grid.RowDefinitions>
 
+                                        <!-- Book Title -->
                                         <TextBlock Text="{Binding TenTuaSach}" Grid.Row="0"
-                                                   FontWeight="Bold"/>
-                                        <TextBlock Text="{Binding DSTacGia}" Grid.Row="1"/>
-                                        <TextBlock Text="{Binding DSTheLoai}" Grid.Row="2"/>
+                                           FontWeight="Bold" TextWrapping="Wrap"/>
+
+                                        <!-- Authors -->
+                                        <TextBlock Text="{Binding DSTacGia}" Grid.Row="1"
+                                           FontStyle="Italic" TextWrapping="Wrap"/>
+
+                                        <!-- Genres -->
+                                        <TextBlock Text="{Binding DSTheLoai}" Grid.Row="2" 
+                                           TextWrapping="Wrap"/>
+
+                                        <!-- Borrow Count -->
+                                        <StackPanel Orientation="Horizontal" Grid.Row="3">
+                                            <TextBlock Text="Lượt mượn: " FontWeight="SemiBold"/>
+                                            <TextBlock Text="{Binding LuotMuon}"/>
+                                        </StackPanel>
+
+                                        <!-- Rating -->
+                                        <StackPanel Orientation="Horizontal" Grid.Row="4">
+                                            <TextBlock Text="Đánh giá: " FontWeight="SemiBold"/>
+                                            <TextBlock Text="{Binding DanhGia}"/>
+                                        </StackPanel>
                                     </Grid>
                                 </StackPanel>
                             </Border>

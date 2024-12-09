@@ -1,4 +1,5 @@
-﻿using Microsoft.Xaml.Behaviors.Core;
+﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.Xaml.Behaviors.Core;
 using QLTV.Models;
 using System;
 using System.Collections.Generic;
@@ -26,7 +27,7 @@ namespace QLTV.User
     {
         private List<TuaSachViewModel> _fullDataSource = new();
         private ObservableCollection<TuaSachViewModel> _dsSach = new();
-        private int _itemsPerPage = 10;
+        private int _itemsPerPage = 20;
         private int _currentPage = 1;
         public ObservableCollection<THELOAI> lstTheLoai { get; set; } = new ObservableCollection<THELOAI>();
         public ObservableCollection<THELOAI> lstSelectedTheLoai { get; set; } = new ObservableCollection<THELOAI>();
@@ -40,6 +41,8 @@ namespace QLTV.User
             public string BiaSach { get; set; } = string.Empty;
             public string DSTacGia { get; set; } = string.Empty;
             public string DSTheLoai { get; set; } = string.Empty;
+            public int LuotMuon { get; set; }
+            public decimal DanhGia { get; set; }
         }
 
         public UUFnDisplaySach()
@@ -82,14 +85,53 @@ namespace QLTV.User
             {
                 _fullDataSource = context.TUASACH
                     .Where(ts => !ts.IsDeleted)
+                    .Include(ts => ts.TUASACH_TACGIA)
+                        .ThenInclude(tg => tg.IDTacGiaNavigation)
+                    .Include(ts => ts.TUASACH_THELOAI)
+                        .ThenInclude(tl => tl.IDTheLoaiNavigation)
+                    .Include(ts => ts.SACH)
+                        .ThenInclude(s => s.CTPHIEUMUON)
+                            .ThenInclude(ctpm => ctpm.IDPhieuMuonNavigation)
+                    .Include(ts => ts.SACH)
+                        .ThenInclude(s => s.DANHGIA)
+                            .ThenInclude(dg => dg.IDPhieuMuonNavigation)
+                    .ToList()
                     .Select(ts => new TuaSachViewModel
                     {
                         TenTuaSach = ts.TenTuaSach,
                         BiaSach = ts.BiaSach,
-                        DSTacGia = string.Join(", ", ts.TUASACH_TACGIA.Select(ts_tg => ts_tg.IDTacGiaNavigation.TenTacGia)),
-                        DSTheLoai = string.Join(", ", ts.TUASACH_THELOAI.Select(ts_tl => ts_tl.IDTheLoaiNavigation.TenTheLoai))
+                        DSTacGia = ts.TUASACH_TACGIA != null && ts.TUASACH_TACGIA.Any()
+                            ? string.Join(", ", ts.TUASACH_TACGIA
+                                .Select(ts_tg => ts_tg.IDTacGiaNavigation?.TenTacGia ?? ""))
+                            : string.Empty,
+                        DSTheLoai = ts.TUASACH_THELOAI != null && ts.TUASACH_THELOAI.Any()
+                            ? string.Join(", ", ts.TUASACH_THELOAI
+                                .Select(ts_tl => ts_tl.IDTheLoaiNavigation?.TenTheLoai ?? ""))
+                            : string.Empty,
+                        LuotMuon = ts.SACH != null && ts.SACH.Any()
+                            ? ts.SACH
+                                .Sum(s => s.CTPHIEUMUON != null
+                                    ? s.CTPHIEUMUON
+                                        .Count(ctpm => ctpm.IDPhieuMuonNavigation != null &&
+                                                       !ctpm.IDPhieuMuonNavigation.IsDeleted &&
+                                                       !ctpm.IDPhieuMuonNavigation.IsPending)
+                                    : 0)
+                            : 0,
+                        DanhGia = ts.SACH != null && ts.SACH.Any()
+                            ? Math.Round(
+                                ts.SACH
+                                    .SelectMany(s => s.DANHGIA ?? Enumerable.Empty<DANHGIA>())
+                                    .Where(dg => dg.IDPhieuMuonNavigation != null &&
+                                                 !dg.IDPhieuMuonNavigation.IsDeleted &&
+                                                 !dg.IDPhieuMuonNavigation.IsPending)
+                                    .Select(dg => dg.DanhGia)
+                                    .DefaultIfEmpty(0)
+                                    .Average(),
+                                1)
+                            : 0
                     })
                     .ToList();
+
             }
 
             ApplyPaging();
@@ -210,23 +252,51 @@ namespace QLTV.User
                 // Truy vấn cơ sở dữ liệu để lấy tất cả các tựa sách
                 var data = context.TUASACH
                     .Where(ts => !ts.IsDeleted)
+                    .Include(ts => ts.TUASACH_TACGIA)
+                        .ThenInclude(tg => tg.IDTacGiaNavigation)
+                    .Include(ts => ts.TUASACH_THELOAI)
+                        .ThenInclude(tl => tl.IDTheLoaiNavigation)
+                    .Include(ts => ts.SACH)
+                        .ThenInclude(s => s.CTPHIEUMUON)
+                            .ThenInclude(ctpm => ctpm.IDPhieuMuonNavigation)
+                    .Include(ts => ts.SACH)
+                        .ThenInclude(s => s.DANHGIA)
+                            .ThenInclude(dg => dg.IDPhieuMuonNavigation)
+                    .ToList()
                     .Select(ts => new TuaSachViewModel
                     {
                         TenTuaSach = ts.TenTuaSach,
                         BiaSach = ts.BiaSach,
-                        DSTacGia = string.Join(", ", ts.TUASACH_TACGIA.Select(ts_tg => ts_tg.IDTacGiaNavigation.TenTacGia)),
-                        DSTheLoai = string.Join(", ", ts.TUASACH_THELOAI.Select(ts_tl => ts_tl.IDTheLoaiNavigation.TenTheLoai))
+                        DSTacGia = ts.TUASACH_TACGIA != null && ts.TUASACH_TACGIA.Any()
+                            ? string.Join(", ", ts.TUASACH_TACGIA
+                                .Select(ts_tg => ts_tg.IDTacGiaNavigation?.TenTacGia ?? ""))
+                            : string.Empty,
+                        DSTheLoai = ts.TUASACH_THELOAI != null && ts.TUASACH_THELOAI.Any()
+                            ? string.Join(", ", ts.TUASACH_THELOAI
+                                .Select(ts_tl => ts_tl.IDTheLoaiNavigation?.TenTheLoai ?? ""))
+                            : string.Empty,
+                        LuotMuon = ts.SACH != null && ts.SACH.Any()
+                            ? ts.SACH
+                                .Sum(s => s.CTPHIEUMUON != null
+                                    ? s.CTPHIEUMUON
+                                        .Count(ctpm => ctpm.IDPhieuMuonNavigation != null &&
+                                                       !ctpm.IDPhieuMuonNavigation.IsDeleted &&
+                                                       !ctpm.IDPhieuMuonNavigation.IsPending)
+                                    : 0)
+                            : 0,
+                        DanhGia = ts.SACH != null && ts.SACH.Any()
+                            ? Math.Round(
+                                ts.SACH
+                                    .SelectMany(s => s.DANHGIA ?? Enumerable.Empty<DANHGIA>())
+                                    .Where(dg => dg.IDPhieuMuonNavigation != null &&
+                                                 !dg.IDPhieuMuonNavigation.IsDeleted &&
+                                                 !dg.IDPhieuMuonNavigation.IsPending)
+                                    .Select(dg => dg.DanhGia)
+                                    .DefaultIfEmpty(0)
+                                    .Average(),
+                                1)
+                            : 0
                     })
-                    .AsEnumerable() // Chuyển về IEnumerable để lọc trên máy khách
-                    .Where(ts =>
-                        selectedProperty == "Tựa Sách" ?
-                            NormalizeString(ts.TenTuaSach).Contains(searchTerm) :
-                        selectedProperty == "Tác Giả" ?
-                            NormalizeString(ts.DSTacGia).Contains(searchTerm) :
-                        selectedProperty == "Thể Loại" ?
-                            NormalizeString(ts.DSTheLoai).Contains(searchTerm) :
-                        true
-                    )
                     .ToList();
 
                 // Initialize _fullDataSource as an ObservableCollection
@@ -241,5 +311,37 @@ namespace QLTV.User
         {
             PerformSearch();
         }
+
+        private void btnSort_Click(object sender, RoutedEventArgs e)
+        {
+            // Toggle the visibility of the popup
+            puSortOptions.IsOpen = !puSortOptions.IsOpen;
+        }
+
+        private void SortByBorrowCountDesc_Click(object sender, RoutedEventArgs e)
+        {
+            _fullDataSource = _fullDataSource.OrderByDescending(book => book.LuotMuon).ToList();
+            _currentPage = 1;
+            ApplyPaging();
+            puSortOptions.IsOpen = false;
+        }
+
+        private void SortByBorrowCountAsc_Click(object sender, RoutedEventArgs e)
+        {
+            _fullDataSource = _fullDataSource.OrderBy(book => book.LuotMuon).ToList();
+            _currentPage = 1;
+            ApplyPaging();
+            puSortOptions.IsOpen = false;
+        }
+
+        private void SortByRating_Click(object sender, RoutedEventArgs e)
+        {
+            // Implement sorting by rating
+            _fullDataSource = _fullDataSource.OrderByDescending(book => book.DanhGia).ToList();
+            _currentPage = 1;
+            ApplyPaging();
+            puSortOptions.IsOpen = false; // Close popup after sorting
+        }
+
     }
 }
