@@ -37,5 +37,10 @@ namespace QLTV
         {
             ADMainContent.Content = new UcQLMuonTra();
         }
+
+        private void btnFnQuyDinh_Click(object sender, RoutedEventArgs e)
+        {
+            ADMainContent.Content = new UcQuyDinh();
+        }
     }
 }

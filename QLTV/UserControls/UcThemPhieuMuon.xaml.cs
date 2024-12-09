@@ -93,9 +93,8 @@ namespace QLTV.UserControls
                         isValid = false;
                         return $"Tối đa {Book.IDTuaSachNavigation.HanMuonToiDa}.";
                     }
-                    isValid = true;
-                    return null;
                 }
+                isValid = true;
                 return null;
             }
         }
@@ -485,25 +484,8 @@ namespace QLTV.UserControls
                     }
 
                     await context.SaveChangesAsync();
-                    phieuMuon = context.PHIEUMUON
-                        .Include(pm => pm.CTPHIEUMUON)
-                            .ThenInclude(ct => ct.IDSachNavigation)
-                                .ThenInclude(s => s.IDTuaSachNavigation)
-                        .Include(pm => pm.IDDocGiaNavigation)
-                            .ThenInclude(dg => dg.IDTaiKhoanNavigation)
-                        .FirstOrDefault(pm => pm.ID == phieuMuon.ID);
                     MessageBox.Show("Thêm phiếu mượn thành công!", "Thông báo", MessageBoxButton.OK, MessageBoxImage.Information);
-                    var window = new Window
-                    {
-                        Title = "In phiếu mượn",
-                        Content = new UcXuatPhieuMuon(phieuMuon),
-                        Width = 350,
-                        Height = 600,
-                        WindowStyle = WindowStyle.None,
-                        WindowStartupLocation = WindowStartupLocation.CenterScreen,
-                        ResizeMode = ResizeMode.CanResizeWithGrip
-                    };
-                    window.ShowDialog();
+                    XuatPhieuMuon(phieuMuon);
                     Window.GetWindow(this).DialogResult = true;
                     Window.GetWindow(this)?.Close();
                 }
@@ -511,6 +493,35 @@ namespace QLTV.UserControls
             catch (Exception ex)
             {
                 MessageBox.Show($"Lỗi khi lưu phiếu mượn: {ex.Message}", "Lỗi", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
+        }
+
+        private void XuatPhieuMuon(PHIEUMUON phieuMuon)
+        {
+            using (var context = new QLTVContext())
+            {
+                phieuMuon = context.PHIEUMUON
+                    .Include(pm => pm.IDDocGiaNavigation)
+                        .ThenInclude(dg => dg.IDTaiKhoanNavigation)
+                    .Include(pm => pm.CTPHIEUMUON)
+                        .ThenInclude(ct => ct.IDSachNavigation)
+                            .ThenInclude(s => s.IDTinhTrangNavigation)
+                    .Include(pm => pm.CTPHIEUMUON)
+                        .ThenInclude(ct => ct.IDSachNavigation)
+                            .ThenInclude(s => s.IDTuaSachNavigation)
+                    .First(pm => pm.ID == phieuMuon.ID);
+
+                var window = new Window
+                {
+                    Title = "In phiếu mượn",
+                    Content = new UcXuatPhieuMuon(phieuMuon),
+                    Width = 350,
+                    Height = 600,
+                    WindowStyle = WindowStyle.None,
+                    WindowStartupLocation = WindowStartupLocation.CenterScreen,
+                    ResizeMode = ResizeMode.CanResizeWithGrip
+                };
+                window.ShowDialog();
             }
         }
 
@@ -540,8 +551,9 @@ namespace QLTV.UserControls
             finally
             {
                 if (!isClosing)
+                {
                     Window.GetWindow(this)?.Close();
-                Window.GetWindow(this).DialogResult = false;
+                }
             }
         }
 
