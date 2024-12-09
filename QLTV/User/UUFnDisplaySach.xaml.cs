@@ -1,4 +1,5 @@
-﻿using QLTV.Models;
+﻿using Microsoft.Xaml.Behaviors.Core;
+using QLTV.Models;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -27,6 +28,9 @@ namespace QLTV.User
         private ObservableCollection<TuaSachViewModel> _dsSach = new();
         private int _itemsPerPage = 10;
         private int _currentPage = 1;
+        public ObservableCollection<THELOAI> lstTheLoai { get; set; } = new ObservableCollection<THELOAI>();
+        public ObservableCollection<THELOAI> lstSelectedTheLoai { get; set; } = new ObservableCollection<THELOAI>();
+        public THELOAI? selectedTheLoai { get; set; }
 
         public ObservableCollection<TuaSachViewModel> dsSach => _dsSach;
 
@@ -43,6 +47,33 @@ namespace QLTV.User
             InitializeComponent();
             DataContext = this;
             LoadTuaSach();
+            LoadTheLoai();
+        }
+
+        private void LoadTheLoai()
+        {
+            using (var context = new QLTVContext())
+            {
+                var data = context.THELOAI
+                    .ToList();
+
+                lstTheLoai = new ObservableCollection<THELOAI>(data);
+            }
+        }
+
+        private void btnAddTheLoai_Click(object sender, RoutedEventArgs e)
+        {
+            if (selectedTheLoai != null && !lstSelectedTheLoai.Contains(selectedTheLoai))
+            {
+                lstSelectedTheLoai.Add(selectedTheLoai);
+            }
+        }
+        private void RemoveTheLoai_Click(object sender, RoutedEventArgs e)
+        {
+            if (sender is Button button && button.Tag is THELOAI theLoai)
+            {
+                lstSelectedTheLoai.Remove(theLoai);
+            }
         }
 
         private void LoadTuaSach()
@@ -107,10 +138,48 @@ namespace QLTV.User
             }
         }
 
-        private void btnFilter_Click(object sender, RoutedEventArgs e)
+        private void btnOpenFilter_Click(object sender, RoutedEventArgs e)
         {
-
+            puFilter.IsOpen = !puFilter.IsOpen;
         }
+
+        private void btnLoc_Click(object sender, RoutedEventArgs e)
+        {
+            if (!lstSelectedTheLoai.Any())
+            {
+                MessageBox.Show("Vui lòng chọn ít nhất một thể loại để lọc!", "Thông báo", MessageBoxButton.OK, MessageBoxImage.Warning);
+                return;
+            }
+
+            using (var context = new QLTVContext())
+            {
+                // Lấy danh sách tên thể loại từ lstSelectedTheLoai
+                var selectedTheLoaiNames = lstSelectedTheLoai.Select(tl => tl.TenTheLoai).ToList();
+
+                // Truy vấn dữ liệu từ cơ sở dữ liệu và chuyển thành TuaSachViewModel
+                var filteredBooks = context.TUASACH
+                    .Where(ts => !ts.IsDeleted)  // Lọc sách chưa bị xóa
+                    .Select(ts => new TuaSachViewModel
+                    {
+                        TenTuaSach = ts.TenTuaSach,
+                        BiaSach = ts.BiaSach,
+                        DSTacGia = string.Join(", ", ts.TUASACH_TACGIA.Select(ts_tg => ts_tg.IDTacGiaNavigation.TenTacGia)),
+                        DSTheLoai = string.Join(", ", ts.TUASACH_THELOAI.Select(ts_tl => ts_tl.IDTheLoaiNavigation.TenTheLoai))
+                    })
+                    .AsEnumerable()  // Chuyển sang LINQ-to-Objects
+                    .Where(tsvm =>
+                        // Kiểm tra xem DSTheLoai của TuaSach có chứa tất cả các thể loại đã chọn không
+                        selectedTheLoaiNames.All(stl =>
+                            tsvm.DSTheLoai.Contains(stl)))
+                    .ToList();
+
+                // Cập nhật dữ liệu hiển thị
+                _fullDataSource = filteredBooks;
+                _currentPage = 1;
+                ApplyPaging();
+            }
+        }
+
 
         private string NormalizeString(string text)
         {
