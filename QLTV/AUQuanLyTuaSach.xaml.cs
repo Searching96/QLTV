@@ -304,7 +304,6 @@ namespace QLTV
         private void cbxSelectAll_Checked(object sender, RoutedEventArgs e)
         {
             var lstTuaSach = _fullDataSource;
-            MessageBox.Show(lstTuaSach.Count.ToString());
             if (lstTuaSach != null)
             {
                 foreach (var tuaSach in lstTuaSach)
@@ -330,7 +329,11 @@ namespace QLTV
         {
             AWThemTuaSach awThemTuaSach = new AWThemTuaSach();
             if (awThemTuaSach.ShowDialog() == true)
+            {
                 LoadTuaSach();
+                MessageBox.Show($"Thêm thành công tựa sách '{awThemTuaSach.NewTuaSach.TenTuaSach}'", "Thông báo",
+                    MessageBoxButton.OK, MessageBoxImage.Information);
+            }
         }
 
         public bool HasError()
@@ -921,8 +924,6 @@ namespace QLTV
                 AWSuaBiaSach awSuaBiaSach = new AWSuaBiaSach(TuaSach);
                 if (awSuaBiaSach.ShowDialog() == true)
                 {
-                    LoadTuaSach();
-
                     BitmapImage bitmap = new BitmapImage();
                     bitmap.BeginInit();
                     bitmap.UriSource = new Uri(awSuaBiaSach.TuaSach.BiaSach, UriKind.Absolute);

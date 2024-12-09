@@ -33,6 +33,7 @@
                 <ColumnDefinition Width="120"/>
                 <ColumnDefinition Width="Auto"/>
                 <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="Auto"/>
             </Grid.ColumnDefinitions>
 
             <TextBox x:Name="tbxThongTinTim" Grid.Column="0" VerticalAlignment="Center"
@@ -122,6 +123,10 @@
                         </StackPanel>
                     </Border>
                 </Popup>
+            </Grid>
+
+            <Grid Grid.Row="4" Width="Auto">
+                
             </Grid>
         </Grid>
 

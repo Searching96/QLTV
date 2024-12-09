@@ -289,7 +289,6 @@ namespace QLTV
         private void cbxSelectAll_Checked(object sender, RoutedEventArgs e)
         {
             var lstTacGia = _fullDataSource;
-            MessageBox.Show(lstTacGia.Count.ToString());
             if (lstTacGia != null)
             {
                 foreach (var tacGia in lstTacGia)
@@ -315,7 +314,11 @@ namespace QLTV
         {
             AWThemTacGia awThemTacGia = new AWThemTacGia();
             if (awThemTacGia.ShowDialog() == true)
+            {
                 LoadTacGia();
+                MessageBox.Show($"Thêm thành công tác giả '{awThemTacGia.NewTacGia.TenTacGia}'", "Thông báo", 
+                    MessageBoxButton.OK, MessageBoxImage.Information);
+            }
         }
 
         public bool HasError()

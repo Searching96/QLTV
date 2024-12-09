@@ -52,7 +52,11 @@ namespace QLTV
         {
             AWThemTheLoai awThemTheLoai = new AWThemTheLoai();
             if (awThemTheLoai.ShowDialog() == true)
+            {
                 LoadTheLoai();
+                MessageBox.Show($"Thêm thành công thể loại '{awThemTheLoai.NewTheLoai.TenTheLoai}'", "Thông báo", 
+                    MessageBoxButton.OK, MessageBoxImage.Information);
+            }
         }
 
         public bool HasError()

@@ -27,6 +27,7 @@ namespace QLTV
     {
         public static readonly Thickness DisplayElementMargin = new Thickness(10, 0, 10, 10);
         public static readonly Thickness ErrorIconMargin = new Thickness(10, 0, 15, 10);
+        public TUASACH NewTuaSach;
 
         public AWThemTuaSach()
         {
@@ -225,6 +226,7 @@ namespace QLTV
                 }
 
                 context.SaveChanges(); // Lưu tất cả các thay đổi
+                NewTuaSach = newTuaSach;
             }
 
 

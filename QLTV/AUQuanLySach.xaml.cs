@@ -32,6 +32,7 @@ using System.Windows.Controls.Primitives;
 using static QLTV.AUQuanLySach;
 using System.Windows.Markup;
 using System.Security.Policy;
+using System.Windows.Media.Animation;
 
 namespace QLTV
 {
@@ -565,7 +566,6 @@ namespace QLTV
         private void cbxSelectAll_Checked(object sender, RoutedEventArgs e)
         {
             var lstSach = _fullDataSource;
-            MessageBox.Show(lstSach.Count.ToString());
             if (lstSach != null)
             {
                 foreach (var sach in lstSach)
@@ -712,7 +712,19 @@ namespace QLTV
         {
             AWThemSach awThemSach = new AWThemSach();
             if (awThemSach.ShowDialog() == true)
-                LoadSach();
+            {
+                string tenTuaSach = string.Empty;
+                using (var context = new QLTVContext())
+                {
+                    tenTuaSach = context.SACH
+                        .Where(s => s.IDTuaSach == awThemSach.NewSach.IDTuaSach)
+                        .Select(s => s.IDTuaSachNavigation.TenTuaSach)
+                        .FirstOrDefault();
+                }
+                    LoadSach();
+                MessageBox.Show($"Thêm thành công {awThemSach.SoLuong} cuốn sách của tựa '{tenTuaSach}'", "Thông báo", 
+                    MessageBoxButton.OK, MessageBoxImage.Information);
+            }
         }
 
         public bool HasError()

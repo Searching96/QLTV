@@ -26,6 +26,8 @@ namespace QLTV
     public partial class AWThemSach : Window
     {
         private CollectionViewSource viewSource;
+        public SACH NewSach;
+        public int SoLuong;
 
         public AWThemSach()
         {
@@ -204,6 +206,7 @@ namespace QLTV
                         IDTinhTrang = idTinhTrang
                     };
                     context.SACH.Add(newSach);
+                    NewSach = newSach;
                 }
 
                 // Save the changes to the SACH table
@@ -215,6 +218,7 @@ namespace QLTV
                     .ExecuteUpdate(ts => ts.SetProperty(t => t.SoLuong, t => t.SoLuong + soLuong));
             }
 
+            SoLuong = soLuong;
             this.DialogResult = true;
             this.Close();
         }

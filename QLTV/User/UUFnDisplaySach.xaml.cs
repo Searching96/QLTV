@@ -154,7 +154,7 @@ namespace QLTV.User
             using (var context = new QLTVContext())
             {
                 // Lấy danh sách tên thể loại từ lstSelectedTheLoai
-                var selectedTheLoaiNames = lstSelectedTheLoai.Select(tl => tl.TenTheLoai).ToList();
+                var lstTenTLDaChon = lstSelectedTheLoai.Select(tl => tl.TenTheLoai).ToList();
 
                 // Truy vấn dữ liệu từ cơ sở dữ liệu và chuyển thành TuaSachViewModel
                 var filteredBooks = context.TUASACH
@@ -169,7 +169,7 @@ namespace QLTV.User
                     .AsEnumerable()  // Chuyển sang LINQ-to-Objects
                     .Where(tsvm =>
                         // Kiểm tra xem DSTheLoai của TuaSach có chứa tất cả các thể loại đã chọn không
-                        selectedTheLoaiNames.All(stl =>
+                        lstTenTLDaChon.All(stl =>
                             tsvm.DSTheLoai.Contains(stl)))
                     .ToList();
 
