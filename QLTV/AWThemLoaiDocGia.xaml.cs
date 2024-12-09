@@ -6,14 +6,17 @@ using System.Windows;
 using System.Windows.Controls;
 using QLTV.Models;
 using System.Windows.Media;
+using Microsoft.EntityFrameworkCore;
 
 namespace QLTV
 {
     public partial class AWThemLoaiDocGia : Window
     {
-        public AWThemLoaiDocGia()
+        private QLTVContext _context; 
+        public AWThemLoaiDocGia(QLTVContext context) // Thêm tham số context
         {
             InitializeComponent();
+            _context = context; // Gán context
         }
 
         private void tbxTenLoaiDocGia_TextChanged(object sender, TextChangedEventArgs e)
@@ -79,30 +82,24 @@ namespace QLTV
                 string tenLoaiDocGia = tbxTenLoaiDocGia.Text;
                 int soSachMuonToiDa = int.Parse(tbxSoSachMuonToiDa.Text);
 
-                using (var context = new QLTVContext())
+                // Create a new LOAIDOCGIA record
+                var newLoaiDocGia = new LOAIDOCGIA()
                 {
-                    // Create a new LOAIDOCGIA record
-                    var newLoaiDocGia = new LOAIDOCGIA()
-                    {
-                        TenLoaiDocGia = tenLoaiDocGia,
-                        SoSachMuonToiDa = soSachMuonToiDa,
-                        IsDeleted = false // Đảm bảo IsDeleted được đặt là false
-                    };
+                    TenLoaiDocGia = tenLoaiDocGia,
+                    SoSachMuonToiDa = soSachMuonToiDa,
+                    IsDeleted = false // Đảm bảo IsDeleted được đặt là false
+                };
 
-                    context.LOAIDOCGIA.Add(newLoaiDocGia);
-                    context.SaveChanges();
+                _context.LOAIDOCGIA.Add(newLoaiDocGia);
+                _context.SaveChanges();
 
-                    // Hiển thị thông báo thành công
-                    MessageBox.Show("Thêm loại độc giả thành công!", "Thông báo", MessageBoxButton.OK, MessageBoxImage.Information);
+                MessageBox.Show("Thêm loại độc giả thành công!", "Thông báo", MessageBoxButton.OK, MessageBoxImage.Information);
 
-                    // Đóng cửa sổ sau khi thêm thành công
-                    this.DialogResult = true;
-                    this.Close();
-                }
+                this.DialogResult = true;
+                this.Close();
             }
             catch (Exception ex)
             {
-                // Hiển thị thông báo lỗi
                 MessageBox.Show($"Lỗi khi thêm loại độc giả: {ex.Message}", "Lỗi", MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }

@@ -8,6 +8,17 @@
         Title="Quản Lý Thư Viện" Height="700" Width="1000">
 
     <Window.Resources>
+        <Style x:Key="ErrorIcon" TargetType="materialDesign:PackIcon">
+            <Setter Property="Kind" Value="AlertCircleOutline"/>
+            <Setter Property="Width" Value="20"/>
+            <Setter Property="Height" Value="20"/>
+            <Setter Property="HorizontalAlignment" Value="Right"/>
+            <Setter Property="VerticalAlignment" Value="Center"/>
+            <Setter Property="Foreground" Value="Red"/>
+            <Setter Property="Background" Value="White"/>
+            <Setter Property="Visibility" Value="Collapsed"/>
+            <Setter Property="ToolTipService.InitialShowDelay" Value="0"/>
+        </Style>
 
         <ContextMenu x:Key="ExportMenu">
             <MenuItem Header="Import Excel" Click="ImportExcel_Click"/>
@@ -92,7 +103,7 @@
             </DockPanel>
         </Grid>
 
-        <TabControl Grid.Row="1" Style="{StaticResource MaterialDesignTabControl}" >
+        <TabControl Grid.Row="1" Style="{StaticResource MaterialDesignTabControl}" SelectionChanged="TabControl_SelectionChanged">
 
             <TabItem>
                 <TabItem.Header>
@@ -140,44 +151,88 @@
                             <ComboBox Grid.Row="0" Grid.Column="0" Margin="0,5,5,0"
           x:Name="TenTaiKhoanComboBox"
           Style="{StaticResource ModernComboBox}"
-          materialDesign:HintAssist.Hint="Tên Tài Khoản"
-          materialDesign:TextFieldAssist.HasLeadingIcon="True"
-          materialDesign:TextFieldAssist.LeadingIcon="Account"
-          IsEditable="True"
-          ItemsSource="{Binding TenTaiKhoanList}"/>
+        materialDesign:HintAssist.Hint="Tên Tài Khoản"
+        materialDesign:TextFieldAssist.HasLeadingIcon="True"
+        materialDesign:TextFieldAssist.LeadingIcon="Account"
+        IsEditable="True" 
+        IsTextSearchEnabled="False" 
+        SelectedValue="{x:Null}" 
+        IsSynchronizedWithCurrentItem="False" 
+        materialDesign:TextFieldAssist.HasClearButton="True"
+        SelectionChanged="cbbTenTaiKhoan_SelectionChanged"/>
+
+                            <materialDesign:PackIcon x:Name="icTenTaiKhoanError" Grid.Row="0" Grid.Column="0"
+                         Style="{StaticResource ErrorIcon}"
+                         Margin="0,5,23,0"/>
 
                             <ComboBox Grid.Row="0" Grid.Column="1" Margin="0,5,5,0"
           x:Name="TenLoaiDocGiaComboBox"
-          Style="{StaticResource ModernComboBox}"
-          materialDesign:HintAssist.Hint="Loại Độc Giả"
-          materialDesign:TextFieldAssist.HasLeadingIcon="True"
-          materialDesign:TextFieldAssist.LeadingIcon="AccountGroup"
-          IsEditable="True"
-          ItemsSource="{Binding TenLoaiDocGiaList}"/>
+                       Style="{StaticResource ModernComboBox}"
+             materialDesign:HintAssist.Hint="Loại Độc Giả"
+             materialDesign:TextFieldAssist.HasLeadingIcon="True"
+             materialDesign:TextFieldAssist.LeadingIcon="AccountGroup"
+             IsEditable="True" 
+             IsTextSearchEnabled="False"
+             SelectedValue="{x:Null}"
+             IsSynchronizedWithCurrentItem="False"
+             materialDesign:TextFieldAssist.HasClearButton="True"
+             SelectionChanged="cbbTenLoaiDocGia_SelectionChanged"/>
+
+                            <materialDesign:PackIcon x:Name="icTenLoaiDocGiaError" Grid.Row="0" Grid.Column="1"
+                        Style="{StaticResource ErrorIcon}"
+                        Margin="0,5,23,0"/>
 
                             <DatePicker Grid.Row="0" Grid.Column="2" Margin="0,5,0,0"
-                    x:Name="NgayLapTheDatePicker"
+                    x:Name="dpNgayLapThe"
                     Style="{StaticResource ModernDatePicker}"
-                    materialDesign:HintAssist.Hint="Ngày Lập Thẻ"/>
+                    materialDesign:HintAssist.Hint="Ngày Lập Thẻ"
+                    xmlns:sys="clr-namespace:System;assembly=mscorlib"
+                    IsEnabled="True"
+                    Loaded="dpNgayLapThe_Loaded"
+                    FirstDayOfWeek="Monday"
+                    Language="vi-VN"/>
+
+                            <materialDesign:PackIcon x:Name="icNgayLapTheError" Grid.Row="0" Grid.Column="2"
+                         Style="{StaticResource ErrorIcon}"
+                         Margin="0,5,23,0"/>
 
                             <TextBox Grid.Row="1" Grid.Column="0" Margin="0,5,5,0"
                  x:Name="GioiThieu"
                  Style="{StaticResource ModernTextBox}"
                  materialDesign:HintAssist.Hint="Thông Tin Giới Thiệu"
                      materialDesign:TextFieldAssist.HasLeadingIcon="True"
-                     materialDesign:TextFieldAssist.LeadingIcon="InfoSerifBox"/>
+                     materialDesign:TextFieldAssist.LeadingIcon="InfoSerifBox"
+                     TextChanged="GioiThieu_TextChanged"/>
+
+                            <materialDesign:PackIcon x:Name="icGioiThieuError" Grid.Row="1" Grid.Column="0"
+                         Style="{StaticResource ErrorIcon}"
+                         Margin="0,5,10,0"/>
 
                             <TextBox Grid.Row="1" Grid.Column="1" Margin="0,5,5,0"
                  x:Name="TongNoTextBox" 
                  Style="{StaticResource ModernTextBox}"
                  materialDesign:HintAssist.Hint="Tổng Nợ"
                      materialDesign:TextFieldAssist.HasLeadingIcon="True"
-                     materialDesign:TextFieldAssist.LeadingIcon="Cash"/>
+                     materialDesign:TextFieldAssist.LeadingIcon="Cash"
+                                     IsEnabled="False"/>
+
+                            <materialDesign:PackIcon x:Name="icTongNoError" Grid.Row="1" Grid.Column="1"
+                         Style="{StaticResource ErrorIcon}"
+                         Margin="0,5,10,0"/>
 
                             <DatePicker Grid.Row="1" Grid.Column="2" Margin="0,5,0,0"
-                    x:Name="NgayHetHanDatePicker"
+                    x:Name="dpNgayHetHan"
                     Style="{StaticResource ModernDatePicker}"
-                    materialDesign:HintAssist.Hint="Ngày Hết Hạn"/>
+                    materialDesign:HintAssist.Hint="Ngày Hết Hạn"
+                    xmlns:sys="clr-namespace:System;assembly=mscorlib"
+                    IsEnabled="True"
+                    Loaded="dpNgayHetHan_Loaded"
+                    FirstDayOfWeek="Monday"
+                    Language="vi-VN"/>
+
+                            <materialDesign:PackIcon x:Name="icNgayHetHanError" Grid.Row="1" Grid.Column="2"
+                    Style="{StaticResource ErrorIcon}"
+                    Margin="0,5,23,0"/>
 
                             <StackPanel Grid.Row="2" Grid.ColumnSpan="3" 
                     Orientation="Horizontal" 
@@ -296,14 +351,26 @@ Click="OpenExportMenu_Click">
                          Style="{StaticResource ModernTextBox}"
                          materialDesign:HintAssist.Hint="Loại Độc Giả"
                          materialDesign:TextFieldAssist.HasLeadingIcon="True"
-                         materialDesign:TextFieldAssist.LeadingIcon="AccountGroup"/>
+                         materialDesign:TextFieldAssist.LeadingIcon="AccountGroup"
+                                                          TextChanged="TenLoaiDocGiaTextBox_TextChanged"/>
+
+
+                            <materialDesign:PackIcon x:Name="icLoaiDocGiaError" Grid.Row="0" Grid.Column="0"
+    Style="{StaticResource ErrorIcon}"
+    Margin="0,5,10,0"/>
 
                             <TextBox Grid.Row="0" Grid.Column="1" Margin="0,5,5,0"
                          x:Name="SoSachMuonToiDaTextBox"
                          Style="{StaticResource ModernTextBox}"
                          materialDesign:HintAssist.Hint="Số Sách Mượn Tối Đa"
                          materialDesign:TextFieldAssist.HasLeadingIcon="True"
-                         materialDesign:TextFieldAssist.LeadingIcon="BookOpenPageVariant"/>
+                         materialDesign:TextFieldAssist.LeadingIcon="BookOpenPageVariant"
+                         TextChanged="SoSachMuonToiDaTextBox_TextChanged"/>
+
+
+                            <materialDesign:PackIcon x:Name="icSoSachMuonToiDaError" Grid.Row="0" Grid.Column="1"
+Style="{StaticResource ErrorIcon}"
+Margin="0,5,10,0"/>
 
                             <StackPanel Grid.Row="1" Grid.ColumnSpan="2" 
                             Orientation="Horizontal" 
@@ -398,9 +465,9 @@ Click="OpenExportMenu_Click">
                     <Border BorderBrush="#DDDDDD" BorderThickness="1" Padding="20" Margin="0,0,0,10" Grid.Row="0" Grid.ColumnSpan="2">
                         <Grid>
                             <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="*"/>
-                                <ColumnDefinition Width="*"/>
-                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition/>
+                                <ColumnDefinition Width="319.333"/>
+                                <ColumnDefinition/>
                             </Grid.ColumnDefinitions>
                             <Grid.RowDefinitions>
                                 <RowDefinition Height="Auto"/>
@@ -410,24 +477,42 @@ Click="OpenExportMenu_Click">
 
                             <ComboBox Grid.Row="0" Grid.Column="0" Margin="0,5,5,0"
                               x:Name="TenTaiKhoanPhatComboBox"
-                              Style="{StaticResource ModernComboBox}"
-                              materialDesign:HintAssist.Hint="Tên Tài Khoản"
-                              materialDesign:TextFieldAssist.HasLeadingIcon="True"
-                              materialDesign:TextFieldAssist.LeadingIcon="Account"
-                              IsEditable="True"
-                              ItemsSource="{Binding TenTaiKhoanList}" />
+                                Style="{StaticResource ModernComboBox}"
+                                materialDesign:HintAssist.Hint="Tên Tài Khoản"
+                                materialDesign:TextFieldAssist.HasLeadingIcon="True"
+                                materialDesign:TextFieldAssist.LeadingIcon="Account"
+                                IsEditable="True" 
+                                IsTextSearchEnabled="False" 
+                                SelectedValue="{x:Null}" 
+                                IsSynchronizedWithCurrentItem="False" 
+                                materialDesign:TextFieldAssist.HasClearButton="True"
+                                      IsEnabled="False"/>
+
+                            <materialDesign:PackIcon x:Name="icTenTaiKhoanPhatError" Grid.Row="0" Grid.Column="0"
+                 Style="{StaticResource ErrorIcon}"
+                 Margin="0,5,23,0"/>
 
                             <DatePicker Grid.Row="0" Grid.Column="1" Margin="0,5,5,0" 
                             x:Name="NgayThuPhat"
                             Style="{StaticResource ModernDatePicker}"
                             materialDesign:HintAssist.Hint="Ngày Thu"/>
 
+                            <materialDesign:PackIcon x:Name="icNgayThuPhatError" Grid.Row="0" Grid.Column="1"
+Style="{StaticResource ErrorIcon}"
+Margin="0,5,27,0"/>
+
                             <TextBox Grid.Row="0" Grid.Column="2" Margin="0,5,5,0"
                          x:Name="SoTienThu"
                          Style="{StaticResource ModernTextBox}"
                          materialDesign:HintAssist.Hint="Số Tiền Thu"
                          materialDesign:TextFieldAssist.HasLeadingIcon="True"
-                         materialDesign:TextFieldAssist.LeadingIcon="Cash"/>
+                         materialDesign:TextFieldAssist.LeadingIcon="Cash"
+                                                          TextChanged="SoTienThu_TextChanged"/>
+
+
+                            <materialDesign:PackIcon x:Name="icSoTienThuError" Grid.Row="0" Grid.Column="2"
+Style="{StaticResource ErrorIcon}"
+Margin="0,5,10,0"/>
 
                             <TextBox Grid.Row="1" Grid.Column="0" Margin="0,5,5,0"
                          x:Name="TongNoPhat"
@@ -488,7 +573,7 @@ Click="OpenExportMenu_Click">
                             <materialDesign:PackIcon Kind="Magnify" Width="20" Height="20"/>
                         </Button>
                     </Grid>
-                        <DataGrid Grid.Row="2" 
+                    <DataGrid Grid.Row="2" 
                   x:Name="PenaltyReceiptsDataGrid" 
                   AutoGenerateColumns="False" 
                   Margin="0,10,0,0" 
@@ -496,15 +581,15 @@ Click="OpenExportMenu_Click">
                   CanUserDeleteRows="False" 
                   IsReadOnly="True" 
                   SelectionChanged="PenaltyReceiptsDataGrid_SelectionChanged" Grid.ColumnSpan="2">
-                            <DataGrid.Columns>
-                                <DataGridTextColumn Header="Mã Phiếu Thu" Binding="{Binding MaPTTP}"/>
-                                <DataGridTextColumn Header="Tên Tài Khoản" Binding="{Binding IDDocGiaNavigation.IDTaiKhoanNavigation.TenTaiKhoan}"/>
-                                <DataGridTextColumn Header="Ngày Thu" Binding="{Binding NgayThu, StringFormat=\{0:dd/MM/yyyy\}}"/>
-                                <DataGridTextColumn Header="Tổng Nợ" Binding="{Binding IDDocGiaNavigation.TongNo}"/>
-                                <DataGridTextColumn Header="Số Tiền Thu" Binding="{Binding SoTienThu, StringFormat=\{0:N0\}}"/>
-                                <DataGridTextColumn Header="Còn Lại" Binding="{Binding ConLai, StringFormat=\{0:N0\}}"/>
-                            </DataGrid.Columns>
-                        </DataGrid>
+                        <DataGrid.Columns>
+                            <DataGridTextColumn Header="Mã Phiếu Thu" Binding="{Binding MaPTTP}"/>
+                            <DataGridTextColumn Header="Tên Tài Khoản" Binding="{Binding IDDocGiaNavigation.IDTaiKhoanNavigation.TenTaiKhoan}"/>
+                            <DataGridTextColumn Header="Ngày Thu" Binding="{Binding NgayThu, StringFormat=\{0:dd/MM/yyyy\}}"/>
+                            <DataGridTextColumn Header="Tổng Nợ" Binding="{Binding IDDocGiaNavigation.TongNo}"/>
+                            <DataGridTextColumn Header="Số Tiền Thu" Binding="{Binding SoTienThu, StringFormat=\{0:N0\}}"/>
+                            <DataGridTextColumn Header="Còn Lại" Binding="{Binding ConLai, StringFormat=\{0:N0\}}"/>
+                        </DataGrid.Columns>
+                    </DataGrid>
                 </Grid>
             </TabItem>
         </TabControl>

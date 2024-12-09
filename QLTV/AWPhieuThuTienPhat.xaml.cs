@@ -18,12 +18,12 @@ namespace QLTV
 {
     public partial class AWPhieuThuTienPhat : Window
     {
-        private readonly QLTVContext _context = new QLTVContext(); // Khởi tạo _context
+        private readonly QLTVContext _context = new QLTVContext(); 
 
         public AWPhieuThuTienPhat(PHIEUTHUTIENPHAT receipt)
         {
             InitializeComponent();
-            _context = new QLTVContext(); // Khởi tạo _context
+            _context = new QLTVContext(); 
             LoadPenaltyReceipt(receipt);
         }
 

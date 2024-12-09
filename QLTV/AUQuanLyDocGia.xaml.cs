@@ -18,6 +18,7 @@ using System.Windows.Input;
 using System.Windows.Media.Animation;
 using System.Globalization;
 using System.Text;
+using MaterialDesignThemes.Wpf;
 
 namespace QLTV
 {
@@ -49,7 +50,7 @@ namespace QLTV
             ReaderTypesDataGrid.ItemsSource = ReaderTypes;
             LoadReaderTypesData();
 
-            PenaltyReceiptsDataGrid.ItemsSource = ReaderTypes;
+            PenaltyReceiptsDataGrid.ItemsSource = PenaltyReceipts;
             LoadPenaltyReceiptsData();
 
             TenTaiKhoanList = _context.TAIKHOAN.Select(tk => tk.TenTaiKhoan).ToList();
@@ -137,7 +138,20 @@ namespace QLTV
             MessageBox.Show("BCTK");
         }
 
-
+        private void TabControl_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            if (e.Source is TabControl)
+            {
+                // Kiểm tra xem tab đầu tiên có được chọn không
+                if (((TabControl)sender).SelectedIndex == 0)
+                {
+                    // Cập nhật lại danh sách TenLoaiDocGiaList
+                    TenLoaiDocGiaList = _context.LOAIDOCGIA.Where(ldg => !ldg.IsDeleted)
+                                                         .Select(ldg => ldg.TenLoaiDocGia).ToList();
+                    TenLoaiDocGiaComboBox.ItemsSource = TenLoaiDocGiaList;
+                }
+            }
+        }
 
         // Readers 
         private void LoadReadersData()
@@ -159,7 +173,7 @@ namespace QLTV
                 string tenTaiKhoan = TenTaiKhoanComboBox.Text;
                 string tenLoaiDocGia = TenLoaiDocGiaComboBox.Text;
 
-                themDocGiaWindow = new AWThemDocGia(tenTaiKhoan, tenLoaiDocGia);
+                themDocGiaWindow = new AWThemDocGia(_context, tenTaiKhoan, tenLoaiDocGia); // Truyền context
                 bool? result = themDocGiaWindow.ShowDialog();
 
                 if (result == true)
@@ -180,6 +194,38 @@ namespace QLTV
             {
                 try
                 {
+                    // Validate dữ liệu đầu vào
+                    if (TenTaiKhoanComboBox.SelectedItem == null)
+                    {
+                        icTenTaiKhoanError.ToolTip = "Tên Tài Khoản không được để trống";
+                        icTenTaiKhoanError.Visibility = Visibility.Visible;
+                    }
+
+                    string tentaiKhoan = TenTaiKhoanComboBox.SelectedItem.ToString();
+                    if (_context.DOCGIA.Any(dg => dg.IDTaiKhoanNavigation.TenTaiKhoan == tentaiKhoan && dg.ID != selectedReader.ID))
+                    {
+                        icTenTaiKhoanError.ToolTip = "Tên tài khoản đã được sử dụng!";
+                        icTenTaiKhoanError.Visibility = Visibility.Visible;
+                    }
+                    if (TenLoaiDocGiaComboBox.SelectedItem == null)
+                    {
+                        icTenLoaiDocGiaError.ToolTip = "Phải chọn Loại Độc Giả";
+                        icTenLoaiDocGiaError.Visibility = Visibility.Visible;
+                    }
+                    if (string.IsNullOrWhiteSpace(TongNoTextBox.Text))
+                    {
+                        icTongNoError.ToolTip = "Tổng Nợ không được để trống";
+                        icTongNoError.Visibility = Visibility.Visible;
+                    }
+
+                    // Kiểm tra còn lỗi không
+                    if (HasError())
+                    {
+                        MessageBox.Show("Tất cả thuộc tính phải hợp lệ trước khi cập nhật!", "Thông báo",
+                            MessageBoxButton.OK, MessageBoxImage.Warning);
+                        return;
+                    }
+
                     // Lấy tên tài khoản và tên loại độc giả từ ComboBox
                     string tenTaiKhoan = TenTaiKhoanComboBox.SelectedItem as string;
                     string tenLoaiDocGia = TenLoaiDocGiaComboBox.SelectedItem as string;
@@ -196,8 +242,8 @@ namespace QLTV
 
                     selectedReader.IDTaiKhoan = taiKhoan.ID;
                     selectedReader.IDLoaiDocGia = loaiDocGia.ID;
-                    selectedReader.NgayLapThe = NgayLapTheDatePicker.SelectedDate ?? selectedReader.NgayLapThe;
-                    selectedReader.NgayHetHan = NgayHetHanDatePicker.SelectedDate ?? selectedReader.NgayHetHan;
+                    selectedReader.NgayLapThe = dpNgayLapThe.SelectedDate ?? selectedReader.NgayLapThe;
+                    selectedReader.NgayHetHan = dpNgayHetHan.SelectedDate ?? selectedReader.NgayHetHan;
                     selectedReader.TongNo = decimal.TryParse(TongNoTextBox.Text, out decimal tongNo) ? tongNo : selectedReader.TongNo;
                     selectedReader.GioiThieu = GioiThieu.Text;
                     _context.SaveChanges();
@@ -221,6 +267,100 @@ namespace QLTV
             {
                 MessageBox.Show("Vui lòng chọn một độc giả để cập nhật.", "Thông báo", MessageBoxButton.OK, MessageBoxImage.Information);
             }
+        }
+
+        //Validate cho Update
+        private void cbbTenTaiKhoan_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            // Kiểm tra đã chọn tên tài khoản chưa
+            if (TenTaiKhoanComboBox.SelectedItem != null)
+            {
+                icTenTaiKhoanError.Visibility = Visibility.Collapsed;
+            }
+        }
+
+        private void cbbTenLoaiDocGia_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            // Kiểm tra đã chọn loại độc giả chưa
+            if (TenLoaiDocGiaComboBox.SelectedItem != null)
+            {
+                icTenLoaiDocGiaError.Visibility = Visibility.Collapsed;
+            }
+        }
+
+        private void GioiThieu_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            if (!string.IsNullOrWhiteSpace(GioiThieu.Text) && GioiThieu.Text.Length > 200)
+            {
+                icGioiThieuError.ToolTip = "Thông Tin Giới Thiệu không được vượt quá 200 kí tự";
+                icGioiThieuError.Visibility = Visibility.Visible;
+                return;
+            }
+
+            icGioiThieuError.Visibility = Visibility.Collapsed;
+        }
+
+        private void dpNgayLapThe_Loaded(object sender, RoutedEventArgs e)
+        {
+            // Tìm TextBox bên trong DatePicker
+            var textBox = (dpNgayLapThe.Template.FindName("PART_TextBox", dpNgayLapThe) as TextBox);
+            if (textBox != null)
+            {
+                textBox.TextChanged += NgayLapThe_TextChanged;
+            }
+        }
+
+        private void NgayLapThe_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            var textBox = sender as TextBox;
+
+            // Danh sách định dạng hỗ trợ nhiều cách nhập ngày
+            string[] formats = { "dd/MM/yyyy", "d/M/yyyy", "dd/M/yyyy", "d/MM/yyyy" };
+            if (!DateTime.TryParseExact(textBox.Text, formats, null, System.Globalization.DateTimeStyles.AllowWhiteSpaces, out DateTime ngayLapThe))
+            {
+                icNgayLapTheError.ToolTip = "Ngày Lập Thẻ không hợp lệ (định dạng đúng: dd/MM/yyyy)";
+                icNgayLapTheError.Visibility = Visibility.Visible;
+                return;
+            }
+
+            // Kiểm tra ngày lập thẻ không được sau ngày hiện tại
+            if (ngayLapThe > DateTime.Now)
+            {
+                icNgayLapTheError.ToolTip = "Ngày Lập Thẻ không được sau ngày hiện tại";
+                icNgayLapTheError.Visibility = Visibility.Visible;
+                return;
+            }
+
+            // Nếu hợp lệ, ẩn thông báo lỗi và cập nhật ngày hết hạn
+            icNgayLapTheError.Visibility = Visibility.Collapsed;
+            dpNgayHetHan.SelectedDate = ngayLapThe.AddYears(1);
+        }
+
+        private void dpNgayHetHan_Loaded(object sender, RoutedEventArgs e)
+        {
+            // Tìm TextBox bên trong DatePicker
+            var textBox = (dpNgayHetHan.Template.FindName("PART_TextBox", dpNgayHetHan) as TextBox);
+            if (textBox != null)
+            {
+                textBox.TextChanged += NgayHetHan_TextChanged;
+            }
+        }
+
+        private void NgayHetHan_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            var textBox = sender as TextBox;
+
+            // Danh sách định dạng hỗ trợ nhiều cách nhập ngày
+            string[] formats = { "dd/MM/yyyy", "d/M/yyyy", "dd/M/yyyy", "d/MM/yyyy" };
+            if (!DateTime.TryParseExact(textBox.Text, formats, null, System.Globalization.DateTimeStyles.AllowWhiteSpaces, out DateTime ngayHetHan))
+            {
+                icNgayLapTheError.ToolTip = "Ngày Hết Hạn không hợp lệ (định dạng đúng: dd/MM/yyyy)";
+                icNgayLapTheError.Visibility = Visibility.Visible;
+                return;
+            }
+
+            // Nếu hợp lệ, ẩn thông báo lỗi
+            icNgayLapTheError.Visibility = Visibility.Collapsed;
         }
 
         private void DeleteReader_Click(object sender, RoutedEventArgs e)
@@ -275,8 +415,8 @@ namespace QLTV
         {
             try
             {
-                DateTime ngayLapThe = NgayLapTheDatePicker.SelectedDate.GetValueOrDefault();
-                DateTime? ngayHetHan = NgayHetHanDatePicker.SelectedDate;
+                DateTime ngayLapThe = dpNgayLapThe.SelectedDate.GetValueOrDefault();
+                DateTime? ngayHetHan = dpNgayHetHan.SelectedDate;
 
                 if (ngayLapThe >= ngayHetHan)
                 {
@@ -308,8 +448,8 @@ namespace QLTV
                 {
                     IDTaiKhoan = taiKhoan.ID,
                     IDLoaiDocGia = loaiDocGia.ID,
-                    NgayLapThe = NgayLapTheDatePicker.SelectedDate ?? DateTime.Now,
-                    NgayHetHan = NgayHetHanDatePicker.SelectedDate ?? DateTime.Now.AddYears(1),
+                    NgayLapThe = dpNgayLapThe.SelectedDate ?? DateTime.Now,
+                    NgayHetHan = dpNgayHetHan.SelectedDate ?? DateTime.Now.AddYears(1),
                     TongNo = decimal.Parse(TongNoTextBox.Text),
                     GioiThieu = GioiThieu.Text
                 };
@@ -383,8 +523,8 @@ namespace QLTV
         {
             TenTaiKhoanComboBox.SelectedItem = null; // Cập nhật cho ComboBox
             TenLoaiDocGiaComboBox.SelectedItem = null; // Cập nhật cho ComboBox
-            NgayLapTheDatePicker.SelectedDate = null;
-            NgayHetHanDatePicker.SelectedDate = null;
+            dpNgayLapThe.SelectedDate = null;
+            dpNgayHetHan.SelectedDate = null;
             TongNoTextBox.Text = string.Empty;
             GioiThieu.Text = string.Empty;
         }
@@ -397,8 +537,8 @@ namespace QLTV
                 TenTaiKhoanComboBox.SelectedItem = selectedReader.IDTaiKhoanNavigation.TenTaiKhoan;
                 TenLoaiDocGiaComboBox.SelectedItem = selectedReader.IDLoaiDocGiaNavigation.TenLoaiDocGia;
 
-                NgayLapTheDatePicker.SelectedDate = selectedReader.NgayLapThe;
-                NgayHetHanDatePicker.SelectedDate = selectedReader.NgayHetHan;
+                dpNgayLapThe.SelectedDate = selectedReader.NgayLapThe;
+                dpNgayHetHan.SelectedDate = selectedReader.NgayHetHan;
                 TongNoTextBox.Text = selectedReader.TongNo.ToString();
                 GioiThieu.Text = selectedReader.GioiThieu;
             }
@@ -409,6 +549,9 @@ namespace QLTV
         {
             var readerTypes = _context.LOAIDOCGIA.Where(r => !r.IsDeleted).ToList(); // Chỉ lấy những loại độc giả chưa bị xóa
             ReaderTypesDataGrid.ItemsSource = readerTypes;
+            TenLoaiDocGiaList = _context.LOAIDOCGIA.Where(ldg => !ldg.IsDeleted)
+                                         .Select(ldg => ldg.TenLoaiDocGia).ToList();
+            TenLoaiDocGiaComboBox.ItemsSource = TenLoaiDocGiaList;
         }
 
         private void AddReaderType_Click(object sender, RoutedEventArgs e)
@@ -416,7 +559,7 @@ namespace QLTV
             // Kiểm tra xem cửa sổ thêm loại độc giả đã tồn tại chưa
             if (themLoaiDocGiaWindow == null || !themLoaiDocGiaWindow.IsVisible)
             {
-                themLoaiDocGiaWindow = new AWThemLoaiDocGia();
+                themLoaiDocGiaWindow = new AWThemLoaiDocGia(_context); // Truyền context
                 themLoaiDocGiaWindow.ShowDialog();
 
                 // Load lại dữ liệu sau khi đóng cửa sổ thêm
@@ -438,6 +581,33 @@ namespace QLTV
             {
                 try
                 {
+                    // Validate dữ liệu đầu vào
+                    if (string.IsNullOrWhiteSpace(TenLoaiDocGiaTextBox.Text))
+                    {
+                        icLoaiDocGiaError.ToolTip = "Tên Loại Độc Giả không được để trống";
+                        icLoaiDocGiaError.Visibility = Visibility.Visible;
+                    }
+                    if (string.IsNullOrWhiteSpace(SoSachMuonToiDaTextBox.Text))
+                    {
+                        icSoSachMuonToiDaError.ToolTip = "Số Sách Mượn Tối Đa không được để trống";
+                        icSoSachMuonToiDaError.Visibility = Visibility.Visible;
+                    }
+
+                    // Kiểm tra trùng lặp tên loại độc giả
+                    string tenLoaiDocGia = TenLoaiDocGiaTextBox.Text;
+                    if (_context.LOAIDOCGIA.Any(ldg => ldg.TenLoaiDocGia == tenLoaiDocGia && ldg.ID != selectedReaderType.ID && !ldg.IsDeleted))
+                    {
+                        icLoaiDocGiaError.ToolTip = "Tên loại độc giả đã tồn tại!";
+                        icLoaiDocGiaError.Visibility = Visibility.Visible;
+                    }
+
+                    // Kiểm tra còn lỗi không
+                    if (HasError())
+                    {
+                        MessageBox.Show("Tất cả thuộc tính phải hợp lệ trước khi cập nhật!", "Thông báo",
+                            MessageBoxButton.OK, MessageBoxImage.Warning);
+                        return;
+                    }
                     // Validate 
                     if (string.IsNullOrWhiteSpace(TenLoaiDocGiaTextBox.Text) ||
                         !int.TryParse(SoSachMuonToiDaTextBox.Text, out int soSachMuonToiDa))
@@ -460,7 +630,10 @@ namespace QLTV
 
                     LoadReaderTypesData();
                     ClearReaderTypeInputs();
-
+                    LoadReadersData();
+                    ReadersDataGrid.Items.Refresh();
+                    icLoaiDocGiaError.Visibility = Visibility.Collapsed;
+                    icSoSachMuonToiDaError.Visibility = Visibility.Collapsed;
                     MessageBox.Show("Cập nhật loại độc giả thành công.", "Thông báo", MessageBoxButton.OK, MessageBoxImage.Information);
                 }
                 catch (Exception ex)
@@ -622,13 +795,16 @@ namespace QLTV
             // Kiểm tra xem cửa sổ thêm phiếu thu đã tồn tại chưa
             if (themPhieuThuWindow == null || !themPhieuThuWindow.IsVisible)
             {
-                themPhieuThuWindow = new AWThemPhieuThuTienPhat();
+                themPhieuThuWindow = new AWThemPhieuThuTienPhat(_context);
                 themPhieuThuWindow.ShowDialog();
 
                 // Load lại dữ liệu sau khi đóng cửa sổ thêm
                 if (themPhieuThuWindow.DialogResult == true)
                 {
                     LoadPenaltyReceiptsData();
+                    UpdateReadersData();
+                    ReadersDataGrid.ItemsSource = Readers;
+                    ReadersDataGrid.Items.Refresh();
                 }
             }
             else
@@ -700,10 +876,28 @@ namespace QLTV
             {
                 try
                 {
-                    // Kiểm tra dữ liệu đầu vào
-                    if (NgayThuPhat.SelectedDate == null || string.IsNullOrEmpty(SoTienThu.Text))
+                    // Validate dữ liệu đầu vào
+                    if (TenTaiKhoanPhatComboBox.SelectedItem == null)
                     {
-                        MessageBox.Show("Vui lòng nhập đầy đủ thông tin phiếu thu!", "Thông báo", MessageBoxButton.OK, MessageBoxImage.Warning);
+                        icTenTaiKhoanPhatError.ToolTip = "Tên Tài Khoản không được để trống";
+                        icTenTaiKhoanPhatError.Visibility = Visibility.Visible;
+                    }
+                    if (NgayThuPhat.SelectedDate == null)
+                    {
+                        icNgayThuPhatError.ToolTip = "Ngày Thu không được để trống";
+                        icNgayThuPhatError.Visibility = Visibility.Visible;
+                    }
+                    if (string.IsNullOrWhiteSpace(SoTienThu.Text))
+                    {
+                        icSoTienThuError.ToolTip = "Số Tiền Thu không được để trống";
+                        icSoTienThuError.Visibility = Visibility.Visible;
+                    }
+
+                    // Kiểm tra còn lỗi không
+                    if (HasError())
+                    {
+                        MessageBox.Show("Tất cả thuộc tính phải hợp lệ trước khi cập nhật!", "Thông báo",
+                            MessageBoxButton.OK, MessageBoxImage.Warning);
                         return;
                     }
 
@@ -754,6 +948,7 @@ namespace QLTV
                             LoadPenaltyReceiptsData();
                             ClearPenaltyInputs();
 
+                            icSoTienThuError.Visibility = Visibility.Collapsed;
                             MessageBox.Show("Cập nhật phiếu thu tiền phạt thành công.", "Thông báo", MessageBoxButton.OK, MessageBoxImage.Information);
                         }
                         catch (Exception ex)
@@ -1109,6 +1304,91 @@ namespace QLTV
             catch (Exception ex)
             {
                 MessageBox.Show($"Lỗi khi xuất dữ liệu: {ex.Message}", "Lỗi", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
+        }
+
+        // Hàm kiểm tra còn lỗi không
+        public bool HasError()
+        {
+            // Tìm tất cả các PackIcon
+            foreach (var icon in FindVisualChildren<PackIcon>(this))
+            {
+                if (icon.Style == FindResource("ErrorIcon") && icon.Visibility == Visibility.Visible)
+                {
+                    return true;
+                }
+            }
+            return false;
+        }
+
+        // Hàm tìm kiếm các control con
+        private static IEnumerable<T> FindVisualChildren<T>(DependencyObject depObj) where T : DependencyObject
+        {
+            if (depObj != null)
+            {
+                for (int i = 0; i < VisualTreeHelper.GetChildrenCount(depObj); i++)
+                {
+                    DependencyObject child = VisualTreeHelper.GetChild(depObj, i);
+                    if (child is T t)
+                    {
+                        yield return t;
+                    }
+                    foreach (T childOfChild in FindVisualChildren<T>(child))
+                    {
+                        yield return childOfChild;
+                    }
+                }
+            }
+        }
+        // Xử lý sự kiện cho TenLoaiDocGiaTextBox
+        private void TenLoaiDocGiaTextBox_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            if (string.IsNullOrWhiteSpace(TenLoaiDocGiaTextBox.Text))
+            {
+                icLoaiDocGiaError.ToolTip = "Tên Loại Độc Giả không được để trống";
+                icLoaiDocGiaError.Visibility = Visibility.Visible;
+            }
+            else
+            {
+                icLoaiDocGiaError.Visibility = Visibility.Collapsed;
+            }
+        }
+
+        // Xử lý sự kiện cho SoSachMuonToiDaTextBox
+        private void SoSachMuonToiDaTextBox_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            if (string.IsNullOrWhiteSpace(SoSachMuonToiDaTextBox.Text))
+            {
+                icSoSachMuonToiDaError.ToolTip = "Số Sách Mượn Tối Đa không được để trống";
+                icSoSachMuonToiDaError.Visibility = Visibility.Visible;
+            }
+            else if (!int.TryParse(SoSachMuonToiDaTextBox.Text, out int soSach) || soSach <= 0)
+            {
+                icSoSachMuonToiDaError.ToolTip = "Số Sách Mượn Tối Đa phải là số nguyên dương";
+                icSoSachMuonToiDaError.Visibility = Visibility.Visible;
+            }
+            else
+            {
+                icSoSachMuonToiDaError.Visibility = Visibility.Collapsed;
+            }
+        }
+
+        // Xử lý sự kiện cho SoTienThu
+        private void SoTienThu_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            if (string.IsNullOrWhiteSpace(SoTienThu.Text))
+            {
+                icSoTienThuError.ToolTip = "Số Tiền Thu không được để trống";
+                icSoTienThuError.Visibility = Visibility.Visible;
+            }
+            else if (!decimal.TryParse(SoTienThu.Text, out decimal soTien) || soTien <= 0)
+            {
+                icSoTienThuError.ToolTip = "Số Tiền Thu phải là số dương";
+                icSoTienThuError.Visibility = Visibility.Visible;
+            }
+            else
+            {
+                icSoTienThuError.Visibility = Visibility.Collapsed;
             }
         }
     }

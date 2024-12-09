@@ -14,12 +14,14 @@ namespace QLTV
 {
     public partial class AWThemDocGia : Window
     {
+        private QLTVContext _context; 
         private string _tenTaiKhoan;
         private string _tenLoaiDocGia;
 
-        public AWThemDocGia(string tenTaiKhoan, string tenLoaiDocGia)
+        public AWThemDocGia(QLTVContext context, string tenTaiKhoan, string tenLoaiDocGia) 
         {
             InitializeComponent();
+            _context = context; // Gán context
             _tenTaiKhoan = tenTaiKhoan;
             _tenLoaiDocGia = tenLoaiDocGia;
             LoadLoaiDocGia();
@@ -31,16 +33,13 @@ namespace QLTV
 
         private void LoadTenTaiKhoan()
         {
-            using (var context = new QLTVContext())
-            {
-                // Lấy danh sách tên tài khoản chưa được sử dụng để tạo độc giả
-                var dsTenTaiKhoan = context.TAIKHOAN
-                    .Where(tk => !context.DOCGIA.Any(dg => dg.IDTaiKhoan == tk.ID))
-                    .Select(tk => tk.TenTaiKhoan)
-                    .ToList();
+            // Sử dụng context nhận được từ cửa sổ chính
+            var dsTenTaiKhoan = _context.TAIKHOAN
+                .Where(tk => !_context.DOCGIA.Any(dg => dg.IDTaiKhoan == tk.ID))
+                .Select(tk => tk.TenTaiKhoan)
+                .ToList();
 
-                cbbTenTaiKhoan.ItemsSource = dsTenTaiKhoan;
-            }
+            cbbTenTaiKhoan.ItemsSource = dsTenTaiKhoan;
         }
 
         private void SetDefaultDates()
@@ -53,10 +52,10 @@ namespace QLTV
         {
             using (var context = new QLTVContext())
             {
-                var dsLoaiDocGia = context.LOAIDOCGIA
-                    .Where(ldg => !ldg.IsDeleted)
-                    .Select(ldg => ldg.TenLoaiDocGia)
-                    .ToList();
+                var dsLoaiDocGia = _context.LOAIDOCGIA
+                .Where(ldg => !ldg.IsDeleted)
+                .Select(ldg => ldg.TenLoaiDocGia)
+                .ToList();
 
                 cbbTenLoaiDocGia.ItemsSource = dsLoaiDocGia;
             }
@@ -225,53 +224,48 @@ namespace QLTV
                 DateTime ngayLapThe = dpNgayLapThe.SelectedDate.Value;
                 DateTime ngayHetHan = dpNgayHetHan.SelectedDate.Value;
 
-                using (var context = new QLTVContext())
+                // Lấy ID của Loại Độc Giả
+                int idLoaiDocGia = _context.LOAIDOCGIA
+                    .Where(ldg => !ldg.IsDeleted && ldg.TenLoaiDocGia == loaiDocGia)
+                    .Select(ldg => ldg.ID)
+                    .FirstOrDefault();
+
+                // Lấy ID của Tài Khoản
+                int idTaiKhoan = _context.TAIKHOAN
+                    .Where(tk => tk.TenTaiKhoan == tenTaiKhoan)
+                    .Select(tk => tk.ID)
+                    .FirstOrDefault();
+
+                if (idTaiKhoan != 0) 
                 {
-                    // Lấy ID của Loại Độc Giả
-                    int idLoaiDocGia = context.LOAIDOCGIA
-                        .Where(ldg => !ldg.IsDeleted && ldg.TenLoaiDocGia == loaiDocGia)
-                        .Select(ldg => ldg.ID)
-                        .FirstOrDefault();
-
-                    // Lấy ID của Tài Khoản
-                    int idTaiKhoan = context.TAIKHOAN
-                        .Where(tk => tk.TenTaiKhoan == tenTaiKhoan)
-                        .Select(tk => tk.ID)
-                        .FirstOrDefault();
-
-                    if (idTaiKhoan != 0) // Kiểm tra xem tài khoản có tồn tại không
+                    // Create a new DOCGIA record
+                    var newDocGia = new DOCGIA()
                     {
-                        // Create a new DOCGIA record
-                        var newDocGia = new DOCGIA()
-                        {
-                            IDTaiKhoan = idTaiKhoan,
-                            IDLoaiDocGia = idLoaiDocGia,
-                            GioiThieu = gioiThieu,
-                            TongNo = tongNo,
-                            NgayLapThe = ngayLapThe,
-                            NgayHetHan = ngayHetHan
-                        };
+                        IDTaiKhoan = idTaiKhoan,
+                        IDLoaiDocGia = idLoaiDocGia,
+                        GioiThieu = gioiThieu,
+                        TongNo = tongNo,
+                        NgayLapThe = ngayLapThe,
+                        NgayHetHan = ngayHetHan
+                    };
 
-                        context.DOCGIA.Add(newDocGia);
-                        context.SaveChanges();
+                    _context.DOCGIA.Add(newDocGia);
+                    _context.SaveChanges();
 
-                        // Hiển thị thông báo thành công
-                        MessageBox.Show("Thêm độc giả thành công!", "Thông báo", MessageBoxButton.OK, MessageBoxImage.Information);
+                    MessageBox.Show("Thêm độc giả thành công!", "Thông báo", MessageBoxButton.OK, MessageBoxImage.Information);
 
-                        // Đóng cửa sổ sau khi thêm thành công
-                        this.DialogResult = true;
-                        this.Close();
-                    }
-                    else
-                    {
-                        // Xử lý trường hợp không tìm thấy tài khoản
-                        MessageBox.Show("Không tìm thấy tài khoản!", "Lỗi", MessageBoxButton.OK, MessageBoxImage.Error);
-                    }
+                    // Đóng cửa sổ sau khi thêm thành công
+                    this.DialogResult = true;
+                    this.Close();
                 }
+                else
+                {
+                    MessageBox.Show("Không tìm thấy tài khoản!", "Lỗi", MessageBoxButton.OK, MessageBoxImage.Error);
+                }
+
             }
             catch (Exception ex)
             {
-                // Hiển thị thông báo lỗi
                 MessageBox.Show($"Lỗi khi thêm độc giả: {ex.Message}", "Lỗi", MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
