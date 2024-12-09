@@ -265,7 +265,7 @@
                            HorizontalOffset="0"
                            VerticalOffset="-5"
                            Width="Auto">
-                        <Border Background="White" Padding="10" CornerRadius="5" BorderBrush="Gray" BorderThickness="2" Width="350">
+                        <Border Background="White" Padding="10" BorderBrush="Gray" BorderThickness="2" Width="350">
                             <StackPanel>
                                 <DockPanel>
                                     <TextBlock Text="Điều kiện tìm kiếm" FontWeight="Bold" FontSize="18" DockPanel.Dock="Left" VerticalAlignment="Center"/>
@@ -345,7 +345,7 @@
                            HorizontalOffset="0"
                            VerticalOffset="-5"
                            Width="Auto">
-                        <Border Background="White" Padding="10" CornerRadius="5" Width="Auto" BorderBrush="Gray" BorderThickness="2">
+                        <Border Background="White" Padding="10" Width="Auto" BorderBrush="Gray" BorderThickness="2">
                             <StackPanel Orientation="Horizontal">
                                 <TextBox x:Name="tbxGiaTriSua" Grid.Column="1" VerticalAlignment="Center"
                                          Style="{StaticResource DataDisplayTextBox}"
