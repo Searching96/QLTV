@@ -21,45 +21,54 @@ namespace QLTV_TranBin.CQuang
     /// </summary>
     public partial class AWThemDocGia : Window
     {
+        private QLTV2Context _context;
         private string _tenTaiKhoan;
         private string _tenLoaiDocGia;
 
-        public AWThemDocGia(string tenTaiKhoan, string tenLoaiDocGia)
+        public AWThemDocGia(QLTV2Context context, string tenTaiKhoan, string tenLoaiDocGia)
         {
             InitializeComponent();
+            _context = context; // Gán context
             _tenTaiKhoan = tenTaiKhoan;
             _tenLoaiDocGia = tenLoaiDocGia;
             LoadLoaiDocGia();
+            LoadTenTaiKhoan();
 
-            tbxTenTaiKhoan.Text = _tenTaiKhoan;
             cbbTenLoaiDocGia.SelectedItem = _tenLoaiDocGia;
+        }
+
+        private void LoadTenTaiKhoan()
+        {
+            // Sử dụng context nhận được từ cửa sổ chính
+            var dsTenTaiKhoan = _context.TAIKHOAN
+                .Where(tk => !_context.DOCGIA.Any(dg => dg.IDTaiKhoan == tk.ID))
+                .Select(tk => tk.TenTaiKhoan)
+                .ToList();
+
+            cbbTenTaiKhoan.ItemsSource = dsTenTaiKhoan;
         }
 
         private void LoadLoaiDocGia()
         {
             using (var context = new QLTV2Context())
             {
-                var dsLoaiDocGia = context.LOAIDOCGIA
-                    .Where(ldg => !ldg.IsDeleted)
-                    .Select(ldg => ldg.TenLoaiDocGia)
-                    .ToList();
+                var dsLoaiDocGia = _context.LOAIDOCGIA
+                .Where(ldg => !ldg.IsDeleted)
+                .Select(ldg => ldg.TenLoaiDocGia)
+                .ToList();
 
                 cbbTenLoaiDocGia.ItemsSource = dsLoaiDocGia;
             }
             // Đăng ký sự kiện TextChanged
         }
 
-        private void tbxTenTaiKhoan_TextChanged(object sender, TextChangedEventArgs e)
+        private void cbbTenTaiKhoan_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            // Kiểm tra tên tài khoản không để trống
-            if (string.IsNullOrWhiteSpace(tbxTenTaiKhoan.Text))
+            // Kiểm tra đã chọn tên tài khoản chưa
+            if (cbbTenTaiKhoan.SelectedItem != null)
             {
-                icTenTaiKhoanError.ToolTip = "Tên Tài Khoản không được để trống";
-                icTenTaiKhoanError.Visibility = Visibility.Visible;
-                return;
+                icTenTaiKhoanError.Visibility = Visibility.Collapsed;
             }
-
-            icTenTaiKhoanError.Visibility = Visibility.Collapsed;
         }
 
         private void cbbTenLoaiDocGia_SelectionChanged(object sender, SelectionChangedEventArgs e)
@@ -112,12 +121,13 @@ namespace QLTV_TranBin.CQuang
 
             icTongNoError.Visibility = Visibility.Collapsed;
         }
+
         private void btnThem_Click(object sender, RoutedEventArgs e)
         {
             try
             {
                 // Kiểm tra các trường bắt buộc
-                if (string.IsNullOrWhiteSpace(tbxTenTaiKhoan.Text))
+                if (string.IsNullOrWhiteSpace(cbbTenTaiKhoan.Text))
                 {
                     icTenTaiKhoanError.ToolTip = "Tên Tài Khoản không được để trống";
                     icTenTaiKhoanError.Visibility = Visibility.Visible;
@@ -144,56 +154,51 @@ namespace QLTV_TranBin.CQuang
                 }
 
                 // Lấy thông tin từ các trường
-                string tenTaiKhoan = tbxTenTaiKhoan.Text;
+                string tenTaiKhoan = cbbTenTaiKhoan.SelectedItem.ToString(); // Lấy từ SelectedItem
                 string loaiDocGia = cbbTenLoaiDocGia.SelectedItem.ToString();
                 string gioiThieu = tbxGioiThieu.Text;
                 decimal tongNo = decimal.Parse(tbxTongNo.Text);
 
-                using (var context = new QLTV2Context())
+                // Lấy ID của Loại Độc Giả
+                int idLoaiDocGia = _context.LOAIDOCGIA
+                    .Where(ldg => !ldg.IsDeleted && ldg.TenLoaiDocGia == loaiDocGia)
+                    .Select(ldg => ldg.ID)
+                    .FirstOrDefault();
+
+                // Lấy ID của Tài Khoản
+                int idTaiKhoan = _context.TAIKHOAN
+                    .Where(tk => tk.TenTaiKhoan == tenTaiKhoan)
+                    .Select(tk => tk.ID)
+                    .FirstOrDefault();
+
+                if (idTaiKhoan != 0)
                 {
-                    // Lấy ID của Loại Độc Giả
-                    int idLoaiDocGia = context.LOAIDOCGIA
-                        .Where(ldg => !ldg.IsDeleted && ldg.TenLoaiDocGia == loaiDocGia)
-                        .Select(ldg => ldg.ID)
-                        .FirstOrDefault();
-
-                    // Lấy ID của Tài Khoản
-                    int idTaiKhoan = context.TAIKHOAN
-                        .Where(tk => tk.TenTaiKhoan == tenTaiKhoan)
-                        .Select(tk => tk.ID)
-                        .FirstOrDefault();
-
-                    if (idTaiKhoan != 0) // Kiểm tra xem tài khoản có tồn tại không
+                    // Create a new DOCGIA record
+                    var newDocGia = new DOCGIA()
                     {
-                        // Create a new DOCGIA record
-                        var newDocGia = new DOCGIA()
-                        {
-                            IDTaiKhoan = idTaiKhoan,
-                            IDLoaiDocGia = idLoaiDocGia,
-                            GioiThieu = gioiThieu,
-                            TongNo = tongNo
-                        };
+                        IDTaiKhoan = idTaiKhoan,
+                        IDLoaiDocGia = idLoaiDocGia,
+                        GioiThieu = gioiThieu,
+                        TongNo = tongNo
+                    };
 
-                        context.DOCGIA.Add(newDocGia);
-                        context.SaveChanges();
+                    _context.DOCGIA.Add(newDocGia);
+                    _context.SaveChanges();
 
-                        // Hiển thị thông báo thành công
-                        MessageBox.Show("Thêm độc giả thành công!", "Thông báo", MessageBoxButton.OK, MessageBoxImage.Information);
+                    MessageBox.Show("Thêm độc giả thành công!", "Thông báo", MessageBoxButton.OK, MessageBoxImage.Information);
 
-                        // Đóng cửa sổ sau khi thêm thành công
-                        this.DialogResult = true;
-                        this.Close();
-                    }
-                    else
-                    {
-                        // Xử lý trường hợp không tìm thấy tài khoản
-                        MessageBox.Show("Không tìm thấy tài khoản!", "Lỗi", MessageBoxButton.OK, MessageBoxImage.Error);
-                    }
+                    // Đóng cửa sổ sau khi thêm thành công
+                    this.DialogResult = true;
+                    this.Close();
                 }
+                else
+                {
+                    MessageBox.Show("Không tìm thấy tài khoản!", "Lỗi", MessageBoxButton.OK, MessageBoxImage.Error);
+                }
+
             }
             catch (Exception ex)
             {
-                // Hiển thị thông báo lỗi
                 MessageBox.Show($"Lỗi khi thêm độc giả: {ex.Message}", "Lỗi", MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }

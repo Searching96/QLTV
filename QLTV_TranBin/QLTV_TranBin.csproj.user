@@ -16,13 +16,19 @@
     <Compile Update="CQuang\AUInterface.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Update="CQuang\AUQuanLyDocGia.xaml.cs">
-      <SubType>Code</SubType>
-    </Compile>
     <Compile Update="CQuang\AWPhieuThuTienPhat.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Update="CQuang\AWRatingWindow.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Update="CQuang\AWThemDocGia.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Update="CQuang\AWThemLoaiDocGia.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Update="CQuang\AWThemPhieuThuTienPhat.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
     <Compile Update="CreateAccount.xaml.cs">
@@ -69,13 +75,19 @@
     <Page Update="CQuang\AUInterface.xaml">
       <SubType>Designer</SubType>
     </Page>
-    <Page Update="CQuang\AUQuanLyDocGia.xaml">
-      <SubType>Designer</SubType>
-    </Page>
     <Page Update="CQuang\AWPhieuThuTienPhat.xaml">
       <SubType>Designer</SubType>
     </Page>
+    <Page Update="CQuang\AWRatingWindow.xaml">
+      <SubType>Designer</SubType>
+    </Page>
     <Page Update="CQuang\AWThemDocGia.xaml">
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="CQuang\AWThemLoaiDocGia.xaml">
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="CQuang\AWThemPhieuThuTienPhat.xaml">
       <SubType>Designer</SubType>
     </Page>
     <Page Update="CreateAccount.xaml">

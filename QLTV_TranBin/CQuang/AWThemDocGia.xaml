@@ -6,7 +6,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:QLTV_TranBin"
         mc:Ignorable="d"
-        Title="Thêm Sách" Height="500" Width="350"
+        Title="Thêm Độc Giả" Height="500" Width="350"
         WindowStartupLocation="CenterScreen">
     <Window.Resources>
         <Style x:Key="DataDisplayTextBox" TargetType="TextBox" 
@@ -46,84 +46,91 @@
     </Window.Resources>
 
     <Grid>
+    <Grid.RowDefinitions>
+        <RowDefinition Height="2*"/>
+        <RowDefinition Height="10*"/>
+        <RowDefinition Height="1.75*"/>
+    </Grid.RowDefinitions>
+
+    <TextBlock Text="Thêm Độc Giả" Grid.Row="0" FontSize="24"
+               FontWeight="Bold" HorizontalAlignment="Center"
+               VerticalAlignment="Center"/>
+
+    <Grid Grid.Row="1">
         <Grid.RowDefinitions>
-            <RowDefinition Height="35*"/>
-            <RowDefinition Height="104*"/>
-            <RowDefinition Height="103*"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
 
-        <TextBlock Text="Thêm Độc Giả" FontSize="24"
-                   FontWeight="Bold" HorizontalAlignment="Center"
-                   VerticalAlignment="Center" Height="32" Width="158"/>
+        <ComboBox x:Name="cbbTenTaiKhoan" Grid.Row="0"
+      Style="{StaticResource ModernComboBox}"
+      Margin="5"
+      materialDesign:HintAssist.Hint="Tên Tài Khoản"
+      materialDesign:TextFieldAssist.HasLeadingIcon="True"
+      materialDesign:TextFieldAssist.LeadingIcon="Account"
+      IsEditable="True" 
+      IsTextSearchEnabled="False" 
+      SelectedValue="{x:Null}" 
+      IsSynchronizedWithCurrentItem="False" 
+      materialDesign:TextFieldAssist.HasClearButton="True"
+      SelectionChanged="cbbTenTaiKhoan_SelectionChanged"/>
 
-        <Grid Margin="0,70,0,0" Grid.RowSpan="2">
-            <Grid.RowDefinitions>
-                <RowDefinition Height="Auto"/>
-                <RowDefinition Height="Auto"/>
-                <RowDefinition Height="Auto"/>
-                <RowDefinition Height="Auto"/>
+        <materialDesign:PackIcon x:Name="icTenTaiKhoanError" Grid.Row="0"
+                     Style="{StaticResource ErrorIcon}"
+                                 Margin="0,0,25,0"/>
 
-            </Grid.RowDefinitions>
+        <ComboBox x:Name="cbbTenLoaiDocGia" Grid.Row="1"
+                  Style="{StaticResource ModernComboBox}"
+     Margin="5"
+                  materialDesign:HintAssist.Hint="Loại Độc Giả"
+                  materialDesign:TextFieldAssist.HasLeadingIcon="True"
+                  materialDesign:TextFieldAssist.LeadingIcon="AccountGroup"
+                  IsEditable="True" 
+                  IsTextSearchEnabled="False"
+                  SelectedValue="{x:Null}"
+                  IsSynchronizedWithCurrentItem="False"
+                  materialDesign:TextFieldAssist.HasClearButton="True"
+                  SelectionChanged="cbbTenLoaiDocGia_SelectionChanged"/>
 
-            <TextBox x:Name="tbxTenTaiKhoan" Grid.Row="0"
-         Style="{StaticResource DataDisplayTextBox}"
-         Margin="5"
-         materialDesign:HintAssist.Hint="Tên Tài Khoản"
-         materialDesign:TextFieldAssist.HasLeadingIcon="True"
-         materialDesign:TextFieldAssist.LeadingIcon="Account"
-         TextChanged="tbxTenTaiKhoan_TextChanged"/>
-
-            <materialDesign:PackIcon x:Name="icTenTaiKhoanError" Grid.Row="0"
-                         Style="{StaticResource ErrorIcon}"
-                                     Margin="0,0,10,0"/>
-
-            <ComboBox x:Name="cbbTenLoaiDocGia" Grid.Row="1"
-                      Style="{StaticResource ModernComboBox}"
-         Margin="5"
-                      materialDesign:HintAssist.Hint="Loại Độc Giả"
-                      materialDesign:TextFieldAssist.HasLeadingIcon="True"
-                      materialDesign:TextFieldAssist.LeadingIcon="AccountGroup"
-                      IsEditable="True" 
-                      IsTextSearchEnabled="False"
-                      SelectedValue="{x:Null}"
-                      IsSynchronizedWithCurrentItem="False"
-                      materialDesign:TextFieldAssist.HasClearButton="True"
-                      SelectionChanged="cbbTenLoaiDocGia_SelectionChanged"/>
-
-            <materialDesign:PackIcon x:Name="icTenLoaiDocGiaError" Grid.Row="1"
-                                     Style="{StaticResource ErrorIcon}"
-                                     Margin="0,0,10,0"/>
+        <materialDesign:PackIcon x:Name="icTenLoaiDocGiaError" Grid.Row="1"
+                                 Style="{StaticResource ErrorIcon}"
+                                 Margin="0,0,25,0"/>
 
 
 
-            <TextBox x:Name="tbxGioiThieu" Grid.Row="2"
-                     Style="{StaticResource DataDisplayTextBox}"
-                              Margin="5"
+        <TextBox x:Name="tbxGioiThieu" Grid.Row="2"
+                 Style="{StaticResource DataDisplayTextBox}"
+                          Margin="5"
 
-                     materialDesign:HintAssist.Hint="Thông Tin Giới Thiệu"
-                     materialDesign:TextFieldAssist.HasLeadingIcon="True"
-                     materialDesign:TextFieldAssist.LeadingIcon="InfoSerifBox"
-                     TextChanged="tbxGioiThieu_TextChanged"/>
+                 materialDesign:HintAssist.Hint="Thông Tin Giới Thiệu"
+                 materialDesign:TextFieldAssist.HasLeadingIcon="True"
+                 materialDesign:TextFieldAssist.LeadingIcon="InfoSerifBox"
+                 TextChanged="tbxGioiThieu_TextChanged"/>
 
-            <materialDesign:PackIcon x:Name="icGioiThieuError" Grid.Row="2"
-                                     Style="{StaticResource ErrorIcon}"
-                                     Margin="0,0,10,0"/>
+        <materialDesign:PackIcon x:Name="icGioiThieuError" Grid.Row="2"
+                                 Style="{StaticResource ErrorIcon}"
+                                 Margin="0,0,10,0"/>
 
 
-            <TextBox x:Name="tbxTongNo" Grid.Row="3"
-         Style="{StaticResource DataDisplayTextBox}"
-                              Margin="5"
+        <TextBox x:Name="tbxTongNo" Grid.Row="3"
+     Style="{StaticResource DataDisplayTextBox}"
+                          Margin="5"
 
-         materialDesign:HintAssist.Hint="Tổng Nợ"
-         materialDesign:TextFieldAssist.HasLeadingIcon="True"
-         materialDesign:TextFieldAssist.LeadingIcon="Cash"
-         TextChanged="tbxTongNo_TextChanged"/>
+     materialDesign:HintAssist.Hint="Tổng Nợ"
+     materialDesign:TextFieldAssist.HasLeadingIcon="True"
+     materialDesign:TextFieldAssist.LeadingIcon="Cash"
+     TextChanged="tbxTongNo_TextChanged"/>
 
             <materialDesign:PackIcon x:Name="icTongNoError" Grid.Row="3"
-                         Style="{StaticResource ErrorIcon}"
-                         Margin="0,0,10,0"/>
+                     Style="{StaticResource ErrorIcon}"
+                     Margin="0,0,10,0"/>
         </Grid>
-        <Button x:Name="btnThem" Grid.Row="2" Content="Thêm"
-                HorizontalAlignment="Center" VerticalAlignment="Center" Click="btnThem_Click" Height="32" Width="68"/>
-    </Grid>
+    <Button x:Name="btnThem" Grid.Row="2" Content="Thêm" Margin="0, 5, 0, 5"
+            HorizontalAlignment="Center" VerticalAlignment="Center" Click="btnThem_Click"/>
+</Grid>
 </Window>

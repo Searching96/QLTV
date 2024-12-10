@@ -127,7 +127,7 @@ namespace QLTV_TranBin
             string tenLoaiDocGia = TenLoaiDocGiaComboBox.Text;
 
             // Truyền tên tài khoản và tên loại độc giả vào AWThemDocGia
-            AWThemDocGia aWThemDocGia = new AWThemDocGia(tenTaiKhoan, tenLoaiDocGia);
+            AWThemDocGia aWThemDocGia = new AWThemDocGia(_context, tenTaiKhoan, tenLoaiDocGia);
             bool? result = aWThemDocGia.ShowDialog();
 
             if (result == true)

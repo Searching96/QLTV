@@ -59,8 +59,8 @@ namespace QLTV_TranBin
                         .OrderBy(t => Guid.NewGuid())
                         .Take(4) // Lấy 4 tựa sách ngẫu nhiên
                         .ToList();
-                    foreach (var tuasach in tuaSachs)
-                        MessageBox.Show(tuasach.TenTuaSach);
+                    //foreach (var tuasach in tuaSachs)
+                    //    MessageBox.Show(tuasach.TenTuaSach);
                     TuaSachByTheLoai[theLoai.ID] = new ObservableCollection<TUASACH>(tuaSachs);
                 }
             }

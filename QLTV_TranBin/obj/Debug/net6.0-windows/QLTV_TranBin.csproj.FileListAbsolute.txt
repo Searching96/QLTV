@@ -382,12 +382,10 @@ D:\Web\QLTV\QLTV_TranBin\obj\Debug\net6.0-windows\QLTV_TranBin.genruntimeconfig.
 D:\Web\QLTV\QLTV_TranBin\obj\Debug\net6.0-windows\ref\QLTV_TranBin.dll
 E:\Repos_DoAn\QLTV_TranBin\QLTV_TranBin\obj\Debug\net6.0-windows\QLTV_TranBin.csproj.AssemblyReference.cache
 E:\Repos_DoAn\QLTV_TranBin\QLTV_TranBin\obj\Debug\net6.0-windows\CQuang\AUInterface.baml
-E:\Repos_DoAn\QLTV_TranBin\QLTV_TranBin\obj\Debug\net6.0-windows\CQuang\AUQuanLyDocGia.baml
 E:\Repos_DoAn\QLTV_TranBin\QLTV_TranBin\obj\Debug\net6.0-windows\CQuang\AWPhieuThuTienPhat.baml
 E:\Repos_DoAn\QLTV_TranBin\QLTV_TranBin\obj\Debug\net6.0-windows\BaoCaoThongKe.g.cs
 E:\Repos_DoAn\QLTV_TranBin\QLTV_TranBin\obj\Debug\net6.0-windows\ChiTietTaiKhoan.g.cs
 E:\Repos_DoAn\QLTV_TranBin\QLTV_TranBin\obj\Debug\net6.0-windows\CQuang\AUInterface.g.cs
-E:\Repos_DoAn\QLTV_TranBin\QLTV_TranBin\obj\Debug\net6.0-windows\CQuang\AUQuanLyDocGia.g.cs
 E:\Repos_DoAn\QLTV_TranBin\QLTV_TranBin\obj\Debug\net6.0-windows\CQuang\AWPhieuThuTienPhat.g.cs
 E:\Repos_DoAn\QLTV_TranBin\QLTV_TranBin\obj\Debug\net6.0-windows\CQuang\AWThemDocGia.g.cs
 E:\Repos_DoAn\QLTV_TranBin\QLTV_TranBin\obj\Debug\net6.0-windows\CreateAccount.g.cs
@@ -522,3 +520,9 @@ E:\Repos_DoAn\QLTV_TranBin\QLTV_TranBin\obj\Debug\net6.0-windows\USachMuon.g.cs
 E:\Repos_DoAn\QLTV_TranBin\QLTV_TranBin\obj\Debug\net6.0-windows\UTrangChu.g.cs
 E:\Repos_DoAn\QLTV_TranBin\QLTV_TranBin\obj\Debug\net6.0-windows\USachMuon.baml
 E:\Repos_DoAn\QLTV_TranBin\QLTV_TranBin\obj\Debug\net6.0-windows\UTrangChu.baml
+E:\Repos_DoAn\QLTV_TranBin\QLTV_TranBin\obj\Debug\net6.0-windows\CQuang\AWRatingWindow.g.cs
+E:\Repos_DoAn\QLTV_TranBin\QLTV_TranBin\obj\Debug\net6.0-windows\CQuang\AWThemLoaiDocGia.g.cs
+E:\Repos_DoAn\QLTV_TranBin\QLTV_TranBin\obj\Debug\net6.0-windows\CQuang\AWThemPhieuThuTienPhat.g.cs
+E:\Repos_DoAn\QLTV_TranBin\QLTV_TranBin\obj\Debug\net6.0-windows\CQuang\AWRatingWindow.baml
+E:\Repos_DoAn\QLTV_TranBin\QLTV_TranBin\obj\Debug\net6.0-windows\CQuang\AWThemLoaiDocGia.baml
+E:\Repos_DoAn\QLTV_TranBin\QLTV_TranBin\obj\Debug\net6.0-windows\CQuang\AWThemPhieuThuTienPhat.baml
