@@ -7,6 +7,7 @@ using System.Windows.Controls;
 using QLTV.Models;
 using System.Windows.Media;
 using Microsoft.EntityFrameworkCore;
+using System.Text.RegularExpressions;
 
 namespace QLTV
 {
@@ -28,8 +29,17 @@ namespace QLTV
                 icTenLoaiDocGiaError.Visibility = Visibility.Visible;
                 return;
             }
-
             icTenLoaiDocGiaError.Visibility = Visibility.Collapsed;
+
+            if (!Regex.IsMatch(tbxTenLoaiDocGia.Text, @"^[a-zA-Z\p{L}\s]+$"))
+            {
+                icTenLoaiDocGiaError.ToolTip = "Tên loại độc giả chỉ được chứa chữ cái và khoảng trắng!";
+                icTenLoaiDocGiaError.Visibility = Visibility.Visible;
+            }
+            else
+            {
+                icTenLoaiDocGiaError.Visibility = Visibility.Collapsed;
+            }
         }
 
         private void tbxSoSachMuonToiDa_TextChanged(object sender, TextChangedEventArgs e)

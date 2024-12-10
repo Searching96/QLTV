@@ -234,9 +234,12 @@ namespace QLTV
                     var taiKhoan = _context.TAIKHOAN.FirstOrDefault(tk => tk.TenTaiKhoan == tenTaiKhoan);
                     var loaiDocGia = _context.LOAIDOCGIA.FirstOrDefault(ldg => ldg.TenLoaiDocGia == tenLoaiDocGia);
 
-                    if (taiKhoan == null || loaiDocGia == null)
+                    if (taiKhoan == null)
                     {
-                        MessageBox.Show("Tên tài khoản hoặc tên loại độc giả không hợp lệ.", "Lỗi", MessageBoxButton.OK, MessageBoxImage.Error);
+                        icTenTaiKhoanError.ToolTip = "Tên tài khoản không tồn tại trong cơ sở dữ liệu!";
+                        icTenTaiKhoanError.Visibility = Visibility.Visible;
+                        MessageBox.Show("Tất cả thuộc tính phải hợp lệ trước khi cập nhật!", "Thông báo",
+                            MessageBoxButton.OK, MessageBoxImage.Warning);
                         return;
                     }
 
@@ -1346,6 +1349,17 @@ namespace QLTV
             if (string.IsNullOrWhiteSpace(TenLoaiDocGiaTextBox.Text))
             {
                 icLoaiDocGiaError.ToolTip = "Tên Loại Độc Giả không được để trống";
+                icLoaiDocGiaError.Visibility = Visibility.Visible;
+            }
+            else
+            {
+                icLoaiDocGiaError.Visibility = Visibility.Collapsed;
+            }
+
+            // Kiểm tra tên loại độc giả chỉ chứa chữ cái và khoảng trắng
+            if (!Regex.IsMatch(TenLoaiDocGiaTextBox.Text, @"^[a-zA-Z\p{L}\s]+$"))
+            {
+                icLoaiDocGiaError.ToolTip = "Tên loại độc giả chỉ được chứa chữ cái và khoảng trắng!";
                 icLoaiDocGiaError.Visibility = Visibility.Visible;
             }
             else

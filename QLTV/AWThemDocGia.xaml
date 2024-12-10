@@ -82,7 +82,7 @@
 
             <materialDesign:PackIcon x:Name="icTenTaiKhoanError" Grid.Row="0"
                          Style="{StaticResource ErrorIcon}"
-                                     Margin="0,0,10,0"/>
+                                     Margin="0,0,25,0"/>
 
             <ComboBox x:Name="cbbTenLoaiDocGia" Grid.Row="1"
                       Style="{StaticResource ModernComboBox}"
@@ -99,7 +99,7 @@
 
             <materialDesign:PackIcon x:Name="icTenLoaiDocGiaError" Grid.Row="1"
                                      Style="{StaticResource ErrorIcon}"
-                                     Margin="0,0,10,0"/>
+                                     Margin="0,0,25,0"/>
 
 
 

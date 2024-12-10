@@ -288,15 +288,16 @@ Click="OpenExportMenu_Click">
 
                     <!-- DataGrid Danh Sách Độc Giả -->
                     <DataGrid Grid.Row="2" 
-                  x:Name="ReadersDataGrid" 
-                  AutoGenerateColumns="False" 
-                  Margin="0,10,0,0" 
-                  CanUserAddRows="False" 
-                  CanUserDeleteRows="False" 
-                  IsReadOnly="True" 
-                  SelectionChanged="ReadersDataGrid_SelectionChanged"
+                              x:Name="ReadersDataGrid" 
+                              AutoGenerateColumns="False" 
+                              Margin="0,10,0,0" 
+                              CanUserAddRows="False" 
+                              CanUserDeleteRows="False" 
+                              IsReadOnly="True" 
+                              SelectionChanged="ReadersDataGrid_SelectionChanged" 
                               VerticalScrollBarVisibility="Auto"
-  ScrollViewer.CanContentScroll="True" Grid.ColumnSpan="2">
+ScrollViewer.CanContentScroll="True"
+MaxHeight="455" Grid.ColumnSpan="2">
                         <DataGrid.Columns>
                             <DataGridTextColumn Header="Mã Độc Giả" Binding="{Binding MaDocGia}"/>
                             <DataGridTextColumn Header="Tên Tài Khoản" Binding="{Binding IDTaiKhoanNavigation.TenTaiKhoan}"/>
@@ -416,13 +417,16 @@ Margin="0,5,10,0"/>
                     </Grid>
 
                     <DataGrid Grid.Row="2" 
-                  x:Name="ReaderTypesDataGrid" 
-                  AutoGenerateColumns="False" 
-                  Margin="0,10,0,0" 
-                  CanUserAddRows="False" 
-                  CanUserDeleteRows="False" 
-                  IsReadOnly="True" 
-                  SelectionChanged="ReaderTypesDataGrid_SelectionChanged">
+       x:Name="ReaderTypesDataGrid" 
+       AutoGenerateColumns="False" 
+       Margin="0,10,0,0" 
+       CanUserAddRows="False" 
+       CanUserDeleteRows="False" 
+       IsReadOnly="True" 
+       SelectionChanged="ReaderTypesDataGrid_SelectionChanged"
+       VerticalScrollBarVisibility="Auto"
+       ScrollViewer.CanContentScroll="True"
+       MaxHeight="510">
                         <DataGrid.Columns>
                             <DataGridTextColumn Header="Mã Loại Độc Giả" Binding="{Binding MaLoaiDocGia}"/>
                             <DataGridTextColumn Header="Loại Độc Giả" Binding="{Binding TenLoaiDocGia}"/>
@@ -465,9 +469,9 @@ Margin="0,5,10,0"/>
                     <Border BorderBrush="#DDDDDD" BorderThickness="1" Padding="20" Margin="0,0,0,10" Grid.Row="0" Grid.ColumnSpan="2">
                         <Grid>
                             <Grid.ColumnDefinitions>
-                                <ColumnDefinition/>
-                                <ColumnDefinition Width="319.333"/>
-                                <ColumnDefinition/>
+                                <ColumnDefinition Width="3*"/>
+                                <ColumnDefinition Width="3*"/>
+                                <ColumnDefinition Width="3*"/>
                             </Grid.ColumnDefinitions>
                             <Grid.RowDefinitions>
                                 <RowDefinition Height="Auto"/>
@@ -580,7 +584,11 @@ Margin="0,5,10,0"/>
                   CanUserAddRows="False" 
                   CanUserDeleteRows="False" 
                   IsReadOnly="True" 
-                  SelectionChanged="PenaltyReceiptsDataGrid_SelectionChanged" Grid.ColumnSpan="2">
+                  SelectionChanged="PenaltyReceiptsDataGrid_SelectionChanged" 
+                              VerticalScrollBarVisibility="Auto"
+ScrollViewer.CanContentScroll="True"
+Height="470"
+                              Grid.ColumnSpan="2">
                         <DataGrid.Columns>
                             <DataGridTextColumn Header="Mã Phiếu Thu" Binding="{Binding MaPTTP}"/>
                             <DataGridTextColumn Header="Tên Tài Khoản" Binding="{Binding IDDocGiaNavigation.IDTaiKhoanNavigation.TenTaiKhoan}"/>

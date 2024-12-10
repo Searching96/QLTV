@@ -131,6 +131,14 @@ namespace QLTV
                 DateTime ngayThu = dpNgayThu.SelectedDate.Value;
                 decimal soTienThu = decimal.Parse(tbxSoTienThu.Text);
 
+                var taiKhoan = _context.TAIKHOAN.FirstOrDefault(tk => tk.TenTaiKhoan == tenTaiKhoan);
+                if (taiKhoan == null)
+                {
+                    icTenTaiKhoanError.ToolTip = "Tên tài khoản không tồn tại trong cơ sở dữ liệu!";
+                    icTenTaiKhoanError.Visibility = Visibility.Visible;
+                    return; 
+                }
+
                 // Lấy ID của Độc Giả
                 int idDocGia = _context.DOCGIA
                     .Include(dg => dg.IDTaiKhoanNavigation)
