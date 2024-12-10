@@ -35,8 +35,8 @@
         </Grid.RowDefinitions>
 
         <TextBlock Text="Thêm Loại Độc Giả" Grid.Row="0" FontSize="24"
-                   FontWeight="Bold" HorizontalAlignment="Center"
-                   VerticalAlignment="Center"/>
+               FontWeight="Bold" HorizontalAlignment="Center"
+               VerticalAlignment="Center"/>
 
         <Grid Grid.Row="1">
             <Grid.RowDefinitions>
@@ -45,30 +45,30 @@
             </Grid.RowDefinitions>
 
             <TextBox x:Name="tbxTenLoaiDocGia" Grid.Row="0"
-                     Style="{StaticResource DataDisplayTextBox}"
-                     Margin="5"
-                     materialDesign:HintAssist.Hint="Tên Loại Độc Giả"
-                     materialDesign:TextFieldAssist.HasLeadingIcon="True"
-                     materialDesign:TextFieldAssist.LeadingIcon="AccountGroup"
-                     TextChanged="tbxTenLoaiDocGia_TextChanged"/>
+                 Style="{StaticResource DataDisplayTextBox}"
+                 Margin="5"
+                 materialDesign:HintAssist.Hint="Tên Loại Độc Giả"
+                 materialDesign:TextFieldAssist.HasLeadingIcon="True"
+                 materialDesign:TextFieldAssist.LeadingIcon="AccountGroup"
+                 TextChanged="tbxTenLoaiDocGia_TextChanged"/>
 
             <materialDesign:PackIcon x:Name="icTenLoaiDocGiaError" Grid.Row="0"
-                                    Style="{StaticResource ErrorIcon}"
-                                    Margin="0,0,10,0"/>
+                                Style="{StaticResource ErrorIcon}"
+                                Margin="0,0,10,0"/>
 
             <TextBox x:Name="tbxSoSachMuonToiDa" Grid.Row="1"
-                     Style="{StaticResource DataDisplayTextBox}"
-                     Margin="5"
-                     materialDesign:HintAssist.Hint="Số Sách Mượn Tối Đa"
-                     materialDesign:TextFieldAssist.HasLeadingIcon="True"
-                     materialDesign:TextFieldAssist.LeadingIcon="BookOpenPageVariant"
-                     TextChanged="tbxSoSachMuonToiDa_TextChanged"/>
+                 Style="{StaticResource DataDisplayTextBox}"
+                 Margin="5"
+                 materialDesign:HintAssist.Hint="Số Sách Mượn Tối Đa"
+                 materialDesign:TextFieldAssist.HasLeadingIcon="True"
+                 materialDesign:TextFieldAssist.LeadingIcon="BookOpenPageVariant"
+                 TextChanged="tbxSoSachMuonToiDa_TextChanged"/>
 
             <materialDesign:PackIcon x:Name="icSoSachMuonToiDaError" Grid.Row="1"
-                                    Style="{StaticResource ErrorIcon}"
-                                    Margin="0,0,10,0"/>
+                                Style="{StaticResource ErrorIcon}"
+                                Margin="0,0,10,0"/>
         </Grid>
         <Button x:Name="btnThem" Grid.Row="2" Content="Thêm" Margin="0, 5, 0, 5"
-                HorizontalAlignment="Center" VerticalAlignment="Center" Click="btnThem_Click"/>
+            HorizontalAlignment="Center" VerticalAlignment="Center" Click="btnThem_Click"/>
     </Grid>
 </Window>

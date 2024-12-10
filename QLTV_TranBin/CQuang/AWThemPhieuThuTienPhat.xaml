@@ -49,8 +49,8 @@
         </Grid.RowDefinitions>
 
         <TextBlock Text="Thêm Phiếu Thu" Grid.Row="0" FontSize="24"
-                   FontWeight="Bold" HorizontalAlignment="Center"
-                   VerticalAlignment="Center"/>
+               FontWeight="Bold" HorizontalAlignment="Center"
+               VerticalAlignment="Center"/>
 
         <Grid Grid.Row="1">
             <Grid.RowDefinitions>
@@ -60,52 +60,52 @@
             </Grid.RowDefinitions>
 
             <ComboBox x:Name="cbbTenTaiKhoan" Grid.Row="0"
-                      Style="{StaticResource ModernComboBox}"
-                      Margin="5"
-                      materialDesign:HintAssist.Hint="Tên Tài Khoản"
-                      materialDesign:TextFieldAssist.HasLeadingIcon="True"
-                      materialDesign:TextFieldAssist.LeadingIcon="Account"
-                      IsEditable="True"
-                      IsTextSearchEnabled="False"
-                      SelectedValue="{x:Null}"
-                      IsSynchronizedWithCurrentItem="False"
-                      materialDesign:TextFieldAssist.HasClearButton="True"
-                      SelectionChanged="cbbTenTaiKhoan_SelectionChanged"/>
+                  Style="{StaticResource ModernComboBox}"
+                  Margin="5"
+                  materialDesign:HintAssist.Hint="Tên Tài Khoản"
+                  materialDesign:TextFieldAssist.HasLeadingIcon="True"
+                  materialDesign:TextFieldAssist.LeadingIcon="Account"
+                  IsEditable="True"
+                  IsTextSearchEnabled="False"
+                  SelectedValue="{x:Null}"
+                  IsSynchronizedWithCurrentItem="False"
+                  materialDesign:TextFieldAssist.HasClearButton="True"
+                  SelectionChanged="cbbTenTaiKhoan_SelectionChanged"/>
 
             <materialDesign:PackIcon x:Name="icTenTaiKhoanError" Grid.Row="0"
-                                    Style="{StaticResource ErrorIcon}"
-                                    Margin="0,0,10,0"/>
+                                Style="{StaticResource ErrorIcon}"
+                                Margin="0,0,25,0"/>
 
             <DatePicker x:Name="dpNgayThu" Grid.Row="1"
-                        Style="{StaticResource ModernDatePicker}"
-                        Margin="5"
-                        materialDesign:HintAssist.Hint="Ngày Thu"
-                        materialDesign:TextFieldAssist.HasLeadingIcon="True"
-                        materialDesign:TextFieldAssist.LeadingIcon="Calendar"
-                        xmlns:sys="clr-namespace:System;assembly=mscorlib"
-                        SelectedDate="{x:Static sys:DateTime.Now}"
-                        IsEnabled="True"
-                        Loaded="dpNgayThu_Loaded"
-                        FirstDayOfWeek="Monday"
-                        Language="vi-VN"/>
+                    Style="{StaticResource ModernDatePicker}"
+                    Margin="5"
+                    materialDesign:HintAssist.Hint="Ngày Thu"
+                    materialDesign:TextFieldAssist.HasLeadingIcon="True"
+                    materialDesign:TextFieldAssist.LeadingIcon="Calendar"
+                    xmlns:sys="clr-namespace:System;assembly=mscorlib"
+                    SelectedDate="{x:Static sys:DateTime.Now}"
+                    IsEnabled="True"
+                    Loaded="dpNgayThu_Loaded"
+                    FirstDayOfWeek="Monday"
+                    Language="vi-VN"/>
 
             <materialDesign:PackIcon x:Name="icNgayThuError" Grid.Row="1"
-                                    Style="{StaticResource ErrorIcon}"
-                                    Margin="0,0,10,0"/>
+                                Style="{StaticResource ErrorIcon}"
+                                Margin="0,0,10,0"/>
 
             <TextBox x:Name="tbxSoTienThu" Grid.Row="2"
-                     Style="{StaticResource DataDisplayTextBox}"
-                     Margin="5"
-                     materialDesign:HintAssist.Hint="Số Tiền Thu"
-                     materialDesign:TextFieldAssist.HasLeadingIcon="True"
-                     materialDesign:TextFieldAssist.LeadingIcon="Cash"
-                     TextChanged="tbxSoTienThu_TextChanged"/>
+                 Style="{StaticResource DataDisplayTextBox}"
+                 Margin="5"
+                 materialDesign:HintAssist.Hint="Số Tiền Thu"
+                 materialDesign:TextFieldAssist.HasLeadingIcon="True"
+                 materialDesign:TextFieldAssist.LeadingIcon="Cash"
+                 TextChanged="tbxSoTienThu_TextChanged"/>
 
             <materialDesign:PackIcon x:Name="icSoTienThuError" Grid.Row="2"
-                                    Style="{StaticResource ErrorIcon}"
-                                    Margin="0,0,10,0"/>
+                                Style="{StaticResource ErrorIcon}"
+                                Margin="0,0,10,0"/>
         </Grid>
         <Button x:Name="btnThem" Grid.Row="2" Content="Thêm" Margin="0, 5, 0, 5"
-                HorizontalAlignment="Center" VerticalAlignment="Center" Click="btnThem_Click"/>
+            HorizontalAlignment="Center" VerticalAlignment="Center" Click="btnThem_Click"/>
     </Grid>
 </Window>

@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("QLTV_TranBin")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+ed4e5bbe5fd2134bf51515a3482186feb7d65015")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+454ac1516f30a7ff62d32ceeb24a06b6f66f8208")]
 [assembly: System.Reflection.AssemblyProductAttribute("QLTV_TranBin")]
 [assembly: System.Reflection.AssemblyTitleAttribute("QLTV_TranBin")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
@@ -18,9 +19,11 @@ namespace QLTV_TranBin.CQuang
 {
     public partial class AWThemLoaiDocGia : Window
     {
-        public AWThemLoaiDocGia()
+        private QLTV2Context _context;
+        public AWThemLoaiDocGia(QLTV2Context context) // Thêm tham số context
         {
             InitializeComponent();
+            _context = context; // Gán context
         }
 
         private void tbxTenLoaiDocGia_TextChanged(object sender, TextChangedEventArgs e)
@@ -32,8 +35,17 @@ namespace QLTV_TranBin.CQuang
                 icTenLoaiDocGiaError.Visibility = Visibility.Visible;
                 return;
             }
-
             icTenLoaiDocGiaError.Visibility = Visibility.Collapsed;
+
+            if (!Regex.IsMatch(tbxTenLoaiDocGia.Text, @"^[a-zA-Z\p{L}\s]+$"))
+            {
+                icTenLoaiDocGiaError.ToolTip = "Tên loại độc giả chỉ được chứa chữ cái và khoảng trắng!";
+                icTenLoaiDocGiaError.Visibility = Visibility.Visible;
+            }
+            else
+            {
+                icTenLoaiDocGiaError.Visibility = Visibility.Collapsed;
+            }
         }
 
         private void tbxSoSachMuonToiDa_TextChanged(object sender, TextChangedEventArgs e)
@@ -86,30 +98,24 @@ namespace QLTV_TranBin.CQuang
                 string tenLoaiDocGia = tbxTenLoaiDocGia.Text;
                 int soSachMuonToiDa = int.Parse(tbxSoSachMuonToiDa.Text);
 
-                using (var context = new QLTV2Context())
+                // Create a new LOAIDOCGIA record
+                var newLoaiDocGia = new LOAIDOCGIA()
                 {
-                    // Create a new LOAIDOCGIA record
-                    var newLoaiDocGia = new LOAIDOCGIA()
-                    {
-                        TenLoaiDocGia = tenLoaiDocGia,
-                        SoSachMuonToiDa = soSachMuonToiDa,
-                        IsDeleted = false // Đảm bảo IsDeleted được đặt là false
-                    };
+                    TenLoaiDocGia = tenLoaiDocGia,
+                    SoSachMuonToiDa = soSachMuonToiDa,
+                    IsDeleted = false // Đảm bảo IsDeleted được đặt là false
+                };
 
-                    context.LOAIDOCGIA.Add(newLoaiDocGia);
-                    context.SaveChanges();
+                _context.LOAIDOCGIA.Add(newLoaiDocGia);
+                _context.SaveChanges();
 
-                    // Hiển thị thông báo thành công
-                    MessageBox.Show("Thêm loại độc giả thành công!", "Thông báo", MessageBoxButton.OK, MessageBoxImage.Information);
+                MessageBox.Show("Thêm loại độc giả thành công!", "Thông báo", MessageBoxButton.OK, MessageBoxImage.Information);
 
-                    // Đóng cửa sổ sau khi thêm thành công
-                    this.DialogResult = true;
-                    this.Close();
-                }
+                this.DialogResult = true;
+                this.Close();
             }
             catch (Exception ex)
             {
-                // Hiển thị thông báo lỗi
                 MessageBox.Show($"Lỗi khi thêm loại độc giả: {ex.Message}", "Lỗi", MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }

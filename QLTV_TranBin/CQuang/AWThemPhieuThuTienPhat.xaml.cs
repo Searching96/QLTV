@@ -19,9 +19,12 @@ namespace QLTV_TranBin.CQuang
 {
     public partial class AWThemPhieuThuTienPhat : Window
     {
-        public AWThemPhieuThuTienPhat()
+        private QLTV2Context _context;
+
+        public AWThemPhieuThuTienPhat(QLTV2Context context) //Truyền context
         {
             InitializeComponent();
+            _context = context;
             LoadTenTaiKhoan();
             SetDefaultDate();
         }
@@ -33,14 +36,11 @@ namespace QLTV_TranBin.CQuang
 
         private void LoadTenTaiKhoan()
         {
-            using (var context = new QLTV2Context())
-            {
-                var dsTenTaiKhoan = context.TAIKHOAN
-                    .Select(tk => tk.TenTaiKhoan)
-                    .ToList();
+            var dsTenTaiKhoan = _context.TAIKHOAN
+                .Select(tk => tk.TenTaiKhoan)
+                .ToList();
 
-                cbbTenTaiKhoan.ItemsSource = dsTenTaiKhoan;
-            }
+            cbbTenTaiKhoan.ItemsSource = dsTenTaiKhoan;
         }
 
         private void cbbTenTaiKhoan_SelectionChanged(object sender, SelectionChangedEventArgs e)
@@ -138,60 +138,61 @@ namespace QLTV_TranBin.CQuang
                 DateTime ngayThu = dpNgayThu.SelectedDate.Value;
                 decimal soTienThu = decimal.Parse(tbxSoTienThu.Text);
 
-                using (var context = new QLTV2Context())
+                var taiKhoan = _context.TAIKHOAN.FirstOrDefault(tk => tk.TenTaiKhoan == tenTaiKhoan);
+                if (taiKhoan == null)
                 {
-                    // Lấy ID của Độc Giả
-                    int idDocGia = context.DOCGIA
-                        .Include(dg => dg.IDTaiKhoanNavigation)
-                        .Where(dg => dg.IDTaiKhoanNavigation.TenTaiKhoan == tenTaiKhoan)
-                        .Select(dg => dg.ID)
+                    icTenTaiKhoanError.ToolTip = "Tên tài khoản không tồn tại trong cơ sở dữ liệu!";
+                    icTenTaiKhoanError.Visibility = Visibility.Visible;
+                    return;
+                }
+
+                // Lấy ID của Độc Giả
+                int idDocGia = _context.DOCGIA
+                    .Include(dg => dg.IDTaiKhoanNavigation)
+                    .Where(dg => dg.IDTaiKhoanNavigation.TenTaiKhoan == tenTaiKhoan)
+                    .Select(dg => dg.ID)
+                    .FirstOrDefault();
+
+                // Kiểm tra xem độc giả có tồn tại không
+                if (idDocGia != 0)
+                {
+                    // Lấy tổng nợ hiện tại của độc giả
+                    decimal tongNoHienTai = _context.DOCGIA
+                        .Where(dg => dg.ID == idDocGia)
+                        .Select(dg => dg.TongNo)
                         .FirstOrDefault();
 
-                    // Kiểm tra xem độc giả có tồn tại không
-                    if (idDocGia != 0)
+                    // Tạo phiếu thu tiền phạt mới
+                    var newPhieuThu = new PHIEUTHUTIENPHAT()
                     {
-                        // Lấy tổng nợ hiện tại của độc giả
-                        decimal tongNoHienTai = context.DOCGIA
-                            .Where(dg => dg.ID == idDocGia)
-                            .Select(dg => dg.TongNo)
-                            .FirstOrDefault();
+                        IDDocGia = idDocGia,
+                        NgayThu = ngayThu,
+                        TongNo = tongNoHienTai,
+                        SoTienThu = soTienThu,
+                        ConLai = tongNoHienTai - soTienThu,
+                        IsDeleted = false
+                    };
 
-                        // Tạo phiếu thu tiền phạt mới
-                        var newPhieuThu = new PHIEUTHUTIENPHAT()
-                        {
-                            IDDocGia = idDocGia,
-                            NgayThu = ngayThu,
-                            TongNo = tongNoHienTai,
-                            SoTienThu = soTienThu,
-                            ConLai = tongNoHienTai - soTienThu,
-                            IsDeleted = false
-                        };
+                    _context.PHIEUTHUTIENPHAT.Add(newPhieuThu);
 
-                        context.PHIEUTHUTIENPHAT.Add(newPhieuThu);
+                    // Cập nhật tổng nợ của độc giả
+                    var docGia = _context.DOCGIA.Find(idDocGia);
+                    docGia.TongNo = newPhieuThu.ConLai;
 
-                        // Cập nhật tổng nợ của độc giả
-                        var docGia = context.DOCGIA.Find(idDocGia);
-                        docGia.TongNo = newPhieuThu.ConLai;
+                    _context.SaveChanges();
 
-                        context.SaveChanges();
+                    MessageBox.Show("Thêm phiếu thu tiền phạt thành công!", "Thông báo", MessageBoxButton.OK, MessageBoxImage.Information);
 
-                        // Hiển thị thông báo thành công
-                        MessageBox.Show("Thêm phiếu thu tiền phạt thành công!", "Thông báo", MessageBoxButton.OK, MessageBoxImage.Information);
-
-                        // Đóng cửa sổ sau khi thêm thành công
-                        this.DialogResult = true;
-                        this.Close();
-                    }
-                    else
-                    {
-                        // Xử lý trường hợp không tìm thấy độc giả
-                        MessageBox.Show("Không tìm thấy độc giả!", "Lỗi", MessageBoxButton.OK, MessageBoxImage.Error);
-                    }
+                    this.DialogResult = true;
+                    this.Close();
+                }
+                else
+                {
+                    MessageBox.Show("Không tìm thấy độc giả!", "Lỗi", MessageBoxButton.OK, MessageBoxImage.Error);
                 }
             }
             catch (Exception ex)
             {
-                // Hiển thị thông báo lỗi
                 MessageBox.Show($"Lỗi khi thêm phiếu thu tiền phạt: {ex.Message}", "Lỗi", MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
