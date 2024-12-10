@@ -16,8 +16,8 @@
                 <Grid>
                     <Grid.RowDefinitions>
                         <RowDefinition Height="Auto" />
-                        <RowDefinition Height="*" />
-                        <RowDefinition Height="*" />
+                        <RowDefinition Height="4*" />
+                        <RowDefinition Height="6*" />
                     </Grid.RowDefinitions>
                     <ComboBox Style="{StaticResource ModernComboBox}"
                               x:Name="cboNamBCMS"
@@ -119,16 +119,19 @@
                         </Grid>
                     </StackPanel>
                     <!--Chart-->
-                    <lvc:CartesianChart x:Name="BCMSChart"
+                    <lvc:CartesianChart x:Name="BCMSLineChart"
                                         Margin="10"
                                         Grid.Row="1"
-                                        Series="{Binding CurrentChartValues}">
+                                        Series="{Binding CurrentChartValues}"
+                                        Background="White">
                         <lvc:CartesianChart.AxisX>
                             <lvc:Axis Title="Thời gian"
+                                      MinValue="0"
                                       Labels="{Binding CurrentLabels}" />
                         </lvc:CartesianChart.AxisX>
                         <lvc:CartesianChart.AxisY>
-                            <lvc:Axis Title="Tổng số lượt mượn" />
+                            <lvc:Axis Title="Tổng số lượt mượn"
+                                      MinValue="0" />
                         </lvc:CartesianChart.AxisY>
                     </lvc:CartesianChart>
 
@@ -143,99 +146,147 @@
                         </Grid.ColumnDefinitions>
                         <Border BorderThickness="1"
                                 BorderBrush="Gray"
-                                CornerRadius="3">
-                            <DataGrid x:Name="dgBorrowingReports"
-                                      AutoGenerateColumns="False"
-                                      Style="{StaticResource MaterialDesignDataGrid}"
-                                      IsReadOnly="True"
-                                      SelectionMode="Single"
-                                      HorizontalAlignment="Stretch"
-                                      VerticalAlignment="Stretch">
-                                <DataGrid.Columns>
-                                    <DataGridTextColumn Header="Tháng"
-                                                        Binding="{Binding Month, StringFormat=MM/yyyy}" />
-                                    <DataGridTextColumn Header="Tổng số lượt mượn"
-                                                        Binding="{Binding TongSoLuotMuon}" />
-                                    <DataGridTemplateColumn Header="Thao tác"
-                                                            IsReadOnly="True">
-                                        <DataGridTemplateColumn.CellTemplate>
-                                            <DataTemplate>
-                                                <StackPanel Orientation="Horizontal">
-                                                    <ToggleButton Style="{StaticResource MaterialDesignRaisedToggleButton}"
-                                                                  Width="52"
-                                                                  IsChecked="{Binding IsExpanded, Mode=TwoWay}"
-                                                                  ToolTip="Chi tiết"
-                                                                  ToolTipService.InitialShowDelay="0"
-                                                                  Click="btnViewDetail_Click"
-                                                                  Margin="0,-5,5,5" />
-                                                </StackPanel>
-                                            </DataTemplate>
-                                        </DataGridTemplateColumn.CellTemplate>
-                                    </DataGridTemplateColumn>
-                                </DataGrid.Columns>
-                                <DataGrid.RowDetailsTemplate>
-                                    <DataTemplate>
-                                        <DataGrid ItemsSource="{Binding DSBCMuonSach}"
-                                                  AutoGenerateColumns="False"
-                                                  Style="{StaticResource MaterialDesignDataGrid}"
-                                                  IsReadOnly="True"
-                                                  SelectionMode="Single"
-                                                  Margin="30,0,0,0"
-                                                  HorizontalAlignment="Stretch"
-                                                  VerticalAlignment="Stretch">
-                                            <DataGrid.Columns>
-                                                <DataGridTextColumn Header="Mã báo cáo"
-                                                                    Binding="{Binding BCMuonSach.MaBCMuonSach}" />
-                                                <DataGridTextColumn Header="Ngày"
-                                                                    Binding="{Binding BCMuonSach.Thang, StringFormat=dd/MM/yyyy}" />
-                                                <DataGridTemplateColumn Header="Thao tác"
-                                                                        IsReadOnly="True">
-                                                    <DataGridTemplateColumn.CellTemplate>
-                                                        <DataTemplate>
-                                                            <StackPanel Orientation="Horizontal">
-                                                                <ToggleButton Style="{StaticResource MaterialDesignRaisedToggleButton}"
-                                                                              Width="52"
-                                                                              IsChecked="{Binding IsExpanded, Mode=TwoWay}"
-                                                                              ToolTip="Chi tiết"
-                                                                              ToolTipService.InitialShowDelay="0"
-                                                                              Click="btnViewDetail_Click"
-                                                                              Margin="0,-5,5,5" />
-                                                            </StackPanel>
-                                                        </DataTemplate>
-                                                    </DataGridTemplateColumn.CellTemplate>
-                                                </DataGridTemplateColumn>
-                                            </DataGrid.Columns>
-                                            <DataGrid.RowDetailsTemplate>
+                                CornerRadius="3"
+                                Margin="5">
+                            <Grid Grid.Column="1">
+                                <DataGrid x:Name="dgBorrowingReports"
+                                          AutoGenerateColumns="False"
+                                          Style="{StaticResource MaterialDesignDataGrid}"
+                                          IsReadOnly="True"
+                                          SelectionMode="Single"
+                                          HorizontalAlignment="Stretch"
+                                          VerticalAlignment="Stretch"
+                                          ScrollViewer.CanContentScroll="False"
+                                          VerticalScrollBarVisibility="Auto">
+                                    <DataGrid.Columns>
+                                        <DataGridTextColumn Header="Tháng"
+                                                            Binding="{Binding Month, StringFormat=MM/yyyy}" />
+                                        <DataGridTextColumn Header="Tổng số lượt mượn"
+                                                            Binding="{Binding TongSoLuotMuon}" />
+                                        <DataGridTemplateColumn Header="Thao tác"
+                                                                IsReadOnly="True">
+                                            <DataGridTemplateColumn.CellTemplate>
                                                 <DataTemplate>
-                                                    <DataGrid ItemsSource="{Binding BCMuonSach.CTBCMUONSACH}"
-                                                              AutoGenerateColumns="False"
-                                                              IsReadOnly="True"
-                                                              Margin="30,0,0,0"
-                                                              Style="{StaticResource MaterialDesignDataGrid}">
-                                                        <DataGrid.Columns>
-                                                            <DataGridTextColumn Header="Mã thể loại"
-                                                                                Binding="{Binding IDTheLoaiNavigation.MaTheLoai}" />
-                                                            <DataGridTextColumn Header="Tên thể loại"
-                                                                                Binding="{Binding IDTheLoaiNavigation.TenTheLoai}" />
-                                                            <DataGridTextColumn Header="Số lượt mượn"
-                                                                                Binding="{Binding SoLuotMuon}" />
-                                                            <DataGridTextColumn Header="Tỉ lệ"
-                                                                                Binding="{Binding TiLe, StringFormat=P2}" />
-                                                        </DataGrid.Columns>
-                                                        <DataGrid.CellStyle>
-                                                            <Style TargetType="DataGridCell"
-                                                                   BasedOn="{StaticResource MaterialDesignDataGridCell}">
-                                                                <Setter Property="Padding"
-                                                                        Value="10 10 0 10" />
-                                                            </Style>
-                                                        </DataGrid.CellStyle>
-                                                    </DataGrid>
+                                                    <StackPanel Orientation="Horizontal">
+                                                        <ToggleButton Style="{StaticResource MaterialDesignRaisedToggleButton}"
+                                                                      Width="52"
+                                                                      IsChecked="{Binding IsExpanded, Mode=TwoWay}"
+                                                                      ToolTip="Chi tiết"
+                                                                      ToolTipService.InitialShowDelay="0"
+                                                                      Click="btnViewDetail_Click" />
+                                                    </StackPanel>
                                                 </DataTemplate>
-                                            </DataGrid.RowDetailsTemplate>
-                                        </DataGrid>
-                                    </DataTemplate>
-                                </DataGrid.RowDetailsTemplate>
-                            </DataGrid>
+                                            </DataGridTemplateColumn.CellTemplate>
+                                        </DataGridTemplateColumn>
+                                    </DataGrid.Columns>
+                                    <DataGrid.RowDetailsTemplate>
+                                        <DataTemplate>
+                                            <DataGrid ItemsSource="{Binding DSBCMuonSach}"
+                                                      AutoGenerateColumns="False"
+                                                      Style="{StaticResource MaterialDesignDataGrid}"
+                                                      IsReadOnly="True"
+                                                      ScrollViewer.CanContentScroll="False"
+                                                      SelectionMode="Single"
+                                                      Margin="30,0,0,0"
+                                                      HorizontalAlignment="Stretch"
+                                                      VerticalAlignment="Stretch">
+                                                <DataGrid.Columns>
+                                                    <DataGridTextColumn Header="Mã báo cáo"
+                                                                        Binding="{Binding BCMuonSach.MaBCMuonSach}" />
+                                                    <DataGridTextColumn Header="Ngày"
+                                                                        Binding="{Binding BCMuonSach.Thang, StringFormat=dd/MM/yyyy}" />
+                                                    <DataGridTemplateColumn Header="Thao tác"
+                                                                            IsReadOnly="True">
+                                                        <DataGridTemplateColumn.CellTemplate>
+                                                            <DataTemplate>
+                                                                <StackPanel Orientation="Horizontal">
+                                                                    <ToggleButton Style="{StaticResource MaterialDesignRaisedToggleButton}"
+                                                                                  Width="52"
+                                                                                  IsChecked="{Binding IsExpanded, Mode=TwoWay}"
+                                                                                  ToolTip="Chi tiết"
+                                                                                  ToolTipService.InitialShowDelay="0"
+                                                                                  Click="btnViewDetail_Click" />
+                                                                </StackPanel>
+                                                            </DataTemplate>
+                                                        </DataGridTemplateColumn.CellTemplate>
+                                                    </DataGridTemplateColumn>
+                                                </DataGrid.Columns>
+                                                <DataGrid.RowDetailsTemplate>
+                                                    <DataTemplate>
+                                                        <DataGrid ItemsSource="{Binding BCMuonSach.CTBCMUONSACH}"
+                                                                  AutoGenerateColumns="False"
+                                                                  IsReadOnly="True"
+                                                                  ScrollViewer.CanContentScroll="False"
+                                                                  Margin="30,0,0,0"
+                                                                  Style="{StaticResource MaterialDesignDataGrid}">
+                                                            <DataGrid.Columns>
+                                                                <DataGridTextColumn Header="Mã thể loại"
+                                                                                    Binding="{Binding IDTheLoaiNavigation.MaTheLoai}" />
+                                                                <DataGridTextColumn Header="Tên thể loại"
+                                                                                    Binding="{Binding IDTheLoaiNavigation.TenTheLoai}" />
+                                                                <DataGridTextColumn Header="Số lượt mượn"
+                                                                                    Binding="{Binding SoLuotMuon}" />
+                                                                <DataGridTextColumn Header="Tỉ lệ"
+                                                                                    Binding="{Binding TiLe, StringFormat=P2}" />
+                                                            </DataGrid.Columns>
+                                                            <DataGrid.CellStyle>
+                                                                <Style TargetType="DataGridCell"
+                                                                       BasedOn="{StaticResource MaterialDesignDataGridCell}">
+                                                                    <Setter Property="Padding"
+                                                                            Value="10 10 0 10" />
+                                                                </Style>
+                                                            </DataGrid.CellStyle>
+                                                        </DataGrid>
+                                                    </DataTemplate>
+                                                </DataGrid.RowDetailsTemplate>
+                                            </DataGrid>
+                                        </DataTemplate>
+                                    </DataGrid.RowDetailsTemplate>
+                                </DataGrid>
+                            </Grid>
+                        </Border>
+                        <Border Grid.Column="1"
+                                Margin="5"
+                                BorderThickness="1"
+                                BorderBrush="Gray"
+                                CornerRadius="3">
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*" />
+                                    <ColumnDefinition Width="*" />
+                                </Grid.ColumnDefinitions>
+                                <lvc:PieChart x:Name="BCMSPieChart"
+                                              Grid.Column="0"
+                                              Series="{Binding CurrentChartValues}"
+                                              Background="White">
+                                    <lvc:PieChart.DataTooltip>
+                                        <lvc:DefaultTooltip SelectionMode="OnlySender" />
+                                    </lvc:PieChart.DataTooltip>
+                                </lvc:PieChart>
+                                <StackPanel Grid.Column="1"
+                                            Margin="10">
+                                    <ItemsControl x:Name="GenresDisplay">
+                                        <ItemsControl.ItemTemplate>
+                                            <DataTemplate>
+                                                <Grid>
+                                                    <StackPanel Orientation="Horizontal"
+                                                                Margin="5">
+                                                        <Rectangle Width="20"
+                                                                   Height="20"
+                                                                   Fill="{Binding Color}"
+                                                                   Margin="0,0,5,0" />
+                                                        <TextBlock Text="{Binding Genre}"
+                                                                   VerticalAlignment="Center" />
+                                                    </StackPanel>
+                                                    <TextBlock Text="{Binding Count}"
+                                                               VerticalAlignment="Center"
+                                                               HorizontalAlignment="Right" />
+                                                </Grid>
+                                            </DataTemplate>
+                                        </ItemsControl.ItemTemplate>
+                                    </ItemsControl>
+                                </StackPanel>
+                            </Grid>
                         </Border>
                     </Grid>
                 </Grid>

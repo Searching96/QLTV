@@ -1,27 +1,15 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using LiveCharts;
+using LiveCharts.Wpf;
+using Microsoft.EntityFrameworkCore;
+using QLTV.Models;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Globalization;
-using System.Linq;
 using System.Runtime.CompilerServices;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Controls.Primitives;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
 using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
-using LiveCharts.Wpf;
-using LiveCharts;
-using Microsoft.EntityFrameworkCore;
-using QLTV.Models;
-using System.Drawing;
 
 namespace QLTV.UserControls
 {
@@ -178,6 +166,13 @@ namespace QLTV.UserControls
         }
     }
 
+    public class GenresViewModel
+    {
+        public string Genre { get; set; }
+        public int Count { get; set; }
+        public SolidColorBrush Color { get; set; }
+    }
+
     /// <summary>
     /// Interaction logic for UcBCMuonTra.xaml
     /// </summary>
@@ -187,7 +182,8 @@ namespace QLTV.UserControls
         private ObservableCollection<DSBCMuonSachModel> _filteredBorrowReports;
         private ObservableCollection<BCTraTreModel> _lateReturnReports;
         private ObservableCollection<BCTraTreModel> _filteredLateReturnReports;
-        private ChartViewModel BCMSChartModel;
+        private ChartViewModel BCMSLineChartModel;
+        private ChartViewModel BCMSPieChartModel;
 
         public UcBCMuonTra()
         {
@@ -340,9 +336,11 @@ namespace QLTV.UserControls
         private void PopulateMonthComboBox(string? selectedYear)
         {
             var ThangBCMS = _borrowReports
-                .Select(r => r.Month.ToString("MM/yyyy"))
+                .Select(r => r.Month)
                 .Distinct()
-                .OrderBy(y => y)
+                .OrderBy(m => m.Year)
+                .ThenBy(m => m.Month)
+                .Select(m => m.ToString("MM/yyyy"))
                 .ToList();
 
             // Populate chart month comboboxes
@@ -351,16 +349,19 @@ namespace QLTV.UserControls
             cbStartMonth.SelectedIndex = 0; // Select the first month by default
             cbEndMonth.SelectedIndex = cbEndMonth.Items.Count - 1; // Select the last month by default
 
-            var ThangBCTT = _lateReturnReports
-                .Where(r => selectedYear == "Tất cả" || r.BCTraTre.Ngay.Year == int.Parse(selectedYear))
-                .Select(r => r.BCTraTre.Ngay.Month.ToString())
-                .Distinct()
-                .OrderBy(m => m)
-                .ToList();
+            if (!string.IsNullOrEmpty(selectedYear))
+            {
+                var ThangBCTT = _lateReturnReports
+                    .Where(r => selectedYear == "Tất cả" || r.BCTraTre.Ngay.Year == int.Parse(selectedYear))
+                    .Select(r => r.BCTraTre.Ngay.Month.ToString())
+                    .Distinct()
+                    .OrderBy(m => m)
+                    .ToList();
 
-            ThangBCTT.Insert(0, "Tất cả"); // Add "Tất cả" option
-            cboThangBCTT.ItemsSource = ThangBCTT;
-            cboThangBCTT.SelectedIndex = 0; // Select "Tất cả" by default
+                ThangBCTT.Insert(0, "Tất cả"); // Add "Tất cả" option
+                cboThangBCTT.ItemsSource = ThangBCTT;
+                cboThangBCTT.SelectedIndex = 0; // Select "Tất cả" by default
+            }
         }
 
         private void PopulateQuarterComboBox(string? selectedYear)
@@ -485,9 +486,9 @@ namespace QLTV.UserControls
             cbQuarter.SelectedItem = null;
         }
 
-        private void PopulateChartViewModel(DateTime begin, DateTime end)
+        private void PopulateLineChartViewModel(DateTime begin, DateTime end)
         {
-            BCMSChartModel = new ChartViewModel
+            BCMSLineChartModel = new ChartViewModel
             {
                 StartTime = begin,
                 EndTime = end,
@@ -506,20 +507,103 @@ namespace QLTV.UserControls
                         bcMuonSach.BCMuonSach.Thang <= end &&
                         bcMuonSach.BCMuonSach.MaBCMuonSach != "Tổng")
                     {
-                        values.Add(bcMuonSach.BCMuonSach.TongSoLuotMuon);
-                        labels.Add(bcMuonSach.BCMuonSach.Thang.ToString("MM/yyyy"));
+                        var daysInMonth = DateTime.DaysInMonth(bcMuonSach.BCMuonSach.Thang.Year, bcMuonSach.BCMuonSach.Thang.Month);
+                        for (int day = 1; day <= daysInMonth; day++)
+                        {
+                            var currentDate = new DateTime(bcMuonSach.BCMuonSach.Thang.Year, bcMuonSach.BCMuonSach.Thang.Month, day);
+                            if (currentDate >= begin && currentDate <= end)
+                            {
+                                values.Add(bcMuonSach.BCMuonSach.TongSoLuotMuon / daysInMonth);
+                                labels.Add(currentDate.ToString("dd/MM/yyyy"));
+                            }
+                        }
                     }
                 }
             }
 
-            BCMSChartModel.CurrentChartValues.Add(new LineSeries
+            BCMSLineChartModel.CurrentChartValues.Add(new LineSeries
             {
                 Title = "Số lượt mượn",
                 Values = values
             });
 
-            BCMSChartModel.CurrentLabels = labels;
-            BCMSChart.DataContext = BCMSChartModel;
+            BCMSLineChartModel.CurrentLabels = labels;
+            BCMSLineChart.DataContext = BCMSLineChartModel;
+        }
+
+        private void PopulatePieChartViewModel(DateTime begin, DateTime end)
+        {
+            BCMSPieChartModel = new ChartViewModel
+            {
+                StartTime = begin,
+                EndTime = end,
+                CurrentChartValues = new SeriesCollection(),
+                CurrentLabels = new List<string>()
+            };
+
+            var genreBorrowCounts = new Dictionary<string, int>();
+
+            foreach (var report in _filteredBorrowReports)
+            {
+                foreach (var bcMuonSach in report.DSBCMuonSach)
+                {
+                    if (bcMuonSach.BCMuonSach.Thang >= begin &&
+                        bcMuonSach.BCMuonSach.Thang <= end &&
+                        bcMuonSach.BCMuonSach.MaBCMuonSach != "Tổng")
+                    {
+                        foreach (var ctbcMuonSach in bcMuonSach.BCMuonSach.CTBCMUONSACH)
+                        {
+                            var genre = ctbcMuonSach.IDTheLoaiNavigation.TenTheLoai;
+                            if (genreBorrowCounts.ContainsKey(genre))
+                            {
+                                genreBorrowCounts[genre] += ctbcMuonSach.SoLuotMuon;
+                            }
+                            else
+                            {
+                                genreBorrowCounts[genre] = ctbcMuonSach.SoLuotMuon;
+                            }
+                        }
+                    }
+                }
+            }
+
+            var top10Genres = genreBorrowCounts
+                .OrderByDescending(g => g.Value)
+                .Take(10)
+                .Select(g => new GenresViewModel
+                {
+                    Genre = g.Key,
+                    Count = g.Value,
+                    Color = new SolidColorBrush(GetRandomColor())
+                })
+                .ToList();
+
+            foreach (var genre in top10Genres)
+            {
+                var pieSeries = new PieSeries
+                {
+                    Values = new ChartValues<int> { genre.Count },
+                    Title = genre.Genre,
+                    DataLabels = false,
+                    Fill = genre.Color,
+                    LabelPoint = chartPoint => $"{chartPoint.SeriesView.Title}: {chartPoint.Y} lượt mượn",
+                    ToolTip = new DefaultTooltip
+                    {
+                        SelectionMode = TooltipSelectionMode.OnlySender
+                    }
+                };
+
+                BCMSPieChartModel.CurrentChartValues.Add(pieSeries);
+            }
+
+            BCMSPieChart.DataContext = BCMSPieChartModel;
+            GenresDisplay.ItemsSource = top10Genres;
+        }
+
+        private System.Windows.Media.Color GetRandomColor()
+        {
+            Random rand = new Random();
+            return System.Windows.Media.Color.FromRgb((byte)rand.Next(256), (byte)rand.Next(256), (byte)rand.Next(256));
         }
 
         private void cboYear_SelectionChanged(object sender, SelectionChangedEventArgs e)
@@ -530,7 +614,8 @@ namespace QLTV.UserControls
             {
                 var begin = new DateTime(int.Parse(selectedYear), 1, 1);
                 var end = new DateTime(int.Parse(selectedYear), 12, 31);
-                PopulateChartViewModel(begin, end);
+                PopulateLineChartViewModel(begin, end);
+                PopulatePieChartViewModel(begin, end);
             }
         }
 
@@ -563,7 +648,8 @@ namespace QLTV.UserControls
                     default:
                         return;
                 }
-                PopulateChartViewModel(begin, end);
+                PopulateLineChartViewModel(begin, end);
+                PopulatePieChartViewModel(begin, end);
             }
         }
 
@@ -574,14 +660,14 @@ namespace QLTV.UserControls
             var selectedEndMonth = cbEndMonth.SelectedItem as string;
             var selectedYear = cbYear.SelectedItem as string;
 
-            if (int.TryParse(selectedStartMonth, out int startMonth) &&
-                int.TryParse(selectedEndMonth, out int endMonth) &&
-                int.TryParse(selectedYear, out int year))
+            if (DateTime.TryParseExact(selectedStartMonth, "MM/yyyy", CultureInfo.InvariantCulture, DateTimeStyles.None, out DateTime startMonth) &&
+                DateTime.TryParseExact(selectedEndMonth, "MM/yyyy", CultureInfo.InvariantCulture, DateTimeStyles.None, out DateTime endMonth))
             {
-                var begin = new DateTime(year, startMonth, 1);
-                var end = new DateTime(year, endMonth, DateTime.DaysInMonth(year, endMonth));
+                var begin = new DateTime(startMonth.Year, startMonth.Month, 1);
+                var end = new DateTime(endMonth.Year, endMonth.Month, DateTime.DaysInMonth(endMonth.Year, endMonth.Month));
 
-                PopulateChartViewModel(begin, end);
+                PopulateLineChartViewModel(begin, end);
+                PopulatePieChartViewModel(begin, end);
             }
         }
 
@@ -598,7 +684,8 @@ namespace QLTV.UserControls
             var selectedEndDay = dpEndDay.SelectedDate;
             if (selectedStartDay != null && selectedEndDay != null)
             {
-                PopulateChartViewModel(selectedStartDay.Value, selectedEndDay.Value);
+                PopulateLineChartViewModel(selectedStartDay.Value, selectedEndDay.Value);
+                PopulatePieChartViewModel(selectedStartDay.Value, selectedEndDay.Value);
             }
         }
     }
