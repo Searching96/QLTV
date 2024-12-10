@@ -112,7 +112,7 @@ namespace QLTV.UserControls
 
         public event PropertyChangedEventHandler? PropertyChanged;
 
-        protected void OnPropertyChanged([CallerMemberName] string propertyName = null)
+        protected void OnPropertyChanged([CallerMemberName] string propertyName = "")
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
@@ -120,13 +120,11 @@ namespace QLTV.UserControls
 
     public partial class UcThemPhieuTra : UserControl
     {
-        private readonly QLTVContext _context;
         private ObservableCollection<ReturnDetailModel> _returnDetails;
 
         public UcThemPhieuTra()
         {
             InitializeComponent();
-            _context = new QLTVContext();
             _returnDetails = new ObservableCollection<ReturnDetailModel>();
             LoadData();
         }
@@ -147,62 +145,68 @@ namespace QLTV.UserControls
         {
             try
             {
-                //Load tất cả độc giả và các phiếu mượn của độc giả đó
-
-                var pendingBorrows = await _context.DOCGIA
-                    .Include(dg => dg.PHIEUMUON.Where(pm => pm.CTPHIEUMUON.Count != pm.CTPHIEUTRA.Count))
-                        .ThenInclude(pm => pm.CTPHIEUMUON)
-                            .ThenInclude(ct => ct.IDSachNavigation)
-                                .ThenInclude(s => s.IDTuaSachNavigation)
-                    .Include(dg => dg.PHIEUMUON.Where(pm => pm.CTPHIEUMUON.Count != pm.CTPHIEUTRA.Count))
-                        .ThenInclude(pm => pm.CTPHIEUTRA)
-                    .Include(dg => dg.PHIEUMUON.Where(pm => pm.CTPHIEUMUON.Count != pm.CTPHIEUTRA.Count))
-                        .ThenInclude(pm => pm.CTPHIEUMUON)
-                            .ThenInclude(ct => ct.IDSachNavigation)
-                                .ThenInclude(s => s.IDTinhTrangNavigation)
-                    .Include(dg => dg.IDTaiKhoanNavigation)
-                    .ToListAsync();
-
-                //Chọn các phiếu mượn chưa hoàn tất trả
-
-                var availableBorrows = pendingBorrows
-                    .Where(dg => dg.PHIEUMUON.Any(pm =>
-                        pm.CTPHIEUMUON.Any(ct =>
-                            !pm.CTPHIEUTRA.Any(ptr => ptr.IDPhieuMuonNavigation == pm && ptr.IDSach == ct.IDSach)
-                        )
-                    ))
-                    .ToList();
-
-                //Load tất cả các tình trạng
-                var tinhTrangList = _context.TINHTRANG.ToList();
-                colTinhTrangTra.ItemsSource = tinhTrangList;
-
-
-                var viewSource = new CollectionViewSource();
-                viewSource.Source = availableBorrows;
-                cboDocGia.ItemsSource = viewSource.View;
-
-                var textBox = cboDocGia.Template.FindName("PART_EditableTextBox", cboDocGia) as TextBox;
-                if (textBox != null)
+                using (var _context = new QLTVContext())
                 {
-                    textBox.TextChanged += (sender, args) =>
+                    //Load tất cả độc giả và các phiếu mượn của độc giả đó
+
+                    var pendingBorrows = await _context.DOCGIA
+                        .Include(dg => dg.PHIEUMUON.Where(pm => pm.CTPHIEUMUON.Count != pm.CTPHIEUTRA.Count
+                                                            && !pm.IsDeleted && !pm.IsPending))
+                            .ThenInclude(pm => pm.CTPHIEUMUON)
+                                .ThenInclude(ct => ct.IDSachNavigation)
+                                    .ThenInclude(s => s.IDTuaSachNavigation)
+                        .Include(dg => dg.PHIEUMUON.Where(pm => pm.CTPHIEUMUON.Count != pm.CTPHIEUTRA.Count
+                                                            && !pm.IsDeleted && !pm.IsPending))
+                            .ThenInclude(pm => pm.CTPHIEUTRA)
+                        .Include(dg => dg.PHIEUMUON.Where(pm => pm.CTPHIEUMUON.Count != pm.CTPHIEUTRA.Count
+                                                            && !pm.IsDeleted && !pm.IsPending))
+                            .ThenInclude(pm => pm.CTPHIEUMUON)
+                                .ThenInclude(ct => ct.IDSachNavigation)
+                                    .ThenInclude(s => s.IDTinhTrangNavigation)
+                        .Include(dg => dg.IDTaiKhoanNavigation)
+                        .ToListAsync();
+
+                    //Chọn các phiếu mượn chưa hoàn tất trả
+
+                    var availableBorrows = pendingBorrows
+                        .Where(dg => dg.PHIEUMUON.Any(pm =>
+                            pm.CTPHIEUMUON.Any(ct =>
+                                !pm.CTPHIEUTRA.Any(ptr => ptr.IDPhieuMuonNavigation == pm && ptr.IDSach == ct.IDSach)
+                            )
+                        ))
+                        .ToList();
+
+                    //Load tất cả các tình trạng
+                    var tinhTrangList = _context.TINHTRANG.ToList();
+                    colTinhTrangTra.ItemsSource = tinhTrangList;
+
+
+                    var viewSource = new CollectionViewSource();
+                    viewSource.Source = availableBorrows;
+                    cboDocGia.ItemsSource = viewSource.View;
+
+                    var textBox = cboDocGia.Template.FindName("PART_EditableTextBox", cboDocGia) as TextBox;
+                    if (textBox != null)
                     {
-                        var searchText = ConvertToUnsigned(textBox.Text);
-                        viewSource.View.Filter = item =>
+                        textBox.TextChanged += (sender, args) =>
                         {
-                            if (string.IsNullOrEmpty(searchText))
-                                return true;
-                            var docGia = item as DOCGIA;
-                            if (docGia != null)
+                            var searchText = ConvertToUnsigned(textBox.Text);
+                            viewSource.View.Filter = item =>
                             {
-                                var itemText = ConvertToUnsigned(docGia.IDTaiKhoanNavigation.TenTaiKhoan.ToString());
-                                return itemText.Contains(searchText, StringComparison.OrdinalIgnoreCase);
-                            }
-                            return false;
+                                if (string.IsNullOrEmpty(searchText))
+                                    return true;
+                                var docGia = item as DOCGIA;
+                                if (docGia != null)
+                                {
+                                    var itemText = ConvertToUnsigned(docGia.IDTaiKhoanNavigation.TenTaiKhoan.ToString());
+                                    return itemText.Contains(searchText, StringComparison.OrdinalIgnoreCase);
+                                }
+                                return false;
+                            };
+                            cboDocGia.IsDropDownOpen = true;
                         };
-                        cboDocGia.IsDropDownOpen = true;
                     };
-                };
+                }
             }
             catch (Exception ex)
             {
@@ -272,125 +276,132 @@ namespace QLTV.UserControls
 
             try
             {
-                var phieuTra = new PHIEUTRA
+                using (var _context = new QLTVContext())
                 {
-                    NgayTra = DateTime.Now
-                };
+                    // Attach selectedReader to context
+                    _context.DOCGIA.Attach(selectedReader);
 
-                _context.PHIEUTRA.Add(phieuTra);
-                await _context.SaveChangesAsync();
-
-                // Check for late returns and update BCTRATRE if necessary
-
-                var lateReturns = selectedBooks
-                    .Where(r => DateTime.Now > r.HanTra)
-                    .ToList();
-
-                if (lateReturns.Any())
-                {
-                    var today = DateTime.Now.Date;
-                    var bcTraTre = await _context.BCTRATRE
-                        .FirstOrDefaultAsync(bc => bc.Ngay == today);
-
-                    if (bcTraTre == null)
+                    // Create return ticket
+                    var phieuTra = new PHIEUTRA
                     {
-                        bcTraTre = new BCTRATRE
+                        NgayTra = DateTime.Now
+                    };
+
+                    _context.PHIEUTRA.Add(phieuTra);
+                    await _context.SaveChangesAsync();
+
+                    // Check for late returns and update BCTRATRE if necessary
+                    var lateReturns = selectedBooks.Where(r => DateTime.Now > r.HanTra).ToList();
+                    if (lateReturns.Any())
+                    {
+                        var today = DateTime.Now.Date;
+                        var bcTraTre = await _context.BCTRATRE.FirstOrDefaultAsync(bc => bc.Ngay == today);
+
+                        if (bcTraTre == null)
                         {
-                            Ngay = today
-                        };
-                        _context.BCTRATRE.Add(bcTraTre);
-                        await _context.SaveChangesAsync();
+                            bcTraTre = new BCTRATRE { Ngay = today };
+                            _context.BCTRATRE.Add(bcTraTre);
+                            await _context.SaveChangesAsync();
+                        }
+
+                        foreach (var lateReturn in lateReturns)
+                        {
+                            var ctBcTraTre = new CTBCTRATRE
+                            {
+                                IDBCTraTre = bcTraTre.ID,
+                                IDPhieuTra = phieuTra.ID,
+                                SoNgayTraTre = (int)(DateTime.Now - lateReturn.HanTra).TotalDays
+                            };
+                            _context.CTBCTRATRE.Add(ctBcTraTre);
+                        }
                     }
 
-                    foreach (var lateReturn in lateReturns)
-                    {
-                        var ctBcTraTre = new CTBCTRATRE
-                        {
-                            IDBCTraTre = bcTraTre.ID,
-                            IDPhieuTra = phieuTra.ID,
-                            SoNgayTraTre = (int)(DateTime.Now - lateReturn.HanTra).TotalDays
-                        };
+                    await _context.SaveChangesAsync();
 
-                        _context.CTBCTRATRE.Add(ctBcTraTre);
+                    // Process each returned book
+                    foreach (var returnBook in selectedBooks)
+                    {
+                        var ctpt = returnBook.CTPhieuTra;
+                        ctpt.IDPhieuTra = phieuTra.ID;
+
+                        // Fetch book and borrow detail without AsNoTracking
+                        var book = await _context.SACH.FindAsync(ctpt.IDSach);
+                        var borrowDetail = await _context.CTPHIEUMUON.FirstOrDefaultAsync(ct => ct.IDPhieuMuon == ctpt.IDPhieuMuon && ct.IDSach == ctpt.IDSach);
+
+                        if (borrowDetail != null)
+                        {
+                            // Calculate fines
+                            if (DateTime.Now > borrowDetail.HanTra)
+                            {
+                                int daysLate = (int)(DateTime.Now - borrowDetail.HanTra).TotalDays;
+                                ctpt.TienPhat = daysLate * _context.THAMSO.OrderBy(ts => ts.ID).Select(ts => ts.TienPhatTraTreMotNgay).Last();
+                            }
+
+                            if (returnBook.TinhTrangTra.ID != returnBook.TinhTrangMuon.ID && book != null)
+                            {
+                                ctpt.TienPhat += book.TriGia * _context.THAMSO.OrderBy(ts => ts.ID).Select(ts => ts.TiLeDenBu).Last() * (returnBook.TinhTrangTra.MucHuHong - returnBook.TinhTrangMuon.MucHuHong) / 100;
+                            }
+
+                            selectedReader.TongNo += ctpt.TienPhat;
+                            ctpt.GhiChu = returnBook.GhiChu;
+
+                            // Detach navigation properties to prevent tracking issues
+                            ctpt.IDTinhTrangTraNavigation = null;
+                            ctpt.IDPhieuMuonNavigation = null;
+                            ctpt.IDPhieuTraNavigation = null;
+                            ctpt.IDSachNavigation = null;
+
+                            _context.CTPHIEUTRA.Add(ctpt);
+
+                            if (book != null)
+                            {
+                                book.IsAvailable = ctpt.IDTinhTrangTraNavigation?.MucHuHong != 100;
+                                book.IDTinhTrang = ctpt.IDTinhTrangTra;
+                                _context.SACH.Update(book);
+                            }
+                        }
                     }
+
+                    // Update borrow ticket status
+                    foreach (var pm in selectedReader.PHIEUMUON.ToList())
+                    {
+                        if (pm.CTPHIEUMUON.All(ct =>
+                            _returnDetails.Select(rd => rd.CTPhieuMuon).Contains(ct) &&
+                            _returnDetails.First(rd => rd.CTPhieuMuon == ct).IsSelected))
+                        {
+                            pm.IsPending = false;
+                            _context.PHIEUMUON.Attach(pm);
+                            _context.Entry(pm).State = EntityState.Modified;
+                        }
+                    }
+
+                    await _context.SaveChangesAsync();
+
+                    // Notify user of success
+                    MessageBox.Show("Thêm phiếu trả thành công!", "Thông báo", MessageBoxButton.OK, MessageBoxImage.Information);
+                    Window.GetWindow(this).DialogResult = true;
+
+                    // Open receipt window
+                    var window = new Window
+                    {
+                        Content = new UcXuatPhieuTra(phieuTra),
+                        Width = 480,
+                        Height = 600,
+                        WindowStyle = WindowStyle.None,
+                        WindowStartupLocation = WindowStartupLocation.CenterScreen,
+                        ResizeMode = ResizeMode.CanResizeWithGrip
+                    };
+                    window.ShowDialog();
+
+                    Window.GetWindow(this)?.Close();
                 }
-
-                await _context.SaveChangesAsync();
-
-                foreach (var returnBook in selectedBooks)
-                {
-                    CTPHIEUTRA ctpt = returnBook.CTPhieuTra;
-                    ctpt.IDPhieuTra = phieuTra.ID;
-
-                    //ctpt.IDTinhTrangTra = returnBook.IDTinhTrangTra;
-                    //ctpt.IDTinhTrangTraNavigation = _context.TINHTRANG.Find(returnBook.IDTinhTrangTra);
-
-                    var book = await _context.SACH.FindAsync(ctpt.IDSach);
-                    var borrowDetail = await _context.CTPHIEUMUON
-                        .FirstOrDefaultAsync(ct => ct.IDPhieuMuon == ctpt.IDPhieuMuon && ct.IDSach == ctpt.IDSach);
-
-                    if (borrowDetail != null)
-                    {
-
-                        // Calculate fines
-                        if (DateTime.Now > borrowDetail.HanTra)
-                        {
-                            int daysLate = (int)(DateTime.Now - borrowDetail.HanTra).TotalDays;
-                            ctpt.TienPhat = daysLate * _context.THAMSO.OrderBy(ts => ts.ID).Last().TienPhatTraTreMotNgay;
-                        }
-
-                        if (returnBook.TinhTrangTra != returnBook.TinhTrangMuon && book != null)
-                        {
-                            ctpt.TienPhat += book.TriGia * _context.THAMSO.OrderBy(ts => ts.ID).Last().TiLeDenBu * (returnBook.TinhTrangTra.MucHuHong - returnBook.TinhTrangMuon.MucHuHong) / 100;
-                        }
-
-
-                        selectedReader.TongNo += ctpt.TienPhat;
-                        ctpt.GhiChu = returnBook.GhiChu;
-
-                        _context.CTPHIEUTRA.Add(ctpt);
-                        if (book != null)
-                        {
-                            if (ctpt.IDTinhTrangTraNavigation.MucHuHong != 100)
-                                book.IsAvailable = true;
-                            book.IDTinhTrang = ctpt.IDTinhTrangTra;
-                            _context.SACH.Update(book);
-                        }
-                    }
-                }
-
-                // Update borrow ticket status
-
-                foreach (var pm in selectedReader.PHIEUMUON.ToList())
-
-                    if (pm.CTPHIEUMUON.All(ct => _returnDetails.Select(ctpm => ctpm.CTPhieuMuon).ToList().Contains(ct) &&
-                                                        pm.CTPHIEUMUON.All(r => _returnDetails.First(rd => rd.CTPhieuMuon == ct).IsSelected)))
-                    {
-                        pm.IsPending = false;
-                        _context.PHIEUMUON.Update(pm);
-                    }
-
-                await _context.SaveChangesAsync();
-                MessageBox.Show("Thêm phiếu trả thành công!", "Thông báo", MessageBoxButton.OK, MessageBoxImage.Information);
-                Window.GetWindow(this).DialogResult = true;
-                var window = new Window
-                {
-                    Content = new UcXuatPhieuTra(phieuTra),
-                    Width = 480,
-                    Height = 600,
-                    WindowStyle = WindowStyle.None,
-                    WindowStartupLocation = WindowStartupLocation.CenterScreen,
-                    ResizeMode = ResizeMode.CanResizeWithGrip
-                };
-                window.ShowDialog();
-                Window.GetWindow(this)?.Close();
-
             }
             catch (Exception ex)
             {
                 MessageBox.Show($"Lỗi khi lưu phiếu trả: {ex.Message}", "Lỗi", MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
+
 
         private void btnCancel_Click(object sender, RoutedEventArgs e)
         {

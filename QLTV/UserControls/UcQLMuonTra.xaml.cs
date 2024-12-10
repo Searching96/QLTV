@@ -91,7 +91,6 @@ namespace QLTV.UserControls
 
     public partial class UcQLMuonTra : UserControl
     {
-        private readonly QLTVContext _context;
         private List<PHIEUMUON> borrowings;
         private ObservableCollection<BorrowViewModel> _borrowings;
         private ObservableCollection<ReturnViewModel> _returns;
@@ -99,7 +98,6 @@ namespace QLTV.UserControls
         public UcQLMuonTra()
         {
             InitializeComponent();
-            _context = new QLTVContext();
             LoadData();
         }
 
@@ -107,47 +105,50 @@ namespace QLTV.UserControls
         {
             try
             {
-                // Load borrowings with related data, excluding soft-deleted records
-                borrowings = await _context.PHIEUMUON
-                    .Include(p => p.IDDocGiaNavigation)
-                        .ThenInclude(d => d.IDTaiKhoanNavigation)
-                    .Include(p => p.CTPHIEUMUON)
-                        .ThenInclude(ct => ct.IDSachNavigation)
-                            .ThenInclude(s => s.IDTuaSachNavigation)
-                    .Include(p => p.CTPHIEUMUON)
-                        .ThenInclude(ct => ct.IDTinhTrangMuonNavigation)
-                    .Where(p => !p.IsDeleted)
-                    .ToListAsync();
+                using (var _context = new QLTVContext())
+                {
+                    // Load borrowings with related data, excluding soft-deleted records
+                    borrowings = await _context.PHIEUMUON
+                        .Include(p => p.IDDocGiaNavigation)
+                            .ThenInclude(d => d.IDTaiKhoanNavigation)
+                        .Include(p => p.CTPHIEUMUON)
+                            .ThenInclude(ct => ct.IDSachNavigation)
+                                .ThenInclude(s => s.IDTuaSachNavigation)
+                        .Include(p => p.CTPHIEUMUON)
+                            .ThenInclude(ct => ct.IDTinhTrangMuonNavigation)
+                        .Where(p => !p.IsDeleted)
+                        .ToListAsync();
 
-                var _borrowings = new ObservableCollection<BorrowViewModel>(
-                    borrowings.Select(b => new BorrowViewModel
-                    {
-                        phieuMuon = b,
-                        ctPhieuMuon = new ObservableCollection<CTPHIEUMUON>(b.CTPHIEUMUON),
-                        IsExpanded = false
-                    })
-                );
+                    var _borrowings = new ObservableCollection<BorrowViewModel>(
+                        borrowings.Select(b => new BorrowViewModel
+                        {
+                            phieuMuon = b,
+                            ctPhieuMuon = new ObservableCollection<CTPHIEUMUON>(b.CTPHIEUMUON),
+                            IsExpanded = false
+                        })
+                    );
 
-                dgBorrowings.ItemsSource = _borrowings;
+                    dgBorrowings.ItemsSource = _borrowings;
 
-                // Load returns with related data, excluding soft-deleted records
-                var returns = await _context.PHIEUTRA
-                    .Include(p => p.CTPHIEUTRA)
-                        .ThenInclude(ct => ct.IDSachNavigation)
-                            .ThenInclude(s => s.IDTuaSachNavigation)
-                    .Include(p => p.CTPHIEUTRA)
-                        .ThenInclude(ct => ct.IDTinhTrangTraNavigation)
-                    .Where(p => !p.IsDeleted)
-                    .ToListAsync();
-                _returns = new ObservableCollection<ReturnViewModel>(
-                    returns.Select(r => new ReturnViewModel
-                    {
-                        phieuTra = r,
-                        ctPhieuTra = new ObservableCollection<CTPHIEUTRA>(r.CTPHIEUTRA),
-                        IsExpanded = false
-                    })
-                );
-                dgReturns.ItemsSource = _returns;
+                    // Load returns with related data, excluding soft-deleted records
+                    var returns = await _context.PHIEUTRA
+                        .Include(p => p.CTPHIEUTRA)
+                            .ThenInclude(ct => ct.IDSachNavigation)
+                                .ThenInclude(s => s.IDTuaSachNavigation)
+                        .Include(p => p.CTPHIEUTRA)
+                            .ThenInclude(ct => ct.IDTinhTrangTraNavigation)
+                        .Where(p => !p.IsDeleted)
+                        .ToListAsync();
+                    _returns = new ObservableCollection<ReturnViewModel>(
+                        returns.Select(r => new ReturnViewModel
+                        {
+                            phieuTra = r,
+                            ctPhieuTra = new ObservableCollection<CTPHIEUTRA>(r.CTPHIEUTRA),
+                            IsExpanded = false
+                        })
+                    );
+                    dgReturns.ItemsSource = _returns;
+                }
             }
             catch (Exception ex)
             {
@@ -197,22 +198,26 @@ namespace QLTV.UserControls
             {
                 try
                 {
-                    // Soft delete the borrowing record
-                    borrowViewModel.phieuMuon.IsDeleted = true;
-
-                    // Also mark related CTborrowViewModel records as deleted if they have IsDeleted property
-                    foreach (var ctborrowViewModel in borrowViewModel.ctPhieuMuon)
+                    using (var _context = new QLTVContext())
                     {
-                        // Update the book's availability
-                        var sach = ctborrowViewModel.IDSachNavigation;
-                        if (sach != null)
-                        {
-                            sach.IsAvailable = true;
-                        }
-                    }
+                        // Soft delete the borrowing record
+                        borrowViewModel.phieuMuon.IsDeleted = true;
 
-                    await _context.SaveChangesAsync();
-                    _borrowings.Remove(borrowViewModel);
+                        // Also mark related CTborrowViewModel records as deleted if they have IsDeleted property
+                        foreach (var ctborrowViewModel in borrowViewModel.ctPhieuMuon)
+                        {
+                            // Update the book's availability
+                            var sach = ctborrowViewModel.IDSachNavigation;
+                            if (sach != null)
+                            {
+                                sach.IsAvailable = true;
+                            }
+                        }
+
+                        await _context.SaveChangesAsync();
+                    }
+                    LoadData();
+                    BorrowSearch((cboLoc.SelectedItem as ComboBoxItem).Content.ToString());
                 }
                 catch (Exception ex)
                 {
@@ -250,22 +255,25 @@ namespace QLTV.UserControls
             {
                 try
                 {
-                    // Soft delete the return record
-                    returnViewModel.phieuTra.IsDeleted = true;
-
-                    // Handle related CTPHIEUTRA records
-                    foreach (var ctPhieuTra in returnViewModel.phieuTra.CTPHIEUTRA)
+                    using (var _context = new QLTVContext())
                     {
-                        // Revert the book's status if needed
-                        var sach = ctPhieuTra.IDSachNavigation;
-                        if (sach != null)
-                        {
-                            sach.IsAvailable = false;
-                        }
-                    }
+                        // Soft delete the return record
+                        returnViewModel.phieuTra.IsDeleted = true;
 
-                    await _context.SaveChangesAsync();
-                    _returns.Remove(returnViewModel);
+                        // Handle related CTPHIEUTRA records
+                        foreach (var ctPhieuTra in returnViewModel.phieuTra.CTPHIEUTRA)
+                        {
+                            // Revert the book's status if needed
+                            var sach = ctPhieuTra.IDSachNavigation;
+                            if (sach != null)
+                            {
+                                sach.IsAvailable = false;
+                            }
+                        }
+
+                        await _context.SaveChangesAsync();
+                        _returns.Remove(returnViewModel);
+                    }
                 }
                 catch (Exception ex)
                 {
@@ -332,6 +340,19 @@ namespace QLTV.UserControls
                         );
                         break;
                     }
+                case "Chưa duyệt":
+                    {
+                        _borrowings = new ObservableCollection<BorrowViewModel>(
+                            borrowings.Select(b => new BorrowViewModel
+                            {
+                                phieuMuon = b,
+                                ctPhieuMuon = new ObservableCollection<CTPHIEUMUON>(b.CTPHIEUMUON),
+                                IsExpanded = false
+                            })
+                            .Where(b => b.phieuMuon.IsPending)
+                        );
+                        break;
+                    }
                 default:
                     {
                         _borrowings = new ObservableCollection<BorrowViewModel>(
@@ -367,10 +388,25 @@ namespace QLTV.UserControls
 
         private void cboLoc_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            if (_context == null) return;
             ComboBoxItem cbi = (ComboBoxItem)cboLoc.SelectedItem;
+            if (cbi == null || cbi.Content == null) return;
             string selectedText = cbi.Content.ToString();
             BorrowSearch(selectedText);
+        }
+
+        private void btnAcceptBorrow_Click(object sender, RoutedEventArgs e)
+        {
+            var borrowViewModel = ((FrameworkElement)sender).DataContext as BorrowViewModel;
+            if (borrowViewModel != null)
+            {
+                using (var _context = new QLTVContext())
+                {
+                    borrowViewModel.phieuMuon.IsPending = false;
+                    _context.Update(borrowViewModel.phieuMuon);
+                    _context.SaveChanges();
+                    LoadData();
+                }
+            }
         }
     }
 }

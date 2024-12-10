@@ -44,7 +44,7 @@
                                     Style="{StaticResource MaterialDesignIconButton}"
                                     Height="50"
                                     Tag="BookMultipleAdd"
-                                    Margin="0"/>
+                                    Margin="0" />
                         </StackPanel>
                         <ComboBox Style="{StaticResource ModernComboBox}"
                                   x:Name="cboLoc"
@@ -55,10 +55,10 @@
                                   materialDesign:HintAssist.Hint="Tình trạng phiếu mượn"
                                   materialDesign:HintAssist.FloatingScale="0.8"
                                   SelectionChanged="cboLoc_SelectionChanged">
-                            <ComboBoxItem Name="All"
-                                          IsSelected="True">Tất cả</ComboBoxItem>
-                            <ComboBoxItem Name="Returned">Đã trả hết</ComboBoxItem>
-                            <ComboBoxItem Name="NotReturned">Chưa trả hết</ComboBoxItem>
+                            <ComboBoxItem IsSelected="True">Tất cả</ComboBoxItem>
+                            <ComboBoxItem>Đã trả hết</ComboBoxItem>
+                            <ComboBoxItem>Chưa trả hết</ComboBoxItem>
+                            <ComboBoxItem>Chưa duyệt</ComboBoxItem>
                         </ComboBox>
                     </Grid>
 
@@ -79,6 +79,8 @@
                                                                Binding="{Binding phieuMuon.IDDocGiaNavigation.IDTaiKhoanNavigation.TenTaiKhoan}" />
                             <materialDesign:DataGridTextColumn Header="Ngày mượn"
                                                                Binding="{Binding phieuMuon.NgayMuon, StringFormat=dd/MM/yyyy}" />
+                            <materialDesign:DataGridTextColumn Header="Tình trạng"
+                                                               Binding="{Binding phieuMuon.IsPending, Converter={StaticResource BooleanToContentConverter}, ConverterParameter='Đã duyệt:Chưa duyệt', FallbackValue='Đã duyệt'}" />
                             <DataGridTemplateColumn Header="Thao tác"
                                                     IsReadOnly="True">
                                 <DataGridTemplateColumn.CellTemplate>
@@ -88,11 +90,18 @@
                                                           IsChecked="{Binding IsExpanded, Mode=TwoWay}"
                                                           ToolTip="Chi tiết"
                                                           ToolTipService.InitialShowDelay="0"
-                                                          Click="btnViewDetail_Click"/>
+                                                          Click="btnViewDetail_Click" />
                                             <Button ToolTip="Xóa"
                                                     Click="btnDeleteBorrow_Click"
                                                     Style="{StaticResource MaterialDesignIconButton}"
                                                     Tag="BookRemoveOutline">
+                                            </Button>
+                                            <Button ToolTip="Duyệt"
+                                                    Click="btnAcceptBorrow_Click"
+                                                    Style="{StaticResource MaterialDesignIconButton}"
+                                                    Visibility="{Binding phieuMuon.IsPending, Converter={StaticResource BooleanToVisibilityConverter}, FallbackValue=Collapsed}"
+                                                    Tag="BookRemoveOutline">
+
                                             </Button>
                                         </StackPanel>
                                     </DataTemplate>
@@ -181,7 +190,7 @@
                                                           Width="52"
                                                           IsChecked="{Binding IsExpanded, Mode=TwoWay}"
                                                           ToolTip="Chi tiết"
-                                                          Click="btnViewDetail_Click"/>
+                                                          Click="btnViewDetail_Click" />
                                             <Button ToolTip="Xóa"
                                                     Click="btnDeleteReturn_Click"
                                                     Style="{StaticResource MaterialDesignIconButton}"
