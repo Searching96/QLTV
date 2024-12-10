@@ -7,95 +7,131 @@
              xmlns:local="clr-namespace:QLTV.User"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
-    <Grid Background="White">
-        <Grid.ColumnDefinitions>
-            <!-- Cột 1 chiếm 1 phần, cột 2 chiếm 1.5 phần -->
-            <ColumnDefinition Width="1*"/>
-            <ColumnDefinition Width="1.5*"/>
-        </Grid.ColumnDefinitions>
+    <ScrollViewer VerticalScrollBarVisibility="Auto">
+        <Grid Background="White">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="1*"/>
+            </Grid.RowDefinitions>
 
-        <!-- Border chứa ảnh bìa -->
-        <Border Background="Wheat" VerticalAlignment="Top" 
-            Grid.Column="0" CornerRadius="20" 
-            Margin="30, 20, 30, 140">
-            <Border BorderBrush="Transparent" BorderThickness="3"
-                HorizontalAlignment="Center"
-                VerticalAlignment="Center" Padding="40">
-                <!-- Ảnh bìa -->
-                <Image Source="{Binding BiaSach}"
-                   HorizontalAlignment="Center"
-                   VerticalAlignment="Top"
-                   Width="Auto"
-                   Height="Auto"
-                   Stretch="Fill"
-                   Margin="0,0,0,0"/>
-            </Border>
-        </Border>
+            <Grid Grid.Row="0" Background="White">
+                <Grid.ColumnDefinitions>
+                    <!-- Cột 1 chiếm 1 phần, cột 2 chiếm 1.5 phần -->
+                    <ColumnDefinition Width="1*"/>
+                    <ColumnDefinition Width="1.5*"/>
+                </Grid.ColumnDefinitions>
 
-        <!-- Border chứa thông tin sách -->
-        <Border Background="Wheat" VerticalAlignment="Top"
-                HorizontalAlignment="Stretch"
-                Grid.Column="1" CornerRadius="20" 
-                Margin="0, 20, 50, 0">
-            <Grid Margin="0, 10, 0, 0" HorizontalAlignment="Stretch">
-                <StackPanel Margin="10">
-                    <!-- Tên sách -->
-                    <TextBlock Text="{Binding TenTuaSach}" 
-                               FontSize="24" 
-                               FontWeight="Bold" 
-                               Foreground="DarkSlateGray"
-                               Margin="0,0,0,10"/>
+                <!-- Border chứa ảnh bìa -->
+                <Border Background="Wheat" VerticalAlignment="Top" 
+                        Grid.Column="0" CornerRadius="20" 
+                        Margin="30, 20, 30, 50">
+                    <Border BorderBrush="Transparent" BorderThickness="3"
+                            HorizontalAlignment="Center"
+                            VerticalAlignment="Center" Padding="40">
+                        <!-- Ảnh bìa -->
+                        <Image Source="{Binding BiaSach}"
+                               HorizontalAlignment="Center"
+                               VerticalAlignment="Top"
+                               Width="250"
+                               Height="400"
+                               Stretch="Fill"
+                               Margin="0,0,0,0"/>
+                    </Border>
+                </Border>
 
-                    <!-- Tác giả và thể loại -->
-                    <Grid Width="500" Margin="0,0,0,10" HorizontalAlignment="Left">
-                        <Grid.ColumnDefinitions>
-                            <!-- Cột 1 chiếm 3 phần, cột 2 chiếm 1.5 phần -->
-                            <ColumnDefinition Width="3*"/>
-                            <ColumnDefinition Width="2*"/>
-                        </Grid.ColumnDefinitions>
-                        <TextBlock Grid.Column="0" HorizontalAlignment="Left" FontSize="14" Foreground="Black" FontWeight="DemiBold">
+                <!-- Border chứa thông tin sách -->
+                <Border Background="Wheat" VerticalAlignment="Top"
+                        HorizontalAlignment="Stretch"
+                        Grid.Column="1" CornerRadius="20" 
+                        Margin="0, 20, 50, 0">
+                    <Grid Margin="0, 5, 0, 0" HorizontalAlignment="Stretch">
+                        <StackPanel Margin="10">
+                            <!-- Tên sách -->
+                            <TextBlock x:Name="tbxTenTuaSach"
+                                       Text="{Binding TenTuaSach}" 
+                                       FontSize="24" 
+                                       FontWeight="Bold" 
+                                       Foreground="DarkSlateGray"
+                                       Margin="0,0,0,10"/>
+
+                            <!-- Tác giả và thể loại -->
+                            <Grid Width="500" Margin="0,0,0,10" HorizontalAlignment="Left">
+                                <Grid.ColumnDefinitions>
+                                    <!-- Cột 1 chiếm 3 phần, cột 2 chiếm 1.5 phần -->
+                                    <ColumnDefinition Width="3*"/>
+                                    <ColumnDefinition Width="2*"/>
+                                </Grid.ColumnDefinitions>
+                                <TextBlock Grid.Column="0" HorizontalAlignment="Left" FontSize="14" Foreground="Black" FontWeight="DemiBold">
                             <Run Text="Tác Giả: "/>
                             <Run Text="{Binding DSTacGia}"/>
-                        </TextBlock>
-                        <TextBlock Grid.Column="1" HorizontalAlignment="Left" FontSize="14" Foreground="Black" FontWeight="DemiBold">
+                                </TextBlock>
+                                <TextBlock Grid.Column="1" HorizontalAlignment="Left" FontSize="14" Foreground="Black" FontWeight="DemiBold">
                             <Run Text="Thể Loại: "/>
                             <Run Text="{Binding DSTheLoai}"/>
-                        </TextBlock>
-                    </Grid>
+                                </TextBlock>
+                            </Grid>
 
-                    <!-- Lượt mượn và đánh giá -->
-                    <Grid Width="500" Margin="0,0,0,10" HorizontalAlignment="Left">
-                        <Grid.ColumnDefinitions>
-                            <!-- Cột 1 chiếm 3 phần, cột 2 chiếm 1.5 phần -->
-                            <ColumnDefinition Width="3*"/>
-                            <ColumnDefinition Width="2*"/>
-                        </Grid.ColumnDefinitions>
-                        <TextBlock Grid.Column="0" HorizontalAlignment="Left" FontSize="14" Foreground="Black" FontWeight="DemiBold">
-                            <Run Text="Lượt Mượn: "/>
-                            <Run Text="{Binding LuotMuon}"/>
-                        </TextBlock>
-                        <StackPanel Orientation="Horizontal" Grid.Column="1">
-                            <TextBlock HorizontalAlignment="Left" FontSize="14" Foreground="Black" FontWeight="DemiBold">
-                                <Run Text="Đánh Giá: "/>
-                                <Run Text="{Binding DanhGia}"/>
+                            <!-- Lượt mượn và đánh giá -->
+                            <Grid Width="500" Margin="0,0,0,10" HorizontalAlignment="Left">
+                                <Grid.ColumnDefinitions>
+                                    <!-- Cột 1 chiếm 3 phần, cột 2 chiếm 1.5 phần -->
+                                    <ColumnDefinition Width="3*"/>
+                                    <ColumnDefinition Width="2*"/>
+                                </Grid.ColumnDefinitions>
+                                <TextBlock Grid.Column="0" HorizontalAlignment="Left" FontSize="14" Foreground="Black" FontWeight="DemiBold">
+                                    <Run Text="Lượt Mượn: "/>
+                                    <Run Text="{Binding LuotMuon}"/>
+                                </TextBlock>
+                                <StackPanel Orientation="Horizontal" Grid.Column="1">
+                                    <TextBlock HorizontalAlignment="Left" FontSize="14" Foreground="Black" FontWeight="DemiBold">
+                                        <Run Text="Đánh Giá: "/>
+                                        <Run Text="{Binding DanhGia}"/>
+                                    </TextBlock>
+                                    <materialDesign:PackIcon Kind="Star" VerticalAlignment="Center" Foreground="Black"/>
+                                </StackPanel>
+                            </Grid>
+
+                            <!-- Mô tả -->
+                            <TextBlock FontSize="14" Foreground="Black" FontWeight="DemiBold" Margin="0,0,0,10">
+                                <Run Text="Mô Tả: "/>
+                                <Run Text="{Binding MoTa}" />
                             </TextBlock>
-                            <materialDesign:PackIcon Kind="Star" VerticalAlignment="Center" Foreground="Black"/>
                         </StackPanel>
                     </Grid>
-
-                    <!-- Vị trí -->
-                    <TextBlock FontSize="14" Foreground="Black" FontWeight="DemiBold" Margin="0,0,0,10">
-                    <Run Text="Vị trí: "/>
-                    <Run Text="{Binding ViTri}" />
+                </Border>
+            </Grid>
+            <Grid Grid.Row="1" Background="White">
+                <StackPanel>
+                    <TextBlock x:Name="tblTenDg"
+                               Margin="5, 0, 0, 0" FontSize="24" FontWeight="Bold"
+                               Text="Các Sách Có Sẵn Của Tựa Này">
                     </TextBlock>
-
-                    <!-- Mô tả -->
-                    <TextBlock FontSize="14" Foreground="Black" FontWeight="DemiBold" Margin="0,0,0,10">
-                    <Run Text="Mô Tả: "/>
-                    <Run Text="{Binding MoTa}" />
-                    </TextBlock>
+                    <DataGrid x:Name="dgSach" Grid.Row="2" SelectionMode="Single"
+                              SelectionUnit="FullRow" IsReadOnly="true" AutoGenerateColumns="False">
+                        <DataGrid.Resources>
+                            <Style TargetType="DataGridColumnHeader" BasedOn="{StaticResource ResourceKey=MaterialDesignDataGridColumnHeader}">
+                                <Setter Property="FontWeight" Value="Bold"/>
+                            </Style>
+                        </DataGrid.Resources>
+                        <DataGrid.Columns>
+                            <DataGridTextColumn Header="Mã Sách" Width="*" Binding="{Binding MaSach}"/>
+                            <DataGridTextColumn Header="Tựa Sách" Width="*" Binding="{Binding TuaSach}"/>
+                            <DataGridTextColumn Header="Vị Trí" Width="*" Binding="{Binding ViTri}"/>
+                            <DataGridTextColumn Header="Trị Giá" Width="*" Binding="{Binding TriGia}"/>
+                            <DataGridTextColumn Header="Tình Trạng" Width="*" Binding="{Binding TinhTrang}"/>
+                            <DataGridTemplateColumn Header="Mượn Ngay" Width="*">
+                                <DataGridTemplateColumn.CellTemplate>
+                                    <DataTemplate>
+                                        <Button Padding="0" Width="40" HorizontalAlignment="Left" Click="btnMuonNgay_Click">
+                                            <materialDesign:PackIcon Kind="BookArrowDown"/>
+                                        </Button>
+                                    </DataTemplate>
+                                </DataGridTemplateColumn.CellTemplate>
+                            </DataGridTemplateColumn>
+                        </DataGrid.Columns>
+                    </DataGrid>
                 </StackPanel>
             </Grid>
-        </Border>
-    </Grid>
+        </Grid>
+    </ScrollViewer>
 </UserControl>

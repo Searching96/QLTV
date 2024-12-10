@@ -129,13 +129,13 @@ namespace QLTV.User
                         if (string.IsNullOrWhiteSpace(SoTuanMuon))
                         {
                             isValid = false;
-                            return "Thầy Dũng đẹp trai";
+                            return "Không được trống.";
                         }
 
                         if (!int.TryParse(SoTuanMuon, out int a))
                         {
                             isValid = false;
-                            return "Nhập số nguyên";
+                            return "Nhập số nguyên.";
                         }
                         if (a <= 0)
                         {
@@ -178,8 +178,6 @@ namespace QLTV.User
                 PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
             }
         }
-
-
 
         public UUFnMuonSach()
         {
@@ -305,6 +303,7 @@ namespace QLTV.User
             using (var context = new QLTVContext())
             {
                 docGia = context.DOCGIA
+                    .Skip(1)
                     .Include(dg => dg.IDLoaiDocGiaNavigation)
                     .Include(dg => dg.PHIEUMUON)
                         .ThenInclude(pm => pm.CTPHIEUMUON)
@@ -553,23 +552,6 @@ namespace QLTV.User
             }
         }
 
-
-        private string GenerateNewBorrowCode()
-        {
-            var lastCode = _context.PHIEUMUON
-                .OrderByDescending(p => p.MaPhieuMuon)
-                .Select(p => p.MaPhieuMuon)
-                .FirstOrDefault();
-
-            if (string.IsNullOrEmpty(lastCode))
-            {
-                return "PM0001";
-            }
-
-            int number = int.Parse(lastCode.Substring(2)) + 1;
-            return $"PM{number:D4}";
-        }
-
         private async void btnCancel_Click(object sender, RoutedEventArgs e)
         {
             using (var context = new QLTVContext())
@@ -597,6 +579,70 @@ namespace QLTV.User
                 {
                     MessageBox.Show($"Lỗi khi hủy: {ex.Message}", "Lỗi", MessageBoxButton.OK, MessageBoxImage.Error);
                 }
+            }
+        }
+
+        public void MuonNgaySach(string maSach)
+        {
+            try
+            {
+                using (var context = new QLTVContext())
+                {
+                    // Lấy thông tin sách từ database
+                    var sachDuocChon = context.SACH
+                        .Where(s => s.MaSach == maSach)
+                        .Include(s => s.IDTuaSachNavigation)
+                        .Include(s => s.IDTinhTrangNavigation)
+                        .Select(s => new SachCoSanViewModel
+                        {
+                            OSach = s,
+                            MaSach = s.MaSach,
+                            TuaSach = s.IDTuaSachNavigation.TenTuaSach,
+                            DSTacGia = string.Join(", ", s.IDTuaSachNavigation.TUASACH_TACGIA
+                                .Select(ts_tg => ts_tg.IDTacGiaNavigation.TenTacGia)),
+                            DSTheLoai = string.Join(", ", s.IDTuaSachNavigation.TUASACH_THELOAI
+                                .Select(ts_tl => ts_tl.IDTheLoaiNavigation.TenTheLoai)),
+                            HanMuonToiDa = s.IDTuaSachNavigation.HanMuonToiDa
+                        })
+                        .FirstOrDefault();
+
+                    if (sachDuocChon == null)
+                    {
+                        return; // Không tìm thấy sách với mã này
+                    }
+
+                    // Safe null handling
+                    string soTuanMuon = "0"; // Default value
+                    if (sachDuocChon.OSach?.IDTuaSachNavigation != null)
+                    {
+                        soTuanMuon = sachDuocChon.OSach.IDTuaSachNavigation.HanMuonToiDa.ToString();
+                    }
+
+                    var sachDaChon = new SachDaChonViewModel
+                    {
+                        OSachVM = sachDuocChon,
+                        SoTuanMuon = soTuanMuon
+                    };
+
+                    // Thay đổi trạng thái một cách an toàn
+                    var tempDsSach = new ObservableCollection<SachCoSanViewModel>(dsSach);
+                    tempDsSach.Remove(sachDuocChon);
+                    dsSach = tempDsSach;
+
+                    var tempAllBooks = new ObservableCollection<SACH>(_allBooks);
+                    tempAllBooks.Remove(sachDuocChon.OSach);
+                    _allBooks = tempAllBooks;
+
+                    // Cập nhật lại danh sách sách sau khi tìm kiếm lại
+                    TimSach(txtSearchBook.Text);
+
+                    // Thêm sách đã chọn vào danh sách
+                    _selectedBooks.Add(sachDaChon);
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Chi tiết lỗi: {ex.Message}\n\nStack Trace: {ex.StackTrace}", "Lỗi Chi Tiết", MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
     }

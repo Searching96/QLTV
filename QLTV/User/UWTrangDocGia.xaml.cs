@@ -19,29 +19,42 @@ namespace QLTV.User
     /// </summary>
     public partial class UWTrangDocGia : Window
     {
+        public List<UserControl> OpeningUC;
+
         public UWTrangDocGia()
         {
             InitializeComponent();
+            OpeningUC = new List<UserControl>();
+        }
+
+        private void OpenUC(UserControl uc)
+        {
+            UserControl existingUC = OpeningUC.FirstOrDefault(x => x.GetType() == uc.GetType());
+
+            if (existingUC == null)
+            {
+                OpeningUC.Add(uc);
+                USMainContent.Content = uc;
+            }
+            else
+            {
+                USMainContent.Content = existingUC;
+            }
         }
 
         private void btnFnMuonSach_Click(object sender, RoutedEventArgs e)
         {
-            UUFnMuonSach ms = new UUFnMuonSach();
-            USMainContent.Content = ms;
+            OpenUC(new UUFnMuonSach());
         }
 
         private void btnFnDisplaySach_Click(object sender, RoutedEventArgs e)
         {
-            UUFnDisplaySach ds = new UUFnDisplaySach();
-            USMainContent.Content = ds;
+            OpenUC(new UUFnDisplaySach());
         }
 
         private void btnFnSachDangMuon_Click(object sender, RoutedEventArgs e)
         {
-            UUFnSachDangMuon sdm = new UUFnSachDangMuon();
-            USMainContent.Content = sdm;
+            OpenUC(new UUFnSachDangMuon());
         }
-
-
     }
 }

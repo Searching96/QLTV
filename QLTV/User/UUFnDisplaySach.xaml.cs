@@ -39,6 +39,7 @@ namespace QLTV.User
 
         public class TuaSachViewModel
         {
+            public string MaTuaSach { get; set; } = string.Empty;
             public string TenTuaSach { get; set; } = string.Empty;
             public string BiaSach { get; set; } = string.Empty;
             public string DSTacGia { get; set; } = string.Empty;
@@ -100,6 +101,7 @@ namespace QLTV.User
                     .ToList()
                     .Select(ts => new TuaSachViewModel
                     {
+                        MaTuaSach = ts.MaTuaSach,
                         TenTuaSach = ts.TenTuaSach,
                         BiaSach = ts.BiaSach,
                         DSTacGia = ts.TUASACH_TACGIA != null && ts.TUASACH_TACGIA.Any()
@@ -218,6 +220,7 @@ namespace QLTV.User
                     .ToList()
                     .Select(ts => new TuaSachViewModel
                     {
+                        MaTuaSach = ts.MaTuaSach,
                         TenTuaSach = ts.TenTuaSach,
                         BiaSach = ts.BiaSach,
                         DSTacGia = ts.TUASACH_TACGIA != null && ts.TUASACH_TACGIA.Any()
@@ -393,8 +396,8 @@ namespace QLTV.User
                 {
                     // Kiểm tra nếu Tab với tài khoản đã tồn tại
                     var existingTab = tcDisplaySach.Items
-                                        .OfType<TabItem>()
-                                        .FirstOrDefault(tab => tab.Header?.ToString() == $"{tuaDaChon.TenTuaSach}");
+                        .OfType<TabItem>()
+                        .FirstOrDefault(tab => tab.Header?.ToString() == $"{tuaDaChon.TenTuaSach}");
 
                     if (existingTab != null)
                     {
@@ -407,7 +410,7 @@ namespace QLTV.User
                         var profileTab = new TabItem
                         {
                             Header = $"{tuaDaChon.TenTuaSach}", // Tiêu đề tab
-                            Content = new UUChiTietSach
+                            Content = new UUChiTietSach(tuaDaChon.MaTuaSach)
                             {
                                 DataContext = tuaDaChon // Truyền dữ liệu vào DataContext
                             }
