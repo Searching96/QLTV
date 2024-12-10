@@ -14,7 +14,7 @@
             <RowDefinition Height="*"/>
             <!-- Cho phép TabControl co giãn -->
         </Grid.RowDefinitions>
-        <TabControl x:Name="tcQLTK" Margin="10">
+        <TabControl x:Name="tcQLTK" Margin="10" HorizontalContentAlignment="Left">
             <TabControl.Resources>
                 <!-- Style cho TabItem -->
                 <Style TargetType="{x:Type TabItem}">

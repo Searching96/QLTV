@@ -41,8 +41,8 @@
 
 
             <Style x:Key="gridEditButton" TargetType="Button">
-                <Setter Property="Background" Value="#512DA8" />
-                <Setter Property="BorderBrush" Value="#4A148C" />
+                <Setter Property="Background" Value="#03A9F4" />
+                <Setter Property="BorderBrush" Value="#03A9F4" />
                 <Setter Property="Foreground" Value="#ffffff" />
                 <Setter Property="FocusVisualStyle" Value="{x:Null}" />
                 <Setter Property="VerticalAlignment" Value="Center" />
@@ -57,7 +57,7 @@
                 </Setter>
                 <Style.Triggers>
                     <Trigger Property="IsMouseOver" Value="True">
-                        <Setter Property="Background" Value="#673AB7" />
+                        <Setter Property="Background" Value="#03A9F4" />
                     </Trigger>
                 </Style.Triggers>
             </Style>
@@ -214,11 +214,11 @@
 
                 <Style.Triggers>
                     <Trigger Property="IsMouseOver" Value="True">
-                        <Setter Property="Background" Value="#623ED0"/>
+                        <Setter Property="Background" Value="#03A9F4"/>
                         <Setter Property="Foreground" Value="#ffffff"/>
                     </Trigger>
                     <Trigger Property="IsSelected" Value="True">
-                        <Setter Property="Background" Value="#623ED0"/>
+                        <Setter Property="Background" Value="#03A9F4"/>
                         <Setter Property="Foreground" Value="#ffffff"/>
                     </Trigger>
                     <MultiTrigger>
@@ -226,13 +226,13 @@
                             <Condition Property="IsSelected" Value="true"/>
                             <Condition Property="Selector.IsSelectionActive" Value="false"/>
                         </MultiTrigger.Conditions>
-                        <Setter Property="Background" Value="#623ED0"/>
+                        <Setter Property="Background" Value="#03A9F4"/>
                         <!-- Vẫn giữ màu tím -->
                         <Setter Property="Foreground" Value="#ffffff"/>
                     </MultiTrigger>
                     <!-- DataTrigger mới để đổi màu theo IsChecked -->
                     <DataTrigger Binding="{Binding IsChecked}" Value="True">
-                        <Setter Property="Background" Value="#623ED0" />
+                        <Setter Property="Background" Value="#03A9F4" />
                         <Setter Property="Foreground" Value="#ffffff" />
                     </DataTrigger>
                 </Style.Triggers>

@@ -31,9 +31,6 @@
     <Compile Update="LoginScreen.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Update="MainScreen.xaml.cs">
-      <SubType>Code</SubType>
-    </Compile>
     <Compile Update="QuanLyTaiKhoan.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -52,7 +49,13 @@
     <Compile Update="UQuanLyDocGia.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Update="USachMuon.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Update="UserScreen.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Update="UTrangChu.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
   </ItemGroup>
@@ -81,9 +84,6 @@
     <Page Update="LoginScreen.xaml">
       <SubType>Designer</SubType>
     </Page>
-    <Page Update="MainScreen.xaml">
-      <SubType>Designer</SubType>
-    </Page>
     <Page Update="QuanLyTaiKhoan.xaml">
       <SubType>Designer</SubType>
     </Page>
@@ -102,7 +102,13 @@
     <Page Update="UQuanLyDocGia.xaml">
       <SubType>Designer</SubType>
     </Page>
+    <Page Update="USachMuon.xaml">
+      <SubType>Designer</SubType>
+    </Page>
     <Page Update="UserScreen.xaml">
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="UTrangChu.xaml">
       <SubType>Designer</SubType>
     </Page>
   </ItemGroup>

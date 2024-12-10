@@ -204,6 +204,20 @@ namespace QLTV_TranBin
                         return;
                     }
 
+                    // Kiểm tra số điện thoại chỉ chứa số
+                    if (string.IsNullOrEmpty(txtSDT.Text) || !txtSDT.Text.All(char.IsDigit))
+                    {
+                        MessageBox.Show("Số điện thoại chỉ được chứa số!", "Lỗi", MessageBoxButton.OK, MessageBoxImage.Warning);
+                        return;
+                    }
+
+                    // Kiểm tra giới tính chỉ được là "Nam" hoặc "Nữ"
+                    if (txtGioiTinh.Text != "Nam" && txtGioiTinh.Text != "Nữ")
+                    {
+                        MessageBox.Show("Giới tính chỉ được chọn Nam hoặc Nữ!", "Lỗi", MessageBoxButton.OK, MessageBoxImage.Warning);
+                        return;
+                    }
+
                     // Cập nhật thông tin vào bảng TAIKHOAN
                     taiKhoan.DiaChi = txtDiaChi.Text;
                     taiKhoan.SinhNhat = dpNgaySinh.SelectedDate.HasValue ? dpNgaySinh.SelectedDate.Value : throw new Exception("Ngày sinh không hợp lệ!");

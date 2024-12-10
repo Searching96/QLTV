@@ -39,10 +39,13 @@ create table [TAIKHOAN]
 	[ID] int identity(1, 1) constraint [PK_TAIKHOAN] primary key,
 	[MaTaiKhoan] as ('TK' + right('00000' + cast([ID] as varchar(5)), 5)) persisted,
 	[TenTaiKhoan] nvarchar(100) constraint [UQ_TenTaiKhoan] unique not null,
-	[Hoten] nvarchar(100) not null,
-	[GioiTinh] nvarchar(5) not null,
 	[MatKhau] varchar(50) not null,
+	[Hoten] nvarchar(100) not null,
 	[Email] varchar(100) constraint [UQ_Email] unique not null,
+)
+	[GioiTinh] nvarchar(5) not null,
+	
+	
 	[SinhNhat] date not null,
 	[DiaChi] nvarchar(200) not null,
 	[SDT] varchar(20) not null,

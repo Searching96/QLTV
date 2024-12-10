@@ -86,23 +86,99 @@ namespace QLTV_TranBin
         {
             try
             {
+                // Tạo đối tượng email
                 var message = new MimeMessage();
-                message.From.Add(new MailboxAddress("QLTV TranBin", "thunderstar848@gmail.com")); // Địa chỉ Gmail của bạn
+                message.From.Add(new MailboxAddress("Quản lý thư viện LIMAN", "thuvienliman@gmail.com")); // Địa chỉ Gmail của bạn
                 message.To.Add(new MailboxAddress("", recipientEmail));
-                message.Subject = "Password for your account";
+                message.Subject = "Mật khẩu cho tài khoản của bạn";
 
-                message.Body = new TextPart("plain")
+                // Nội dung HTML
+                var bodyBuilder = new BodyBuilder
                 {
-                    Text = $"Your password is: {code}"
+                    HtmlBody = $@"
+                <!DOCTYPE html>
+                <html lang='vi'>
+                <head>
+                    <meta charset='UTF-8'>
+                    <meta name='viewport' content='width=device-width, initial-scale=1.0'>
+                    <title>Email OTP</title>
+                    <style>
+                        body {{
+                            font-family: Arial, sans-serif;
+                            line-height: 1.6;
+                            margin: 0;
+                            padding: 0;
+                            background-color: #f4f4f4;
+                        }}
+                        .email-container {{
+                            max-width: 600px;
+                            margin: 20px auto;
+                            background: #ffffff;
+                            border: 1px solid #ddd;
+                            border-radius: 8px;
+                            padding: 20px;
+                        }}
+                        .email-header {{
+                            text-align: center;
+                            font-size: 24px;
+                            font-weight: bold;
+                            color: #333;
+                            margin-bottom: 20px;
+                        }}
+                        .email-body {{
+                            color: #555;
+                            font-size: 16px;
+                        }}
+                        .otp-box {{
+                            display: inline-block;
+                            background-color: #007bff;
+                            color: white;
+                            font-size: 20px;
+                            font-weight: bold;
+                            padding: 10px 20px;
+                            border-radius: 8px;
+                            margin: 20px 0;
+                            text-align: center;
+                        }}
+                        .email-footer {{
+                            margin-top: 20px;
+                            font-size: 14px;
+                            color: #888;
+                            text-align: center;
+                        }}
+                    </style>
+                </head>
+                <body>
+                    <div class='email-container'>
+                        <div class='email-header'>
+                            Quản lý thư viện LIMAN
+                        </div>
+                        <div class='email-body'>
+                            <p>Chào bạn,</p>
+                            <p>Tài khoản của bạn đã được tạo thành công trên hệ thống. Dưới đây là mật khẩu của bạn để đăng nhập. Vui lòng thay đổi mật khẩu ngay sau khi đăng nhập để đảm bảo an toàn. Nếu bạn không yêu cầu tạo tài khoản, xin vui lòng bỏ qua email này.</p>
+                            <div class='otp-box'>
+                                {code}
+                            </div>
+                        </div>
+                        <div class='email-footer'>
+                            Trân trọng,<br>
+                            QLTV Development Team
+                        </div>
+                    </div>
+                </body>
+                </html>"
                 };
 
+                // Gán nội dung vào email
+                message.Body = bodyBuilder.ToMessageBody();
+
+                // Kết nối tới SMTP Server và gửi email
                 using (var client = new SmtpClient())
                 {
-                    // Kết nối tới máy chủ Gmail
                     client.Connect("smtp.gmail.com", 587, MailKit.Security.SecureSocketOptions.StartTls);
 
-                    // Sử dụng App Password thay vì mật khẩu thông thường
-                    client.Authenticate("thunderstar848@gmail.com", "arqd unir cttu vhgi");
+                    // Lưu ý: Sử dụng App Password của Gmail thay vì mật khẩu thông thường
+                    client.Authenticate("thuvienliman@gmail.com", "ujsk gxba hfgo cgzi");
 
                     client.Send(message);
                     client.Disconnect(true);
@@ -112,6 +188,7 @@ namespace QLTV_TranBin
             }
             catch (Exception ex)
             {
+                // Hiển thị lỗi nếu xảy ra vấn đề
                 MessageBox.Show($"Error: {ex.Message}");
                 return false;
             }
@@ -202,6 +279,13 @@ namespace QLTV_TranBin
                 return;
             }
 
+            // Kiểm tra số điện thoại chỉ chứa số
+            if (string.IsNullOrEmpty(phoneNumber) || !phoneNumber.All(char.IsDigit))
+            {
+                MessageBox.Show("Phone number must contain only numbers!", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                return;
+            }
+
             try
             {
                 using (var context = new QLTV2Context())
@@ -214,6 +298,8 @@ namespace QLTV_TranBin
                         MessageBox.Show("Email already exists!", "Error", MessageBoxButton.OK, MessageBoxImage.Warning);
                         return;
                     }
+
+
 
                     // Kiểm tra nếu là "Độc giả"
                     int phanQuyen = 0;

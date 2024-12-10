@@ -1,5 +1,6 @@
 ﻿using QLTV_TranBin.Models;
 using QLTV_TranBin.Properties;
+using QLTV_TranBin.ViewModels;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -25,6 +26,8 @@ namespace QLTV_TranBin.CQuang
         public AUInterface()
         {
             InitializeComponent();
+            DataContext = new CLClockViewModel();
+
             _context = new QLTV2Context();
         }
 

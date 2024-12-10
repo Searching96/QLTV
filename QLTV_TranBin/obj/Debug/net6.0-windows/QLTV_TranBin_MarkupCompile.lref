@@ -5,7 +5,6 @@ FE:\Repos_DoAn\QLTV_TranBin\QLTV_TranBin\ChiTietTaiKhoan.xaml;;
 FE:\Repos_DoAn\QLTV_TranBin\QLTV_TranBin\CQuang\AWThemDocGia.xaml;;
 FE:\Repos_DoAn\QLTV_TranBin\QLTV_TranBin\CreateAccount.xaml;;
 FE:\Repos_DoAn\QLTV_TranBin\QLTV_TranBin\LoginScreen.xaml;;
-FE:\Repos_DoAn\QLTV_TranBin\QLTV_TranBin\MainScreen.xaml;;
 FE:\Repos_DoAn\QLTV_TranBin\QLTV_TranBin\QuanLyTaiKhoan.xaml;;
 FE:\Repos_DoAn\QLTV_TranBin\QLTV_TranBin\ResetPassword.xaml;;
 FE:\Repos_DoAn\QLTV_TranBin\QLTV_TranBin\SignInScreen.xaml;;
@@ -14,4 +13,6 @@ FE:\Repos_DoAn\QLTV_TranBin\QLTV_TranBin\UCTrangChuUser.xaml;;
 FE:\Repos_DoAn\QLTV_TranBin\QLTV_TranBin\UQuanLyDocGia.xaml;;
 FE:\Repos_DoAn\QLTV_TranBin\QLTV_TranBin\UserScreen.xaml;;
 FE:\Repos_DoAn\QLTV_TranBin\QLTV_TranBin\WUserWindow.xaml;;
+FE:\Repos_DoAn\QLTV_TranBin\QLTV_TranBin\USachMuon.xaml;;
+FE:\Repos_DoAn\QLTV_TranBin\QLTV_TranBin\UTrangChu.xaml;;
 

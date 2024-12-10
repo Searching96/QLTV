@@ -135,7 +135,7 @@
             <!-- Main -->
             <Grid Grid.Column="1">
                 <Grid.RowDefinitions>
-                    <RowDefinition Height="64"/>
+                    <RowDefinition Height="100"/>
                     <RowDefinition Height="*"/>
                 </Grid.RowDefinitions>
 
@@ -149,11 +149,16 @@
                     </Grid.Effect>
 
                     <DockPanel Margin="16,0">
-                        <TextBlock x:Name="PageTitle"
-                                 FontSize="24" 
+                        <TextBlock x:Name="PageTitle" Text="LIMAN" FontWeight="SemiBold"
+                                 FontSize="34" Margin="50,0,0,0" 
                                  VerticalAlignment="Center"/>
-
-                        <StackPanel DockPanel.Dock="Right" 
+                        <Rectangle Width="100" HorizontalAlignment="Center" Height="100">
+                            <Rectangle.Fill>
+                                <ImageBrush x:Name="AnhTV" ImageSource="../Images/LogoTV.png" Stretch="Fill"/>
+                            </Rectangle.Fill>
+                        </Rectangle>
+                        
+                        <StackPanel DockPanel.Dock="Right"
                                   Orientation="Horizontal" 
                                   HorizontalAlignment="Right">
                             <Button Style="{StaticResource MaterialDesignIconButton}">
@@ -168,6 +173,22 @@
                                 </StackPanel>
                             </materialDesign:PopupBox>
                         </StackPanel>
+                        <Border Background="#2c3e50" CornerRadius="10"  DockPanel.Dock="Right"  Width="210" Height="50" RenderTransformOrigin="0.5,0.5">
+
+                            <StackPanel VerticalAlignment="Center">
+                                <TextBlock Text="{Binding CurrentTime}" 
+                                            FontSize="28" 
+                                            Foreground="#ecf0f1" 
+                                            HorizontalAlignment="Center"
+                                            VerticalAlignment="Top" 
+                                            FontWeight="Bold"/>
+                                            <TextBlock Text="{Binding CurrentDate}" 
+                                            FontSize="8" 
+                                            Foreground="#bdc3c7" 
+                                            HorizontalAlignment="Center"
+                                            Margin="0,-5,0,0"/>
+                            </StackPanel>
+                        </Border>
                     </DockPanel>
                 </Grid>
 

@@ -6,8 +6,7 @@ using System.Threading.Tasks;
 
 namespace QLTV_TranBin.ViewModels
 {
-    public class DocGiaViewModel
+    class DocGiaViewModel
     {
-
     }
 }

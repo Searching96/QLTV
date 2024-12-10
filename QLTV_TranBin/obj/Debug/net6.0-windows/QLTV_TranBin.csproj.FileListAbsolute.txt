@@ -392,7 +392,6 @@ E:\Repos_DoAn\QLTV_TranBin\QLTV_TranBin\obj\Debug\net6.0-windows\CQuang\AWPhieuT
 E:\Repos_DoAn\QLTV_TranBin\QLTV_TranBin\obj\Debug\net6.0-windows\CQuang\AWThemDocGia.g.cs
 E:\Repos_DoAn\QLTV_TranBin\QLTV_TranBin\obj\Debug\net6.0-windows\CreateAccount.g.cs
 E:\Repos_DoAn\QLTV_TranBin\QLTV_TranBin\obj\Debug\net6.0-windows\LoginScreen.g.cs
-E:\Repos_DoAn\QLTV_TranBin\QLTV_TranBin\obj\Debug\net6.0-windows\MainScreen.g.cs
 E:\Repos_DoAn\QLTV_TranBin\QLTV_TranBin\obj\Debug\net6.0-windows\QuanLyTaiKhoan.g.cs
 E:\Repos_DoAn\QLTV_TranBin\QLTV_TranBin\obj\Debug\net6.0-windows\ResetPassword.g.cs
 E:\Repos_DoAn\QLTV_TranBin\QLTV_TranBin\obj\Debug\net6.0-windows\SignInScreen.g.cs
@@ -501,7 +500,6 @@ E:\Repos_DoAn\QLTV_TranBin\QLTV_TranBin\obj\Debug\net6.0-windows\ChiTietTaiKhoan
 E:\Repos_DoAn\QLTV_TranBin\QLTV_TranBin\obj\Debug\net6.0-windows\CQuang\AWThemDocGia.baml
 E:\Repos_DoAn\QLTV_TranBin\QLTV_TranBin\obj\Debug\net6.0-windows\CreateAccount.baml
 E:\Repos_DoAn\QLTV_TranBin\QLTV_TranBin\obj\Debug\net6.0-windows\LoginScreen.baml
-E:\Repos_DoAn\QLTV_TranBin\QLTV_TranBin\obj\Debug\net6.0-windows\MainScreen.baml
 E:\Repos_DoAn\QLTV_TranBin\QLTV_TranBin\obj\Debug\net6.0-windows\QuanLyTaiKhoan.baml
 E:\Repos_DoAn\QLTV_TranBin\QLTV_TranBin\obj\Debug\net6.0-windows\ResetPassword.baml
 E:\Repos_DoAn\QLTV_TranBin\QLTV_TranBin\obj\Debug\net6.0-windows\SignInScreen.baml
@@ -520,3 +518,7 @@ E:\Repos_DoAn\QLTV_TranBin\QLTV_TranBin\obj\Debug\net6.0-windows\QLTV_TranBin.ge
 E:\Repos_DoAn\QLTV_TranBin\QLTV_TranBin\obj\Debug\net6.0-windows\ref\QLTV_TranBin.dll
 E:\Repos_DoAn\QLTV_TranBin\QLTV_TranBin\obj\Debug\net6.0-windows\UQuanLyDocGia.g.cs
 E:\Repos_DoAn\QLTV_TranBin\QLTV_TranBin\obj\Debug\net6.0-windows\UQuanLyDocGia.baml
+E:\Repos_DoAn\QLTV_TranBin\QLTV_TranBin\obj\Debug\net6.0-windows\USachMuon.g.cs
+E:\Repos_DoAn\QLTV_TranBin\QLTV_TranBin\obj\Debug\net6.0-windows\UTrangChu.g.cs
+E:\Repos_DoAn\QLTV_TranBin\QLTV_TranBin\obj\Debug\net6.0-windows\USachMuon.baml
+E:\Repos_DoAn\QLTV_TranBin\QLTV_TranBin\obj\Debug\net6.0-windows\UTrangChu.baml

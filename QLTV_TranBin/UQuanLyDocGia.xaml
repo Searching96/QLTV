@@ -7,7 +7,7 @@ xmlns:animation="clr-namespace:System.Windows.Media.Animation;assembly=Presentat
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:QLTV_TranBin"
              mc:Ignorable="d" 
-             Height="820" Width="860">
+             Height="800" Width="860">
     <UserControl.Resources>
 
         <ContextMenu x:Key="ExportMenu">
@@ -158,7 +158,7 @@ xmlns:animation="clr-namespace:System.Windows.Media.Animation;assembly=Presentat
                             <DatePicker Grid.Row="0" Grid.Column="2" Margin="0,5,0,0"
                     x:Name="NgayLapTheDatePicker"
                     Style="{StaticResource ModernDatePicker}"
-                    materialDesign:HintAssist.Hint="Ngày Lập Thẻ"/>
+                    materialDesign:HintAssist.Hint="Ngày Lập Thẻ" IsEnabled="False"/>
 
                             <TextBox Grid.Row="1" Grid.Column="1" Margin="0,5,5,0"
                  x:Name="GioiThieu"
@@ -176,7 +176,7 @@ xmlns:animation="clr-namespace:System.Windows.Media.Animation;assembly=Presentat
                             <DatePicker Grid.Row="1" Grid.Column="2" Margin="0,5,0,0"
                     x:Name="NgayHetHanDatePicker"
                     Style="{StaticResource ModernDatePicker}"
-                    materialDesign:HintAssist.Hint="Ngày Hết Hạn"/>
+                    materialDesign:HintAssist.Hint="Ngày Hết Hạn" IsEnabled="False"/>
 
                             <StackPanel Grid.Row="2" Grid.ColumnSpan="3" 
                     Orientation="Horizontal" 
