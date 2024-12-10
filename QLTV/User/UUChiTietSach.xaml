@@ -3,51 +3,99 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
              xmlns:local="clr-namespace:QLTV.User"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
     <Grid Background="White">
-        <Grid.RowDefinitions>
-            <RowDefinition Height="Auto"/>
-            <RowDefinition Height="*"/>
-        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <!-- Cột 1 chiếm 1 phần, cột 2 chiếm 1.5 phần -->
+            <ColumnDefinition Width="1*"/>
+            <ColumnDefinition Width="1.5*"/>
+        </Grid.ColumnDefinitions>
 
-        <StackPanel Grid.Row="0" Margin="10">
-            <TextBlock Text="{Binding TenTuaSach}" 
-                       FontSize="20" 
-                       FontWeight="Bold"/>
-            <TextBlock Text="{Binding DSTacGia}" 
-                       FontStyle="Italic"/>
-        </StackPanel>
-
-        <ScrollViewer Grid.Row="1">
-            <Grid Margin="10">
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="Auto"/>
-                    <ColumnDefinition Width="*"/>
-                </Grid.ColumnDefinitions>
-
+        <!-- Border chứa ảnh bìa -->
+        <Border Background="Wheat" VerticalAlignment="Top" 
+            Grid.Column="0" CornerRadius="20" 
+            Margin="30, 20, 30, 140">
+            <Border BorderBrush="Transparent" BorderThickness="3"
+                HorizontalAlignment="Center"
+                VerticalAlignment="Center" Padding="40">
                 <!-- Ảnh bìa -->
-                <Image Grid.Column="0" 
-                       Source="{Binding BiaSach}"
-                       Width="200" 
-                       Height="300" 
-                       Stretch="Fill"
-                       Margin="0,0,10,0"/>
+                <Image Source="{Binding BiaSach}"
+                   HorizontalAlignment="Center"
+                   VerticalAlignment="Top"
+                   Width="Auto"
+                   Height="Auto"
+                   Stretch="Fill"
+                   Margin="0,0,0,0"/>
+            </Border>
+        </Border>
 
-                <!-- Thông tin chi tiết -->
-                <StackPanel Grid.Column="1">
-                    <TextBlock>
-                        <Run Text="Thể loại: "/>
-                        <Run Text="{Binding DSTheLoai}"/>
+        <!-- Border chứa thông tin sách -->
+        <Border Background="Wheat" VerticalAlignment="Top"
+                HorizontalAlignment="Stretch"
+                Grid.Column="1" CornerRadius="20" 
+                Margin="0, 20, 50, 0">
+            <Grid Margin="0, 10, 0, 0" HorizontalAlignment="Stretch">
+                <StackPanel Margin="10">
+                    <!-- Tên sách -->
+                    <TextBlock Text="{Binding TenTuaSach}" 
+                               FontSize="24" 
+                               FontWeight="Bold" 
+                               Foreground="DarkSlateGray"
+                               Margin="0,0,0,10"/>
+
+                    <!-- Tác giả và thể loại -->
+                    <Grid Width="500" Margin="0,0,0,10" HorizontalAlignment="Left">
+                        <Grid.ColumnDefinitions>
+                            <!-- Cột 1 chiếm 3 phần, cột 2 chiếm 1.5 phần -->
+                            <ColumnDefinition Width="3*"/>
+                            <ColumnDefinition Width="2*"/>
+                        </Grid.ColumnDefinitions>
+                        <TextBlock Grid.Column="0" HorizontalAlignment="Left" FontSize="14" Foreground="Black" FontWeight="DemiBold">
+                            <Run Text="Tác Giả: "/>
+                            <Run Text="{Binding DSTacGia}"/>
+                        </TextBlock>
+                        <TextBlock Grid.Column="1" HorizontalAlignment="Left" FontSize="14" Foreground="Black" FontWeight="DemiBold">
+                            <Run Text="Thể Loại: "/>
+                            <Run Text="{Binding DSTheLoai}"/>
+                        </TextBlock>
+                    </Grid>
+
+                    <!-- Lượt mượn và đánh giá -->
+                    <Grid Width="500" Margin="0,0,0,10" HorizontalAlignment="Left">
+                        <Grid.ColumnDefinitions>
+                            <!-- Cột 1 chiếm 3 phần, cột 2 chiếm 1.5 phần -->
+                            <ColumnDefinition Width="3*"/>
+                            <ColumnDefinition Width="2*"/>
+                        </Grid.ColumnDefinitions>
+                        <TextBlock Grid.Column="0" HorizontalAlignment="Left" FontSize="14" Foreground="Black" FontWeight="DemiBold">
+                            <Run Text="Lượt Mượn: "/>
+                            <Run Text="{Binding LuotMuon}"/>
+                        </TextBlock>
+                        <StackPanel Orientation="Horizontal" Grid.Column="1">
+                            <TextBlock HorizontalAlignment="Left" FontSize="14" Foreground="Black" FontWeight="DemiBold">
+                                <Run Text="Đánh Giá: "/>
+                                <Run Text="{Binding DanhGia}"/>
+                            </TextBlock>
+                            <materialDesign:PackIcon Kind="Star" VerticalAlignment="Center" Foreground="Black"/>
+                        </StackPanel>
+                    </Grid>
+
+                    <!-- Vị trí -->
+                    <TextBlock FontSize="14" Foreground="Black" FontWeight="DemiBold" Margin="0,0,0,10">
+                    <Run Text="Vị trí: "/>
+                    <Run Text="{Binding ViTri}" />
                     </TextBlock>
-                    <TextBlock>
-                        <Run Text="Lượt mượn: "/>
-                        <Run Text="{Binding LuotMuon}"/>
+
+                    <!-- Mô tả -->
+                    <TextBlock FontSize="14" Foreground="Black" FontWeight="DemiBold" Margin="0,0,0,10">
+                    <Run Text="Mô Tả: "/>
+                    <Run Text="{Binding MoTa}" />
                     </TextBlock>
-                    <!-- Thêm các thông tin khác -->
                 </StackPanel>
             </Grid>
-        </ScrollViewer>
+        </Border>
     </Grid>
 </UserControl>

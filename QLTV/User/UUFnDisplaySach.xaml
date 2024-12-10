@@ -22,28 +22,50 @@
     </UserControl.Resources>
     <Grid>
         <TabControl x:Name="tcDisplaySach" HorizontalContentAlignment="Left">
+            <TabControl.Template>
+                <ControlTemplate TargetType="TabControl">
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="*"/>
+                        </Grid.RowDefinitions>
+                        <ScrollViewer HorizontalScrollBarVisibility="Auto" 
+                              VerticalScrollBarVisibility="Disabled">
+                            <TabPanel x:Name="HeaderPanel" 
+                              IsItemsHost="True" 
+                              KeyboardNavigation.TabIndex="1"/>
+                        </ScrollViewer>
+                        <ContentPresenter Grid.Row="1" 
+                                  ContentSource="SelectedContent"/>
+                    </Grid>
+                </ControlTemplate>
+            </TabControl.Template>
+            
             <TabControl.Resources>
                 <!-- Style cho TabItem -->
                 <Style TargetType="{x:Type TabItem}">
+                    <!-- Template để thay đổi giao diện tổng thể của TabItem -->
                     <Setter Property="Template">
                         <Setter.Value>
                             <ControlTemplate TargetType="{x:Type TabItem}">
                                 <Grid>
-                                    <!-- Border TabItem -->
+                                    <!-- Border TabItem (đã bỏ đi) -->
                                     <Border x:Name="Border"
-                                CornerRadius="10,10,0,0"
-                                Background="Transparent"
-                                BorderThickness="0,0,0,3">
+                                            CornerRadius="10,10,0,0"
+                                            Background="AliceBlue"
+                                            BorderThickness="0,0,0,0">
+                                        <!-- Nội dung Header của TabItem -->
                                         <ContentPresenter x:Name="ContentSite"
-                                              VerticalAlignment="Center"
-                                              HorizontalAlignment="Left"
-                                              ContentSource="Header"
-                                              Margin="10,2" />
+                                                  VerticalAlignment="Center"
+                                                  HorizontalAlignment="Left"
+                                                  ContentSource="Header"
+                                                  Margin="10, 2"/>
                                     </Border>
                                 </Grid>
+                                <!-- Trigger thay đổi màu khi Tab được chọn -->
                                 <ControlTemplate.Triggers>
                                     <Trigger Property="IsSelected" Value="True">
-                                        <Setter TargetName="Border" Property="Background" Value="AliceBlue" />
+                                        <Setter TargetName="Border" Property="Background" Value="White" />
                                     </Trigger>
                                 </ControlTemplate.Triggers>
                             </ControlTemplate>
@@ -54,11 +76,8 @@
                     <Setter Property="HeaderTemplate">
                         <Setter.Value>
                             <DataTemplate>
-                                <Grid Height="30"
-                          MinWidth="50"
-                          HorizontalAlignment="Stretch"
-                          VerticalAlignment="Center"
-                          SharedSizeGroup="TabHeader">
+                                <Grid Height="30" Width="140" HorizontalAlignment="Stretch" VerticalAlignment="Center">
+                                    <!-- Cột định nghĩa các phần tử bên trong Header -->
                                     <Grid.ColumnDefinitions>
                                         <ColumnDefinition Width="Auto" />
                                         <ColumnDefinition Width="*" />
@@ -66,45 +85,45 @@
                                     </Grid.ColumnDefinitions>
 
                                     <!-- PackIcon Shape -->
-                                    <materialDesign:PackIcon
-                            Grid.Column="0"
-                            Kind="Book"
-                            Foreground="DimGray"
-                            Width="16"
-                            Height="16"
-                            VerticalAlignment="Center"
-                            Margin="0,0,5,0" />
+                                    <materialDesign:PackIcon Grid.Column="0"
+                                                             Kind="Book"
+                                                             Foreground="DimGray"
+                                                             Width="16"
+                                                             Height="16"
+                                                             HorizontalAlignment="Left"
+                                                             VerticalAlignment="Center"
+                                                             Margin="0,0,5,0" />
 
                                     <!-- TextBlock hiển thị tên tab -->
                                     <TextBlock Grid.Column="1"
-                                   FontSize="12"
-                                   Text="{Binding}"
-                                   FontWeight="Bold"
-                                   Foreground="DimGray"
-                                   VerticalAlignment="Center"
-                                   HorizontalAlignment="Left"
-                                   Margin="0,0,5,0" />
+                                               FontSize="12"
+                                               Text="{Binding}" 
+                                               FontWeight="Bold" 
+                                               Foreground="DimGray"
+                                               VerticalAlignment="Center" 
+                                               HorizontalAlignment="Left" 
+                                               Margin="0,0,5,0" />
 
                                     <!-- Button đóng tab -->
                                     <Button Grid.Column="2"
-                                Click="CloseTab_Click"
-                                VerticalAlignment="Center"
-                                HorizontalAlignment="Right"
-                                Background="Transparent"
-                                Padding="0">
+                                            Click="CloseTab_Click"
+                                            VerticalAlignment="Center"
+                                            HorizontalAlignment="Right" 
+                                            Background="Transparent"
+                                            Padding="0">
                                         <Button.Template>
                                             <ControlTemplate>
                                                 <Border x:Name="border"
-                                            BorderThickness="0"
-                                            Background="Transparent"
-                                            Width="20"
-                                            Height="20"
-                                            CornerRadius="10">
+                                                        BorderThickness="0" 
+                                                        Background="Transparent" 
+                                                        Width="20" 
+                                                        Height="20" 
+                                                        CornerRadius="10">
                                                     <materialDesign:PackIcon
-                                            Kind="Close" Height="15" Width="15"
-                                            Foreground="Red"
-                                            VerticalAlignment="Center"
-                                            HorizontalAlignment="Center" />
+                                                        Kind="Close" Height="15" Width="15"
+                                                        Foreground="Red"
+                                                        VerticalAlignment="Center"
+                                                        HorizontalAlignment="Center" />
                                                 </Border>
                                                 <ControlTemplate.Triggers>
                                                     <Trigger Property="IsMouseOver" Value="True">
@@ -121,7 +140,7 @@
                 </Style>
             </TabControl.Resources>
 
-            <TabItem HeaderTemplate="{x:Null}" Height="37">
+            <TabItem HeaderTemplate="{x:Null}" Height="37" Width="165">
                 <TabItem.Header>
                     <Grid>
                         <Grid.ColumnDefinitions>
@@ -137,11 +156,12 @@
                             Width="16"
                             Height="16"
                             VerticalAlignment="Center"
-                            Margin="5,0,5,0"/>
+                            HorizontalAlignment="Left"
+                            Margin="0,0,5,0"/>
 
                         <TextBlock 
                             Grid.Column="1"
-                            Text="Home Tab"
+                            Text="Kho Sách"
                             FontWeight="Bold" 
                             Foreground="DimGray"
                             VerticalAlignment="Center" 
@@ -327,15 +347,14 @@
 
                                                     <!-- Book Title -->
                                                     <TextBlock Text="{Binding TenTuaSach}" Grid.Row="0"
-                                                               FontWeight="Bold" TextWrapping="Wrap"/>
+                                                               FontWeight="Bold"/>
 
                                                     <!-- Authors -->
                                                     <TextBlock Text="{Binding DSTacGia}" Grid.Row="1"
-                                                               FontStyle="Italic" TextWrapping="Wrap"/>
+                                                               FontStyle="Italic"/>
 
                                                     <!-- Genres -->
-                                                    <TextBlock Text="{Binding DSTheLoai}" Grid.Row="2" 
-                                                               TextWrapping="Wrap"/>
+                                                    <TextBlock Text="{Binding DSTheLoai}" Grid.Row="2"/>
 
                                                     <!-- Borrow Count -->
                                                     <StackPanel Orientation="Horizontal" Grid.Row="3">
@@ -347,6 +366,7 @@
                                                     <DockPanel Grid.Row="4">
                                                         <TextBlock Text="Đánh giá: " FontWeight="SemiBold" DockPanel.Dock="Left"/>
                                                         <TextBlock Text="{Binding DanhGia}" DockPanel.Dock="Left"/>
+                                                        <materialDesign:PackIcon Kind="Star" DockPanel.Dock="Left"/>
                                                         <Button x:Name="btnChiTiet" Padding="0" DockPanel.Dock="Right" 
                                                                 Width="20" Height="Auto"
                                                                 HorizontalAlignment="Right"
@@ -380,5 +400,4 @@
             </TabItem>
         </TabControl>
     </Grid>
-
 </UserControl>
