@@ -20,225 +20,365 @@
             <Setter Property="Padding" Value="8"/>
         </Style>
     </UserControl.Resources>
-    <Grid Background="White">
-        <Grid.RowDefinitions>
-            <RowDefinition Height="Auto"/>
-            <RowDefinition Height="*"/>
-            <RowDefinition Height="Auto"/>
-        </Grid.RowDefinitions>
+    <Grid>
+        <TabControl x:Name="tcDisplaySach" HorizontalContentAlignment="Left">
+            <TabControl.Resources>
+                <!-- Style cho TabItem -->
+                <Style TargetType="{x:Type TabItem}">
+                    <Setter Property="Template">
+                        <Setter.Value>
+                            <ControlTemplate TargetType="{x:Type TabItem}">
+                                <Grid>
+                                    <!-- Border TabItem -->
+                                    <Border x:Name="Border"
+                                CornerRadius="10,10,0,0"
+                                Background="Transparent"
+                                BorderThickness="0,0,0,3">
+                                        <ContentPresenter x:Name="ContentSite"
+                                              VerticalAlignment="Center"
+                                              HorizontalAlignment="Left"
+                                              ContentSource="Header"
+                                              Margin="10,2" />
+                                    </Border>
+                                </Grid>
+                                <ControlTemplate.Triggers>
+                                    <Trigger Property="IsSelected" Value="True">
+                                        <Setter TargetName="Border" Property="Background" Value="AliceBlue" />
+                                    </Trigger>
+                                </ControlTemplate.Triggers>
+                            </ControlTemplate>
+                        </Setter.Value>
+                    </Setter>
 
-        <Grid Grid.Column="0" Margin="10, 10, 0, 0">
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="300"/>
-                <ColumnDefinition Width="120"/>
-                <ColumnDefinition Width="Auto"/>
-                <ColumnDefinition Width="Auto"/>
-                <ColumnDefinition Width="Auto"/>
-            </Grid.ColumnDefinitions>
-
-            <TextBox x:Name="tbxThongTinTim" Grid.Column="0" VerticalAlignment="Center"
-                     Style="{StaticResource DataDisplayTextBox}"
-                     Padding="7.5"
-                     materialDesign:HintAssist.Hint="Từ Khóa"
-                     materialDesign:HintAssist.FloatingScale="0.8"/>
-
-            <ComboBox x:Name="cbbThuocTinhTim" Grid.Column="1" 
+                    <!-- Giao diện cho Header -->
+                    <Setter Property="HeaderTemplate">
+                        <Setter.Value>
+                            <DataTemplate>
+                                <Grid Height="30"
+                          MinWidth="50"
+                          HorizontalAlignment="Stretch"
                           VerticalAlignment="Center"
-                          Style="{StaticResource ModernComboBox}"
-                          Padding="7.5"
-                          materialDesign:HintAssist.Hint="Thuộc Tính"
-                          materialDesign:HintAssist.FloatingScale="0.8">
-                <ComboBoxItem Content="Tựa Sách"/>
-                <ComboBoxItem Content="Tác Giả"/>
-                <ComboBoxItem Content="Thể Loại"/>
-            </ComboBox>
+                          SharedSizeGroup="TabHeader">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="Auto" />
+                                        <ColumnDefinition Width="*" />
+                                        <ColumnDefinition Width="Auto" />
+                                    </Grid.ColumnDefinitions>
 
-            <Button x:Name="btnTimKiem" Grid.Column="2" Click="btnTimKiem_Click" Padding="0" Width="30">
-                <materialDesign:PackIcon Kind="Magnify" Width="22" Height="22"/>
-            </Button>
+                                    <!-- PackIcon Shape -->
+                                    <materialDesign:PackIcon
+                            Grid.Column="0"
+                            Kind="Book"
+                            Foreground="DimGray"
+                            Width="16"
+                            Height="16"
+                            VerticalAlignment="Center"
+                            Margin="0,0,5,0" />
 
-            <Grid Grid.Column="3" Width="Auto">
-                <Button x:Name="btnFilter" Grid.Column="3" Click="btnOpenFilter_Click" Padding="0" Width="30">
-                    <materialDesign:PackIcon Kind="Filter" Width="22" Height="22"/>
-                </Button>
+                                    <!-- TextBlock hiển thị tên tab -->
+                                    <TextBlock Grid.Column="1"
+                                   FontSize="12"
+                                   Text="{Binding}"
+                                   FontWeight="Bold"
+                                   Foreground="DimGray"
+                                   VerticalAlignment="Center"
+                                   HorizontalAlignment="Left"
+                                   Margin="0,0,5,0" />
 
-                <Popup x:Name="puFilter"
-                       Placement="Bottom"
-                       PlacementTarget="{Binding ElementName=btnFilter}"
-                       StaysOpen="False"
-                       HorizontalOffset="0"
-                       VerticalOffset="0"
-                       Width="Auto">
-                    <Border Background="White" Padding="10" CornerRadius="0" BorderBrush="Gray"
-                            BorderThickness="2" Width="400">
-                        <StackPanel>
-                            <!-- Row 1: ComboBox and Add Button -->
-                            <DockPanel LastChildFill="False" Margin="0,0,0,10">
-                                <ComboBox x:Name="cbTheLoai" 
-                                          Style="{StaticResource ModernComboBox}"
-                                          materialDesign:HintAssist.Hint="Thể Loại"
-                                          materialDesign:HintAssist.FloatingScale="0.8"
-                                          Width="250" 
-                                          DisplayMemberPath="TenTheLoai"
-                                          ItemsSource="{Binding lstTheLoai}" 
-                                          SelectedItem="{Binding selectedTheLoai}" />
-                                <Button Content="Thêm" Width="50" Padding="0" Margin="5,0,0,0" Click="btnAddTheLoai_Click"/>
-                                <Button Content="Lọc" Width="50" Padding="0" Margin="5, 0, 0, 0" Click="btnLoc_Click"/>
-                            </DockPanel>
+                                    <!-- Button đóng tab -->
+                                    <Button Grid.Column="2"
+                                Click="CloseTab_Click"
+                                VerticalAlignment="Center"
+                                HorizontalAlignment="Right"
+                                Background="Transparent"
+                                Padding="0">
+                                        <Button.Template>
+                                            <ControlTemplate>
+                                                <Border x:Name="border"
+                                            BorderThickness="0"
+                                            Background="Transparent"
+                                            Width="20"
+                                            Height="20"
+                                            CornerRadius="10">
+                                                    <materialDesign:PackIcon
+                                            Kind="Close" Height="15" Width="15"
+                                            Foreground="Red"
+                                            VerticalAlignment="Center"
+                                            HorizontalAlignment="Center" />
+                                                </Border>
+                                                <ControlTemplate.Triggers>
+                                                    <Trigger Property="IsMouseOver" Value="True">
+                                                        <Setter TargetName="border" Property="Background" Value="#77808080" />
+                                                    </Trigger>
+                                                </ControlTemplate.Triggers>
+                                            </ControlTemplate>
+                                        </Button.Template>
+                                    </Button>
+                                </Grid>
+                            </DataTemplate>
+                        </Setter.Value>
+                    </Setter>
+                </Style>
+            </TabControl.Resources>
 
-                            <!-- Row 2: Dynamic list -->
-                            <ItemsControl x:Name="icSelectedTheLoai" ItemsSource="{Binding lstSelectedTheLoai}">
+            <TabItem HeaderTemplate="{x:Null}" Height="37">
+                <TabItem.Header>
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="Auto"/>
+                        </Grid.ColumnDefinitions>
+
+                        <materialDesign:PackIcon 
+                            Grid.Column="0"
+                            Kind="Home"
+                            Foreground="DimGray"
+                            Width="16"
+                            Height="16"
+                            VerticalAlignment="Center"
+                            Margin="5,0,5,0"/>
+
+                        <TextBlock 
+                            Grid.Column="1"
+                            Text="Home Tab"
+                            FontWeight="Bold" 
+                            Foreground="DimGray"
+                            VerticalAlignment="Center" 
+                            HorizontalAlignment="Left" 
+                            Margin="0,0,5,0"/>
+                    </Grid>
+                </TabItem.Header>
+
+                <Grid Background="White">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="*"/>
+                        <RowDefinition Height="Auto"/>
+                    </Grid.RowDefinitions>
+
+                    <Grid Grid.Column="0" Margin="10, 10, 0, 0">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="300"/>
+                            <ColumnDefinition Width="120"/>
+                            <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition Width="Auto"/>
+                        </Grid.ColumnDefinitions>
+
+                        <TextBox x:Name="tbxThongTinTim" Grid.Column="0" VerticalAlignment="Center"
+                                 Style="{StaticResource DataDisplayTextBox}"
+                                 Padding="7.5"
+                                 materialDesign:HintAssist.Hint="Từ Khóa"
+                                 materialDesign:HintAssist.FloatingScale="0.8"/>
+
+                        <ComboBox x:Name="cbbThuocTinhTim" Grid.Column="1" 
+                                  VerticalAlignment="Center"
+                                  Style="{StaticResource ModernComboBox}"
+                                  Padding="7.5"
+                                  materialDesign:HintAssist.Hint="Thuộc Tính"
+                                  materialDesign:HintAssist.FloatingScale="0.8">
+                            <ComboBoxItem Content="Tựa Sách"/>
+                            <ComboBoxItem Content="Tác Giả"/>
+                            <ComboBoxItem Content="Thể Loại"/>
+                        </ComboBox>
+
+                        <Button x:Name="btnTimKiem" Grid.Column="2" Click="btnTimKiem_Click" Padding="0" Width="30">
+                            <materialDesign:PackIcon Kind="Magnify" Width="22" Height="22"/>
+                        </Button>
+
+                        <Grid Grid.Column="3" Width="Auto">
+                            <Button x:Name="btnFilter" Grid.Column="3" Click="btnOpenFilter_Click" Padding="0" Width="30">
+                                <materialDesign:PackIcon Kind="Filter" Width="22" Height="22"/>
+                            </Button>
+
+                            <Popup x:Name="puFilter"
+                                   Placement="Bottom"
+                                   PlacementTarget="{Binding ElementName=btnFilter}"
+                                   StaysOpen="False"
+                                   HorizontalOffset="0"
+                                   VerticalOffset="0"
+                                   Width="Auto">
+                                <Border Background="White" Padding="10" CornerRadius="0" BorderBrush="Gray"
+                                        BorderThickness="2" Width="400">
+                                    <StackPanel>
+                                        <!-- Row 1: ComboBox and Add Button -->
+                                        <DockPanel LastChildFill="False" Margin="0,0,0,10">
+                                            <ComboBox x:Name="cbTheLoai" 
+                                                      Style="{StaticResource ModernComboBox}"
+                                                      materialDesign:HintAssist.Hint="Thể Loại"
+                                                      materialDesign:HintAssist.FloatingScale="0.8"
+                                                      Width="250" 
+                                                      DisplayMemberPath="TenTheLoai"
+                                                      ItemsSource="{Binding lstTheLoai}" 
+                                                      SelectedItem="{Binding selectedTheLoai}" />
+                                            <Button Content="Thêm" Width="50" Padding="0" Margin="5,0,0,0" Click="btnAddTheLoai_Click"/>
+                                            <Button Content="Lọc" Width="50" Padding="0" Margin="5, 0, 0, 0" Click="btnLoc_Click"/>
+                                        </DockPanel>
+
+                                        <!-- Row 2: Dynamic list -->
+                                        <ItemsControl x:Name="icSelectedTheLoai" ItemsSource="{Binding lstSelectedTheLoai}">
+                                            <ItemsControl.ItemsPanel>
+                                                <ItemsPanelTemplate>
+                                                    <WrapPanel Orientation="Horizontal" ItemWidth="Auto" ItemHeight="Auto" />
+                                                </ItemsPanelTemplate>
+                                            </ItemsControl.ItemsPanel>
+                                            <ItemsControl.ItemTemplate>
+                                                <DataTemplate>
+                                                    <Border Background="LightGray" CornerRadius="10" Margin="5" Padding="5">
+                                                        <DockPanel LastChildFill="False">
+                                                            <!-- Tên thể loại -->
+                                                            <TextBlock Text="{Binding TenTheLoai}" VerticalAlignment="Center" Margin="5,0,0,0" />
+
+                                                            <!-- Nút "x" -->
+                                                            <Button Content="x"
+                                                                    Width="18"
+                                                                    Height="18"
+                                                                    Margin="0,0,0,2"
+                                                                    Padding="0"
+                                                                    VerticalAlignment="Center"
+                                                                    VerticalContentAlignment="Center"
+                                                                    Foreground="Gray"
+                                                                    Background="Transparent"
+                                                                    BorderBrush="Transparent"
+                                                                    FontWeight="Bold"
+                                                                    Cursor="Hand"
+                                                                    Click="RemoveTheLoai_Click"
+                                                                    Tag="{Binding}" />
+                                                        </DockPanel>
+                                                    </Border>
+                                                </DataTemplate>
+                                            </ItemsControl.ItemTemplate>
+                                        </ItemsControl>
+                                    </StackPanel>
+                                </Border>
+                            </Popup>
+                        </Grid>
+
+                        <StackPanel Grid.Column="4" Orientation="Horizontal" VerticalAlignment="Center">
+                            <!-- Sort Button -->
+                            <Button x:Name="btnSort" Width="30" Click="btnSort_Click" Padding="0">
+                                <materialDesign:PackIcon Kind="Sort"/>
+                            </Button>
+
+                            <!-- Popup for Sort Options -->
+                            <Popup x:Name="puSortOptions" Grid.Row="4"
+                                   Placement="Bottom" 
+                                   PlacementTarget="{Binding ElementName=btnSort}" 
+                                   StaysOpen="False">
+                                <Border Background="WhiteSmoke" Padding="10">
+                                    <StackPanel>
+                                        <!-- Sort by Borrow Count -->
+                                        <Button Content="Lượt mượn giảm" 
+                                                Style="{StaticResource MaterialDesignOutlinedButton}"
+                                                HorizontalAlignment="Stretch" 
+                                                Padding="5" 
+                                                Click="SortByBorrowCountDesc_Click" />
+
+                                        <Button Content="Lượt mượn tăng"
+                                                Style="{StaticResource MaterialDesignOutlinedButton}"
+                                                HorizontalAlignment="Stretch" 
+                                                Padding="5" 
+                                                Click="SortByBorrowCountAsc_Click" />
+
+                                        <!-- Sort by Rating -->
+                                        <Button Content="Đánh giá" 
+                                                Style="{StaticResource MaterialDesignOutlinedButton}"
+                                                HorizontalAlignment="Stretch" 
+                                                Padding="5" 
+                                                Click="SortByRating_Click" />
+                                    </StackPanel>
+                                </Border>
+                            </Popup>
+                        </StackPanel>
+                    </Grid>
+
+                    <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto">
+                        <WrapPanel>
+                            <ItemsControl ItemsSource="{Binding dsSach}">
                                 <ItemsControl.ItemsPanel>
                                     <ItemsPanelTemplate>
-                                        <WrapPanel Orientation="Horizontal" ItemWidth="Auto" ItemHeight="Auto" />
+                                        <WrapPanel/>
                                     </ItemsPanelTemplate>
                                 </ItemsControl.ItemsPanel>
                                 <ItemsControl.ItemTemplate>
                                     <DataTemplate>
-                                        <Border Background="LightGray" CornerRadius="10" Margin="5" Padding="5">
-                                            <DockPanel LastChildFill="False">
-                                                <!-- Tên thể loại -->
-                                                <TextBlock Text="{Binding TenTheLoai}" VerticalAlignment="Center" Margin="5,0,0,0" />
+                                        <Border BorderBrush="Gray" BorderThickness="1" CornerRadius="5" 
+                                                Margin="10" Padding="5" Width="150">
+                                            <StackPanel>
+                                                <!-- Book Cover Image -->
+                                                <Image Source="{Binding BiaSach}" 
+                                                       Width="120" Height="160"
+                                                       Stretch="Fill"/>
 
-                                                <!-- Nút "x" -->
-                                                <Button Content="x"
-                                                        Width="18"
-                                                        Height="18"
-                                                        Margin="0,0,0,2"
-                                                        Padding="0"
-                                                        VerticalAlignment="Center"
-                                                        VerticalContentAlignment="Center"
-                                                        Foreground="Gray"
-                                                        Background="Transparent"
-                                                        BorderBrush="Transparent"
-                                                        FontWeight="Bold"
-                                                        Cursor="Hand"
-                                                        Click="RemoveTheLoai_Click"
-                                                        Tag="{Binding}" />
-                                            </DockPanel>
+                                                <!-- Separator -->
+                                                <Border BorderBrush="LightGray" BorderThickness="0, 1, 0, 1"
+                                                        Margin="0, 5, 0, 5"/>
+
+                                                <!-- Grid for book details -->
+                                                <Grid>
+                                                    <Grid.RowDefinitions>
+                                                        <RowDefinition Height="Auto"/>
+                                                        <RowDefinition Height="Auto"/>
+                                                        <RowDefinition Height="Auto"/>
+                                                        <RowDefinition Height="Auto"/>
+                                                        <RowDefinition Height="Auto"/>
+                                                    </Grid.RowDefinitions>
+
+                                                    <!-- Book Title -->
+                                                    <TextBlock Text="{Binding TenTuaSach}" Grid.Row="0"
+                                                               FontWeight="Bold" TextWrapping="Wrap"/>
+
+                                                    <!-- Authors -->
+                                                    <TextBlock Text="{Binding DSTacGia}" Grid.Row="1"
+                                                               FontStyle="Italic" TextWrapping="Wrap"/>
+
+                                                    <!-- Genres -->
+                                                    <TextBlock Text="{Binding DSTheLoai}" Grid.Row="2" 
+                                                               TextWrapping="Wrap"/>
+
+                                                    <!-- Borrow Count -->
+                                                    <StackPanel Orientation="Horizontal" Grid.Row="3">
+                                                        <TextBlock Text="Lượt mượn: " FontWeight="SemiBold"/>
+                                                        <TextBlock Text="{Binding LuotMuon}"/>
+                                                    </StackPanel>
+
+                                                    <!-- Rating -->
+                                                    <DockPanel Grid.Row="4">
+                                                        <TextBlock Text="Đánh giá: " FontWeight="SemiBold" DockPanel.Dock="Left"/>
+                                                        <TextBlock Text="{Binding DanhGia}" DockPanel.Dock="Left"/>
+                                                        <Button x:Name="btnChiTiet" Padding="0" DockPanel.Dock="Right" 
+                                                                Width="20" Height="Auto"
+                                                                HorizontalAlignment="Right"
+                                                                Click="btnChiTiet_Click">
+                                                            <materialDesign:PackIcon Kind="Eye"/>
+                                                        </Button>
+                                                    </DockPanel>
+                                                </Grid>
+                                            </StackPanel>
                                         </Border>
                                     </DataTemplate>
                                 </ItemsControl.ItemTemplate>
                             </ItemsControl>
-                        </StackPanel>
-                    </Border>
-                </Popup>
-            </Grid>
+                        </WrapPanel>
+                    </ScrollViewer>
 
-            <StackPanel Grid.Column="4" Orientation="Horizontal" VerticalAlignment="Center">
-                <!-- Sort Button -->
-                <Button x:Name="btnSort" Width="30" Click="btnSort_Click" Padding="0">
-                    <materialDesign:PackIcon Kind="Sort"/>
-                </Button>
+                    <!-- Paging Controls -->
+                    <StackPanel Orientation="Horizontal" Grid.Row="2" 
+                                HorizontalAlignment="Center" VerticalAlignment="Bottom">
+                        <Button x:Name="btnPrevious" Click="btnPrevious_Click" Width="20" Height="20" Padding="0">
+                            <materialDesign:PackIcon Kind="ChevronLeft"/>
+                        </Button>
 
-                <!-- Popup for Sort Options -->
-                <Popup x:Name="puSortOptions" Grid.Row="4"
-                       Placement="Bottom" 
-                       PlacementTarget="{Binding ElementName=btnSort}" 
-                       StaysOpen="False">       
-                    <Border Background="WhiteSmoke" Padding="10">
-                        <StackPanel>
-                            <!-- Sort by Borrow Count -->
-                            <Button Content="Lượt mượn giảm" 
-                                    Style="{StaticResource MaterialDesignOutlinedButton}"
-                                    HorizontalAlignment="Stretch" 
-                                    Padding="5" 
-                                    Click="SortByBorrowCountDesc_Click" />
+                        <TextBlock x:Name="tbxPageNumber" VerticalAlignment="Center" Margin="5"/>
 
-                            <Button Content="Lượt mượn tăng"
-                                    Style="{StaticResource MaterialDesignOutlinedButton}"
-                                    HorizontalAlignment="Stretch" 
-                                    Padding="5" 
-                                    Click="SortByBorrowCountAsc_Click" />
-                            
-                            <!-- Sort by Rating -->
-                            <Button Content="Đánh giá" 
-                                    Style="{StaticResource MaterialDesignOutlinedButton}"
-                                    HorizontalAlignment="Stretch" 
-                                    Padding="5" 
-                                    Click="SortByRating_Click" />
-                        </StackPanel>
-                    </Border>
-                </Popup>
-            </StackPanel>
-        </Grid>
-
-        <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto">
-            <WrapPanel>
-                <ItemsControl ItemsSource="{Binding dsSach}">
-                    <ItemsControl.ItemsPanel>
-                        <ItemsPanelTemplate>
-                            <WrapPanel/>
-                        </ItemsPanelTemplate>
-                    </ItemsControl.ItemsPanel>
-                    <ItemsControl.ItemTemplate>
-                        <DataTemplate>
-                            <Border BorderBrush="Gray" BorderThickness="1" CornerRadius="5" 
-                            Margin="10" Padding="5" Width="150">
-                                <StackPanel>
-                                    <!-- Book Cover Image -->
-                                    <Image Source="{Binding BiaSach}" 
-                                   Width="120" Height="160"
-                                   Stretch="Fill"/>
-
-                                    <!-- Separator -->
-                                    <Border BorderBrush="LightGray" BorderThickness="0, 1, 0, 1"
-                                    Margin="0, 5, 0, 5"/>
-
-                                    <!-- Grid for book details -->
-                                    <Grid>
-                                        <Grid.RowDefinitions>
-                                            <RowDefinition Height="Auto"/>
-                                            <RowDefinition Height="Auto"/>
-                                            <RowDefinition Height="Auto"/>
-                                            <RowDefinition Height="Auto"/>
-                                            <RowDefinition Height="Auto"/>
-                                        </Grid.RowDefinitions>
-
-                                        <!-- Book Title -->
-                                        <TextBlock Text="{Binding TenTuaSach}" Grid.Row="0"
-                                           FontWeight="Bold" TextWrapping="Wrap"/>
-
-                                        <!-- Authors -->
-                                        <TextBlock Text="{Binding DSTacGia}" Grid.Row="1"
-                                           FontStyle="Italic" TextWrapping="Wrap"/>
-
-                                        <!-- Genres -->
-                                        <TextBlock Text="{Binding DSTheLoai}" Grid.Row="2" 
-                                           TextWrapping="Wrap"/>
-
-                                        <!-- Borrow Count -->
-                                        <StackPanel Orientation="Horizontal" Grid.Row="3">
-                                            <TextBlock Text="Lượt mượn: " FontWeight="SemiBold"/>
-                                            <TextBlock Text="{Binding LuotMuon}"/>
-                                        </StackPanel>
-
-                                        <!-- Rating -->
-                                        <StackPanel Orientation="Horizontal" Grid.Row="4">
-                                            <TextBlock Text="Đánh giá: " FontWeight="SemiBold"/>
-                                            <TextBlock Text="{Binding DanhGia}"/>
-                                        </StackPanel>
-                                    </Grid>
-                                </StackPanel>
-                            </Border>
-                        </DataTemplate>
-                    </ItemsControl.ItemTemplate>
-                </ItemsControl>
-            </WrapPanel>
-        </ScrollViewer>
-
-        <!-- Paging Controls -->
-        <StackPanel Orientation="Horizontal" Grid.Row="2" 
-                    HorizontalAlignment="Center" VerticalAlignment="Bottom">
-            <Button x:Name="btnPrevious" Click="btnPrevious_Click" Width="20" Height="20" Padding="0">
-                <materialDesign:PackIcon Kind="ChevronLeft"/>
-            </Button>
-
-            <TextBlock x:Name="tbxPageNumber" VerticalAlignment="Center" Margin="5"/>
-
-            <Button x:Name="btnNext" Click="btnNext_Click" Width="20" Height="20" Padding="0">
-                <materialDesign:PackIcon Kind="ChevronRight"/>
-            </Button>
-        </StackPanel>
+                        <Button x:Name="btnNext" Click="btnNext_Click" Width="20" Height="20" Padding="0">
+                            <materialDesign:PackIcon Kind="ChevronRight"/>
+                        </Button>
+                    </StackPanel>
+                </Grid>
+            </TabItem>
+        </TabControl>
     </Grid>
+
 </UserControl>

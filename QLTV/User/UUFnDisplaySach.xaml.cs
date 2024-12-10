@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using MaterialDesignThemes.Wpf;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Xaml.Behaviors.Core;
 using QLTV.Models;
 using System;
@@ -351,20 +352,79 @@ namespace QLTV.User
 
         private void CloseTab_Click(object sender, RoutedEventArgs e)
         {
-            // Lấy TabItem hiện tại dựa vào nút 'Close' được click
-            var closeButton = sender as Button;
-            if (closeButton == null) return;
+            // Lấy Button đã được nhấn
+            Button closeButton = sender as Button;
 
-            // Lấy TabItem chứa nút 'Close'
-            var tabItem = closeButton.Tag as TabItem;
-            if (tabItem == null) return;
+            // Xác định TabItem chứa nút
+            TabItem tabItem = FindParent<TabItem>(closeButton);
 
-            // Lấy TabControl chứa TabItem này
-            var tabControl = ItemsControl.ItemsControlFromItemContainer(tabItem) as TabControl;
-            if (tabControl == null) return;
+            // Kiểm tra và xóa TabItem khỏi TabControl
+            if (tabItem != null)
+            {
+                TabControl tabControl = FindParent<TabControl>(tabItem);
+                if (tabControl != null)
+                {
+                    tabControl.Items.Remove(tabItem);
+                }
+            }
+        }
 
-            // Xóa TabItem khỏi TabControl
-            tabControl.Items.Remove(tabItem);
+        // Hàm tìm parent control (generic)
+        private T FindParent<T>(DependencyObject child) where T : DependencyObject
+        {
+            DependencyObject parent = VisualTreeHelper.GetParent(child);
+
+            while (parent != null && !(parent is T))
+            {
+                parent = VisualTreeHelper.GetParent(parent);
+            }
+
+            return parent as T;
+        }
+
+        private void btnChiTiet_Click(object sender, RoutedEventArgs e)
+        {
+            // Lấy tài khoản hiện tại từ DataContext
+            var button = sender as Button;
+            if (button?.DataContext is TuaSachViewModel tuaDaChon)
+            {
+                // Kiểm tra nếu TabControl không null
+                if (tcDisplaySach != null)
+                {
+                    // Kiểm tra nếu Tab với tài khoản đã tồn tại
+                    var existingTab = tcDisplaySach.Items
+                                        .OfType<TabItem>()
+                                        .FirstOrDefault(tab => tab.Header?.ToString() == $"{tuaDaChon.TenTuaSach}");
+
+                    if (existingTab != null)
+                    {
+                        // Nếu Tab đã tồn tại, chuyển sang Tab đó
+                        tcDisplaySach.SelectedItem = existingTab;
+                    }
+                    else
+                    {
+                        // Tạo Tab mới
+                        var profileTab = new TabItem
+                        {
+                            Header = $"{tuaDaChon.TenTuaSach}", // Tiêu đề tab
+                            Content = new UUChiTietSach
+                            {
+                                DataContext = tuaDaChon // Truyền dữ liệu vào DataContext
+                            }
+                        };
+
+                        // Thêm Tab vào TabControl
+                        tcDisplaySach.Items.Add(profileTab);
+
+                        // Chuyển sang Tab vừa tạo
+                        tcDisplaySach.SelectedItem = profileTab;
+                    }
+                }
+                else
+                {
+                    MessageBox.Show("TabControl không được tìm thấy!", "Lỗi", MessageBoxButton.OK, MessageBoxImage.Error);
+                }
+            }
         }
     }
 }
