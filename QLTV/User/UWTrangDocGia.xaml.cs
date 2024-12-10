@@ -35,5 +35,13 @@ namespace QLTV.User
             UUFnDisplaySach ds = new UUFnDisplaySach();
             USMainContent.Content = ds;
         }
+
+        private void btnFnSachDangMuon_Click(object sender, RoutedEventArgs e)
+        {
+            UUFnSachDangMuon sdm = new UUFnSachDangMuon();
+            USMainContent.Content = sdm;
+        }
+
+
     }
 }

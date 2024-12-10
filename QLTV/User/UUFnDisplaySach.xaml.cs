@@ -26,6 +26,7 @@ namespace QLTV.User
     public partial class UUFnDisplaySach : UserControl
     {
         private List<TuaSachViewModel> _fullDataSource = new();
+        private List<TuaSachViewModel> _filteredSource = new();
         private ObservableCollection<TuaSachViewModel> _dsSach = new();
         private int _itemsPerPage = 20;
         private int _currentPage = 1;
@@ -132,6 +133,7 @@ namespace QLTV.User
                     })
                     .ToList();
 
+                _filteredSource = _fullDataSource;
             }
 
             ApplyPaging();
@@ -199,58 +201,8 @@ namespace QLTV.User
                 var lstTenTLDaChon = lstSelectedTheLoai.Select(tl => tl.TenTheLoai).ToList();
 
                 // Truy vấn dữ liệu từ cơ sở dữ liệu và chuyển thành TuaSachViewModel
-                var filteredBooks = context.TUASACH
-                    .Where(ts => !ts.IsDeleted)  // Lọc sách chưa bị xóa
-                    .Select(ts => new TuaSachViewModel
-                    {
-                        TenTuaSach = ts.TenTuaSach,
-                        BiaSach = ts.BiaSach,
-                        DSTacGia = string.Join(", ", ts.TUASACH_TACGIA.Select(ts_tg => ts_tg.IDTacGiaNavigation.TenTacGia)),
-                        DSTheLoai = string.Join(", ", ts.TUASACH_THELOAI.Select(ts_tl => ts_tl.IDTheLoaiNavigation.TenTheLoai))
-                    })
-                    .AsEnumerable()  // Chuyển sang LINQ-to-Objects
-                    .Where(tsvm =>
-                        // Kiểm tra xem DSTheLoai của TuaSach có chứa tất cả các thể loại đã chọn không
-                        lstTenTLDaChon.All(stl =>
-                            tsvm.DSTheLoai.Contains(stl)))
-                    .ToList();
-
-                // Cập nhật dữ liệu hiển thị
-                _fullDataSource = filteredBooks;
-                _currentPage = 1;
-                ApplyPaging();
-            }
-        }
-
-
-        private string NormalizeString(string text)
-        {
-            if (string.IsNullOrEmpty(text))
-                return text;
-
-            return new string(
-                text.Normalize(NormalizationForm.FormD)
-                    .Where(c => CharUnicodeInfo.GetUnicodeCategory(c) != UnicodeCategory.NonSpacingMark)
-                    .ToArray()
-            ).Normalize(NormalizationForm.FormC).ToLower();
-        }
-
-        private void PerformSearch()
-        {
-            string searchTerm = NormalizeString(tbxThongTinTim.Text.Trim().ToLower());
-            string selectedProperty = ((ComboBoxItem)cbbThuocTinhTim.SelectedItem)?.Content.ToString();
-
-            // Kiểm tra nếu không có gì được chọn
-            if (string.IsNullOrEmpty(selectedProperty))
-            {
-                MessageBox.Show("Vui lòng chọn thuộc tính tìm kiếm", "Thông báo", MessageBoxButton.OK, MessageBoxImage.Warning);
-                return;
-            }
-
-            using (var context = new QLTVContext())
-            {
                 // Truy vấn cơ sở dữ liệu để lấy tất cả các tựa sách
-                var data = context.TUASACH
+                var filteredBooks = context.TUASACH
                     .Where(ts => !ts.IsDeleted)
                     .Include(ts => ts.TUASACH_TACGIA)
                         .ThenInclude(tg => tg.IDTacGiaNavigation)
@@ -297,6 +249,60 @@ namespace QLTV.User
                                 1)
                             : 0
                     })
+                    .AsEnumerable() // Chuyển về IEnumerable để lọc trên máy khách
+                    .Where(tsvm =>
+                        // Kiểm tra xem DSTheLoai của TuaSach có chứa tất cả các thể loại đã chọn không
+                        lstTenTLDaChon.All(stl =>
+                            tsvm.DSTheLoai.Contains(stl)))
+                    .ToList();
+
+                // Cập nhật dữ liệu hiển thị
+                _filteredSource = filteredBooks;
+                _fullDataSource = _filteredSource;
+                _currentPage = 1;
+                tbxThongTinTim.Text = string.Empty;
+                ApplyPaging();
+            }
+        }
+
+
+        private string NormalizeString(string text)
+        {
+            if (string.IsNullOrEmpty(text))
+                return text;
+
+            return new string(
+                text.Normalize(NormalizationForm.FormD)
+                    .Where(c => CharUnicodeInfo.GetUnicodeCategory(c) != UnicodeCategory.NonSpacingMark)
+                    .ToArray()
+            ).Normalize(NormalizationForm.FormC).ToLower();
+        }
+
+        private void PerformSearch()
+        {
+            string searchTerm = NormalizeString(tbxThongTinTim.Text.Trim().ToLower());
+            string selectedProperty = ((ComboBoxItem)cbbThuocTinhTim.SelectedItem)?.Content.ToString();
+
+            // Kiểm tra nếu không có gì được chọn
+            if (string.IsNullOrEmpty(selectedProperty))
+            {
+                MessageBox.Show("Vui lòng chọn thuộc tính tìm kiếm", "Thông báo", MessageBoxButton.OK, MessageBoxImage.Warning);
+                return;
+            }
+
+            using (var context = new QLTVContext())
+            {
+                // Truy vấn cơ sở dữ liệu để lấy tất cả các tựa sách
+                var data = _filteredSource
+                    .Where(ts =>
+                        selectedProperty == "Tựa Sách" ?
+                            NormalizeString(ts.TenTuaSach).Contains(searchTerm) :
+                        selectedProperty == "Tác Giả" ?
+                            NormalizeString(ts.DSTacGia).Contains(searchTerm) :
+                        selectedProperty == "Thể Loại" ?
+                            NormalizeString(ts.DSTheLoai).Contains(searchTerm) :
+                        true
+                    )
                     .ToList();
 
                 // Initialize _fullDataSource as an ObservableCollection
@@ -343,5 +349,22 @@ namespace QLTV.User
             puSortOptions.IsOpen = false; // Close popup after sorting
         }
 
+        private void CloseTab_Click(object sender, RoutedEventArgs e)
+        {
+            // Lấy TabItem hiện tại dựa vào nút 'Close' được click
+            var closeButton = sender as Button;
+            if (closeButton == null) return;
+
+            // Lấy TabItem chứa nút 'Close'
+            var tabItem = closeButton.Tag as TabItem;
+            if (tabItem == null) return;
+
+            // Lấy TabControl chứa TabItem này
+            var tabControl = ItemsControl.ItemsControlFromItemContainer(tabItem) as TabControl;
+            if (tabControl == null) return;
+
+            // Xóa TabItem khỏi TabControl
+            tabControl.Items.Remove(tabItem);
+        }
     }
 }

@@ -42,6 +42,9 @@
 
                     <Button x:Name="btnFnDisplaySach" Content="Kho Sách" Background="DodgerBlue"
                             Click="btnFnDisplaySach_Click"/>
+
+                    <Button x:Name="btnFnSachDangMuon" Content="Sách Đang Mượn" Background="DodgerBlue"
+                            Click="btnFnSachDangMuon_Click"/>
                 </StackPanel>
             </DockPanel>
 
