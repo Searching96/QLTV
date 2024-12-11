@@ -306,7 +306,7 @@ namespace QLTV.UserControls
                 }
             }
 
-            // Convert filtered books to display format using the concrete type
+            // Liên kết kết quả hàm lọc với DataGrid
 
             dgAvailableBooks.ItemsSource = filteredBooks;
         }
@@ -423,7 +423,7 @@ namespace QLTV.UserControls
                         bookWithDate.Book.IsAvailable = false;
                     }
 
-                    // Update BCMUONSACH
+                    // Cập nhật BCMUONSACH
                     var Today = DateTime.Now;
                     var bcMuonSach = await context.BCMUONSACH
                         .FirstOrDefaultAsync(bc => bc.Thang == Today);
@@ -444,7 +444,7 @@ namespace QLTV.UserControls
 
                     await context.SaveChangesAsync();
 
-                    // Update CTBCMUONSACH
+                    // Cập nhật CTBCMUONSACH
                     var theLoaiGroups = _selectedBooks
                         .SelectMany(b => b.Book.IDTuaSachNavigation.TUASACH_THELOAI.Select(ts_tl => ts_tl.IDTheLoaiNavigation))
                         .GroupBy(tl => tl.ID)
@@ -473,7 +473,7 @@ namespace QLTV.UserControls
 
                     await context.SaveChangesAsync();
 
-                    // Update TiLe for all CTBCMUONSACH entries of this report
+                    // Cập nhật TiLe cho tất cả các bản ghi CTBCMUONSACH có trong báo cáo
                     var allCtBcMuonSach = await context.CTBCMUONSACH
                         .Where(ct => ct.IDBCMuonSach == bcMuonSach.ID)
                         .ToListAsync();

@@ -9,6 +9,13 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="Fonts\**" />
+    <EmbeddedResource Remove="Fonts\**" />
+    <None Remove="Fonts\**" />
+    <Page Remove="Fonts\**" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="EPPlus" Version="7.5.1" />
     <PackageReference Include="kenjiuno.PdfSharp.Xps" Version="1.1.14" />
     <PackageReference Include="LiveCharts.Wpf" Version="0.9.7" />
@@ -22,10 +29,6 @@
     </PackageReference>
     <PackageReference Include="PdfSharp" Version="6.1.1" />
     <PackageReference Include="System.Configuration.ConfigurationManager" Version="7.0.0" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="Fonts\" />
   </ItemGroup>
 
 </Project>

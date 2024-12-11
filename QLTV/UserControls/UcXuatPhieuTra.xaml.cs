@@ -41,25 +41,25 @@ namespace QLTV.UserControls
         }
         private void btnInPhieu_Click(object sender, RoutedEventArgs e)
         {
-            // Show save file dialog
+            // Mở hộp thoại lưu file
             Microsoft.Win32.SaveFileDialog dlg = new Microsoft.Win32.SaveFileDialog
             {
-                FileName = phieuTra.MaPhieuTra, // Default file name
-                DefaultExt = ".pdf",  // Default file extension
-                Filter = "PDF documents (.pdf)|*.pdf" // Filter files by extension
+                FileName = phieuTra.MaPhieuTra, // Tên file mặc định
+                DefaultExt = ".pdf",  // Loại file mặc định
+                Filter = "PDF documents (.pdf)|*.pdf" // Lọc theo loại file
             };
 
-            // Process save file dialog box results
+            // Xử lí kết quả hộp thoại save file
             bool? result = dlg.ShowDialog();
 
             if (result == true)
             {
-                // Get the selected file path
+                // Lấy đường dẫn của file đã chọn
                 string filename = dlg.FileName;
 
                 try
                 {
-                    // Convert WPF visual to XPS and then to PDF
+                    // Xuất thuộc tính WPF thành file XPS và chuyển thành file PDF
                     using (MemoryStream lMemoryStream = new MemoryStream())
                     {
                         using (Package package = Package.Open(lMemoryStream, FileMode.Create))
@@ -68,17 +68,17 @@ namespace QLTV.UserControls
                             {
                                 XpsDocumentWriter writer = XpsDocument.CreateXpsDocumentWriter(doc);
 
-                                // This is your WPF Window or Visual to be converted
+                                // Nội dung thuộc tính WPF cần xuất
                                 writer.Write(PhieuTraContent);
                             }
                         }
 
-                        // Convert XPS to PDF
+                        // Chuyển file XPS thành file PDF
                         using (MemoryStream outStream = new MemoryStream())
                         {
                             PdfSharp.Xps.XpsConverter.Convert(lMemoryStream, outStream, false);
 
-                            // Write the PDF file to the selected location
+                            // Ghi nội dung vào file PDF ở địa chỉ đã lưu
                             using (FileStream fileStream = new FileStream(filename, FileMode.Create))
                             {
                                 outStream.CopyTo(fileStream);

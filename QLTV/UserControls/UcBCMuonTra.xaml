@@ -19,16 +19,6 @@
                         <RowDefinition Height="4*" />
                         <RowDefinition Height="6*" />
                     </Grid.RowDefinitions>
-                    <ComboBox Style="{StaticResource ModernComboBox}"
-                              x:Name="cboNamBCMS"
-                              HorizontalAlignment="Right"
-                              Grid.Row="0"
-                              Width="100"
-                              Margin="10"
-                              IsEditable="False"
-                              materialDesign:HintAssist.Hint="Chọn năm"
-                              materialDesign:HintAssist.FloatingScale="0.8"
-                              SelectionChanged="cboNamBCMS_SelectionChanged" />
                     <!-- ListBox for Selection -->
                     <StackPanel Orientation="Horizontal">
                         <ListBox x:Name="lbBCMSChartMode"
@@ -36,11 +26,11 @@
                                  Grid.Row="0"
                                  Margin="5,10,5,0"
                                  SelectionChanged="lbBCMSChartMode_SelectionChanged">
-                            <ListBoxItem Content="Ngày"
-                                         IsSelected="True" />
+                            <ListBoxItem Content="Ngày" />
                             <ListBoxItem Content="Tháng" />
                             <ListBoxItem Content="Quý" />
-                            <ListBoxItem Content="Năm" />
+                            <ListBoxItem Content="Năm"
+                                         IsSelected="True" />
                         </ListBox>
 
                         <!-- Container for Pickers -->
@@ -48,73 +38,73 @@
                               Margin="5"
                               HorizontalAlignment="Left">
                             <!-- Date Picker for "Ngày" -->
-                            <StackPanel x:Name="spDay"
+                            <StackPanel x:Name="spDayMS"
                                         Orientation="Horizontal"
-                                        Visibility="Visible"
+                                        Visibility="Collapsed"
                                         Margin="0,5,0,0">
-                                <DatePicker  x:Name="dpStartDay"
+                                <DatePicker  x:Name="dpStartDayMS"
                                              Width="100"
                                              materialDesign:HintAssist.Hint="Từ ngày"
                                              materialDesign:TextFieldAssist.HasClearButton="True"
                                              materialDesign:HintAssist.FloatingScale="0.9"
                                              Margin="5,0"
                                              Style="{StaticResource MaterialDesignFloatingHintDatePicker}"
-                                             SelectedDateChanged="dpEndDay_SelectionChanged" />
-                                <DatePicker  x:Name="dpEndDay"
+                                             SelectedDateChanged="dpEndDayMS_SelectionChanged" />
+                                <DatePicker  x:Name="dpEndDayMS"
                                              Width="100"
                                              materialDesign:HintAssist.Hint="Đến ngày"
                                              materialDesign:TextFieldAssist.HasClearButton="True"
                                              materialDesign:HintAssist.FloatingScale="0.9"
                                              Margin="5,0"
                                              Style="{StaticResource MaterialDesignFloatingHintDatePicker}"
-                                             SelectedDateChanged="dpEndDay_SelectionChanged" />
+                                             SelectedDateChanged="dpEndDayMS_SelectionChanged" />
                             </StackPanel>
 
 
                             <!-- Month Selector for "Tháng" -->
-                            <StackPanel x:Name="spMonth"
+                            <StackPanel x:Name="spMonthMS"
                                         Orientation="Horizontal"
                                         Visibility="Hidden"
                                         Margin="0,5,0,0">
                                 <ComboBox Style="{StaticResource ModernComboBox}"
-                                          x:Name="cbStartMonth"
+                                          x:Name="cbStartMonthMS"
                                           Width="100"
                                           Margin="10,0"
                                           IsEditable="False"
                                           materialDesign:HintAssist.Hint="Từ tháng"
                                           materialDesign:HintAssist.FloatingScale="0.8"
-                                          SelectionChanged="cboStartMonth_SelectionChanged" />
+                                          SelectionChanged="cboStartMonthMS_SelectionChanged" />
                                 <ComboBox Style="{StaticResource ModernComboBox}"
-                                          x:Name="cbEndMonth"
+                                          x:Name="cbEndMonthMS"
                                           Width="100"
                                           Margin="10,0"
                                           IsEditable="False"
                                           materialDesign:HintAssist.Hint="Từ tháng"
                                           materialDesign:HintAssist.FloatingScale="0.8"
-                                          SelectionChanged="cboEndMonth_SelectionChanged" />
+                                          SelectionChanged="cboEndMonthMS_SelectionChanged" />
                             </StackPanel>
 
                             <!-- Quarter Selector for "Quý" -->
                             <StackPanel Orientation="Horizontal"
                                         Margin="0,5,0,0">
                                 <ComboBox Style="{StaticResource ModernComboBox}"
-                                          x:Name="cbQuarter"
+                                          x:Name="cbQuarterMS"
                                           Width="100"
                                           Margin="10,0"
                                           Visibility="Collapsed"
                                           IsEditable="False"
                                           materialDesign:HintAssist.Hint="Quý"
                                           materialDesign:HintAssist.FloatingScale="0.8"
-                                          SelectionChanged="cboQuarter_SelectionChanged" />
+                                          SelectionChanged="cboQuarterMS_SelectionChanged" />
                                 <ComboBox Style="{StaticResource ModernComboBox}"
-                                          x:Name="cbYear"
+                                          x:Name="cbYearMS"
                                           Width="100"
                                           Margin="10,0"
-                                          Visibility="Collapsed"
+                                          Visibility="Visible"
                                           IsEditable="False"
                                           materialDesign:HintAssist.Hint="Năm"
                                           materialDesign:HintAssist.FloatingScale="0.8"
-                                          SelectionChanged="cboYear_SelectionChanged" />
+                                          SelectionChanged="cboYearMS_SelectionChanged" />
                             </StackPanel>
                         </Grid>
                     </StackPanel>
@@ -154,8 +144,6 @@
                                           Style="{StaticResource MaterialDesignDataGrid}"
                                           IsReadOnly="True"
                                           SelectionMode="Single"
-                                          HorizontalAlignment="Stretch"
-                                          VerticalAlignment="Stretch"
                                           ScrollViewer.CanContentScroll="False"
                                           VerticalScrollBarVisibility="Auto">
                                     <DataGrid.Columns>
@@ -275,10 +263,10 @@
                                                                    Height="20"
                                                                    Fill="{Binding Color}"
                                                                    Margin="0,0,5,0" />
-                                                        <TextBlock Text="{Binding Genre}"
+                                                        <TextBlock Text="{Binding Key}"
                                                                    VerticalAlignment="Center" />
                                                     </StackPanel>
-                                                    <TextBlock Text="{Binding Count}"
+                                                    <TextBlock Text="{Binding Value}"
                                                                VerticalAlignment="Center"
                                                                HorizontalAlignment="Right" />
                                                 </Grid>
@@ -296,93 +284,303 @@
                 <Grid>
                     <Grid.RowDefinitions>
                         <RowDefinition Height="Auto" />
-                        <RowDefinition Height="*" />
+                        <RowDefinition Height="4*" />
+                        <RowDefinition Height="6*" />
                     </Grid.RowDefinitions>
 
-                    <StackPanel Grid.Row="0"
-                                Orientation="Horizontal"
-                                HorizontalAlignment="Right">
-                        <ComboBox Style="{StaticResource ModernComboBox}"
-                                  x:Name="cboThangBCTT"
-                                  HorizontalAlignment="Right"
-                                  Width="100"
-                                  Margin="10"
-                                  IsEditable="False"
-                                  materialDesign:HintAssist.Hint="Chọn tháng"
-                                  materialDesign:HintAssist.FloatingScale="0.8"
-                                  SelectionChanged="cboThangBCTT_SelectionChanged" />
+                    <!-- ListBox for Selection -->
+                    <StackPanel Orientation="Horizontal">
+                        <ListBox x:Name="lbBCTTChartMode"
+                                 Style="{StaticResource MaterialDesignChoiceChipListBox}"
+                                 Grid.Row="0"
+                                 Margin="5,10,5,0"
+                                 SelectionChanged="lbBCTTChartMode_SelectionChanged">
+                            <ListBoxItem Content="Ngày" />
+                            <ListBoxItem Content="Tháng" />
+                            <ListBoxItem Content="Quý" />
+                            <ListBoxItem Content="Năm"
+                                         IsSelected="True" />
+                        </ListBox>
 
-                        <ComboBox Style="{StaticResource ModernComboBox}"
-                                  x:Name="cboNamBCTT"
-                                  HorizontalAlignment="Right"
-                                  Width="100"
-                                  Margin="10"
-                                  IsEditable="False"
-                                  materialDesign:HintAssist.Hint="Chọn năm"
-                                  materialDesign:HintAssist.FloatingScale="0.8"
-                                  SelectionChanged="cboNamBCTT_SelectionChanged" />
+                        <!-- Container for Pickers -->
+                        <Grid Grid.Row="0"
+                              Margin="5"
+                              HorizontalAlignment="Left">
+                            <!-- Date Picker for "Ngày" -->
+                            <StackPanel x:Name="spDayTT"
+                                        Orientation="Horizontal"
+                                        Visibility="Collapsed"
+                                        Margin="0,5,0,0">
+                                <DatePicker  x:Name="dpStartDayTT"
+                                             Width="100"
+                                             materialDesign:HintAssist.Hint="Từ ngày"
+                                             materialDesign:TextFieldAssist.HasClearButton="True"
+                                             materialDesign:HintAssist.FloatingScale="0.9"
+                                             Margin="5,0"
+                                             Style="{StaticResource MaterialDesignFloatingHintDatePicker}"
+                                             SelectedDateChanged="dpEndDayTT_SelectionChanged" />
+                                <DatePicker  x:Name="dpEndDayTT"
+                                             Width="100"
+                                             materialDesign:HintAssist.Hint="Đến ngày"
+                                             materialDesign:TextFieldAssist.HasClearButton="True"
+                                             materialDesign:HintAssist.FloatingScale="0.9"
+                                             Margin="5,0"
+                                             Style="{StaticResource MaterialDesignFloatingHintDatePicker}"
+                                             SelectedDateChanged="dpEndDayTT_SelectionChanged" />
+                            </StackPanel>
+
+                            <!-- Month Selector for "Tháng" -->
+                            <StackPanel x:Name="spMonthTT"
+                                        Orientation="Horizontal"
+                                        Visibility="Hidden"
+                                        Margin="0,5,0,0">
+                                <ComboBox Style="{StaticResource ModernComboBox}"
+                                          x:Name="cbStartMonthTT"
+                                          Width="100"
+                                          Margin="10,0"
+                                          IsEditable="False"
+                                          materialDesign:HintAssist.Hint="Từ tháng"
+                                          materialDesign:HintAssist.FloatingScale="0.8"
+                                          SelectionChanged="cbStartMonthTT_SelectionChanged" />
+                                <ComboBox Style="{StaticResource ModernComboBox}"
+                                          x:Name="cbEndMonthTT"
+                                          Width="100"
+                                          Margin="10,0"
+                                          IsEditable="False"
+                                          materialDesign:HintAssist.Hint="Đến tháng"
+                                          materialDesign:HintAssist.FloatingScale="0.8"
+                                          SelectionChanged="cbEndMonthTT_SelectionChanged" />
+                            </StackPanel>
+
+                            <!-- Quarter Selector for "Quý" -->
+                            <StackPanel Orientation="Horizontal"
+                                        Margin="0,5,0,0">
+                                <ComboBox Style="{StaticResource ModernComboBox}"
+                                          x:Name="cbQuarterTT"
+                                          Width="100"
+                                          Margin="10,0"
+                                          Visibility="Collapsed"
+                                          IsEditable="False"
+                                          materialDesign:HintAssist.Hint="Quý"
+                                          materialDesign:HintAssist.FloatingScale="0.8"
+                                          SelectionChanged="cbQuarterTT_SelectionChanged" />
+                                <ComboBox Style="{StaticResource ModernComboBox}"
+                                          x:Name="cbYearTT"
+                                          Width="100"
+                                          Margin="10,0"
+                                          Visibility="Visible"
+                                          IsEditable="False"
+                                          materialDesign:HintAssist.Hint="Năm"
+                                          materialDesign:HintAssist.FloatingScale="0.8"
+                                          SelectionChanged="cbYearTT_SelectionChanged" />
+                            </StackPanel>
+                        </Grid>
                     </StackPanel>
 
+                    <!--Chart-->
+                    <Grid Grid.Row="1" Margin="10">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="*" />
+                        </Grid.ColumnDefinitions>
+                        <Border Grid.Column="0"
+                                BorderThickness="1"
+                                BorderBrush="Gray"
+                                CornerRadius="3"
+                                Margin="5">
+                            <Grid>
+                                <lvc:CartesianChart x:Name="BCTTLineChart"
+                                                    Series="{Binding CurrentChartValues}"
+                                                    Background="White"
+                                                    Margin="2">
+                                    <lvc:CartesianChart.AxisX>
+                                        <lvc:Axis Title="Thời gian"
+                                                  MinValue="0"
+                                                  Labels="{Binding CurrentLabels}" />
+                                    </lvc:CartesianChart.AxisX>
+                                    <lvc:CartesianChart.AxisY>
+                                        <lvc:Axis Title="Tổng số lượt trả trễ"
+                                                  MinValue="0" />
+                                    </lvc:CartesianChart.AxisY>
+                                </lvc:CartesianChart>
+                            </Grid>
+                        </Border>
+                        <Border Grid.Column="1"
+                                BorderThickness="1"
+                                BorderBrush="Gray"
+                                CornerRadius="3"
+                                Margin="5">
+                            <Grid>
+                                <lvc:CartesianChart x:Name="TienPhatBarChart"
+                                                    Series="{Binding CurrentChartValues}"
+                                                    Background="White"
+                                                    Margin="2">
+
+                                    <lvc:CartesianChart.AxisX>
+                                        <lvc:Axis Title="Thời gian"
+                                                  MinValue="0"
+                                                  Labels="{Binding CurrentLabels}" />
+                                    </lvc:CartesianChart.AxisX>
+
+                                    <lvc:CartesianChart.AxisY>
+                                        <lvc:Axis Title="Số tiền phạt"
+                                                  MinValue="0" />
+                                    </lvc:CartesianChart.AxisY>
+                                </lvc:CartesianChart>
+                            </Grid>
+                        </Border>
+                    </Grid>
 
                     <!-- Late Returning Reports DataGrid -->
-                    <DataGrid x:Name="dgLateReturnReports"
-                              AutoGenerateColumns="False"
-                              Grid.Row="1"
-                              Style="{StaticResource MaterialDesignDataGrid}"
-                              IsReadOnly="True"
-                              SelectionMode="Single"
-                              HorizontalAlignment="Stretch"
-                              VerticalAlignment="Stretch">
-                        <DataGrid.Columns>
-                            <DataGridTextColumn Header="Mã báo cáo"
-                                                Binding="{Binding BCTraTre.MaBCTraTre}" />
-                            <DataGridTextColumn Header="Ngày"
-                                                Binding="{Binding BCTraTre.Ngay, StringFormat=MM/yyyy}" />
-                            <DataGridTextColumn Header="Tổng số lượt trả trễ"
-                                                Binding="{Binding BCTraTre.TongSoLuotTraTre}" />
-                            <DataGridTemplateColumn Header="Thao tác"
-                                                    IsReadOnly="True">
-                                <DataGridTemplateColumn.CellTemplate>
-                                    <DataTemplate>
-                                        <StackPanel Orientation="Horizontal">
-                                            <ToggleButton Style="{StaticResource MaterialDesignRaisedToggleButton}"
-                                                          Width="52"
-                                                          IsChecked="{Binding IsExpanded, Mode=TwoWay}"
-                                                          ToolTip="Chi tiết"
-                                                          ToolTipService.InitialShowDelay="0"
-                                                          Click="btnViewDetail_Click"
-                                                          Margin="0,-10,5,0" />
-                                        </StackPanel>
-                                    </DataTemplate>
-                                </DataGridTemplateColumn.CellTemplate>
-                            </DataGridTemplateColumn>
-                        </DataGrid.Columns>
-                        <DataGrid.RowDetailsTemplate>
-                            <DataTemplate>
-                                <DataGrid ItemsSource="{Binding BCTraTre.CTBCTRATRE}"
+                    <Grid Grid.Row="2"
+                          Margin="10">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="*" />
+                        </Grid.ColumnDefinitions>
+
+                        <Border BorderThickness="1"
+                                BorderBrush="Gray"
+                                CornerRadius="3"
+                                Margin="5">
+                            <Grid Grid.Column="1">
+                                <!-- Late Returning Reports DataGrid -->
+                                <DataGrid x:Name="dgLateReturnReports"
                                           AutoGenerateColumns="False"
-                                          IsReadOnly="True"
-                                          Margin="0,0,0,10"
                                           Style="{StaticResource MaterialDesignDataGrid}"
-                                          HorizontalAlignment="Stretch"
-                                          VerticalAlignment="Stretch">
+                                          IsReadOnly="True"
+                                          SelectionMode="Single"
+                                          ScrollViewer.CanContentScroll="False"
+                                          VerticalScrollBarVisibility="Auto">
                                     <DataGrid.Columns>
-                                        <DataGridTextColumn Header="Mã phiếu trả"
-                                                            Binding="{Binding IDPhieuTra}" />
-                                        <DataGridTextColumn Header="Số ngày trả trễ"
-                                                            Binding="{Binding SoNgayTraTre}" />
+                                        <DataGridTextColumn Header="Tháng"
+                                                            Binding="{Binding Month, StringFormat=MM/yyyy}" />
+                                        <DataGridTextColumn Header="Tổng số lượt trả trễ"
+                                                            Binding="{Binding TongSoLuotTraTre}" />
+                                        <DataGridTemplateColumn Header="Thao tác"
+                                                                IsReadOnly="True">
+                                            <DataGridTemplateColumn.CellTemplate>
+                                                <DataTemplate>
+                                                    <StackPanel Orientation="Horizontal">
+                                                        <ToggleButton Style="{StaticResource MaterialDesignRaisedToggleButton}"
+                                                                      Width="52"
+                                                                      IsChecked="{Binding IsExpanded, Mode=TwoWay}"
+                                                                      ToolTip="Chi tiết"
+                                                                      ToolTipService.InitialShowDelay="0"
+                                                                      Click="btnViewDetail_Click" />
+                                                    </StackPanel>
+                                                </DataTemplate>
+                                            </DataGridTemplateColumn.CellTemplate>
+                                        </DataGridTemplateColumn>
                                     </DataGrid.Columns>
-                                    <DataGrid.CellStyle>
-                                        <Style TargetType="DataGridCell"
-                                               BasedOn="{StaticResource MaterialDesignDataGridCell}">
-                                            <Setter Property="Padding"
-                                                    Value="10 10 0 10" />
-                                        </Style>
-                                    </DataGrid.CellStyle>
+                                    <DataGrid.RowDetailsTemplate>
+                                        <DataTemplate>
+                                            <DataGrid ItemsSource="{Binding DSBCTraTre}"
+                                                      AutoGenerateColumns="False"
+                                                      Style="{StaticResource MaterialDesignDataGrid}"
+                                                      IsReadOnly="True"
+                                                      ScrollViewer.CanContentScroll="False"
+                                                      SelectionMode="Single"
+                                                      Margin="30,0,0,0"
+                                                      HorizontalAlignment="Stretch"
+                                                      VerticalAlignment="Stretch">
+                                                <DataGrid.Columns>
+                                                    <DataGridTextColumn Header="Mã báo cáo"
+                                                                        Binding="{Binding BCTraTre.MaBCTraTre}" />
+                                                    <DataGridTextColumn Header="Ngày"
+                                                                        Binding="{Binding BCTraTre.Ngay, StringFormat=dd/MM/yyyy}" />
+                                                    <DataGridTemplateColumn Header="Thao tác"
+                                                                            IsReadOnly="True">
+                                                        <DataGridTemplateColumn.CellTemplate>
+                                                            <DataTemplate>
+                                                                <StackPanel Orientation="Horizontal">
+                                                                    <ToggleButton Style="{StaticResource MaterialDesignRaisedToggleButton}"
+                                                                                  Width="52"
+                                                                                  IsChecked="{Binding IsExpanded, Mode=TwoWay}"
+                                                                                  ToolTip="Chi tiết"
+                                                                                  ToolTipService.InitialShowDelay="0"
+                                                                                  Click="btnViewDetail_Click" />
+                                                                </StackPanel>
+                                                            </DataTemplate>
+                                                        </DataGridTemplateColumn.CellTemplate>
+                                                    </DataGridTemplateColumn>
+                                                </DataGrid.Columns>
+                                                <DataGrid.RowDetailsTemplate>
+                                                    <DataTemplate>
+                                                        <DataGrid ItemsSource="{Binding BCTraTre.CTBCTRATRE}"
+                                                                  AutoGenerateColumns="False"
+                                                                  IsReadOnly="True"
+                                                                  ScrollViewer.CanContentScroll="False"
+                                                                  Margin="30,0,0,0"
+                                                                  Style="{StaticResource MaterialDesignDataGrid}">
+                                                            <DataGrid.Columns>
+                                                                <DataGridTextColumn Header="Mã phiếu trả"
+                                                                                    Binding="{Binding IDPhieuTraNavigation.MaPhieuTra}" />
+                                                                <DataGridTextColumn Header="Số ngày trả trễ"
+                                                                                    Binding="{Binding SoNgayTraTre}" />
+                                                            </DataGrid.Columns>
+                                                            <DataGrid.CellStyle>
+                                                                <Style TargetType="DataGridCell"
+                                                                       BasedOn="{StaticResource MaterialDesignDataGridCell}">
+                                                                    <Setter Property="Padding"
+                                                                            Value="10 10 0 10" />
+                                                                </Style>
+                                                            </DataGrid.CellStyle>
+                                                        </DataGrid>
+                                                    </DataTemplate>
+                                                </DataGrid.RowDetailsTemplate>
+                                            </DataGrid>
+                                        </DataTemplate>
+                                    </DataGrid.RowDetailsTemplate>
                                 </DataGrid>
-                            </DataTemplate>
-                        </DataGrid.RowDetailsTemplate>
-                    </DataGrid>
+                            </Grid>
+                        </Border>
+
+                        <Border Grid.Column="1"
+                                Margin="5"
+                                BorderThickness="1"
+                                BorderBrush="Gray"
+                                CornerRadius="3">
+                            <Grid Margin="2">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*" />
+                                    <ColumnDefinition Width="*" />
+                                </Grid.ColumnDefinitions>
+                                <lvc:PieChart x:Name="BCTTPieChart"
+                                              Grid.Column="0"
+                                              Series="{Binding CurrentChartValues}"
+                                              
+                                              Background="White">
+                                    <lvc:PieChart.DataTooltip>
+                                        <lvc:DefaultTooltip SelectionMode="OnlySender" />
+                                    </lvc:PieChart.DataTooltip>
+                                </lvc:PieChart>
+                                <StackPanel Grid.Column="1"
+                                            Margin="10">
+                                    <ItemsControl x:Name="LateDisplay">
+                                        <ItemsControl.ItemTemplate>
+                                            <DataTemplate>
+                                                <Grid>
+                                                    <StackPanel Orientation="Horizontal"
+                                                                Margin="5">
+                                                        <Rectangle Width="20"
+                                                                   Height="20"
+                                                                   Fill="{Binding Color}"
+                                                                   Margin="0,0,5,0" />
+                                                        <TextBlock Text="{Binding Key}"
+                                                                   VerticalAlignment="Center" />
+                                                    </StackPanel>
+                                                    <TextBlock Text="{Binding Value}"
+                                                               VerticalAlignment="Center"
+                                                               HorizontalAlignment="Right" />
+                                                </Grid>
+                                            </DataTemplate>
+                                        </ItemsControl.ItemTemplate>
+                                    </ItemsControl>
+                                </StackPanel>
+                            </Grid>
+                        </Border>
+                    </Grid>
                 </Grid>
             </TabItem>
         </TabControl>

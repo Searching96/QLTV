@@ -278,10 +278,10 @@ namespace QLTV.UserControls
             {
                 using (var _context = new QLTVContext())
                 {
-                    // Attach selectedReader to context
+                    // Liên kết thông tin dộc giả với context
                     _context.DOCGIA.Attach(selectedReader);
 
-                    // Create return ticket
+                    // Tạo phiếu trả
                     var phieuTra = new PHIEUTRA
                     {
                         NgayTra = DateTime.Now
@@ -290,7 +290,7 @@ namespace QLTV.UserControls
                     _context.PHIEUTRA.Add(phieuTra);
                     await _context.SaveChangesAsync();
 
-                    // Check for late returns and update BCTRATRE if necessary
+                    // Kiểm tra trả trễ và cập nhật BCTRATRE nếu cần thiết
                     var lateReturns = selectedBooks.Where(r => DateTime.Now > r.HanTra).ToList();
                     if (lateReturns.Any())
                     {
@@ -318,19 +318,19 @@ namespace QLTV.UserControls
 
                     await _context.SaveChangesAsync();
 
-                    // Process each returned book
+                    // Xử lý từng cuốn sách trả
                     foreach (var returnBook in selectedBooks)
                     {
                         var ctpt = returnBook.CTPhieuTra;
                         ctpt.IDPhieuTra = phieuTra.ID;
 
-                        // Fetch book and borrow detail without AsNoTracking
+                        // Lấy thông tin sách và chi tiết mượn không dùng AsNoTracking
                         var book = await _context.SACH.FindAsync(ctpt.IDSach);
                         var borrowDetail = await _context.CTPHIEUMUON.FirstOrDefaultAsync(ct => ct.IDPhieuMuon == ctpt.IDPhieuMuon && ct.IDSach == ctpt.IDSach);
 
                         if (borrowDetail != null)
                         {
-                            // Calculate fines
+                            // Tính tiền phạt
                             if (DateTime.Now > borrowDetail.HanTra)
                             {
                                 int daysLate = (int)(DateTime.Now - borrowDetail.HanTra).TotalDays;
@@ -345,7 +345,7 @@ namespace QLTV.UserControls
                             selectedReader.TongNo += ctpt.TienPhat;
                             ctpt.GhiChu = returnBook.GhiChu;
 
-                            // Detach navigation properties to prevent tracking issues
+                            // Tách các thuộc tính liên kết để tránh vấn đề liên kết
                             ctpt.IDTinhTrangTraNavigation = null;
                             ctpt.IDPhieuMuonNavigation = null;
                             ctpt.IDPhieuTraNavigation = null;
@@ -362,7 +362,7 @@ namespace QLTV.UserControls
                         }
                     }
 
-                    // Update borrow ticket status
+                    // Cập nhật trạng thái phiếu mượn
                     foreach (var pm in selectedReader.PHIEUMUON.ToList())
                     {
                         if (pm.CTPHIEUMUON.All(ct =>
@@ -377,11 +377,11 @@ namespace QLTV.UserControls
 
                     await _context.SaveChangesAsync();
 
-                    // Notify user of success
+                    // Thông báo thành công
                     MessageBox.Show("Thêm phiếu trả thành công!", "Thông báo", MessageBoxButton.OK, MessageBoxImage.Information);
                     Window.GetWindow(this).DialogResult = true;
 
-                    // Open receipt window
+                    // Mở cửa sổ biên lai
                     var window = new Window
                     {
                         Content = new UcXuatPhieuTra(phieuTra),

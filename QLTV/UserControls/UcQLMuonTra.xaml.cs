@@ -107,7 +107,7 @@ namespace QLTV.UserControls
             {
                 using (var _context = new QLTVContext())
                 {
-                    // Load borrowings with related data, excluding soft-deleted records
+                    // Lấy dữ liệu phiếu mượn và các thông tin liên quan, ngoại trừ các phiếu đã xóa mềm
                     borrowings = await _context.PHIEUMUON
                         .Include(p => p.IDDocGiaNavigation)
                             .ThenInclude(d => d.IDTaiKhoanNavigation)
@@ -130,7 +130,7 @@ namespace QLTV.UserControls
 
                     dgBorrowings.ItemsSource = _borrowings;
 
-                    // Load returns with related data, excluding soft-deleted records
+                    // Lấy dữ liệu phiếu trả và các thông tin liên quan, ngoại trừ các phiếu đã xóa mềm
                     var returns = await _context.PHIEUTRA
                         .Include(p => p.CTPHIEUTRA)
                             .ThenInclude(ct => ct.IDSachNavigation)
@@ -200,13 +200,12 @@ namespace QLTV.UserControls
                 {
                     using (var _context = new QLTVContext())
                     {
-                        // Soft delete the borrowing record
+                        // Xoá mềm phiếu mượn
                         borrowViewModel.phieuMuon.IsDeleted = true;
 
-                        // Also mark related CTborrowViewModel records as deleted if they have IsDeleted property
+                        // Khôi phục tình trạng mượn của các quyển sách có trong phiếu mượn
                         foreach (var ctborrowViewModel in borrowViewModel.ctPhieuMuon)
                         {
-                            // Update the book's availability
                             var sach = ctborrowViewModel.IDSachNavigation;
                             if (sach != null)
                             {
@@ -257,13 +256,13 @@ namespace QLTV.UserControls
                 {
                     using (var _context = new QLTVContext())
                     {
-                        // Soft delete the return record
+                        // Xoá mềm phiếu trả
                         returnViewModel.phieuTra.IsDeleted = true;
 
-                        // Handle related CTPHIEUTRA records
+                        // Xử lí các CTPHIEUTRA có liên quan
                         foreach (var ctPhieuTra in returnViewModel.phieuTra.CTPHIEUTRA)
                         {
-                            // Revert the book's status if needed
+                            // Khôi phục trạng thái trả của sách
                             var sach = ctPhieuTra.IDSachNavigation;
                             if (sach != null)
                             {
