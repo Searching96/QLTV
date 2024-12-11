@@ -81,7 +81,7 @@ create table [THELOAI]
     [ID] int identity(1, 1) constraint [PK_THELOAI] primary key,
     [MaTheLoai] as ('TL' + right('00000' + cast([ID] as varchar(5)), 5)) persisted,
     [TenTheLoai] nvarchar(100) not null,
-	[MoTa] nvarchar(500) not null,
+    [MoTa] nvarchar(500) not null,
     [IsDeleted] bit not null
 )
 
@@ -93,7 +93,7 @@ create table [TUASACH]
     [BiaSach] varchar(500) not null,
     [SoLuong] int not null, -- them rang buoc so luong nay phai bang so luong sach co ma tua sach nay
     [HanMuonToiDa] int not null, -- don vi: tuan
-    [MoTa] nvarchar[1500] not null,
+    [MoTa] nvarchar(1500) not null,
     [IsDeleted] bit not null
 )
 
