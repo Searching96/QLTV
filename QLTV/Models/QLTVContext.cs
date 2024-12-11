@@ -292,6 +292,7 @@ public partial class QLTVContext : DbContext
             entity.Property(e => e.NgayNhap).HasColumnType("date");
             entity.Property(e => e.NhaXuatBan).HasMaxLength(100);
             entity.Property(e => e.TriGia).HasColumnType("decimal(18, 0)");
+            entity.Property(e => e.ViTri).HasMaxLength(20);
 
             entity.HasOne(d => d.IDTinhTrangNavigation).WithMany(p => p.SACH)
                 .HasForeignKey(d => d.IDTinhTrang)
@@ -348,6 +349,7 @@ public partial class QLTVContext : DbContext
 
         modelBuilder.Entity<THAMSO>(entity =>
         {
+            entity.Property(e => e.ThoiGian).HasColumnType("datetime");
             entity.Property(e => e.TienPhatTraTreMotNgay).HasColumnType("decimal(18, 0)");
         });
 
@@ -381,6 +383,7 @@ public partial class QLTVContext : DbContext
                 .HasMaxLength(7)
                 .IsUnicode(false)
                 .HasComputedColumnSql("('TS'+right('00000'+CONVERT([varchar](5),[ID]),(5)))", true);
+            entity.Property(e => e.MoTa).HasMaxLength(1500);
             entity.Property(e => e.TenTuaSach).HasMaxLength(100);
         });
 

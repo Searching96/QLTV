@@ -273,8 +273,9 @@
             <Grid Grid.Column="1">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="1*"/>
-                    <ColumnDefinition Width="2.5*"/>
-                    <ColumnDefinition Width="1*"/>
+                    <ColumnDefinition Width="2.25*"/>
+                    <ColumnDefinition Width="1.25*"/>
+                    <ColumnDefinition Width="Auto"/>
                     <ColumnDefinition Width="Auto"/>
                 </Grid.ColumnDefinitions>
 
@@ -300,6 +301,38 @@
                 <Button x:Name="btnTimKiem" Grid.Column="3" Click="btnTimKiem_Click" Padding="0" Width="25">
                     <materialDesign:PackIcon Kind="Magnify" Width="22" Height="22"/>
                 </Button>
+
+                <StackPanel Grid.Column="4" Orientation="Horizontal" VerticalAlignment="Center">
+                    <!-- Column Visibility Button -->
+                    <Button x:Name="btnColumnVisibility" Width="25" Padding="0"
+                            Click="btnColumnVisibility_Click">
+                        <materialDesign:PackIcon Kind="Eye" />
+                    </Button>
+
+                    <!-- Popup for Column Visibility Options -->
+                    <Popup x:Name="puColumnVisibility" 
+           Placement="Bottom" 
+           PlacementTarget="{Binding ElementName=btnColumnVisibility}" 
+           StaysOpen="False">
+                        <Border Background="WhiteSmoke" Padding="10">
+                            <StackPanel>
+                                <!-- Column Checkboxes -->
+                                <CheckBox Content="Tên Tựa Sách" IsChecked="True" 
+                          Tag="colTenTuaSach" 
+                          Checked="ColumnCheckBox_Checked" 
+                          Unchecked="ColumnCheckBox_Unchecked" />
+                                <CheckBox Content="Tác Giả" IsChecked="True" 
+                          Tag="colTacGia" 
+                          Checked="ColumnCheckBox_Checked" 
+                          Unchecked="ColumnCheckBox_Unchecked" />
+                                <CheckBox Content="Thể Loại" IsChecked="True" 
+                          Tag="colTheLoai" 
+                          Checked="ColumnCheckBox_Checked" 
+                          Unchecked="ColumnCheckBox_Unchecked" />
+                            </StackPanel>
+                        </Border>
+                    </Popup>
+                </StackPanel>
             </Grid>
         </Grid>
 
@@ -330,12 +363,13 @@
                 </DataGridTemplateColumn>
 
                 <!-- Các cột dữ liệu khác -->
-                <DataGridTextColumn Header="Mã Tựa Sách" Width="*" Binding="{Binding MaTuaSach, Mode=OneWay}" IsReadOnly="True"/>
-                <DataGridTextColumn Header="Tên Tựa Sách" Width="*" Binding="{Binding TenTuaSach, Mode=OneWay}" IsReadOnly="True"/>
-                <DataGridTextColumn Header="Tác Giả" Width="*" Binding="{Binding DSTacGia, Mode=OneWay}" IsReadOnly="True"/>
-                <DataGridTextColumn Header="Thể Loại" Width="*" Binding="{Binding DSTheLoai, Mode=OneWay}" IsReadOnly="True"/>
-                <DataGridTextColumn Header="Số Lượng" Width="*" Binding="{Binding SoLuong, Mode=OneWay}" IsReadOnly="True"/>
-                <DataGridTextColumn Header="Hạn Mượn Tối Đa (Tuần)" Width="*" Binding="{Binding HanMuonToiDa, Mode=OneWay}" IsReadOnly="True"/>
+                <DataGridTextColumn x:Name="colMaTuaSach" Header="Mã Tựa Sách" Width="*" Binding="{Binding MaTuaSach, Mode=OneWay}" IsReadOnly="True"/>
+                <DataGridTextColumn x:Name="colTenTuaSach" Header="Tên Tựa Sách" Width="*" Binding="{Binding TenTuaSach, Mode=OneWay}" IsReadOnly="True"/>
+                <DataGridTextColumn x:Name="colTacGia" Header="Tác Giả" Width="*" Binding="{Binding DSTacGia, Mode=OneWay}" IsReadOnly="True"/>
+                <DataGridTextColumn x:Name="colTheLoai" Header="Thể Loại" Width="*" Binding="{Binding DSTheLoai, Mode=OneWay}" IsReadOnly="True"/>
+                <DataGridTextColumn x:Name="colMoTa" Header="Mô Tả" Width="*" Binding="{Binding MoTa, Mode=OneWay}" IsReadOnly="True"/>
+                <DataGridTextColumn x:Name="colSoLuong" Header="Số Lượng" Width="*" Binding="{Binding SoLuong, Mode=OneWay}" IsReadOnly="True"/>
+                <DataGridTextColumn x:Name="colHMTD" Header="Hạn Mượn Tối Đa (Tuần)" Width="*" Binding="{Binding HanMuonToiDa, Mode=OneWay}" IsReadOnly="True"/>
             </DataGrid.Columns>
         </DataGrid>
 

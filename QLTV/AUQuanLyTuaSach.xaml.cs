@@ -52,6 +52,7 @@ namespace QLTV
             public string TenTuaSach { get; set; }
             public int SoLuong { get; set; }
             public int HanMuonToiDa { get; set; }
+            public string MoTa { get; set; }
             public string DSTacGia { get; set; }
             public string DSTheLoai { get; set; }
             private bool _isSelected;
@@ -97,6 +98,7 @@ namespace QLTV
                         TenTuaSach = ts.TenTuaSach,
                         SoLuong = ts.SoLuong,
                         HanMuonToiDa = ts.HanMuonToiDa,
+                        MoTa = ts.MoTa,
                         DSTacGia = string.Join(", ", ts.TUASACH_TACGIA
                             .Select(ts_tg => ts_tg.IDTacGiaNavigation.TenTacGia)),
                         DSTheLoai = string.Join(", ", ts.TUASACH_THELOAI
@@ -142,6 +144,7 @@ namespace QLTV
                         TenTuaSach = ts.TenTuaSach,
                         SoLuong = ts.SoLuong,
                         HanMuonToiDa = ts.HanMuonToiDa,
+                        MoTa = ts.MoTa,
                         DSTacGia = string.Join(", ", ts.TUASACH_TACGIA.Select(ts_tg => ts_tg.IDTacGiaNavigation.TenTacGia)),
                         DSTheLoai = string.Join(", ", ts.TUASACH_THELOAI.Select(ts_tl => ts_tl.IDTheLoaiNavigation.TenTheLoai))
                     })
@@ -1005,6 +1008,35 @@ namespace QLTV
                     }
                 }
             }
+        }
+
+        private void ColumnCheckBox_Checked(object sender, RoutedEventArgs e)
+        {
+            if (sender is CheckBox checkBox && checkBox.Tag is string columnName)
+            {
+                var column = FindName(columnName) as DataGridColumn;
+                if (column != null)
+                {
+                    column.Visibility = Visibility.Visible;
+                }
+            }
+        }
+
+        private void ColumnCheckBox_Unchecked(object sender, RoutedEventArgs e)
+        {
+            if (sender is CheckBox checkBox && checkBox.Tag is string columnName)
+            {
+                var column = FindName(columnName) as DataGridColumn;
+                if (column != null)
+                {
+                    column.Visibility = Visibility.Collapsed;
+                }
+            }
+        }
+
+        private void btnColumnVisibility_Click(object sender, RoutedEventArgs e)
+        {
+            puColumnVisibility.IsOpen = !puColumnVisibility.IsOpen;
         }
     }
 }

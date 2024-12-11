@@ -17,6 +17,8 @@ public partial class TUASACH
 
     public int HanMuonToiDa { get; set; }
 
+    public string MoTa { get; set; } = null!;
+
     public bool IsDeleted { get; set; }
 
     public virtual ICollection<SACH> SACH { get; set; } = new List<SACH>();

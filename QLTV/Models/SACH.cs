@@ -19,6 +19,8 @@ public partial class SACH
 
     public decimal TriGia { get; set; }
 
+    public string ViTri { get; set; } = null!;
+
     public int IDTinhTrang { get; set; }
 
     public bool? IsAvailable { get; set; }
