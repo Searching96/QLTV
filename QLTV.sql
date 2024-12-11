@@ -92,7 +92,8 @@ create table [TUASACH]
     [TenTuaSach] nvarchar(100) not null,
     [BiaSach] varchar(500) not null,
     [SoLuong] int not null, -- them rang buoc so luong nay phai bang so luong sach co ma tua sach nay
-    [HanMuonToiDa] int not null, -- don vi: thang
+    [HanMuonToiDa] int not null, -- don vi: tuan
+    [MoTa] nvarchar[1500] not null,
     [IsDeleted] bit not null
 )
 
@@ -131,6 +132,7 @@ create table [SACH]
     [NhaXuatBan] nvarchar(100) not null,
     [NgayNhap] date not null,
     [TriGia] decimal(18, 0) not null,
+    [ViTri] nvarchar(20) not null,
     [IDTinhTrang] int not null, -- FK
     [IsAvailable] bit not null,
     [IsDeleted] bit not null
@@ -223,6 +225,7 @@ create table [PHIEUTHUTIENPHAT]
 create table [THAMSO]
 (
     [ID] int identity(1, 1) constraint [PK_THAMSO] primary key,
+    [ThoiGian] datetime not null,
     [TuoiToiThieu] int not null,
     [TienPhatTraTreMotNgay] decimal(18, 0) not null
 )
