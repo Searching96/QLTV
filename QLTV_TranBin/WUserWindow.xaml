@@ -6,18 +6,31 @@
         xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
         xmlns:local="clr-namespace:QLTV_TranBin"
         mc:Ignorable="d"
-        Title="Quản lý thư viện LIMAN" WindowStartupLocation="CenterScreen"  Height="820" Width="1080">
+        Title="Quản lý thư viện LIMAN" WindowStartupLocation="CenterScreen"  Height="820" Width="1180">
+    <Window.Resources>
+        <Style x:Key="DataDisplayTextBox" TargetType="TextBox" 
+           BasedOn="{StaticResource MaterialDesignOutlinedTextBox}">
+            <Setter Property="Height" Value="Auto"/>
+            <Setter Property="materialDesign:HintAssist.FloatingScale" Value="0.8"/>
+        </Style>
+
+        <Style x:Key="ModernComboBox" TargetType="ComboBox" 
+           BasedOn="{StaticResource MaterialDesignOutlinedComboBox}">
+            <Setter Property="materialDesign:HintAssist.FloatingScale" Value="0.8"/>
+            <Setter Property="Padding" Value="8"/>
+        </Style>
+    </Window.Resources>
     <Border  CornerRadius="30" Background="White" >
-        <Grid>
+        <Grid HorizontalAlignment="Center">
             <Grid.RowDefinitions>
                 <RowDefinition Height="0.15*"/>
                 <RowDefinition/>
             </Grid.RowDefinitions>
             <Grid Grid.Row="0">
                 <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="0.95*"/>
-                    <ColumnDefinition Width="0.95*"/>
-                    <ColumnDefinition Width="1.3*"/>
+                    <ColumnDefinition Width="0.75*"/>
+                    <ColumnDefinition Width="1.35*"/>
+                    <ColumnDefinition Width="1.2*"/>
                 </Grid.ColumnDefinitions>
 
 
@@ -25,19 +38,40 @@
                     Style="{StaticResource MaterialDesignFlatButton}" 
                     Click="btnTrangChu_Click">
                     <StackPanel Orientation="Horizontal">
-                        <materialDesign:PackIcon Kind="Home" Width="55" Height="55" Margin="5" />
+                        <materialDesign:PackIcon Kind="Home" Width="35" Height="35" Margin="5" />
                         <TextBlock Text="Trang chủ" FontSize="35" VerticalAlignment="Center"/>
                     </StackPanel>
                 </Button>
+                <Grid Grid.Column="1">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="3*"/>
+                        <ColumnDefinition Width="1.5*"/>
+                        <ColumnDefinition Width="0.75*"/>
+                    </Grid.ColumnDefinitions>
+                <TextBox Grid.Column="0" x:Name="tbxThongTinTim" BorderBrush="Orange" Height="60"  VerticalAlignment="Center"
+                         Style="{StaticResource DataDisplayTextBox}"
+                         Padding="7.5"
+                         materialDesign:HintAssist.Hint="Từ Khóa"
+                         materialDesign:HintAssist.FloatingScale="0.8"
+                         FontSize="16"/>
 
-                <TextBox Grid.Column="1" x:Name="tbBookFilter" BorderBrush="Orange"
-                         
-                         FontSize="16" 
-                         Style="{StaticResource MaterialDesignOutlinedTextBox}" 
-                         Height="60" 
-                         TextChanged="tbBookFilter_TextChanged" 
-                         materialDesign:HintAssist.Hint="Tìm kiếm sách"/>
-
+                <ComboBox x:Name="cbbThuocTinhTim" Grid.Column="1" Margin="5,0,0,0" FontSize="16" 
+                            VerticalAlignment="Center"
+                            Style="{StaticResource ModernComboBox}"
+                            Padding="7.5"
+                            materialDesign:HintAssist.Hint="Thuộc Tính"
+                            BorderBrush="Orange" Height="60"
+                            materialDesign:HintAssist.FloatingScale="0.8">
+                            <ComboBoxItem Content="Tựa Sách"/>
+                            <ComboBoxItem Content="Tác Giả"/>
+                            <ComboBoxItem Content="Thể Loại"/>
+                
+                </ComboBox>
+                <Button x:Name="btnTimKiem" Grid.Column="2" Click="btnTimKiem_Click" Padding="0" Height="60" Margin="5,0,0,0"
+                        BorderBrush="Orange" Background="Orange">
+                    <materialDesign:PackIcon Kind="Magnify" Width="25" Height="25"/>
+                </Button>
+                </Grid>
                 <Grid Grid.Column="2" >
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="1*"/>
@@ -140,7 +174,8 @@
                     </Grid>
                 </Grid>
             </Grid>
-            <TabControl x:Name="MainTabControl" Margin="10" Grid.Row="1" HorizontalContentAlignment="Left">
+            <TabControl x:Name="MainTabControl" Margin="10" Grid.Row="1" Width="1140"
+                        HorizontalContentAlignment="Left" >
                 <TabControl.Resources>
                     <!-- Style cho TabItem -->
                     <Style TargetType="{x:Type TabItem}">

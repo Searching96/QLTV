@@ -395,7 +395,6 @@ E:\Repos_DoAn\QLTV_TranBin\QLTV_TranBin\obj\Debug\net6.0-windows\ResetPassword.g
 E:\Repos_DoAn\QLTV_TranBin\QLTV_TranBin\obj\Debug\net6.0-windows\SignInScreen.g.cs
 E:\Repos_DoAn\QLTV_TranBin\QLTV_TranBin\obj\Debug\net6.0-windows\UCChiTietSach.g.cs
 E:\Repos_DoAn\QLTV_TranBin\QLTV_TranBin\obj\Debug\net6.0-windows\UCTrangChuUser.g.cs
-E:\Repos_DoAn\QLTV_TranBin\QLTV_TranBin\obj\Debug\net6.0-windows\UserScreen.g.cs
 E:\Repos_DoAn\QLTV_TranBin\QLTV_TranBin\obj\Debug\net6.0-windows\WUserWindow.g.cs
 E:\Repos_DoAn\QLTV_TranBin\QLTV_TranBin\obj\Debug\net6.0-windows\App.g.cs
 E:\Repos_DoAn\QLTV_TranBin\QLTV_TranBin\obj\Debug\net6.0-windows\GeneratedInternalTypeHelper.g.cs
@@ -503,7 +502,6 @@ E:\Repos_DoAn\QLTV_TranBin\QLTV_TranBin\obj\Debug\net6.0-windows\ResetPassword.b
 E:\Repos_DoAn\QLTV_TranBin\QLTV_TranBin\obj\Debug\net6.0-windows\SignInScreen.baml
 E:\Repos_DoAn\QLTV_TranBin\QLTV_TranBin\obj\Debug\net6.0-windows\UCChiTietSach.baml
 E:\Repos_DoAn\QLTV_TranBin\QLTV_TranBin\obj\Debug\net6.0-windows\UCTrangChuUser.baml
-E:\Repos_DoAn\QLTV_TranBin\QLTV_TranBin\obj\Debug\net6.0-windows\UserScreen.baml
 E:\Repos_DoAn\QLTV_TranBin\QLTV_TranBin\obj\Debug\net6.0-windows\WUserWindow.baml
 E:\Repos_DoAn\QLTV_TranBin\QLTV_TranBin\obj\Debug\net6.0-windows\QLTV_TranBin.g.resources
 E:\Repos_DoAn\QLTV_TranBin\QLTV_TranBin\obj\Debug\net6.0-windows\QLTV_TranBin.GeneratedMSBuildEditorConfig.editorconfig

@@ -85,8 +85,33 @@ namespace QLTV_TranBin
 
         private void btnTrangChu_Click(object sender, RoutedEventArgs e)
         {
+            // Kiểm tra xem tab "Trang Chủ" đã tồn tại hay chưa
+            TabItem trangChuTab = null;
+            foreach (var item in MainTabControl.Items)
+            {
+                if (item is TabItem tab && tab.Header.ToString() == "Trang Chủ")
+                {
+                    trangChuTab = tab;
+                    break;
+                }
+            }
 
+            if (trangChuTab == null)
+            {
+                // Nếu chưa có, tạo mới tab "Trang Chủ"
+                trangChuTab = new TabItem
+                {
+                    Header = "Trang Chủ",
+                    Content = new UTrangChu() // Tạo mới UserControl "Trang Chủ"
+                };
+
+                MainTabControl.Items.Add(trangChuTab);
+            }
+
+            // Chuyển sang tab "Trang Chủ"
+            MainTabControl.SelectedItem = trangChuTab;
         }
+        
 
         private void btnThongBao_Click(object sender, RoutedEventArgs e)
         {

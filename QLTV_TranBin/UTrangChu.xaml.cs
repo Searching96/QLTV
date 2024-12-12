@@ -1,4 +1,5 @@
-﻿using QLTV_TranBin.Models;
+﻿using Microsoft.EntityFrameworkCore;
+using QLTV_TranBin.Models;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -23,87 +24,230 @@ namespace QLTV_TranBin
     /// </summary>
     public partial class UTrangChu : INotifyPropertyChanged
     {
-        private ObservableCollection<THELOAI> _theLoaiList;
+            private ObservableCollection<THELOAI> _theLoaiList;
 
-        public ObservableCollection<THELOAI> TheLoaiList
+            public ObservableCollection<THELOAI> TheLoaiList
 
-        {
-            get => _theLoaiList;
-            set
             {
-                _theLoaiList = value;
-                OnPropertyChanged(nameof(TheLoaiList));
+                get => _theLoaiList;
+                set
+                {
+                    _theLoaiList = value;
+                    OnPropertyChanged(nameof(TheLoaiList));
+                }
             }
-        }
-        private Dictionary<int, ObservableCollection<TUASACH>> _tuaSachByTheLoai;
+            private ObservableCollection<THELOAI> _theLoaiMuonNhieuList;
 
-        public Dictionary<int, ObservableCollection<TUASACH>> TuaSachByTheLoai
-        {
-            get => _tuaSachByTheLoai;
-            set
+            public ObservableCollection<THELOAI> TheLoaiMuonNhieuList
+
             {
-                _tuaSachByTheLoai = value;
-                OnPropertyChanged(nameof(TuaSachByTheLoai));
+                get => _theLoaiMuonNhieuList;
+                set
+                {
+                    _theLoaiMuonNhieuList = value;
+                    OnPropertyChanged(nameof(TheLoaiMuonNhieuList));
+                }
             }
-        }
-        private void LoadTuaSachByTheLoai()
+            private Dictionary<int, ObservableCollection<TUASACH>> _tuaSachByTheLoai;
+
+            public Dictionary<int, ObservableCollection<TUASACH>> TuaSachByTheLoai
+            {
+                get => _tuaSachByTheLoai;
+                set
+                {
+                    _tuaSachByTheLoai = value;
+                    OnPropertyChanged(nameof(TuaSachByTheLoai));
+                }
+            }
+            private Dictionary<int, ObservableCollection<TUASACH>> _tuaSachByTheLoaiMuonNhieu;
+
+            public Dictionary<int, ObservableCollection<TUASACH>> TuaSachByTheLoaiMuonNhieu
+            {
+                get => _tuaSachByTheLoaiMuonNhieu;
+                set
+                {
+                    _tuaSachByTheLoaiMuonNhieu = value;
+                    OnPropertyChanged(nameof(TuaSachByTheLoaiMuonNhieu));
+                }
+            }
+            private void LoadTuaSachByTheLoai()
+            {
+                using (var context = new QLTV2Context())
+                {
+                    TuaSachByTheLoai = new Dictionary<int, ObservableCollection<TUASACH>>();
+
+                    foreach (var theLoai in TheLoaiList)
+                    {
+                        var tuaSachs = context.TUASACH
+                            .Where(t => t.IDTheLoai.Any(tl => tl.ID == theLoai.ID) && !t.IsDeleted) // Lọc theo thể loại
+                            .OrderBy(t => Guid.NewGuid())
+                            .Take(4) // Lấy 4 tựa sách ngẫu nhiên
+                            .ToList();
+                        //foreach (var tuasach in tuaSachs)
+                        //    MessageBox.Show(tuasach.TenTuaSach);
+                        TuaSachByTheLoai[theLoai.ID] = new ObservableCollection<TUASACH>(tuaSachs);
+                        
+                    }
+                }
+            }
+            public ObservableCollection<TUASACH> TuaSachList { get; set; }
+
+            private void TabControl_SelectionChanged(object sender, SelectionChangedEventArgs e)
+            {
+                if (tabControl.SelectedItem is THELOAI selectedTheLoai && TuaSachByTheLoai.ContainsKey(selectedTheLoai.ID))
+                {
+                
+                TuaSachList = TuaSachByTheLoai[selectedTheLoai.ID];
+                    OnPropertyChanged(nameof(TuaSachList));
+                }
+                
+            }
+            public ObservableCollection<TUASACH> TuaSachMuonNhieuList { get; set; }
+            private void tcMuonNhieu_SelectionChanged(object sender, SelectionChangedEventArgs e)
+            {
+                if ((sender as TabControl)?.SelectedItem is THELOAI SelectedTheLoaiMuonNhieu)
+                {
+                    
+                    if (TuaSachByTheLoaiMuonNhieu.ContainsKey(SelectedTheLoaiMuonNhieu.ID))
+                    {
+                        
+                        TuaSachMuonNhieuList = TuaSachByTheLoaiMuonNhieu[SelectedTheLoaiMuonNhieu.ID];
+                        OnPropertyChanged(nameof(TuaSachMuonNhieuList));  // Quan trọng để cập nhật giao diện
+                    }
+                }
+            
+            }
+                private void LoadTheLoai()
+                {
+                    using (var context = new QLTV2Context())
+                    {
+                        // Lấy 4 thể loại ngẫu nhiên
+                        var randomTheLoai = context.THELOAI
+                            .Where(t => !t.IsDeleted)
+                            .OrderBy(t => Guid.NewGuid())
+                            .Take(4)
+                            .ToList();
+
+                        TheLoaiList = new ObservableCollection<THELOAI>(randomTheLoai);
+                    }
+                }
+            private void LoadTheLoaiMuonNhieu()
+            {
+                try
+                {
+                    using (var context = new QLTV2Context())
+                    {
+
+                        // Truy vấn lấy danh sách thể loại được mượn nhiều nhất
+                        var topTheLoai = context.CTPHIEUMUON
+                            .Include(ctpm => ctpm.IDSachNavigation)
+                            .ThenInclude(sach => sach.IDTuaSachNavigation)
+                            .ThenInclude(tuaSach => tuaSach.IDTheLoai)
+                            .ToList() // Thêm ToList() để lấy dữ liệu ra trước
+                            .SelectMany(ctpm => ctpm.IDSachNavigation.IDTuaSachNavigation.IDTheLoai)
+                            .GroupBy(theloai => theloai.ID)
+                            .Select(g => new
+                            {
+                                TheLoai = g.FirstOrDefault(),
+                                SoLuotMuon = g.Count()
+                            })
+                            .OrderByDescending(x => x.SoLuotMuon)
+                            .Take(5)
+                            .Select(x => x.TheLoai)
+                            .ToList(); // Chuyển kết quả cuối cùng thành danh sách
+                        // Gán danh sách vào ObservableCollection để hiển thị trên giao diện
+                        TheLoaiMuonNhieuList = new ObservableCollection<THELOAI>(topTheLoai);
+                        
+                    }
+                }
+                catch (Exception ex)
+                {
+                    // Xử lý ngoại lệ nếu có
+                    MessageBox.Show($"Lỗi khi tải thể loại mượn nhiều: {ex.Message}");
+                }
+            }
+        private void LoadTuaSachByTheLoaiMuonNhieu()
         {
             using (var context = new QLTV2Context())
             {
-                TuaSachByTheLoai = new Dictionary<int, ObservableCollection<TUASACH>>();
+                TuaSachByTheLoaiMuonNhieu = new Dictionary<int, ObservableCollection<TUASACH>>();
 
-                foreach (var theLoai in TheLoaiList)
+                foreach (var theLoai in TheLoaiMuonNhieuList)
                 {
-                    var tuaSachs = context.TUASACH
-                        .Where(t => t.IDTheLoai.Any(tl => tl.ID == theLoai.ID) && !t.IsDeleted) // Lọc theo thể loại
-                        .OrderBy(t => Guid.NewGuid())
-                        .Take(4) // Lấy 4 tựa sách ngẫu nhiên
+                    
+                    // Truy vấn 5 cuốn sách mượn nhiều nhất trong thể loại
+                    var tuaSachs = context.CTPHIEUMUON
+                        .Include(ctpm => ctpm.IDSachNavigation) // Bao gồm thông tin Sách
+                        .ThenInclude(sach => sach.IDTuaSachNavigation) // Bao gồm thông tin Tựa sách
+                        .Where(ctpm => ctpm.IDSachNavigation.IDTuaSachNavigation.IDTheLoai.Any(tl => tl.ID == theLoai.ID)) // Lọc theo thể loại
+                        .GroupBy(ctpm => ctpm.IDSachNavigation.IDTuaSachNavigation) // Nhóm theo Tựa sách
+                        .Select(g => new
+                        {
+                            TuaSach = g.Key,
+                            SoLuotMuon = g.Count() // Đếm số lần mượn
+                        })
+                        .OrderByDescending(x => x.SoLuotMuon) // Sắp xếp giảm dần theo số lượt mượn
+                        .Take(5) // Lấy 5 tựa sách mượn nhiều nhất
+                        .Select(x => x.TuaSach) // Chỉ lấy đối tượng Tựa sách
                         .ToList();
-                    //foreach (var tuasach in tuaSachs)
-                    //    MessageBox.Show(tuasach.TenTuaSach);
-                    TuaSachByTheLoai[theLoai.ID] = new ObservableCollection<TUASACH>(tuaSachs);
+                    // Gán danh sách tựa sách vào Dictionary
+                    TuaSachByTheLoaiMuonNhieu[theLoai.ID] = new ObservableCollection<TUASACH>(tuaSachs);
                 }
             }
         }
-        public ObservableCollection<TUASACH> TuaSachList { get; set; }
 
-        private void TabControl_SelectionChanged(object sender, SelectionChangedEventArgs e)
-        {
-            if (tabControl.SelectedItem is THELOAI selectedTheLoai)
-            {
-                // Cập nhật TuaSachList khi chọn Tab
-                TuaSachList = TuaSachByTheLoai[selectedTheLoai.ID];
-                OnPropertyChanged(nameof(TuaSachList));
-            }
-        }
-        private void LoadTheLoai()
-        {
-            using (var context = new QLTV2Context())
-            {
-                // Lấy 4 thể loại ngẫu nhiên
-                var randomTheLoai = context.THELOAI
-                    .Where(t => !t.IsDeleted)
-                    .OrderBy(t => Guid.NewGuid())
-                    .Take(4)
-                    .ToList();
+        
+        
 
-                TheLoaiList = new ObservableCollection<THELOAI>(randomTheLoai);
-            }
-        }
         public event PropertyChangedEventHandler PropertyChanged;
 
-        protected virtual void OnPropertyChanged(string propertyName)
-        {
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+            protected virtual void OnPropertyChanged(string propertyName)
+            {
+                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+            }
+            public UTrangChu()
+            {
+                InitializeComponent();
+                
+                LoadTheLoai();
+                LoadTuaSachByTheLoai(); // Thêm phương thức tải tựa sách theo thể loại
+                LoadTheLoaiMuonNhieu(); 
+                LoadTuaSachByTheLoaiMuonNhieu();
+                DataContext = this; // Gán DataContext chính là UserControl
         }
-        public UTrangChu()
+        private void btnSach_Click(object sender, RoutedEventArgs e)
         {
-            InitializeComponent();
-            DataContext = this; // Gán DataContext chính là UserControl
-            LoadTheLoai();
-            LoadTuaSachByTheLoai(); // Thêm phương thức tải tựa sách theo thể loại
+            // Lấy thông tin sách từ Tag của button
+            var button = sender as Button;
+            var selectedBook = button?.Tag as TUASACH; // selectedBook sẽ là một đối tượng SACH
+
+            if (selectedBook == null)
+            {
+                MessageBox.Show("Selected book is null!");
+                return;
+            }
+            else MessageBox.Show("Co Sach");
+            //// Gửi thông tin sách lên Window để mở tab chi tiết
+            //var mainWindow = Application.Current.MainWindow as WUserWindow;
+            //mainWindow?.OpenBookDetailTab(selectedBook);
         }
-        
+        private TUASACH _selectedTuaSach;
+        public TUASACH SelectedTuaSach
+        {
+            get => _selectedTuaSach;
+            set
+            {
+                _selectedTuaSach = value;
+                OnPropertyChanged(nameof(SelectedTuaSach));
+            }
+        }
+        private void Button_MouseEnter(object sender, MouseEventArgs e)
+        {
+            if (sender is Button button && button.Tag is TUASACH tuaSach)
+            {
+                SelectedTuaSach = tuaSach; // Cập nhật trực tiếp vào property SelectedTuaSach
+            }
+        }
 
     }
 }

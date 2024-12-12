@@ -111,9 +111,9 @@ namespace QLTV_TranBin
                 return;
             }
 
-            // Gửi thông tin sách lên Window để mở tab chi tiết
-            var mainWindow = Application.Current.MainWindow as UserScreen;
-            mainWindow?.OpenBookDetailTab(selectedBook);
+            //// Gửi thông tin sách lên Window để mở tab chi tiết
+            //var mainWindow = Application.Current.MainWindow as UserScreen;
+            //mainWindow?.OpenBookDetailTab(selectedBook);
         }
     }
 }

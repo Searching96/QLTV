@@ -58,9 +58,6 @@
     <Compile Update="USachMuon.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Update="UserScreen.xaml.cs">
-      <SubType>Code</SubType>
-    </Compile>
     <Compile Update="UTrangChu.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -117,10 +114,10 @@
     <Page Update="USachMuon.xaml">
       <SubType>Designer</SubType>
     </Page>
-    <Page Update="UserScreen.xaml">
+    <Page Update="UTrangChu.xaml">
       <SubType>Designer</SubType>
     </Page>
-    <Page Update="UTrangChu.xaml">
+    <Page Update="UUFnDisplaySach.xaml">
       <SubType>Designer</SubType>
     </Page>
   </ItemGroup>
