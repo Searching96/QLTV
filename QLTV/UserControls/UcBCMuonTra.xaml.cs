@@ -1034,7 +1034,7 @@ namespace QLTV.UserControls
                 }
             }
 
-            TienPhatBarChartModel.CurrentChartValues.Add(new ColumnSeries
+            TienPhatBarChartModel.CurrentChartValues.Add(new LineSeries
             {
                 Title = "Số tiền phạt",
                 Values = values

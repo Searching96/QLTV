@@ -8,89 +8,17 @@ using System.Windows.Controls.Primitives;
 
 namespace QLTV.UserControls
 {
-
-    public class BorrowViewModel : INotifyPropertyChanged
-    {
-        private ObservableCollection<CTPHIEUMUON> _ctPhieuMuon;
-        public ObservableCollection<CTPHIEUMUON> ctPhieuMuon
-        {
-            get => _ctPhieuMuon;
-            set
-            {
-                _ctPhieuMuon = value;
-                OnPropertyChanged(nameof(ctPhieuMuon));
-            }
-        }
-
-        public PHIEUMUON phieuMuon { get; set; }
-        private bool _isExpanded;
-        public bool IsExpanded
-        {
-            get => _isExpanded;
-            set
-            {
-                if (_isExpanded != value)
-                {
-                    _isExpanded = value;
-                    OnPropertyChanged(nameof(IsExpanded));
-                }
-            }
-        }
-
-        public event PropertyChangedEventHandler PropertyChanged;
-        protected void OnPropertyChanged(string propertyName)
-        {
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
-        }
-    }
-
-    public class ReturnViewModel : INotifyPropertyChanged
-    {
-        private ObservableCollection<CTPHIEUTRA> _ctPhieuTra;
-        public ObservableCollection<CTPHIEUTRA> ctPhieuTra
-        {
-            get => _ctPhieuTra;
-            set
-            {
-                _ctPhieuTra = value;
-                OnPropertyChanged(nameof(ctPhieuTra));
-            }
-        }
-
-        public string DocGia => _ctPhieuTra.First().IDPhieuMuonNavigation.IDDocGiaNavigation.IDTaiKhoanNavigation.TenTaiKhoan ?? "";
-
-        public PHIEUTRA phieuTra { get; set; }
-        private bool _isExpanded;
-        public bool IsExpanded
-        {
-            get => _isExpanded;
-            set
-            {
-                if (_isExpanded != value)
-                {
-                    _isExpanded = value;
-                    OnPropertyChanged(nameof(IsExpanded));
-                }
-            }
-        }
-
-        public event PropertyChangedEventHandler PropertyChanged;
-        protected void OnPropertyChanged(string propertyName)
-        {
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
-        }
-    }
-
-
-    public partial class UcQLMuonTra : UserControl
+    public partial class UUFnLichSuMuonTra : UserControl
     {
         private List<PHIEUMUON> borrowings;
         private ObservableCollection<BorrowViewModel> _borrowings;
         private ObservableCollection<ReturnViewModel> _returns;
+        private DOCGIA currentDocGia;
 
-        public UcQLMuonTra()
+        public UUFnLichSuMuonTra(DOCGIA docgia)
         {
             InitializeComponent();
+            currentDocGia = docgia ?? new QLTVContext().DOCGIA.FirstOrDefault();
             LoadData();
         }
 
@@ -109,7 +37,7 @@ namespace QLTV.UserControls
                                 .ThenInclude(s => s.IDTuaSachNavigation)
                         .Include(p => p.CTPHIEUMUON)
                             .ThenInclude(ct => ct.IDTinhTrangMuonNavigation)
-                        .Where(p => !p.IsDeleted)
+                        .Where(p => !p.IsDeleted && p.IDDocGia == currentDocGia.ID)
                         .ToListAsync();
 
                     var _borrowings = new ObservableCollection<BorrowViewModel>(
@@ -130,7 +58,7 @@ namespace QLTV.UserControls
                                 .ThenInclude(s => s.IDTuaSachNavigation)
                         .Include(p => p.CTPHIEUTRA)
                             .ThenInclude(ct => ct.IDTinhTrangTraNavigation)
-                        .Where(p => !p.IsDeleted)
+                        .Where(p => !p.IsDeleted && p.CTPHIEUTRA.All(ct => ct.IDPhieuMuonNavigation.IDDocGia == currentDocGia.ID))
                         .ToListAsync();
                     _returns = new ObservableCollection<ReturnViewModel>(
                         returns.Select(r => new ReturnViewModel
@@ -191,8 +119,13 @@ namespace QLTV.UserControls
             {
                 try
                 {
-                    using (var _context = new QLTVContext())
-                    {
+                    using (var _context = new QLTVContext())                    {
+                        if (!borrowViewModel.phieuMuon.IsPending)
+                        {
+                            MessageBox.Show("Không thể xóa phiếu mượn đã được duyệt!", "Lỗi",
+                                MessageBoxButton.OK, MessageBoxImage.Error);
+                            return;
+                        }
                         // Xoá mềm phiếu mượn
                         borrowViewModel.phieuMuon.IsDeleted = true;
 
@@ -234,44 +167,6 @@ namespace QLTV.UserControls
             if (window.ShowDialog() == true)
             {
                 LoadData();
-            }
-        }
-
-        private async void btnDeleteReturn_Click(object sender, RoutedEventArgs e)
-        {
-            var returnViewModel = ((FrameworkElement)sender).DataContext as ReturnViewModel;
-            if (returnViewModel == null) return;
-
-            if (MessageBox.Show("Bạn có chắc muốn xóa phiếu trả này?", "Xác nhận",
-                MessageBoxButton.YesNo, MessageBoxImage.Question) == MessageBoxResult.Yes)
-            {
-                try
-                {
-                    using (var _context = new QLTVContext())
-                    {
-                        // Xoá mềm phiếu trả
-                        returnViewModel.phieuTra.IsDeleted = true;
-
-                        // Xử lí các CTPHIEUTRA có liên quan
-                        foreach (var ctPhieuTra in returnViewModel.phieuTra.CTPHIEUTRA)
-                        {
-                            // Khôi phục trạng thái trả của sách
-                            var sach = ctPhieuTra.IDSachNavigation;
-                            if (sach != null)
-                            {
-                                sach.IsAvailable = false;
-                            }
-                        }
-
-                        await _context.SaveChangesAsync();
-                        _returns.Remove(returnViewModel);
-                    }
-                }
-                catch (Exception ex)
-                {
-                    MessageBox.Show($"Lỗi khi xóa phiếu trả: {ex.Message}", "Lỗi",
-                        MessageBoxButton.OK, MessageBoxImage.Error);
-                }
             }
         }
 
@@ -384,21 +279,6 @@ namespace QLTV.UserControls
             if (cbi == null || cbi.Content == null) return;
             string selectedText = cbi.Content.ToString();
             BorrowSearch(selectedText);
-        }
-
-        private void btnAcceptBorrow_Click(object sender, RoutedEventArgs e)
-        {
-            var borrowViewModel = ((FrameworkElement)sender).DataContext as BorrowViewModel;
-            if (borrowViewModel != null)
-            {
-                using (var _context = new QLTVContext())
-                {
-                    borrowViewModel.phieuMuon.IsPending = false;
-                    _context.Update(borrowViewModel.phieuMuon);
-                    _context.SaveChanges();
-                    LoadData();
-                }
-            }
         }
     }
 }
