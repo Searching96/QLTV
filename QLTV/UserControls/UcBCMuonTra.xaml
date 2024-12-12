@@ -71,7 +71,7 @@
                                               IsEditable="False"
                                               materialDesign:HintAssist.Hint="Từ tháng"
                                               materialDesign:HintAssist.FloatingScale="0.8"
-                                              SelectionChanged="cboStartMonthMS_SelectionChanged" />
+                                              SelectionChanged="cbStartMonthMS_SelectionChanged" />
                                     <ComboBox Style="{StaticResource ModernComboBox}"
                                               x:Name="cbEndMonthMS"
                                               Width="100"
@@ -79,7 +79,7 @@
                                               IsEditable="False"
                                               materialDesign:HintAssist.Hint="Từ tháng"
                                               materialDesign:HintAssist.FloatingScale="0.8"
-                                              SelectionChanged="cboEndMonthMS_SelectionChanged" />
+                                              SelectionChanged="cbEndMonthMS_SelectionChanged" />
                                 </StackPanel>
 
                                 <!-- Quarter Selector for "Quý" -->
@@ -92,7 +92,7 @@
                                           IsEditable="False"
                                           materialDesign:HintAssist.Hint="Quý"
                                           materialDesign:HintAssist.FloatingScale="0.8"
-                                          SelectionChanged="cboQuarterMS_SelectionChanged" />
+                                          SelectionChanged="cbQuarterMS_SelectionChanged" />
                                 <ComboBox Style="{StaticResource ModernComboBox}"
                                           x:Name="cbYearMS"
                                           Width="100"
@@ -101,7 +101,7 @@
                                           IsEditable="False"
                                           materialDesign:HintAssist.Hint="Năm"
                                           materialDesign:HintAssist.FloatingScale="0.8"
-                                          SelectionChanged="cboYearMS_SelectionChanged" />
+                                          SelectionChanged="cbYearMS_SelectionChanged" />
                             </StackPanel>
                         </Grid>
                         <materialDesign:PackIcon Kind="AlertCircleOutline"
