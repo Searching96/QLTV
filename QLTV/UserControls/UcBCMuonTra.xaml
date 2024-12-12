@@ -105,7 +105,7 @@
                             </StackPanel>
                         </Grid>
                         <materialDesign:PackIcon Kind="AlertCircleOutline"
-                                                 x:Name="icTimePickerError"
+                                                 x:Name="icMSTimePickerError"
                                                  Visibility="Collapsed"
                                                  Style="{StaticResource Warning}" />
                     </StackPanel>
@@ -294,7 +294,7 @@
                         <ListBox x:Name="lbBCTTChartMode"
                                  Style="{StaticResource MaterialDesignChoiceChipListBox}"
                                  Grid.Row="0"
-                                 Margin="5,10,5,0"
+                                 Margin="5,2,5,0"
                                  SelectionChanged="lbBCTTChartMode_SelectionChanged">
                             <ListBoxItem Content="Ngày" />
                             <ListBoxItem Content="Tháng" />
@@ -305,13 +305,11 @@
 
                         <!-- Container for Pickers -->
                         <Grid Grid.Row="0"
-                              Margin="5"
                               HorizontalAlignment="Left">
                             <!-- Date Picker for "Ngày" -->
                             <StackPanel x:Name="spDayTT"
                                         Orientation="Horizontal"
-                                        Visibility="Collapsed"
-                                        Margin="0,5,0,0">
+                                        Visibility="Collapsed">
                                 <DatePicker  x:Name="dpStartDayTT"
                                              Width="100"
                                              materialDesign:HintAssist.Hint="Từ ngày"
@@ -333,8 +331,7 @@
                             <!-- Month Selector for "Tháng" -->
                             <StackPanel x:Name="spMonthTT"
                                         Orientation="Horizontal"
-                                        Visibility="Hidden"
-                                        Margin="0,5,0,0">
+                                        Visibility="Collapsed">
                                 <ComboBox Style="{StaticResource ModernComboBox}"
                                           x:Name="cbStartMonthTT"
                                           Width="100"
@@ -354,8 +351,7 @@
                             </StackPanel>
 
                             <!-- Quarter Selector for "Quý" -->
-                            <StackPanel Orientation="Horizontal"
-                                        Margin="0,5,0,0">
+                            <StackPanel Orientation="Horizontal">
                                 <ComboBox Style="{StaticResource ModernComboBox}"
                                           x:Name="cbQuarterTT"
                                           Width="100"
@@ -376,6 +372,10 @@
                                           SelectionChanged="cbYearTT_SelectionChanged" />
                             </StackPanel>
                         </Grid>
+                        <materialDesign:PackIcon Kind="AlertCircleOutline"
+                                                 x:Name="icTTTimePickerError"
+                                                 Visibility="Collapsed"
+                                                 Style="{StaticResource Warning}" />
                     </StackPanel>
 
                     <!--Chart-->

@@ -688,7 +688,7 @@ namespace QLTV.UserControls
             return System.Windows.Media.Color.FromRgb((byte)rand.Next(256), (byte)rand.Next(256), (byte)rand.Next(256));
         }
 
-        private void cboYearMS_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        private void cbYearMS_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             if (!IsLoaded) return;
             var selectedYear = (sender as ComboBox)?.SelectedItem as string;
@@ -709,7 +709,7 @@ namespace QLTV.UserControls
             }
         }
 
-        private void cboQuarterMS_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        private void cbQuarterMS_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             if (!IsLoaded) return;
             var selectedQuarter = (sender as ComboBox)?.SelectedItem as string;
@@ -750,24 +750,24 @@ namespace QLTV.UserControls
 
             if (string.IsNullOrEmpty(selectedStartMonth) && string.IsNullOrEmpty(selectedEndMonth))
             {
-                icTimePickerError.ToolTip = $"Vui lòng chọn tháng bắt đầu và tháng kết thúc.";
-                icTimePickerError.Visibility = Visibility.Visible;
+                icMSTimePickerError.ToolTip = $"Vui lòng chọn tháng bắt đầu và tháng kết thúc.";
+                icMSTimePickerError.Visibility = Visibility.Visible;
                 cbStartMonthMS.BorderBrush = Brushes.Red;
                 cbEndMonthMS.BorderBrush = Brushes.Red;
                 return;
             }
             else if (string.IsNullOrEmpty(selectedStartMonth))
             {
-                icTimePickerError.ToolTip = $"Vui lòng chọn tháng bắt đầu.";
-                icTimePickerError.Visibility = Visibility.Visible;
+                icMSTimePickerError.ToolTip = $"Vui lòng chọn tháng bắt đầu.";
+                icMSTimePickerError.Visibility = Visibility.Visible;
                 cbStartMonthMS.BorderBrush = Brushes.Red;
                 cbEndMonthMS.BorderBrush = Brushes.LightGray;
                 return;
             }
             else if (string.IsNullOrEmpty(selectedEndMonth))
             {
-                icTimePickerError.ToolTip = $"Vui lòng chọn tháng kết thúc.";
-                icTimePickerError.Visibility = Visibility.Visible;
+                icMSTimePickerError.ToolTip = $"Vui lòng chọn tháng kết thúc.";
+                icMSTimePickerError.Visibility = Visibility.Visible;
                 cbEndMonthMS.BorderBrush = Brushes.Red;
                 cbStartMonthMS.BorderBrush = Brushes.LightGray;
                 return;
@@ -778,8 +778,8 @@ namespace QLTV.UserControls
             {
                 if (startMonth > endMonth)
                 {
-                    icTimePickerError.ToolTip = $"Tháng bắt đầu không thể sau tháng kết thúc.";
-                    icTimePickerError.Visibility = Visibility.Visible;
+                    icMSTimePickerError.ToolTip = $"Tháng bắt đầu không thể sau tháng kết thúc.";
+                    icMSTimePickerError.Visibility = Visibility.Visible;
                     cbStartMonthMS.BorderBrush = Brushes.Red;
                     cbEndMonthMS.BorderBrush = Brushes.Red;
                     return;
@@ -788,7 +788,7 @@ namespace QLTV.UserControls
                 {
                     cbStartMonthMS.BorderBrush = Brushes.LightGray;
                     cbEndMonthMS.BorderBrush = Brushes.LightGray;
-                    icTimePickerError.Visibility = Visibility.Collapsed;
+                    icMSTimePickerError.Visibility = Visibility.Collapsed;
                     var begin = new DateTime(startMonth.Year, startMonth.Month, 1);
                     var end = new DateTime(endMonth.Year, endMonth.Month, DateTime.DaysInMonth(endMonth.Year, endMonth.Month));
                     PopulateBCMSChartAndDataGrid(begin, end);
@@ -796,8 +796,8 @@ namespace QLTV.UserControls
             }
             else
             {
-                icTimePickerError.ToolTip = $"Định dạng tháng không hợp lệ. Vui lòng chọn lại.";
-                icTimePickerError.Visibility = Visibility.Visible;
+                icMSTimePickerError.ToolTip = $"Định dạng tháng không hợp lệ. Vui lòng chọn lại.";
+                icMSTimePickerError.Visibility = Visibility.Visible;
                 cbStartMonthMS.BorderBrush = Brushes.Red;
                 cbEndMonthMS.BorderBrush = Brushes.Red;
             }
@@ -817,32 +817,32 @@ namespace QLTV.UserControls
 
             if (selectedStartDay == null && selectedEndDay == null)
             {
-                icTimePickerError.ToolTip = $"Vui lòng chọn ngày bắt đầu và ngày kết thúc.";
-                icTimePickerError.Visibility = Visibility.Visible;
+                icMSTimePickerError.ToolTip = $"Vui lòng chọn ngày bắt đầu và ngày kết thúc.";
+                icMSTimePickerError.Visibility = Visibility.Visible;
                 dpStartDayMS.BorderBrush = Brushes.Red;
                 dpEndDayMS.BorderBrush = Brushes.Red;
                 return;
             }
             else if (selectedStartDay == null)
             {
-                icTimePickerError.ToolTip = $"Vui lòng chọn ngày bắt đầu.";
-                icTimePickerError.Visibility = Visibility.Visible;
+                icMSTimePickerError.ToolTip = $"Vui lòng chọn ngày bắt đầu.";
+                icMSTimePickerError.Visibility = Visibility.Visible;
                 dpStartDayMS.BorderBrush = Brushes.Red;
                 dpEndDayMS.BorderBrush = Brushes.LightGray;
                 return;
             }
             else if (selectedEndDay == null)
             {
-                icTimePickerError.ToolTip = $"Vui lòng chọn ngày kết thúc.";
-                icTimePickerError.Visibility = Visibility.Visible;
+                icMSTimePickerError.ToolTip = $"Vui lòng chọn ngày kết thúc.";
+                icMSTimePickerError.Visibility = Visibility.Visible;
                 dpEndDayMS.BorderBrush = Brushes.Red;
                 dpStartDayMS.BorderBrush = Brushes.LightGray;
                 return;
             }
             else if (selectedStartDay.Value > selectedEndDay.Value)
             {
-                icTimePickerError.ToolTip = $"Ngày bắt đầu không thể sau ngày kết thúc.";
-                icTimePickerError.Visibility = Visibility.Visible;
+                icMSTimePickerError.ToolTip = $"Ngày bắt đầu không thể sau ngày kết thúc.";
+                icMSTimePickerError.Visibility = Visibility.Visible;
                 dpStartDayMS.BorderBrush = Brushes.Red;
                 dpEndDayMS.BorderBrush = Brushes.Red;
                 return;
@@ -851,7 +851,7 @@ namespace QLTV.UserControls
             {
                 dpStartDayMS.BorderBrush = Brushes.LightGray;
                 dpEndDayMS.BorderBrush = Brushes.LightGray;
-                icTimePickerError.Visibility = Visibility.Collapsed;
+                icMSTimePickerError.Visibility = Visibility.Collapsed;
                 PopulateBCMSChartAndDataGrid(selectedStartDay.Value, selectedEndDay.Value);
             }
         }
@@ -1172,24 +1172,24 @@ namespace QLTV.UserControls
 
             if (string.IsNullOrEmpty(selectedStartMonth) && string.IsNullOrEmpty(selectedEndMonth))
             {
-                icTimePickerError.ToolTip = $"Vui lòng chọn tháng bắt đầu và tháng kết thúc.";
-                icTimePickerError.Visibility = Visibility.Visible;
+                icTTTimePickerError.ToolTip = $"Vui lòng chọn tháng bắt đầu và tháng kết thúc.";
+                icTTTimePickerError.Visibility = Visibility.Visible;
                 cbStartMonthTT.BorderBrush = Brushes.Red;
                 cbEndMonthTT.BorderBrush = Brushes.Red;
                 return;
             }
             else if (string.IsNullOrEmpty(selectedStartMonth))
             {
-                icTimePickerError.ToolTip = $"Vui lòng chọn tháng bắt đầu.";
-                icTimePickerError.Visibility = Visibility.Visible;
+                icTTTimePickerError.ToolTip = $"Vui lòng chọn tháng bắt đầu.";
+                icTTTimePickerError.Visibility = Visibility.Visible;
                 cbStartMonthTT.BorderBrush = Brushes.Red;
                 cbEndMonthTT.BorderBrush = Brushes.LightGray;
                 return;
             }
             else if (string.IsNullOrEmpty(selectedEndMonth))
             {
-                icTimePickerError.ToolTip = $"Vui lòng chọn tháng kết thúc.";
-                icTimePickerError.Visibility = Visibility.Visible;
+                icTTTimePickerError.ToolTip = $"Vui lòng chọn tháng kết thúc.";
+                icTTTimePickerError.Visibility = Visibility.Visible;
                 cbEndMonthTT.BorderBrush = Brushes.Red;
                 cbStartMonthTT.BorderBrush = Brushes.LightGray;
                 return;
@@ -1200,8 +1200,8 @@ namespace QLTV.UserControls
             {
                 if (startMonth > endMonth)
                 {
-                    icTimePickerError.ToolTip = $"Tháng bắt đầu không thể sau tháng kết thúc.";
-                    icTimePickerError.Visibility = Visibility.Visible;
+                    icTTTimePickerError.ToolTip = $"Tháng bắt đầu không thể sau tháng kết thúc.";
+                    icTTTimePickerError.Visibility = Visibility.Visible;
                     cbStartMonthTT.BorderBrush = Brushes.Red;
                     cbEndMonthTT.BorderBrush = Brushes.Red;
                     return;
@@ -1210,7 +1210,7 @@ namespace QLTV.UserControls
                 {
                     cbStartMonthTT.BorderBrush = Brushes.LightGray;
                     cbEndMonthTT.BorderBrush = Brushes.LightGray;
-                    icTimePickerError.Visibility = Visibility.Collapsed;
+                    icTTTimePickerError.Visibility = Visibility.Collapsed;
                     var begin = new DateTime(startMonth.Year, startMonth.Month, 1);
                     var end = new DateTime(endMonth.Year, endMonth.Month, DateTime.DaysInMonth(endMonth.Year, endMonth.Month));
                     PopulateBCTTChartAndDataGrid(begin, end);
@@ -1218,8 +1218,8 @@ namespace QLTV.UserControls
             }
             else
             {
-                icTimePickerError.ToolTip = $"Định dạng tháng không hợp lệ. Vui lòng chọn lại.";
-                icTimePickerError.Visibility = Visibility.Visible;
+                icTTTimePickerError.ToolTip = $"Định dạng tháng không hợp lệ. Vui lòng chọn lại.";
+                icTTTimePickerError.Visibility = Visibility.Visible;
                 cbStartMonthTT.BorderBrush = Brushes.Red;
                 cbEndMonthTT.BorderBrush = Brushes.Red;
             }
@@ -1238,33 +1238,33 @@ namespace QLTV.UserControls
             var selectedEndDay = dpEndDayTT.SelectedDate;
             if (selectedStartDay == null && selectedEndDay == null)
             {
-                icTimePickerError.ToolTip = $"Vui lòng chọn ngày bắt đầu và ngày kết thúc.";
-                icTimePickerError.Visibility = Visibility.Visible;
+                icTTTimePickerError.ToolTip = $"Vui lòng chọn ngày bắt đầu và ngày kết thúc.";
+                icTTTimePickerError.Visibility = Visibility.Visible;
                 dpStartDayTT.BorderBrush = Brushes.Red;
                 dpEndDayMS.BorderBrush = Brushes.Red;
                 return;
             }
             else if (selectedStartDay != null)
             {
-                icTimePickerError.ToolTip = $"Vui lòng chọn ngày kết thúc.";
-                icTimePickerError.Visibility = Visibility.Visible;
+                icTTTimePickerError.ToolTip = $"Vui lòng chọn ngày kết thúc.";
+                icTTTimePickerError.Visibility = Visibility.Visible;
                 dpEndDayTT.BorderBrush = Brushes.Red;
                 dpStartDayTT.BorderBrush = Brushes.LightGray;
                 return;
             }
             else if (selectedEndDay != null)
             {
-                icTimePickerError.ToolTip = $"Vui lòng chọn ngày bắt đầu.";
-                icTimePickerError.Visibility = Visibility.Visible;
+                icTTTimePickerError.ToolTip = $"Vui lòng chọn ngày bắt đầu.";
+                icTTTimePickerError.Visibility = Visibility.Visible;
                 dpStartDayTT.BorderBrush = Brushes.Red;
                 dpEndDayTT.BorderBrush = Brushes.LightGray;
                 return;
             }
             else if (selectedStartDay.Value > selectedEndDay.Value)
             {
-                icTimePickerError.ToolTip = $"Ngày bắt đầu không thể sau ngày kết thúc.";
-                icTimePickerError.Visibility = Visibility.Visible;
-                icTimePickerError.Visibility = Visibility.Collapsed;
+                icTTTimePickerError.ToolTip = $"Ngày bắt đầu không thể sau ngày kết thúc.";
+                icTTTimePickerError.Visibility = Visibility.Visible;
+                icTTTimePickerError.Visibility = Visibility.Collapsed;
                 dpStartDayTT.BorderBrush = Brushes.Red;
                 dpEndDayMS.BorderBrush = Brushes.Red;
                 return;
