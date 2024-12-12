@@ -64,6 +64,7 @@ namespace QLTV
             public string TuaSach { get; set; }
             public string DSTacGia { get; set; }
             public string DSTheLoai { get; set; }
+            public string ViTri { get; set; }
             public string NhaXuatBan { get; set; }
             public int NamXuatBan { get; set; }
             public string NgayNhap { get; set; }
@@ -199,6 +200,7 @@ namespace QLTV
                                 .Select(ts_tg => ts_tg.IDTacGiaNavigation.TenTacGia)),
                             DSTheLoai = string.Join(", ", s.IDTuaSachNavigation.TUASACH_THELOAI
                                 .Select(ts_tl => ts_tl.IDTheLoaiNavigation.TenTheLoai)),
+                            ViTri = s.ViTri,
                             NhaXuatBan = s.NhaXuatBan,
                             NamXuatBan = s.NamXuatBan,
                             NgayNhap = s.NgayNhap.ToString("dd/MM/yyyy"),
@@ -272,6 +274,7 @@ namespace QLTV
                         selectedProperty == "Tựa Sách" ? NormalizeString(s.TuaSach).Contains(NormalizeString(conditionText)) :
                         selectedProperty == "Tác Giả" ? NormalizeString(s.DSTacGia).Contains(NormalizeString(conditionText)) :
                         selectedProperty == "Thể Loại" ? NormalizeString(s.DSTheLoai).Contains(NormalizeString(conditionText)) :
+                        selectedProperty == "Vị Trí" ? NormalizeString(s.ViTri).Contains(NormalizeString(conditionText)) :
                         selectedProperty == "Nhà Xuất Bản" ? NormalizeString(s.NhaXuatBan).Contains(NormalizeString(conditionText)) :
                         selectedProperty == "Tình Trạng" ? NormalizeString(s.TinhTrang).Contains(NormalizeString(conditionText)) :
                         selectedProperty == "Ngày Nhập" && searchDate.HasValue
@@ -335,6 +338,7 @@ namespace QLTV
                             .Select(ts_tg => ts_tg.IDTacGiaNavigation.TenTacGia)),
                         DSTheLoai = string.Join(", ", s.IDTuaSachNavigation.TUASACH_THELOAI
                             .Select(ts_tl => ts_tl.IDTheLoaiNavigation.TenTheLoai)),
+                        ViTri = s.ViTri,
                         NhaXuatBan = s.NhaXuatBan,
                         NamXuatBan = s.NamXuatBan,
                         NgayNhap = s.NgayNhap.ToString("dd/MM/yyyy"),
@@ -404,6 +408,7 @@ namespace QLTV
                             .Select(ts_tg => ts_tg.IDTacGiaNavigation.TenTacGia)),
                         DSTheLoai = string.Join(", ", s.IDTuaSachNavigation.TUASACH_THELOAI
                             .Select(ts_tl => ts_tl.IDTheLoaiNavigation.TenTheLoai)),
+                        ViTri = s.ViTri,
                         NhaXuatBan = s.NhaXuatBan,
                         NamXuatBan = s.NamXuatBan,
                         NgayNhap = s.NgayNhap.ToString("dd/MM/yyyy"),
@@ -415,6 +420,7 @@ namespace QLTV
                         selectedProperty == "Tựa Sách" ? NormalizeString(s.TuaSach).Contains(NormalizeString(searchTerm)) :
                         selectedProperty == "Tác Giả" ? NormalizeString(s.DSTacGia).Contains(NormalizeString(searchTerm)) :
                         selectedProperty == "Thể Loại" ? NormalizeString(s.DSTheLoai).Contains(NormalizeString(searchTerm)) :
+                        selectedProperty == "Vị Trí" ? NormalizeString(s.ViTri).Contains(NormalizeString(searchTerm)) :
                         selectedProperty == "Nhà Xuất Bản" ? NormalizeString(s.NhaXuatBan).Contains(NormalizeString(searchTerm)) :
                         selectedProperty == "Tình Trạng" ? NormalizeString(s.TinhTrang).Contains(NormalizeString(searchTerm)) :
                         selectedProperty == "Ngày Nhập" && searchDate.HasValue
@@ -597,7 +603,7 @@ namespace QLTV
                 tbxMaSach.Text = selectedBook.MaSach;
                 tbxTuaSach.Text = selectedBook.TuaSach;
                 tbxDSTacGia.Text = selectedBook.DSTacGia;
-                tbxDSTheLoai.Text = selectedBook.DSTheLoai;
+                tbxViTri.Text = selectedBook.ViTri;
                 tbxNhaXuatBan.Text = selectedBook.NhaXuatBan;
                 tbxNamXuatBan.Text = selectedBook.NamXuatBan.ToString();
 
@@ -699,7 +705,7 @@ namespace QLTV
                 tbxMaSach.Text = "";
                 tbxTuaSach.Text = "";
                 tbxDSTacGia.Text = "";
-                tbxDSTheLoai.Text = "";
+                tbxViTri.Text = "";
                 tbxNhaXuatBan.Text = "";
                 tbxNamXuatBan.Text = "";
                 dpNgayNhap.Text = "";
@@ -892,14 +898,15 @@ namespace QLTV
                     worksheet.Cells[1, 2].Value = "Tựa Sách";
                     worksheet.Cells[1, 3].Value = "Tác Giả";
                     worksheet.Cells[1, 4].Value = "Thể Loại";
-                    worksheet.Cells[1, 5].Value = "Nhà Xuất Bản";
-                    worksheet.Cells[1, 6].Value = "Năm Xuất Bản";
-                    worksheet.Cells[1, 7].Value = "Ngày Nhập";
-                    worksheet.Cells[1, 8].Value = "Trị Giá";
-                    worksheet.Cells[1, 9].Value = "Tình Trạng";
+                    worksheet.Cells[1, 5].Value = "Vị Trí";
+                    worksheet.Cells[1, 6].Value = "Nhà Xuất Bản";
+                    worksheet.Cells[1, 7].Value = "Năm Xuất Bản";
+                    worksheet.Cells[1, 8].Value = "Ngày Nhập";
+                    worksheet.Cells[1, 9].Value = "Trị Giá";
+                    worksheet.Cells[1, 10].Value = "Tình Trạng";
 
                     // Áp dụng style cho tiêu đề
-                    using (var range = worksheet.Cells[1, 1, 1, 9])
+                    using (var range = worksheet.Cells[1, 1, 1, 10])
                     {
                         range.Style.Font.Bold = true;
                         range.Style.HorizontalAlignment = ExcelHorizontalAlignment.Center;
@@ -919,11 +926,12 @@ namespace QLTV
                         worksheet.Cells[rowIndex, 2].Value = data.TuaSach;
                         worksheet.Cells[rowIndex, 3].Value = data.DSTacGia;
                         worksheet.Cells[rowIndex, 4].Value = data.DSTheLoai;
-                        worksheet.Cells[rowIndex, 5].Value = data.NhaXuatBan;
-                        worksheet.Cells[rowIndex, 6].Value = data.NamXuatBan;
-                        worksheet.Cells[rowIndex, 7].Value = data.NgayNhap;
-                        worksheet.Cells[rowIndex, 8].Value = data.TriGia;
-                        worksheet.Cells[rowIndex, 9].Value = data.TinhTrang;
+                        worksheet.Cells[rowIndex, 5].Value = data.ViTri;
+                        worksheet.Cells[rowIndex, 6].Value = data.NhaXuatBan;
+                        worksheet.Cells[rowIndex, 7].Value = data.NamXuatBan;
+                        worksheet.Cells[rowIndex, 8].Value = data.NgayNhap;
+                        worksheet.Cells[rowIndex, 9].Value = data.TriGia;
+                        worksheet.Cells[rowIndex, 10].Value = data.TinhTrang;
                         rowIndex++;
                     }
 
@@ -957,8 +965,8 @@ namespace QLTV
                         // Bước 1: Kiểm tra và đánh dấu các dòng lỗi
                         for (int row = 2; row <= worksheet.Dimension.End.Row; row++)
                         {
-                            string triGia = worksheet.Cells[row, 7].Text;
-                            string tenTinhTrang = worksheet.Cells[row, 8].Text;
+                            string triGia = worksheet.Cells[row, 8].Text;
+                            string tenTinhTrang = worksheet.Cells[row, 9].Text;
 
                             var tinhTrang = context.TINHTRANG
                                 .FirstOrDefault(tt => !tt.IsDeleted && tt.TenTinhTrang == tenTinhTrang);
@@ -967,15 +975,17 @@ namespace QLTV
                                 lstDongBiLoi.Add(row);
                         }
 
-                        // Hiển thị hộp thoại xác nhận nếu có dòng bị lỗi
-                        MessageBoxResult mbrXacNhan = MessageBox.Show(
-                            $"Có {lstDongBiLoi.Count} dòng bị lỗi. Bạn có muốn tiếp tục nhập dữ liệu bỏ qua các dòng đó không?",
-                            "Xác nhận nhập",
-                            MessageBoxButton.YesNo,
-                            MessageBoxImage.Warning);
+                        if (lstDongBiLoi.Count > 0)
+                        {
+                            MessageBoxResult mbrXacNhan = MessageBox.Show(
+                                $"Có {lstDongBiLoi.Count} dòng bị lỗi. Bạn có muốn tiếp tục nhập dữ liệu bỏ qua các dòng đó không?",
+                                "Xác nhận nhập",
+                                MessageBoxButton.YesNo,
+                                MessageBoxImage.Warning);
 
-                        if (mbrXacNhan != MessageBoxResult.Yes)
-                            return -1;
+                            if (mbrXacNhan != MessageBoxResult.Yes)
+                                return -1;
+                        }
 
                         // Bước 2: Nhập dữ liệu từng dòng
                         for (int row = 2; row <= worksheet.Dimension.End.Row; row++)
@@ -986,11 +996,12 @@ namespace QLTV
                             string tenTuaSach = worksheet.Cells[row, 1].Text;
                             string dsTacGia = worksheet.Cells[row, 2].Text;
                             string dsTheLoai = worksheet.Cells[row, 3].Text;
-                            string nhaXuatBan = worksheet.Cells[row, 4].Text;
-                            int namXuatBan = int.Parse(worksheet.Cells[row, 5].Text);
-                            DateTime ngayNhap = DateTime.ParseExact(worksheet.Cells[row, 6].Text, "dd/MM/yyyy", CultureInfo.InvariantCulture);
-                            decimal triGia = decimal.Parse(worksheet.Cells[row, 7].Text);
-                            string tenTinhTrang = worksheet.Cells[row, 8].Text;
+                            string viTri = worksheet.Cells[row, 4].Text;
+                            string nhaXuatBan = worksheet.Cells[row, 5].Text;
+                            int namXuatBan = int.Parse(worksheet.Cells[row, 6].Text);
+                            DateTime ngayNhap = DateTime.ParseExact(worksheet.Cells[row, 7].Text, "dd/MM/yyyy", CultureInfo.InvariantCulture);
+                            decimal triGia = decimal.Parse(worksheet.Cells[row, 8].Text);
+                            string tenTinhTrang = worksheet.Cells[row, 9].Text;
 
                             // Tìm tình trạng
                             var tinhTrang = context.TINHTRANG
@@ -1022,7 +1033,7 @@ namespace QLTV
                                 );
 
                             // Nếu không tìm thấy TUASACH phù hợp, tạo mới
-                            TUASACH tuaSach = existingTuaSach ?? new TUASACH { TenTuaSach = tenTuaSach };
+                            TUASACH tuaSach = existingTuaSach ?? new TUASACH { TenTuaSach = tenTuaSach, MoTa = "Chưa Có" };
                             if (existingTuaSach == null)
                             {
                                 context.TUASACH.Add(tuaSach);
@@ -1062,6 +1073,7 @@ namespace QLTV
                             var newSach = new SACH
                             {
                                 IDTuaSach = tuaSach.ID,
+                                ViTri = viTri,
                                 NhaXuatBan = nhaXuatBan,
                                 NamXuatBan = namXuatBan,
                                 NgayNhap = ngayNhap,
@@ -1354,6 +1366,10 @@ namespace QLTV
 
                     switch (selectedProperty)
                     {
+                        case "Vị Trí":
+                            sachToEdit.ViTri = editValue;
+                            break;
+
                         case "Nhà Xuất Bản":
                             sachToEdit.NhaXuatBan = editValue;
                             break;
@@ -1418,6 +1434,9 @@ namespace QLTV
                             }
                             break;
                     }
+
+                    MessageBox.Show("Thay đổi dữ liệu thành công cho các sách đã chọn", "Thông báo", 
+                        MessageBoxButton.OK, MessageBoxImage.Information);
                 }
 
                 // Lưu các thay đổi
@@ -1451,6 +1470,35 @@ namespace QLTV
                 puAdvancedSearch.HorizontalOffset += 1; // Temporarily change the offset
                 puAdvancedSearch.HorizontalOffset -= 1; // Restore the offset
             }
+        }
+
+        private void ColumnCheckBox_Checked(object sender, RoutedEventArgs e)
+        {
+            if (sender is CheckBox checkBox && checkBox.Tag is string columnName)
+            {
+                var column = FindName(columnName) as DataGridColumn;
+                if (column != null)
+                {
+                    column.Visibility = Visibility.Visible;
+                }
+            }
+        }
+
+        private void ColumnCheckBox_Unchecked(object sender, RoutedEventArgs e)
+        {
+            if (sender is CheckBox checkBox && checkBox.Tag is string columnName)
+            {
+                var column = FindName(columnName) as DataGridColumn;
+                if (column != null)
+                {
+                    column.Visibility = Visibility.Collapsed;
+                }
+            }
+        }
+
+        private void btnColumnVisibility_Click(object sender, RoutedEventArgs e)
+        {
+            puColumnVisibility.IsOpen = !puColumnVisibility.IsOpen;
         }
     }
 }

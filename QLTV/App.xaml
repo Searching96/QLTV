@@ -3,7 +3,7 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
              xmlns:local="clr-namespace:QLTV"
-             StartupUri="AWTrangQuanLy.xaml">
+             StartupUri="User/UWTrangDocGia.xaml">
     <!--AWTrangQuanLy-->
     <!--User/UWTrangDocGia-->
     <Application.Resources>

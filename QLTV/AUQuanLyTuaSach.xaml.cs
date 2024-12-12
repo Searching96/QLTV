@@ -404,7 +404,7 @@ namespace QLTV
                 {
                     // Cập nhật thông tin cơ bản
                     tuaSachToUpdate.TenTuaSach = tbxTenTuaSach.Text;
-                    tuaSachToUpdate.SoLuong = int.Parse(tbxSoLuong.Text);
+                    tuaSachToUpdate.MoTa = tbxMoTa.Text;
                     tuaSachToUpdate.HanMuonToiDa = int.Parse(tbxHanMuonToiDa.Text.Replace(" tuần", ""));
 
                     // Cập nhật quan hệ với Tác giả
@@ -460,7 +460,7 @@ namespace QLTV
                 tbxTenTuaSach.Text = selectedBook.TenTuaSach;
                 tbxDSTacGia.Text = selectedBook.DSTacGia;
                 tbxDSTheLoai.Text = selectedBook.DSTheLoai;
-                tbxSoLuong.Text = selectedBook.SoLuong.ToString();
+                tbxMoTa.Text = selectedBook.MoTa;
                 tbxHanMuonToiDa.Text = selectedBook.HanMuonToiDa.ToString();
 
                 string maTuaSach = selectedBook.MaTuaSach;
@@ -502,7 +502,7 @@ namespace QLTV
                 tbxTenTuaSach.Text = "";
                 tbxDSTacGia.Text = "";
                 tbxDSTheLoai.Text = "";
-                tbxSoLuong.Text = "";
+                tbxMoTa.Text = "";
                 tbxHanMuonToiDa.Text = "";
                 imgBiaSach.Source = null;
             }
@@ -679,11 +679,12 @@ namespace QLTV
                     worksheet.Cells[1, 2].Value = "Tên Tựa Sách";
                     worksheet.Cells[1, 3].Value = "Tác Giả";
                     worksheet.Cells[1, 4].Value = "Thể Loại";
-                    worksheet.Cells[1, 5].Value = "Số Lượng";
-                    worksheet.Cells[1, 6].Value = "Hạn Mượn Tối Đa (Tuần)";
+                    worksheet.Cells[1, 5].Value = "Mô Tả";
+                    worksheet.Cells[1, 6].Value = "Số Lượng";
+                    worksheet.Cells[1, 7].Value = "Mượn Tối Đa (Tuần)";
 
                     // Áp dụng style cho tiêu đề
-                    using (var range = worksheet.Cells[1, 1, 1, 6])
+                    using (var range = worksheet.Cells[1, 1, 1, 7])
                     {
                         range.Style.Font.Bold = true;
                         range.Style.HorizontalAlignment = ExcelHorizontalAlignment.Center;
@@ -702,8 +703,9 @@ namespace QLTV
                         worksheet.Cells[rowIndex, 2].Value = data.TenTuaSach;
                         worksheet.Cells[rowIndex, 3].Value = data.DSTacGia;
                         worksheet.Cells[rowIndex, 4].Value = data.DSTheLoai;
-                        worksheet.Cells[rowIndex, 5].Value = data.SoLuong;
-                        worksheet.Cells[rowIndex, 6].Value = data.HanMuonToiDa;
+                        worksheet.Cells[rowIndex, 5].Value = data.MoTa;
+                        worksheet.Cells[rowIndex, 6].Value = data.SoLuong;
+                        worksheet.Cells[rowIndex, 7].Value = data.HanMuonToiDa;
                         rowIndex++;
                     }
 
@@ -736,8 +738,8 @@ namespace QLTV
                 for (int row = 2; row <= worksheet.Dimension.End.Row; row++)
                 {
                     string tenTuaSach = worksheet.Cells[row, 1].Text;
-                    string hanMuonToiDaText = worksheet.Cells[row, 4].Text;
-                    if (string.IsNullOrWhiteSpace(tenTuaSach) || !int.TryParse(hanMuonToiDaText, out int hanMuonToiDa))
+                    string hanMuonToiDaText = worksheet.Cells[row, 5].Text;
+                    if (string.IsNullOrWhiteSpace(tenTuaSach) || !int.TryParse(hanMuonToiDaText, out int hmtd))
                         lstDongBiLoi.Add(row);
                 }
 
@@ -759,11 +761,13 @@ namespace QLTV
                         continue;
 
                     string tenTuaSach = worksheet.Cells[row, 1].Text;
-                    int hanMuonToiDa = int.Parse(worksheet.Cells[row, 4].Text);
+                    string moTa = worksheet.Cells[row, 4].Text;
+                    int hanMuonToiDa = int.Parse(worksheet.Cells[row, 5].Text);
 
                     var newTuaSach = new TUASACH
                     {
                         TenTuaSach = tenTuaSach,
+                        MoTa = moTa,
                         HanMuonToiDa = hanMuonToiDa
                     };
                     context.TUASACH.Add(newTuaSach);

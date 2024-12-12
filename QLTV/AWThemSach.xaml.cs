@@ -170,6 +170,7 @@ namespace QLTV
             }
             string tuaSach = cbbTuaSach.SelectedItem?.ToString() ?? string.Empty;
             string nhaXuatBan = tbxNhaXuatBan.Text;
+            string viTri = tbxViTri.Text;
             int namXuatBan = int.Parse(tbxNamXuatBan.Text);
             DateTime ngayNhap = DateTime.ParseExact(
                 dpNgayNhap.Text,
@@ -199,6 +200,7 @@ namespace QLTV
                     var newSach = new SACH()
                     {
                         IDTuaSach = idTuaSach,
+                        ViTri = viTri,
                         NhaXuatBan = nhaXuatBan,
                         NamXuatBan = namXuatBan,
                         NgayNhap = ngayNhap,

@@ -178,6 +178,7 @@ namespace QLTV
             }
 
             string tenTuaSach = tbxTenTuaSach.Text;
+            string moTa = tbxMoTa.Text;
             int hanMuonToiDa = int.Parse(tbxHanMuonToiDa.Text);
             var lstTenTacGia = tbxDSTacGia.Text.Split(", ").Select(n => n.Trim()).ToList();
             var lstTenTheLoai = tbxDSTheLoai.Text.Split(", ").Select(n => n.Trim()).ToList();
@@ -187,6 +188,7 @@ namespace QLTV
                 var newTuaSach = new TUASACH()
                 {
                     TenTuaSach = tenTuaSach,
+                    MoTa = moTa,
                     HanMuonToiDa = hanMuonToiDa
                 };
 

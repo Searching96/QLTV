@@ -59,6 +59,7 @@
                 <RowDefinition Height="Auto"/>
                 <RowDefinition Height="Auto"/>
                 <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
             </Grid.RowDefinitions>
 
             <TextBox x:Name="tbxTenTuaSach" Grid.Row="0"
@@ -120,17 +121,25 @@
                     <materialDesign:PackIcon Kind="TextBoxEdit"/>
                 </Button>
             </Grid>
-            
-            <TextBox x:Name="tbxHanMuonToiDa" Grid.Row="3"
+
+            <TextBox x:Name="tbxMoTa" Grid.Row="3"
                      Style="{StaticResource DataDisplayTextBox}"
-                     materialDesign:HintAssist.Hint="Hạn Mượn Tối Đa (Tuần)"
+                     materialDesign:HintAssist.Hint="Mô Tả"
+                     materialDesign:TextFieldAssist.HasLeadingIcon="True"
+                     materialDesign:TextFieldAssist.LeadingIcon="InvoiceTextOutline"
+                     Margin="{x:Static local:AWThemTuaSach.DisplayElementMargin}"/>
+
+
+            <TextBox x:Name="tbxHanMuonToiDa" Grid.Row="4"
+                     Style="{StaticResource DataDisplayTextBox}"
+                     materialDesign:HintAssist.Hint="Mượn Tối Đa (Tuần)"
                      materialDesign:TextFieldAssist.HasLeadingIcon="True"
                      materialDesign:TextFieldAssist.LeadingIcon="TimerSand"
                      Margin="{x:Static local:AWThemTuaSach.DisplayElementMargin}"
                      Text="2"
                      TextChanged="tbxHanMuonToiDa_TextChanged"/>
 
-            <materialDesign:PackIcon x:Name="icHanMuonToiDaError" Grid.Row="3"
+            <materialDesign:PackIcon x:Name="icHanMuonToiDaError" Grid.Row="4"
                                      Style="{StaticResource ErrorIcon}"
                                      Margin="{x:Static local:AWThemTuaSach.ErrorIconMargin}"/>
             

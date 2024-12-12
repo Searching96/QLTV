@@ -27,6 +27,7 @@ namespace QLTV.User
             public string MaSach { get; set; }
             public string TenTuaSach { get; set; }
             public string MaPhieuMuon { get; set; }
+            public string ViTri { get; set; }
             public string TinhTrang { get; set; }
             public string NgayConLai { get; set; }
             public string HanTra { get; set; }
@@ -49,7 +50,9 @@ namespace QLTV.User
 
                 // Truy vấn các sách chưa trả của độc giả này
                 var dsSachDangMuon = context.CTPHIEUMUON
-                    .Where(ct => ct.IDPhieuMuonNavigation.IDDocGia == docGiaId && !ct.IDPhieuMuonNavigation.CTPHIEUTRA.Any()) // Chưa có phiếu trả
+                    .Where(ct => ct.IDPhieuMuonNavigation.IDDocGia == docGiaId 
+                        && !ct.IDPhieuMuonNavigation.IsPending
+                        && !ct.IDPhieuMuonNavigation.CTPHIEUTRA.Any()) // Chưa có phiếu trả
                     .Include(ct => ct.IDSachNavigation) // Bao gồm SACH
                     .ThenInclude(s => s.IDTuaSachNavigation) // Bao gồm TUASACH liên quan
                     .Include(ct => ct.IDTinhTrangMuonNavigation) // Bao gồm TINHTRANGMuon
@@ -60,6 +63,7 @@ namespace QLTV.User
                         MaSach = ct.IDSachNavigation.MaSach,
                         TenTuaSach = ct.IDSachNavigation.IDTuaSachNavigation.TenTuaSach,
                         MaPhieuMuon = ct.IDPhieuMuonNavigation.MaPhieuMuon,
+                        ViTri = ct.IDSachNavigation.ViTri,
                         TinhTrang = ct.IDTinhTrangMuonNavigation.TenTinhTrang, // Tình trạng mượn
                         NgayConLai = (ct.HanTra - DateTime.Now).Days.ToString() + " ngày", // Ngày còn lại
                         HanTra = ct.HanTra.ToString("dd/MM/yyyy"),
@@ -120,7 +124,7 @@ namespace QLTV.User
                 catch (Exception ex)
                 {
                     // Log error if needed, you can also use a logger here
-                    MessageBox.Show($"Error saving changes: {ex.Message}");
+                    MessageBox.Show($"Lỗi khi lưu dữ liệu: {ex.Message}");
                 }
             }
         }

@@ -42,6 +42,7 @@ namespace QLTV.User
             public string MaTuaSach { get; set; } = string.Empty;
             public string TenTuaSach { get; set; } = string.Empty;
             public string BiaSach { get; set; } = string.Empty;
+            public string MoTa { get; set; } = string.Empty;
             public string DSTacGia { get; set; } = string.Empty;
             public string DSTheLoai { get; set; } = string.Empty;
             public int LuotMuon { get; set; }
@@ -104,6 +105,7 @@ namespace QLTV.User
                         MaTuaSach = ts.MaTuaSach,
                         TenTuaSach = ts.TenTuaSach,
                         BiaSach = ts.BiaSach,
+                        MoTa = ts.MoTa,
                         DSTacGia = ts.TUASACH_TACGIA != null && ts.TUASACH_TACGIA.Any()
                             ? string.Join(", ", ts.TUASACH_TACGIA
                                 .Select(ts_tg => ts_tg.IDTacGiaNavigation?.TenTacGia ?? ""))
@@ -223,6 +225,7 @@ namespace QLTV.User
                         MaTuaSach = ts.MaTuaSach,
                         TenTuaSach = ts.TenTuaSach,
                         BiaSach = ts.BiaSach,
+                        MoTa = ts.MoTa,
                         DSTacGia = ts.TUASACH_TACGIA != null && ts.TUASACH_TACGIA.Any()
                             ? string.Join(", ", ts.TUASACH_TACGIA
                                 .Select(ts_tg => ts_tg.IDTacGiaNavigation?.TenTacGia ?? ""))
@@ -428,6 +431,12 @@ namespace QLTV.User
                     MessageBox.Show("TabControl không được tìm thấy!", "Lỗi", MessageBoxButton.OK, MessageBoxImage.Error);
                 }
             }
+        }
+
+        private void btnLamMoi_Click(object sender, RoutedEventArgs e)
+        {
+            LoadTuaSach();
+            tbxThongTinTim.Text = string.Empty;
         }
     }
 }

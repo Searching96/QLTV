@@ -64,7 +64,7 @@ namespace QLTV.User
                         {
                             MaSach = s.MaSach,
                             TuaSach = s.IDTuaSachNavigation.TenTuaSach,
-                            ViTri = "abc",
+                            ViTri = s.ViTri,
                             TriGia = s.TriGia,
                             TinhTrang = s.IDTinhTrangNavigation.TenTinhTrang
                         })

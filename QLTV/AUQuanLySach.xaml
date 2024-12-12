@@ -124,13 +124,12 @@
                          Margin="{x:Static local:AUQuanLyTuaSach.DisplayElementMargin}"
                          IsReadOnly="True"/>
 
-                <TextBox x:Name="tbxDSTheLoai" Grid.Row="1" Grid.Column="3"
+                <TextBox x:Name="tbxViTri" Grid.Row="1" Grid.Column="3"
                          Style="{StaticResource DataDisplayTextBox}"
-                         materialDesign:HintAssist.Hint="Thể Loại"
+                         materialDesign:HintAssist.Hint="Vị Trí"
                          materialDesign:TextFieldAssist.HasLeadingIcon="True"
-                         materialDesign:TextFieldAssist.LeadingIcon="Shape"
-                         Margin="{x:Static local:AUQuanLyTuaSach.DisplayElementMargin}"
-                         IsReadOnly="True"/>
+                         materialDesign:TextFieldAssist.LeadingIcon="Location"
+                         Margin="{x:Static local:AUQuanLyTuaSach.DisplayElementMargin}"/>
 
                 <TextBox x:Name="tbxNhaXuatBan" Grid.Row="1" Grid.Column="5"
                          Style="{StaticResource DataDisplayTextBox}"
@@ -360,6 +359,7 @@
                                           Width="120"
                                           materialDesign:HintAssist.Hint="Thuộc Tính"
                                           materialDesign:HintAssist.FloatingScale="0.8">
+                                    <ComboBoxItem Content="Vị Trí"/>
                                     <ComboBoxItem Content="Nhà Xuất Bản"/>
                                     <ComboBoxItem Content="Ngày Nhập"/>
                                     <ComboBoxItem Content="Trị Giá"/>
@@ -415,6 +415,7 @@
                     <ColumnDefinition Width="1*"/>
                     <ColumnDefinition Width="Auto"/>
                     <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="Auto"/>
                 </Grid.ColumnDefinitions>
 
                 <TextBlock Text="Tìm Kiếm:" Grid.Column="0" FontSize="14" VerticalAlignment="Center"/>
@@ -434,6 +435,7 @@
                     <ComboBoxItem Content="Tựa Sách"/>
                     <ComboBoxItem Content="Tác Giả"/>
                     <ComboBoxItem Content="Thể Loại"/>
+                    <ComboBoxItem Content="Vị Trí"/>
                     <ComboBoxItem Content="Ngày Nhập"/>
                     <ComboBoxItem Content="Nhà Xuất Bản"/>
                     <ComboBoxItem Content="Tình Trạng"/>
@@ -445,6 +447,58 @@
                 <Button x:Name="btnAddQuery" Grid.Column="4" Click="btnAddQuery_Click" Padding="0" Width="25">
                     <materialDesign:PackIcon Kind="PlusThick" Width="22" Height="22"/>
                 </Button>
+
+                <StackPanel Grid.Column="5" Orientation="Horizontal" VerticalAlignment="Center">
+                    <!-- Column Visibility Button -->
+                    <Button x:Name="btnColumnVisibility" Width="25" Padding="0"
+                            Click="btnColumnVisibility_Click">
+                        <materialDesign:PackIcon Kind="Eye" />
+                    </Button>
+
+                    <!-- Popup for Column Visibility Options -->
+                    <Popup x:Name="puColumnVisibility" 
+                           Placement="Bottom" 
+                           PlacementTarget="{Binding ElementName=btnColumnVisibility}" 
+                           StaysOpen="False">
+                        <Border Background="WhiteSmoke" Padding="10">
+                            <StackPanel>
+                                <!-- Column Checkboxes -->
+                                <CheckBox Content="Tác Giả" IsChecked="True" 
+                                          Tag="colTacGia" 
+                                          Checked="ColumnCheckBox_Checked" 
+                                          Unchecked="ColumnCheckBox_Unchecked" />
+                                <CheckBox Content="Thể Loại" IsChecked="True" 
+                                          Tag="colTheLoai" 
+                                          Checked="ColumnCheckBox_Checked" 
+                                          Unchecked="ColumnCheckBox_Unchecked" />
+                                <CheckBox Content="Vị Trí" IsChecked="True" 
+                                          Tag="colViTri" 
+                                          Checked="ColumnCheckBox_Checked" 
+                                          Unchecked="ColumnCheckBox_Unchecked" />
+                                <CheckBox Content="Nhà Xuất Bản" IsChecked="True" 
+                                          Tag="colNhaXB" 
+                                          Checked="ColumnCheckBox_Checked" 
+                                          Unchecked="ColumnCheckBox_Unchecked" />
+                                <CheckBox Content="Năm Xuất Bản" IsChecked="True" 
+                                          Tag="colNamXB" 
+                                          Checked="ColumnCheckBox_Checked" 
+                                          Unchecked="ColumnCheckBox_Unchecked" />
+                                <CheckBox Content="Ngày Nhập" IsChecked="True" 
+                                          Tag="colNgayNhap" 
+                                          Checked="ColumnCheckBox_Checked" 
+                                          Unchecked="ColumnCheckBox_Unchecked" />
+                                <CheckBox Content="Trị Giá" IsChecked="True" 
+                                          Tag="colTriGia" 
+                                          Checked="ColumnCheckBox_Checked" 
+                                          Unchecked="ColumnCheckBox_Unchecked" />
+                                <CheckBox Content="Tình Trạng" IsChecked="True" 
+                                          Tag="colTinhTrang" 
+                                          Checked="ColumnCheckBox_Checked" 
+                                          Unchecked="ColumnCheckBox_Unchecked" />
+                            </StackPanel>
+                        </Border>
+                    </Popup>
+                </StackPanel>
             </Grid>
         </Grid>
 
@@ -472,15 +526,16 @@
                     </DataGridTemplateColumn.CellTemplate>
                 </DataGridTemplateColumn>
 
-                <DataGridTextColumn Header="Mã Sách" Width="*" Binding="{Binding MaSach, Mode=OneWay}" IsReadOnly="True"/>
-                <DataGridTextColumn Header="Tựa Sách" Width="*" Binding="{Binding TuaSach, Mode=OneWay}" IsReadOnly="True"/>
-                <DataGridTextColumn Header="Tác Giả" Width="*" Binding="{Binding DSTacGia, Mode=OneWay}" IsReadOnly="True"/>
-                <DataGridTextColumn Header="Thể Loại" Width="*" Binding="{Binding DSTheLoai, Mode=OneWay}" IsReadOnly="True"/>
-                <DataGridTextColumn Header="Nhà Xuất Bản" Width="*" Binding="{Binding NhaXuatBan, Mode=OneWay}" IsReadOnly="True"/>
-                <DataGridTextColumn Header="Năm Xuất Bản" Width="*" Binding="{Binding NamXuatBan, Mode=OneWay}" IsReadOnly="True"/>
-                <DataGridTextColumn Header="Ngày Nhập" Width="*" Binding="{Binding NgayNhap, Mode=OneWay}" IsReadOnly="True"/>
-                <DataGridTextColumn Header="Trị Giá" Width="*" Binding="{Binding TriGia, Mode=OneWay}" IsReadOnly="True"/>
-                <DataGridTextColumn Header="Tình Trạng" Width="*" Binding="{Binding TinhTrang, Mode=OneWay}" IsReadOnly="True"/>
+                <DataGridTextColumn x:Name="colMaSach" Header="Mã Sách" Width="*" Binding="{Binding MaSach, Mode=OneWay}" IsReadOnly="True"/>
+                <DataGridTextColumn x:Name="colTuaSach" Header="Tựa Sách" Width="*" Binding="{Binding TuaSach, Mode=OneWay}" IsReadOnly="True"/>
+                <DataGridTextColumn x:Name="colTacGia" Header="Tác Giả" Width="*" Binding="{Binding DSTacGia, Mode=OneWay}" IsReadOnly="True"/>
+                <DataGridTextColumn x:Name="colTheLoai" Header="Thể Loại" Width="*" Binding="{Binding DSTheLoai, Mode=OneWay}" IsReadOnly="True"/>
+                <DataGridTextColumn x:Name="colViTri" Header="Vị Trí" Width="*" Binding="{Binding ViTri, Mode=OneWay}" IsReadOnly="True"/>
+                <DataGridTextColumn x:Name="colNhaXB" Header="Nhà Xuất Bản" Width="*" Binding="{Binding NhaXuatBan, Mode=OneWay}" IsReadOnly="True"/>
+                <DataGridTextColumn x:Name="colNamXB" Header="Năm Xuất Bản" Width="*" Binding="{Binding NamXuatBan, Mode=OneWay}" IsReadOnly="True"/>
+                <DataGridTextColumn x:Name="colNgayNhap" Header="Ngày Nhập" Width="*" Binding="{Binding NgayNhap, Mode=OneWay}" IsReadOnly="True"/>
+                <DataGridTextColumn x:Name="colTriGia" Header="Trị Giá" Width="*" Binding="{Binding TriGia, Mode=OneWay}" IsReadOnly="True"/>
+                <DataGridTextColumn x:Name="colTinhTrang" Header="Tình Trạng" Width="*" Binding="{Binding TinhTrang, Mode=OneWay}" IsReadOnly="True"/>
             </DataGrid.Columns>
         </DataGrid>
 

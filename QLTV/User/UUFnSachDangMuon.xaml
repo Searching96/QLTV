@@ -18,6 +18,7 @@
             <DataGrid.Columns>
                 <DataGridTextColumn Header="Tựa Sách" Width="*" Binding="{Binding TenTuaSach}"/>
                 <DataGridTextColumn Header="Mã Phiếu Mượn" Width="*" Binding="{Binding MaPhieuMuon}"/>
+                <DataGridTextColumn Header="Vị Trí" Width="*" Binding="{Binding ViTri}"/>
                 <DataGridTextColumn Header="Tình Trạng" Width="*" Binding="{Binding TinhTrang}"/>
                 <DataGridTextColumn Header="Ngày Còn Lại" Width="*" Binding="{Binding NgayConLai}"/>
                 <DataGridTextColumn Header="Hạn Trả" Width="*" Binding="{Binding HanTra}"/>
