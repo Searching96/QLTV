@@ -53,7 +53,7 @@
                          Padding="7.5"
                          materialDesign:HintAssist.Hint="Từ Khóa"
                          materialDesign:HintAssist.FloatingScale="0.8"
-                         FontSize="16"/>
+                         FontSize="16" TextChanged="tbxThongTinTim_TextChanged"/>
 
                 <ComboBox x:Name="cbbThuocTinhTim" Grid.Column="1" Margin="5,0,0,0" FontSize="16" 
                             VerticalAlignment="Center"
@@ -61,7 +61,7 @@
                             Padding="7.5"
                             materialDesign:HintAssist.Hint="Thuộc Tính"
                             BorderBrush="Orange" Height="60"
-                            materialDesign:HintAssist.FloatingScale="0.8">
+                            materialDesign:HintAssist.FloatingScale="0.8" SelectionChanged="cbbThuocTinhTim_SelectionChanged">
                             <ComboBoxItem Content="Tựa Sách"/>
                             <ComboBoxItem Content="Tác Giả"/>
                             <ComboBoxItem Content="Thể Loại"/>

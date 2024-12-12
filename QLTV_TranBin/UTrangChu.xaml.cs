@@ -78,14 +78,15 @@ namespace QLTV_TranBin
 
                     foreach (var theLoai in TheLoaiList)
                     {
-                        var tuaSachs = context.TUASACH
-                            .Where(t => t.IDTheLoai.Any(tl => tl.ID == theLoai.ID) && !t.IsDeleted) // Lọc theo thể loại
-                            .OrderBy(t => Guid.NewGuid())
-                            .Take(4) // Lấy 4 tựa sách ngẫu nhiên
-                            .ToList();
-                        //foreach (var tuasach in tuaSachs)
-                        //    MessageBox.Show(tuasach.TenTuaSach);
-                        TuaSachByTheLoai[theLoai.ID] = new ObservableCollection<TUASACH>(tuaSachs);
+                    var tuaSachs = context.TUASACH
+                    .Where(t => t.TUASACH_THELOAI
+                        .Any(ttl => ttl.IDTheLoai == theLoai.ID) && !t.IsDeleted) // Lọc theo thể loại từ bảng TUASACH_THELOAI
+                    .OrderBy(t => Guid.NewGuid()) // Lấy tựa sách ngẫu nhiên
+                    .Take(4) // Lấy 4 tựa sách ngẫu nhiên
+                    .ToList();
+                    //foreach (var tuasach in tuaSachs)
+                    //    MessageBox.Show(tuasach.TenTuaSach);
+                    TuaSachByTheLoai[theLoai.ID] = new ObservableCollection<TUASACH>(tuaSachs);
                         
                     }
                 }
@@ -142,10 +143,12 @@ namespace QLTV_TranBin
                         var topTheLoai = context.CTPHIEUMUON
                             .Include(ctpm => ctpm.IDSachNavigation)
                             .ThenInclude(sach => sach.IDTuaSachNavigation)
-                            .ThenInclude(tuaSach => tuaSach.IDTheLoai)
-                            .ToList() // Thêm ToList() để lấy dữ liệu ra trước
-                            .SelectMany(ctpm => ctpm.IDSachNavigation.IDTuaSachNavigation.IDTheLoai)
-                            .GroupBy(theloai => theloai.ID)
+                            .ThenInclude(tuaSach => tuaSach.TUASACH_THELOAI) // Bao gồm bảng TUASACH_THELOAI
+                            .ThenInclude(tuasachTheLoai => tuasachTheLoai.IDTheLoaiNavigation) // Bao gồm thông tin Thể loại
+                            .ToList() // Lấy toàn bộ dữ liệu ra trước
+                            .SelectMany(ctpm => ctpm.IDSachNavigation.IDTuaSachNavigation.TUASACH_THELOAI) // Lấy tất cả các thể loại của tựa sách
+                            .Select(tuasachTheLoai => tuasachTheLoai.IDTheLoaiNavigation) // Chỉ lấy thông tin thể loại
+                            .GroupBy(theloai => theloai.ID) // Nhóm theo ID thể loại
                             .Select(g => new
                             {
                                 TheLoai = g.FirstOrDefault(),
@@ -179,7 +182,10 @@ namespace QLTV_TranBin
                     var tuaSachs = context.CTPHIEUMUON
                         .Include(ctpm => ctpm.IDSachNavigation) // Bao gồm thông tin Sách
                         .ThenInclude(sach => sach.IDTuaSachNavigation) // Bao gồm thông tin Tựa sách
-                        .Where(ctpm => ctpm.IDSachNavigation.IDTuaSachNavigation.IDTheLoai.Any(tl => tl.ID == theLoai.ID)) // Lọc theo thể loại
+                        .ThenInclude(tuasach => tuasach.TUASACH_THELOAI)
+                        .ThenInclude(tuasachTheLoai => tuasachTheLoai.IDTheLoaiNavigation) // Bao gồm thông tin Thể loại
+                        .Where(ctpm => ctpm.IDSachNavigation.IDTuaSachNavigation.TUASACH_THELOAI
+                        .Any(tl => tl.IDTheLoai == theLoai.ID)) // Lọc theo thể loại
                         .GroupBy(ctpm => ctpm.IDSachNavigation.IDTuaSachNavigation) // Nhóm theo Tựa sách
                         .Select(g => new
                         {

@@ -225,7 +225,19 @@ namespace QLTV_TranBin
             }
         }
 
-        private void tbBookFilter_TextChanged(object sender, TextChangedEventArgs e)
+       
+
+        private void tbxThongTinTim_TextChanged(object sender, TextChangedEventArgs e)
+        {
+
+        }
+
+        private void cbbThuocTinhTim_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+
+        }
+
+        private void btnTimKiem_Click(object sender, RoutedEventArgs e)
         {
 
         }
