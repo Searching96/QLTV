@@ -561,6 +561,7 @@ namespace QLTV.UserControls
             spMonthMS.Visibility = Visibility.Collapsed;
             cbQuarterMS.Visibility = Visibility.Collapsed;
             cbYearMS.Visibility = Visibility.Collapsed;
+            icMSTimePickerError.Visibility = Visibility.Collapsed;
             dpStartDayMS.SelectedDate = null;
             dpEndDayMS.SelectedDate = null;
             cbStartMonthMS.SelectedItem = null;
@@ -961,6 +962,7 @@ namespace QLTV.UserControls
             spMonthTT.Visibility = Visibility.Collapsed;
             cbQuarterTT.Visibility = Visibility.Collapsed;
             cbYearTT.Visibility = Visibility.Collapsed;
+            icTTTimePickerError.Visibility = Visibility.Collapsed;
             dpStartDayTT.SelectedDate = null;
             dpEndDayTT.SelectedDate = null;
             cbStartMonthTT.SelectedItem = null;
