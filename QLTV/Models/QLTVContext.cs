@@ -15,6 +15,8 @@ public partial class QLTVContext : DbContext
     {
     }
 
+    public virtual DbSet<ACTIVE_SESSION> ACTIVE_SESSION { get; set; }
+
     public virtual DbSet<ADMIN> ADMIN { get; set; }
 
     public virtual DbSet<BCMUONSACH> BCMUONSACH { get; set; }
@@ -63,18 +65,29 @@ public partial class QLTVContext : DbContext
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
 #warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see http://go.microsoft.com/fwlink/?LinkId=723263.
-        => optionsBuilder.UseSqlServer("Server=LAPTOP-S9VDQ6Q1;Database=QLTV_User;Trusted_Connection=True;TrustServerCertificate=True;");
+        => optionsBuilder.UseSqlServer("Server=LAPTOP-S9VDQ6Q1;Database=QLTV_Merged;Trusted_Connection=True;TrustServerCertificate=True;");
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
+        modelBuilder.Entity<ACTIVE_SESSION>(entity =>
+        {
+            entity.HasKey(e => e.ID).HasName("PK_ACTIVESESSION");
+
+            entity.Property(e => e.ExpiryTime).HasColumnType("datetime");
+            entity.Property(e => e.SessionToken).HasMaxLength(255);
+
+            entity.HasOne(d => d.IDTaiKhoanNavigation).WithMany(p => p.ACTIVE_SESSION)
+                .HasForeignKey(d => d.IDTaiKhoan)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK_ACTIVESESSION_TAIKHOAN");
+        });
+
         modelBuilder.Entity<ADMIN>(entity =>
         {
             entity.Property(e => e.MaAdmin)
                 .HasMaxLength(7)
                 .IsUnicode(false)
                 .HasComputedColumnSql("('AD'+right('00000'+CONVERT([varchar](5),[ID]),(5)))", true);
-            entity.Property(e => e.NgayKetThuc).HasColumnType("date");
-            entity.Property(e => e.NgayVaoLam).HasColumnType("date");
 
             entity.HasOne(d => d.IDTaiKhoanNavigation).WithMany(p => p.ADMIN)
                 .HasForeignKey(d => d.IDTaiKhoan)
@@ -204,8 +217,6 @@ public partial class QLTVContext : DbContext
                 .HasMaxLength(7)
                 .IsUnicode(false)
                 .HasComputedColumnSql("('DG'+right('00000'+CONVERT([varchar](5),[ID]),(5)))", true);
-            entity.Property(e => e.NgayHetHan).HasColumnType("date");
-            entity.Property(e => e.NgayLapThe).HasColumnType("date");
             entity.Property(e => e.TongNo).HasColumnType("decimal(18, 0)");
 
             entity.HasOne(d => d.IDLoaiDocGiaNavigation).WithMany(p => p.DOCGIA)
@@ -323,11 +334,13 @@ public partial class QLTVContext : DbContext
 
             entity.Property(e => e.Avatar)
                 .HasMaxLength(500)
-                .IsUnicode(false);
+                .HasDefaultValueSql("('D:\\WPF\\QLTVReal - User\\QLTV\\Image\\DefaultAvatar.png')");
             entity.Property(e => e.DiaChi).HasMaxLength(200);
             entity.Property(e => e.Email)
                 .HasMaxLength(100)
                 .IsUnicode(false);
+            entity.Property(e => e.GioiTinh).HasMaxLength(5);
+            entity.Property(e => e.Hoten).HasMaxLength(100);
             entity.Property(e => e.MaTaiKhoan)
                 .HasMaxLength(7)
                 .IsUnicode(false)
@@ -335,10 +348,12 @@ public partial class QLTVContext : DbContext
             entity.Property(e => e.MatKhau)
                 .HasMaxLength(50)
                 .IsUnicode(false);
+            entity.Property(e => e.NgayDong).HasColumnType("date");
+            entity.Property(e => e.NgayMo).HasColumnType("date");
             entity.Property(e => e.SDT)
                 .HasMaxLength(20)
                 .IsUnicode(false);
-            entity.Property(e => e.SinhNhat).HasColumnType("datetime");
+            entity.Property(e => e.SinhNhat).HasColumnType("date");
             entity.Property(e => e.TenTaiKhoan).HasMaxLength(100);
 
             entity.HasOne(d => d.IDPhanQuyenNavigation).WithMany(p => p.TAIKHOAN)

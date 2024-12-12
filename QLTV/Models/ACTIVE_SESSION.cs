@@ -3,13 +3,15 @@ using System.Collections.Generic;
 
 namespace QLTV.Models;
 
-public partial class ADMIN
+public partial class ACTIVE_SESSION
 {
     public int ID { get; set; }
 
-    public string? MaAdmin { get; set; }
-
     public int IDTaiKhoan { get; set; }
+
+    public string SessionToken { get; set; } = null!;
+
+    public DateTime ExpiryTime { get; set; }
 
     public virtual TAIKHOAN IDTaiKhoanNavigation { get; set; } = null!;
 }

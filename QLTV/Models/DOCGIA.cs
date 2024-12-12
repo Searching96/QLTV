@@ -13,13 +13,9 @@ public partial class DOCGIA
 
     public int IDLoaiDocGia { get; set; }
 
-    public DateTime NgayLapThe { get; set; }
-
-    public DateTime NgayHetHan { get; set; }
+    public string GioiThieu { get; set; } = null!;
 
     public decimal TongNo { get; set; }
-
-    public string GioiThieu { get; set; } = null!;
 
     public virtual LOAIDOCGIA IDLoaiDocGiaNavigation { get; set; } = null!;
 

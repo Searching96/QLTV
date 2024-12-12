@@ -27,9 +27,9 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 using System.Windows.Xps;
-using static QLTV.AUQuanLyTuaSach;
+using static QLTV.Admin.AUQuanLyTuaSach;
      
-namespace QLTV
+namespace QLTV.Admin
 {
     /// <summary>
     /// Interaction logic for AUQuanLyTacGia.xaml

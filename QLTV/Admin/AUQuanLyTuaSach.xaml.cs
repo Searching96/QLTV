@@ -25,10 +25,9 @@ using System.Windows.Media.Imaging;
 using Microsoft.Identity.Client;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
-using static QLTV.AUQuanLyTacGia;
 using Microsoft.IdentityModel.Tokens;
 
-namespace QLTV
+namespace QLTV.Admin
 {
     /// <summary>
     /// Interaction logic for ADUCQuanLySach.xaml

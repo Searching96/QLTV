@@ -1,13 +1,14 @@
-﻿<Window x:Class="QLTV.AWTrangQuanLy"
+﻿<Window x:Class="QLTV.Admin.AWTrangQuanLy"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:local="clr-namespace:QLTV"
+        xmlns:local="clr-namespace:QLTV.Admin"
+        xmlns:qltv="clr-namespace:QLTV"
         mc:Ignorable="d"
         Title="TRANG QUẢN LÝ" Height="750" Width="1250"
         WindowStartupLocation="CenterScreen">
-    <Grid Background="{x:Static local:App.BgColor}">
+    <Grid Background="{x:Static qltv:App.BgColor}">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="*"/>
@@ -24,7 +25,7 @@
         
         <!--Thanh Menu ben trai-->
         <DockPanel Grid.Row="1" Grid.Column="0" Margin="0, 5, 0, 0" 
-                   Background="{x:Static local:App.AdminPriColor}">
+                   Background="{x:Static qltv:App.AdminPriColor}">
             <TextBlock Text="Quản Lý Thư Viện" DockPanel.Dock="Top" Foreground="White" HorizontalAlignment="Stretch" 
                        FontSize="14" FontWeight="Bold" Margin="5, 25, 0, 10" TextAlignment="Center"/>
             <TextBlock Text="Admin" DockPanel.Dock="Top" Foreground="White"

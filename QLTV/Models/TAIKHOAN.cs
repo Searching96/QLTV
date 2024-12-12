@@ -9,11 +9,15 @@ public partial class TAIKHOAN
 
     public string? MaTaiKhoan { get; set; }
 
-    public string MatKhau { get; set; } = null!;
-
     public string TenTaiKhoan { get; set; } = null!;
 
+    public string MatKhau { get; set; } = null!;
+
+    public string Hoten { get; set; } = null!;
+
     public string Email { get; set; } = null!;
+
+    public string GioiTinh { get; set; } = null!;
 
     public DateTime SinhNhat { get; set; }
 
@@ -28,6 +32,12 @@ public partial class TAIKHOAN
     public int IDPhanQuyen { get; set; }
 
     public bool IsDeleted { get; set; }
+
+    public DateTime NgayMo { get; set; }
+
+    public DateTime NgayDong { get; set; }
+
+    public virtual ICollection<ACTIVE_SESSION> ACTIVE_SESSION { get; set; } = new List<ACTIVE_SESSION>();
 
     public virtual ICollection<ADMIN> ADMIN { get; set; } = new List<ADMIN>();
 

@@ -29,12 +29,11 @@ using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using Microsoft.IdentityModel.Tokens;
 using System.Windows.Controls.Primitives;
-using static QLTV.AUQuanLySach;
 using System.Windows.Markup;
 using System.Security.Policy;
 using System.Windows.Media.Animation;
 
-namespace QLTV
+namespace QLTV.Admin
 {
     /// <summary>
     /// Interaction logic for AUQuanLySach.xaml

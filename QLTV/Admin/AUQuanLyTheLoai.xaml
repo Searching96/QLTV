@@ -1,10 +1,10 @@
-﻿<UserControl x:Class="QLTV.AUQuanLyTacGia"
+﻿<UserControl x:Class="QLTV.Admin.AUQuanLyTheLoai"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
-             xmlns:local="clr-namespace:QLTV"
+             xmlns:local="clr-namespace:QLTV.Admin"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
     <UserControl.Resources>
@@ -39,28 +39,29 @@
             <Setter Property="Padding" Value="7.5"/>
         </Style>
     </UserControl.Resources>
-
+    
     <Grid Background="White" Margin="0, 0, 0, 5">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
-            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="100*"/>
             <RowDefinition Height="800*"/>
-            <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
 
         <Grid>
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto"/>
-                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="*"/>
                 <RowDefinition Height="Auto"/>
             </Grid.RowDefinitions>
 
-            <TextBlock Grid.Row="0" Text="Thông Tin Tác Giả" FontSize="26"
+            <TextBlock Grid.Row="0" Text="Thông Tin Thể Loại" FontSize="26"
                        FontWeight="Bold" HorizontalAlignment="Left" Margin="10, 5"/>
 
-            <!--Section hien thi sach duoc chon-->
+            <!--Section hien thi the loai duoc chon-->
             <Grid Grid.Row="1">
                 <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="5*"/>
+                    <ColumnDefinition Width="1*"/>
                     <ColumnDefinition Width="5*"/>
                     <ColumnDefinition Width="1*"/>
                     <ColumnDefinition Width="5*"/>
@@ -72,76 +73,65 @@
                     <RowDefinition Height="Auto"/>
                 </Grid.RowDefinitions>
 
-                <TextBox x:Name="tbxMaTacGia" Grid.Row="0" Grid.Column="0"
+                <TextBox x:Name="tbxMaTheLoai" Grid.Row="0" Grid.Column="0"
                          Style="{StaticResource DataDisplayTextBox}"
-                         materialDesign:HintAssist.Hint="Mã Tác Giả"
+                         materialDesign:HintAssist.Hint="Mã Thể Loại"
                          materialDesign:TextFieldAssist.HasLeadingIcon="True"
                          materialDesign:TextFieldAssist.LeadingIcon="PoundBoxOutline"
                          Margin="10, 0, 0, 10" 
                          IsReadOnly="True"/>
 
-                <TextBox x:Name="tbxTenTacGia" Grid.Row="0" Grid.Column="2"
+                <TextBox x:Name="tbxTenTheLoai" Grid.Row="0" Grid.Column="2"
                          Style="{StaticResource DataDisplayTextBox}"
-                         materialDesign:HintAssist.Hint="Tên Tác Giả"
+                         materialDesign:HintAssist.Hint="Tên Thể Loại"
                          materialDesign:TextFieldAssist.HasLeadingIcon="True"
-                         materialDesign:TextFieldAssist.LeadingIcon="AccountEdit"
-                         Margin="0, 0, 10, 10"
-                         TextChanged="tbxTenTacGia_TextChanged"/>
+                         materialDesign:TextFieldAssist.LeadingIcon="Shape"
+                         Margin="{x:Static local:AUQuanLyTuaSach.DisplayElementMargin}"
+                         TextChanged="tbxTenTheLoai_TextChanged"/>
 
-                <materialDesign:PackIcon x:Name="icTenTacGiaError" Grid.Row="0" Grid.Column="2"
-                                         Style="{StaticResource ErrorIcon}"
-                                         Margin="0, 0, 15, 10"/>
-
-                <TextBox x:Name="tbxNamSinh" Grid.Row="1" Grid.Column="0"
-                         Style="{StaticResource DataDisplayTextBox}"
-                         materialDesign:HintAssist.Hint="Năm Sinh"
-                         materialDesign:TextFieldAssist.HasLeadingIcon="True"
-                         materialDesign:TextFieldAssist.LeadingIcon="Cake"
-                         Margin="10, 0, 0, 10"
-                         TextChanged="tbxNamSinh_TextChanged"/>
-
-                <materialDesign:PackIcon x:Name="icNamSinhError" Grid.Row="1" Grid.Column="0"
+                <materialDesign:PackIcon x:Name="icTenTheLoaiError" Grid.Row="0" Grid.Column="2"
                                          Style="{StaticResource ErrorIcon}"
                                          Margin="{x:Static local:AUQuanLyTuaSach.ErrorIconMargin}"/>
 
-                <TextBox x:Name="tbxQuocTich" Grid.Row="1" Grid.Column="2"
+                <TextBox x:Name="tbxMoTa" Grid.Row="0" Grid.Column="4"
                          Style="{StaticResource DataDisplayTextBox}"
-                         materialDesign:HintAssist.Hint="Quốc Tịch"
+                         materialDesign:HintAssist.Hint="Mô Tả"
                          materialDesign:TextFieldAssist.HasLeadingIcon="True"
-                         materialDesign:TextFieldAssist.LeadingIcon="Earth"
+                         materialDesign:TextFieldAssist.LeadingIcon="InvoiceTextOutline"
                          Margin="0, 0, 10, 10"
-                         TextChanged="tbxQuocTich_TextChanged"/>
+                         TextChanged="tbxMoTa_TextChanged"/>
 
-                <materialDesign:PackIcon x:Name="icQuocTichError" Grid.Row="1" Grid.Column="2"
+                <materialDesign:PackIcon x:Name="icMoTaError" Grid.Row="0" Grid.Column="4"
                                          Style="{StaticResource ErrorIcon}"
                                          Margin="0, 0, 15, 10"/>
             </Grid>
 
             <!--CRUD buttons-->
-            <DockPanel Grid.Row="2"
-                       HorizontalAlignment="Stretch">
-                <Button x:Name="btnThemTacGia" 
-                            ToolTip="Thêm Tác Giả" 
+            <StackPanel Grid.Row="2"
+                        Orientation="Horizontal"
+                        HorizontalAlignment="Stretch">
+                <Button x:Name="btnThemTheLoai" 
+                            ToolTip="Thêm Thể Loại" 
                             Margin="10, 0, 0, 0" 
-                            Click="btnThemTacGia_Click"
+                            Click="btnThemTheLoai_Click"
                             Width="30"
                             Padding="0">
                     <materialDesign:PackIcon Kind="PlusCircleOutline" Width="24" Height="24"/>
                 </Button>
 
-                <Button x:Name="btnSuaTacGia" 
-                            ToolTip="Sửa Tác Giả" 
+                <Button x:Name="btnSuaTheLoai" 
+                            ToolTip="Sửa Thể Loại" 
                             Margin="5, 0, 0, 0" 
-                            Click="btnSuaTacGia_Click"
+                            Click="btnSuaTheLoai_Click"
                             Width="30"
                             Padding="0">
                     <materialDesign:PackIcon Kind="CircleEditOutline" Width="22.5" Height="22.5"/>
                 </Button>
 
-                <Button x:Name="btnXoaTacGIa" 
-                            ToolTip="Xóa Tác Giả" 
+                <Button x:Name="btnXoaTheLoai" 
+                            ToolTip="Xóa Thể Loại" 
                             Margin="5, 0, 0, 0" 
-                            Click="btnXoaTacGia_Click"
+                            Click="btnXoaTheLoai_Click"
                             Width="30"
                             Padding="0">
                     <materialDesign:PackIcon Kind="Delete" Width="22.5" Height="22.5"/>
@@ -155,36 +145,7 @@
                             Padding="0">
                     <materialDesign:PackIcon Kind="Refresh" Width="24" Height="24"/>
                 </Button>
-
-                <Button x:Name="btnXoaChon"
-                            DockPanel.Dock="Right"
-                            ToolTip="Xóa Tác Giả Đã Chọn" 
-                            Margin="0, 0, 10, 0" 
-                            Click="btnXoaChon_Click"
-                            Width="30"
-                            Padding="0">
-                    <materialDesign:PackIcon Kind="DeleteSweep" Width="24" Height="24"/>
-                </Button>
-
-                <materialDesign:SplitButton VerticalAlignment="Center"
-                                            HorizontalAlignment="Right"
-                                            DockPanel.Dock="Right"
-                                            Margin="0, 0, 5, 0" 
-                                            Padding="0"
-                                            ToolTip="Nhập/Xuất">
-                    <materialDesign:PackIcon Kind="MicrosoftExcel" Width="24" Height="24"/>
-                    <materialDesign:SplitButton.PopupContent>
-                        <StackPanel>
-                            <Button x:Name="btnExportExcel"
-                                        Content="Xuất Excel"
-                                        Click="btnExportExcel_Click" />
-                            <Button x:Name="btnImportExcel"
-                                        Content="Nhập Excel"
-                                        Click="btnImportExcel_Click" />
-                        </StackPanel>
-                    </materialDesign:SplitButton.PopupContent>
-                </materialDesign:SplitButton>
-            </DockPanel>
+            </StackPanel>
         </Grid>
 
         <!--Grid cho title Data Grid va Thanh Search-->
@@ -194,7 +155,7 @@
                 <ColumnDefinition Width="1*"/>
             </Grid.ColumnDefinitions>
 
-            <TextBlock Text="Danh Sách Các Tác Giả" Grid.Column="0" FontWeight="Bold"
+            <TextBlock Text="Danh Sách Các Thể Loại" Grid.Column="0" FontWeight="Bold"
                        FontSize="26" VerticalAlignment="Center" Margin="5"/>
             <Grid Grid.Column="1">
                 <Grid.ColumnDefinitions>
@@ -217,9 +178,8 @@
                           Style="{StaticResource ModernComboBox}"
                           materialDesign:HintAssist.Hint="Thuộc Tính"
                           materialDesign:HintAssist.FloatingScale="0.8">
-                    <ComboBoxItem Content="Tên Tác Giả"/>
-                    <ComboBoxItem Content="Năm Sinh"/>
-                    <ComboBoxItem Content="Quốc Tịch"/>
+                    <ComboBoxItem Content="Tên Thể Loại"/>
+                    <ComboBoxItem Content="Mô Tả"/>
                 </ComboBox>
 
                 <Button x:Name="btnTimKiem" Grid.Column="3" Click="btnTimKiem_Click" Padding="0" Width="25">
@@ -228,50 +188,19 @@
             </Grid>
         </Grid>
 
-        <DataGrid x:Name="dgTacGia" Grid.Row="2" SelectionMode="Single"
-                  SelectionUnit="FullRow" IsReadOnly="false" AutoGenerateColumns="False"
-                  SelectionChanged="dgTacGia_SelectionChanged"
-                  CanUserAddRows="False">
+        <DataGrid x:Name="dgTheLoai" Grid.Row="2" SelectionMode="Single"
+                  SelectionUnit="FullRow" IsReadOnly="true" AutoGenerateColumns="False"
+                  SelectionChanged="dgTheLoai_SelectionChanged">
             <DataGrid.Resources>
                 <Style TargetType="DataGridColumnHeader" BasedOn="{StaticResource ResourceKey=MaterialDesignDataGridColumnHeader}">
                     <Setter Property="FontWeight" Value="Bold"/>
                 </Style>
             </DataGrid.Resources>
             <DataGrid.Columns>
-                <DataGridTemplateColumn Width="50">
-                    <DataGridTemplateColumn.Header>
-                        <CheckBox x:Name="cbxSelectAll" Content=""
-                                  Checked="cbxSelectAll_Checked"
-                                  Unchecked="cbxSelectAll_Unchecked" />
-                    </DataGridTemplateColumn.Header>
-                    <DataGridTemplateColumn.CellTemplate>
-                        <DataTemplate>
-                            <CheckBox IsChecked="{Binding IsSelected}"
-                                      Checked="cbxSelectRow_Checked"
-                                      Unchecked="cbxSelectRow_Unchecked"/>
-                        </DataTemplate>
-                    </DataGridTemplateColumn.CellTemplate>
-                </DataGridTemplateColumn>
-
-                <!-- Các cột thông tin khác -->
-                <DataGridTextColumn Header="Mã Tác Giả:" Width="*" Binding="{Binding MaTacGia, Mode=OneWay}" IsReadOnly="True"/>
-                <DataGridTextColumn Header="Tên Tác Giả:" Width="*" Binding="{Binding TenTacGia, Mode=OneWay}" IsReadOnly="True"/>
-                <DataGridTextColumn Header="Năm Sinh:" Width="*" Binding="{Binding NamSinh, Mode=OneWay}" IsReadOnly="True"/>
-                <DataGridTextColumn Header="Quốc Tịch:" Width="*" Binding="{Binding QuocTich, Mode=OneWay}" IsReadOnly="True"/>
+                <DataGridTextColumn Header="Mã Thể Loại:" Width="*" Binding="{Binding MaTheLoai}"/>
+                <DataGridTextColumn Header="Tên Thể Loại:" Width="*" Binding="{Binding TenTheLoai}"/>
+                <DataGridTextColumn Header="Mô Tả:" Width="*" Binding="{Binding MoTa}"/>
             </DataGrid.Columns>
         </DataGrid>
-
-        <StackPanel Orientation="Horizontal" Grid.Row="3" 
-                    HorizontalAlignment="Center" VerticalAlignment="Bottom">
-            <Button Click="btnPrevious_Click" Width="20" Height="20" Padding="0">
-                <materialDesign:PackIcon Kind="ChevronLeft"/>
-            </Button>
-
-            <TextBlock x:Name="tbxPageNumber" VerticalAlignment="Center" Margin="5"/>
-
-            <Button Click="btnNext_Click" Width="20" Height="20" Padding="0">
-                <materialDesign:PackIcon Kind="ChevronRight"/>
-            </Button>
-        </StackPanel>
     </Grid>
 </UserControl>

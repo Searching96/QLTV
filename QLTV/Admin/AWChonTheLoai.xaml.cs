@@ -13,7 +13,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
 
-namespace QLTV
+namespace QLTV.Admin
 {
     /// <summary>
     /// Interaction logic for AWChonTheLoai.xaml
