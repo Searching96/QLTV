@@ -24,7 +24,7 @@
                         <ListBox x:Name="lbBCMSChartMode"
                                  Style="{StaticResource MaterialDesignChoiceChipListBox}"
                                  Grid.Row="0"
-                                 Margin="5,10,5,0"
+                                 Margin="5,2,5,0"
                                  SelectionChanged="lbBCMSChartMode_SelectionChanged">
                             <ListBoxItem Content="Ngày" />
                             <ListBoxItem Content="Tháng" />
@@ -38,55 +38,52 @@
                               Margin="5"
                               HorizontalAlignment="Left">
                             <!-- Date Picker for "Ngày" -->
-                            <StackPanel x:Name="spDayMS"
-                                        Orientation="Horizontal"
-                                        Visibility="Collapsed"
-                                        Margin="0,5,0,0">
-                                <DatePicker  x:Name="dpStartDayMS"
-                                             Width="100"
-                                             materialDesign:HintAssist.Hint="Từ ngày"
-                                             materialDesign:TextFieldAssist.HasClearButton="True"
-                                             materialDesign:HintAssist.FloatingScale="0.9"
-                                             Margin="5,0"
-                                             Style="{StaticResource MaterialDesignFloatingHintDatePicker}"
-                                             SelectedDateChanged="dpEndDayMS_SelectionChanged" />
-                                <DatePicker  x:Name="dpEndDayMS"
-                                             Width="100"
-                                             materialDesign:HintAssist.Hint="Đến ngày"
-                                             materialDesign:TextFieldAssist.HasClearButton="True"
-                                             materialDesign:HintAssist.FloatingScale="0.9"
-                                             Margin="5,0"
-                                             Style="{StaticResource MaterialDesignFloatingHintDatePicker}"
-                                             SelectedDateChanged="dpEndDayMS_SelectionChanged" />
-                            </StackPanel>
+                                <StackPanel x:Name="spDayMS"
+                                            Orientation="Horizontal"
+                                            Visibility="Collapsed">
+                                    <DatePicker  x:Name="dpStartDayMS"
+                                                 Width="100"
+                                                 materialDesign:HintAssist.Hint="Từ ngày"
+                                                 materialDesign:TextFieldAssist.HasClearButton="True"
+                                                 materialDesign:HintAssist.FloatingScale="0.9"
+                                                 Margin="5,0"
+                                                 Style="{StaticResource MaterialDesignFloatingHintDatePicker}"
+                                                 SelectedDateChanged="dpEndDayMS_SelectionChanged" />
+                                    <DatePicker  x:Name="dpEndDayMS"
+                                                 Width="100"
+                                                 materialDesign:HintAssist.Hint="Đến ngày"
+                                                 materialDesign:TextFieldAssist.HasClearButton="True"
+                                                 materialDesign:HintAssist.FloatingScale="0.9"
+                                                 Margin="5,0"
+                                                 Style="{StaticResource MaterialDesignFloatingHintDatePicker}"
+                                                 SelectedDateChanged="dpEndDayMS_SelectionChanged" />
+                                </StackPanel>
 
 
-                            <!-- Month Selector for "Tháng" -->
-                            <StackPanel x:Name="spMonthMS"
-                                        Orientation="Horizontal"
-                                        Visibility="Hidden"
-                                        Margin="0,5,0,0">
-                                <ComboBox Style="{StaticResource ModernComboBox}"
-                                          x:Name="cbStartMonthMS"
-                                          Width="100"
-                                          Margin="10,0"
-                                          IsEditable="False"
-                                          materialDesign:HintAssist.Hint="Từ tháng"
-                                          materialDesign:HintAssist.FloatingScale="0.8"
-                                          SelectionChanged="cboStartMonthMS_SelectionChanged" />
-                                <ComboBox Style="{StaticResource ModernComboBox}"
-                                          x:Name="cbEndMonthMS"
-                                          Width="100"
-                                          Margin="10,0"
-                                          IsEditable="False"
-                                          materialDesign:HintAssist.Hint="Từ tháng"
-                                          materialDesign:HintAssist.FloatingScale="0.8"
-                                          SelectionChanged="cboEndMonthMS_SelectionChanged" />
-                            </StackPanel>
+                                <!-- Month Selector for "Tháng" -->
+                                <StackPanel x:Name="spMonthMS"
+                                            Orientation="Horizontal"
+                                            Visibility="Collapsed">
+                                    <ComboBox Style="{StaticResource ModernComboBox}"
+                                              x:Name="cbStartMonthMS"
+                                              Width="100"
+                                              Margin="10,0"
+                                              IsEditable="False"
+                                              materialDesign:HintAssist.Hint="Từ tháng"
+                                              materialDesign:HintAssist.FloatingScale="0.8"
+                                              SelectionChanged="cboStartMonthMS_SelectionChanged" />
+                                    <ComboBox Style="{StaticResource ModernComboBox}"
+                                              x:Name="cbEndMonthMS"
+                                              Width="100"
+                                              Margin="10,0"
+                                              IsEditable="False"
+                                              materialDesign:HintAssist.Hint="Từ tháng"
+                                              materialDesign:HintAssist.FloatingScale="0.8"
+                                              SelectionChanged="cboEndMonthMS_SelectionChanged" />
+                                </StackPanel>
 
-                            <!-- Quarter Selector for "Quý" -->
-                            <StackPanel Orientation="Horizontal"
-                                        Margin="0,5,0,0">
+                                <!-- Quarter Selector for "Quý" -->
+                            <StackPanel Orientation="Horizontal">
                                 <ComboBox Style="{StaticResource ModernComboBox}"
                                           x:Name="cbQuarterMS"
                                           Width="100"
@@ -107,6 +104,10 @@
                                           SelectionChanged="cboYearMS_SelectionChanged" />
                             </StackPanel>
                         </Grid>
+                        <materialDesign:PackIcon Kind="AlertCircleOutline"
+                                                 x:Name="icTimePickerError"
+                                                 Visibility="Collapsed"
+                                                 Style="{StaticResource Warning}" />
                     </StackPanel>
                     <!--Chart-->
                     <lvc:CartesianChart x:Name="BCMSLineChart"
@@ -378,7 +379,8 @@
                     </StackPanel>
 
                     <!--Chart-->
-                    <Grid Grid.Row="1" Margin="10">
+                    <Grid Grid.Row="1"
+                          Margin="10">
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="*" />
                             <ColumnDefinition Width="*" />
@@ -395,7 +397,6 @@
                                                     Margin="2">
                                     <lvc:CartesianChart.AxisX>
                                         <lvc:Axis Title="Thời gian"
-                                                  MinValue="0"
                                                   Labels="{Binding CurrentLabels}" />
                                     </lvc:CartesianChart.AxisX>
                                     <lvc:CartesianChart.AxisY>
@@ -415,10 +416,8 @@
                                                     Series="{Binding CurrentChartValues}"
                                                     Background="White"
                                                     Margin="2">
-
                                     <lvc:CartesianChart.AxisX>
                                         <lvc:Axis Title="Thời gian"
-                                                  MinValue="0"
                                                   Labels="{Binding CurrentLabels}" />
                                     </lvc:CartesianChart.AxisX>
 
@@ -549,7 +548,6 @@
                                 <lvc:PieChart x:Name="BCTTPieChart"
                                               Grid.Column="0"
                                               Series="{Binding CurrentChartValues}"
-                                              
                                               Background="White">
                                     <lvc:PieChart.DataTooltip>
                                         <lvc:DefaultTooltip SelectionMode="OnlySender" />
