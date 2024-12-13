@@ -12,4 +12,6 @@ public partial class THAMSO
     public int TuoiToiThieu { get; set; }
 
     public decimal TienPhatTraTreMotNgay { get; set; }
+
+    public decimal TiLeDenBu { get; set; }
 }

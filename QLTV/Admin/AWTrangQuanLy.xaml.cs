@@ -32,5 +32,35 @@ namespace QLTV.Admin
 
             //MessageBox.Show($"PrimaryColor: {colorCode}");
         }
+
+        private void btnFnQuanLyTaiKhoan_Click(object sender, RoutedEventArgs e)
+        {
+            QuanLyTaiKhoan qltk = new QuanLyTaiKhoan();
+            ADMainContent.Content = qltk;
+        }
+
+        private void btnFnQuanLyDocGia_Click(object sender, RoutedEventArgs e)
+        {
+            UQuanLyDocGia qldg = new UQuanLyDocGia();
+            ADMainContent.Content = qldg;
+        }
+
+        private void btnFnQuanLyMuonTra_Click(object sender, RoutedEventArgs e)
+        {
+            UcQLMuonTra qlmt = new UcQLMuonTra();
+            ADMainContent.Content = qlmt;
+        }
+
+        private void btnFnBaoCaoThongKe_Click(object sender, RoutedEventArgs e)
+        {
+            UcBCMuonTra bctk = new UcBCMuonTra();
+            ADMainContent.Content = bctk;
+        }
+
+        private void btnFnQuyDinh_Click(object sender, RoutedEventArgs e)
+        {
+            UcQuyDinh qd = new UcQuyDinh();
+            ADMainContent.Content = qd;
+        }
     }
 }

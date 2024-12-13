@@ -340,7 +340,7 @@ public partial class QLTVContext : DbContext
                 .HasMaxLength(100)
                 .IsUnicode(false);
             entity.Property(e => e.GioiTinh).HasMaxLength(5);
-            entity.Property(e => e.Hoten).HasMaxLength(100);
+            entity.Property(e => e.HoTen).HasMaxLength(100);
             entity.Property(e => e.MaTaiKhoan)
                 .HasMaxLength(7)
                 .IsUnicode(false)

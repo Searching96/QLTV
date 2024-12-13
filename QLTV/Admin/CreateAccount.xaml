@@ -1,0 +1,230 @@
+﻿<Window x:Class="QLTV.Admin.CreateAccount"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+         xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+        
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:QLTV.Admin"
+        mc:Ignorable="d"
+        Title="CreateAccount" Height="520" Width="720" WindowStartupLocation="CenterScreen">
+    <Window.Resources>
+        <Style x:Key="DataDisplayTextBox" TargetType="TextBox" BasedOn="{StaticResource MaterialDesignOutlinedTextBox}">
+            <Setter Property="Padding" Value="5.5"/>
+            <Setter Property="Height" Value="Auto"/>
+            <Setter Property="materialDesign:HintAssist.FloatingScale" Value="0.8"/>
+            <Setter Property="FontSize" Value="16"/>
+        </Style>
+        <Style x:Key="ModernDatePicker" TargetType="DatePicker" BasedOn="{StaticResource MaterialDesignOutlinedDatePicker}">
+            <Setter Property="materialDesign:HintAssist.FloatingScale" Value="0.8"/>
+            <Setter Property="Height" Value="Auto"/>
+            <Setter Property="Padding" Value="5.5"/>
+            <Setter Property="FontSize" Value="16"/>
+        </Style>
+        <Style x:Key="ModernComboBox" TargetType="ComboBox" BasedOn="{StaticResource MaterialDesignOutlinedComboBox}">
+            <Setter Property="materialDesign:HintAssist.FloatingScale" Value="0.8"/>
+            <Setter Property="Height" Value="Auto"/>
+            <Setter Property="Padding" Value="5.5"/>
+            <Setter Property="FontSize" Value="16"/>
+            <Setter Property="FontSize" Value="16"/>
+        </Style>
+        <Style x:Key="ErrorIcon" TargetType="materialDesign:PackIcon">
+            <Setter Property="Kind" Value="AlertCircleOutline"/>
+            <Setter Property="Width" Value="20"/>
+            <Setter Property="Height" Value="20"/>
+            <Setter Property="HorizontalAlignment" Value="Right"/>
+            <Setter Property="VerticalAlignment" Value="Center"/>
+            <Setter Property="Foreground" Value="Red"/>
+            <Setter Property="Background" Value="White"/>
+            <Setter Property="Visibility" Value="Collapsed"/>
+            <Setter Property="ToolTipService.InitialShowDelay" Value="0"/>
+            <Setter Property="Margin" Value="0,0,10,0"/>
+        </Style>
+    </Window.Resources>
+        <Grid>
+        
+        <Grid.Effect>
+            <DropShadowEffect BlurRadius="30" ShadowDepth="1" Opacity="0.4"/>
+        </Grid.Effect>
+
+        <Border  Background="#ffffff" CornerRadius="0 10 10 0" >
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="1*"/>
+                    <ColumnDefinition Width="1*"/>
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <!-- Mỗi dòng sẽ chứa một TextBox hoặc phần tử giao diện -->
+                    <RowDefinition Height="*" />
+                    <RowDefinition Height="1.5*" />
+                    <RowDefinition Height="*" />
+                    <RowDefinition Height="*" />
+                    <RowDefinition Height="*" />
+                    <RowDefinition Height="*" />
+                    <RowDefinition Height="*" />
+                    
+                </Grid.RowDefinitions>
+
+                <!-- Username -->
+                <TextBox Grid.Row="0" x:Name="txtFullName"  Margin="10,10"
+                         materialDesign:HintAssist.FloatingOffset="0,-20" materialDesign:HintAssist.Hint="Họ và tên"
+                        materialDesign:TextFieldAssist.HasLeadingIcon="True" materialDesign:TextFieldAssist.LeadingIcon="User"
+                        Style="{StaticResource DataDisplayTextBox}" TextChanged="txtFullName_TextChanged" />
+                        <materialDesign:PackIcon x:Name="icFullNameError" Grid.Row="0" Margin="0,0,15,0"
+                        Style="{StaticResource ErrorIcon}"/>
+                <GroupBox Grid.Row="1" Margin="10,10" Header="Giới tính" >
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="1*" />
+                        <ColumnDefinition Width="1*" />
+                    </Grid.ColumnDefinitions>
+                    <CheckBox Grid.Column="0" x:Name="cbNam" Content="Nam" Checked="cbNam_Checked" Unchecked="cbNam_Unchecked" />
+                    <CheckBox Grid.Column="1" x:Name="cbNu" Content="Nữ" Checked="cbNu_Checked" Unchecked="cbNu_Unchecked" />
+                </Grid>
+                </GroupBox >
+                <TextBox Grid.Row="2" x:Name="txtUsername"  Margin="10,10"
+              materialDesign:HintAssist.FloatingOffset="0,-20" materialDesign:HintAssist.Hint="Tên đăng nhập"
+             materialDesign:TextFieldAssist.HasLeadingIcon="True" materialDesign:TextFieldAssist.LeadingIcon="User"
+             Style="{StaticResource DataDisplayTextBox}" TextChanged="txtUsername_TextChanged" />
+                <materialDesign:PackIcon x:Name="icUsernameError" Grid.Row="2" Margin="0,0,15,0"
+                                        Style="{StaticResource ErrorIcon}"/>
+
+                <!-- Email -->
+                <TextBox Grid.Row="3" x:Name="txtEmail"  Margin="10,10"
+              materialDesign:HintAssist.FloatingOffset="0,-20" materialDesign:HintAssist.Hint="Email"
+             materialDesign:TextFieldAssist.HasLeadingIcon="True" materialDesign:TextFieldAssist.LeadingIcon="Email"
+             Style="{StaticResource DataDisplayTextBox}" TextChanged="txtEmail_TextChanged" />
+                <materialDesign:PackIcon x:Name="icEmailError" Grid.Row="3" Margin="0,0,15,0"
+                        Style="{StaticResource ErrorIcon}"/>
+
+                <!-- Address -->
+                <TextBox Grid.Row="4" x:Name="txtAddress"  Margin="10,10"
+              materialDesign:HintAssist.FloatingOffset="0,-20" materialDesign:HintAssist.Hint="Địa chỉ"
+             materialDesign:TextFieldAssist.HasLeadingIcon="True" materialDesign:TextFieldAssist.LeadingIcon="Location"
+             Style="{StaticResource DataDisplayTextBox}" TextChanged="txtAddress_TextChanged" />
+                <materialDesign:PackIcon x:Name="icAddressError" Grid.Row="4" Margin="0,0,15,0"
+                        Style="{StaticResource ErrorIcon}"/>
+
+                <!-- Phone Number -->
+                <TextBox Grid.Row="5" x:Name="txtPhoneNumber"  Margin="10,10"
+              materialDesign:HintAssist.FloatingOffset="0,-20" materialDesign:HintAssist.Hint="Số điện thoại"
+             materialDesign:TextFieldAssist.HasLeadingIcon="True" materialDesign:TextFieldAssist.LeadingIcon="Phone"
+             Style="{StaticResource DataDisplayTextBox}" TextChanged="txtPhoneNumber_TextChanged" />
+                <materialDesign:PackIcon x:Name="icPhoneNumberError" Grid.Row="5" Margin="0,0,15,0"
+                        Style="{StaticResource ErrorIcon}"/>
+
+                <!-- Birthday -->
+                <Grid Grid.Row="0" Grid.Column="1" Margin="10,10,10,10">
+                    <DatePicker  x:Name="dpBirthday"  materialDesign:HintAssist.Hint="Sinh nhật"
+                    Style="{StaticResource ModernDatePicker}" materialDesign:TextFieldAssist.HasLeadingIcon="True"
+                    materialDesign:TextFieldAssist.LeadingIcon="Cake" VerticalContentAlignment="Center"  >
+                        <DatePicker.CalendarStyle>
+                            <Style TargetType="Calendar" BasedOn="{StaticResource MaterialDesignCalendarPortrait}">
+                                <Style.Resources>
+                                    <SolidColorBrush x:Key="PrimaryHueMidBrush" Color="Red" />
+                                    <SolidColorBrush x:Key="PrimaryHueDarkBrush" Color="Green" />
+                                </Style.Resources>
+                            </Style>
+                        </DatePicker.CalendarStyle>
+                    </DatePicker>
+                    <materialDesign:PackIcon x:Name="icSinhNhatError" HorizontalAlignment="Right" Margin="0,0,25,0"  
+>
+                        <!-- Thêm DataTrigger vào Style hiện tại -->
+                        <materialDesign:PackIcon.Style>
+                            <Style TargetType="materialDesign:PackIcon" BasedOn="{StaticResource ErrorIcon}">
+                                <Style.Triggers>
+                                    <!-- Hiển thị khi DatePicker không có ngày được chọn -->
+                                    <DataTrigger Binding="{Binding SelectedDate, ElementName=dpBirthday}" Value="{x:Null}">
+                                        <Setter Property="Visibility" Value="Visible"/>
+                                        <Setter Property="ToolTip" Value="Ngày sinh không được để trống"/>
+                                    </DataTrigger>
+                                    <!-- Ẩn khi DatePicker có ngày được chọn -->
+                                    <DataTrigger Binding="{Binding SelectedDate, ElementName=dpBirthday}">
+                                        <Setter Property="Visibility" Value="Collapsed"/>
+                                    </DataTrigger>
+                                </Style.Triggers>
+                            </Style>
+                        </materialDesign:PackIcon.Style>
+                    </materialDesign:PackIcon>
+                </Grid>
+                <!-- Checkboxes -->
+                <GroupBox Grid.Row="1" Grid.Column="1" Margin="10,10" Header="Loại tài khoản">
+                    <Grid >
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="1*" />
+                        <ColumnDefinition Width="1*" />
+                    </Grid.ColumnDefinitions>
+                    <CheckBox Grid.Column="0" x:Name="cbDocGia" Content="Độc giả" Checked="cbDocGia_Checked" Unchecked="cbDocGia_Unchecked" />
+                    <CheckBox Grid.Column="1" x:Name="cbAdmin" Content="Admin" Checked="cbAdmin_Checked" Unchecked="cbAdmin_Unchecked" />
+                </Grid>
+                </GroupBox>
+
+                <!-- ComboBox -->
+                <ComboBox Grid.Row="2" Grid.Column="1" x:Name="cbPhanQuyen" Margin="10,0,10,0" Style="{StaticResource ModernComboBox}"
+              ItemsSource="{Binding AvailableRoles}"
+              DisplayMemberPath="MoTa" SelectedValuePath="ID" SelectedValue="{Binding SelectedRoleID, Mode=TwoWay}"
+              SelectionChanged="cbPhanQuyen_SelectionChanged" Height="50" />
+
+                <!-- Ngày Mở -->
+                <Grid Grid.Row="3" Grid.Column="1" Margin="10,10">
+                    <DatePicker  x:Name="dpNgayMo" IsEnabled="True" 
+                    materialDesign:HintAssist.Hint="Pick Date" materialDesign:TextFieldAssist.HasClearButton="True"
+                   Style="{StaticResource ModernDatePicker}" VerticalContentAlignment="Center" 
+                                 materialDesign:TextFieldAssist.HasLeadingIcon="True" 
+                                 materialDesign:TextFieldAssist.LeadingIcon="OpenInApp" />
+                    <materialDesign:PackIcon x:Name="icNgayMoError" HorizontalAlignment="Right" Margin="0,0,25,0"  
+>
+                        <!-- Thêm DataTrigger vào Style hiện tại -->
+                        <materialDesign:PackIcon.Style>
+                            <Style TargetType="materialDesign:PackIcon" BasedOn="{StaticResource ErrorIcon}">
+                                <Style.Triggers>
+                                    <!-- Hiển thị khi DatePicker không có ngày được chọn -->
+                                    <DataTrigger Binding="{Binding SelectedDate, ElementName=dpNgayMo}" Value="{x:Null}">
+                                        <Setter Property="Visibility" Value="Visible"/>
+                                        <Setter Property="ToolTip" Value="Ngày mở tài khoản không được để trống"/>
+                                    </DataTrigger>
+                                    <!-- Ẩn khi DatePicker có ngày được chọn -->
+                                    <DataTrigger Binding="{Binding SelectedDate, ElementName=dpNgayMo}">
+                                        <Setter Property="Visibility" Value="Collapsed"/>
+                                    </DataTrigger>
+                                </Style.Triggers>
+                            </Style>
+                        </materialDesign:PackIcon.Style>
+                    </materialDesign:PackIcon>
+                </Grid>
+                <!-- Ngày Đóng -->
+                <Grid Grid.Row="4" Grid.Column="1"  Margin="10,10,10,10">
+                    <DatePicker  x:Name="dpNgayDong" IsEnabled="True"
+                    materialDesign:HintAssist.Hint="Pick Date" materialDesign:TextFieldAssist.HasClearButton="True"
+                    Style="{StaticResource ModernDatePicker}" VerticalContentAlignment="Center" materialDesign:TextFieldAssist.HasLeadingIcon="True" materialDesign:TextFieldAssist.LeadingIcon="CloseBox" />
+                    <materialDesign:PackIcon x:Name="icNgayDongError" HorizontalAlignment="Right" Margin="0,0,25,0"  
+>
+                        <!-- Thêm DataTrigger vào Style hiện tại -->
+                        <materialDesign:PackIcon.Style>
+                            <Style TargetType="materialDesign:PackIcon" BasedOn="{StaticResource ErrorIcon}">
+                                <Style.Triggers>
+                                    <!-- Hiển thị khi DatePicker không có ngày được chọn -->
+                                    <DataTrigger Binding="{Binding SelectedDate, ElementName=dpNgayDong}" Value="{x:Null}">
+                                        <Setter Property="Visibility" Value="Visible"/>
+                                        <Setter Property="ToolTip" Value="Ngày đóng tài khoản không được để trống"/>
+                                    </DataTrigger>
+                                    <!-- Ẩn khi DatePicker có ngày được chọn -->
+                                    <DataTrigger Binding="{Binding SelectedDate, ElementName=dpNgayDong}">
+                                        <Setter Property="Visibility" Value="Collapsed"/>
+                                    </DataTrigger>
+                                </Style.Triggers>
+                            </Style>
+                        </materialDesign:PackIcon.Style>
+                    </materialDesign:PackIcon>
+                </Grid>
+
+
+                <!-- Button -->
+                <Button Grid.Row="6" Grid.Column="0" Grid.ColumnSpan="2" x:Name="btnSignUp" Margin="10,10" Content="Create" Foreground="#ffffff" FontSize="18"
+            materialDesign:ButtonAssist.CornerRadius="22" Height="45" Width="120" Click="btnSignUp_Click" />
+            </Grid>
+
+        </Border>
+
+    </Grid>
+</Window>

@@ -1,0 +1,550 @@
+<UserControl x:Class="QLTV.Admin.UcThemPhieuMuon"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:local="clr-namespace:QLTV.Admin"
+             mc:Ignorable="d"
+             d:DesignHeight="600"
+             d:DesignWidth="800">
+    <UserControl.Resources>
+        <Duration x:Key="ExpandDuration">0:0:0.250</Duration>
+        <Duration x:Key="CollapseDuration">0:0:0.200</Duration>
+
+        <KeyTime x:Key="ExpandKeyTime">0:0:0.250</KeyTime>
+        <KeyTime x:Key="CollapseKeyTime">0:0:0.200</KeyTime>
+
+        <Style x:Key="DataDisplayTextBox"
+                   TargetType="TextBox"
+                   BasedOn="{StaticResource MaterialDesignOutlinedTextBox}">
+            <Setter Property="Padding"
+                        Value="5.5" />
+            <Setter Property="Height"
+                        Value="Auto" />
+            <Setter Property="materialDesign:HintAssist.FloatingScale"
+                        Value="0.8" />
+        </Style>
+
+        <Style x:Key="ModernComboBox"
+                   TargetType="ComboBox"
+                   BasedOn="{StaticResource MaterialDesignOutlinedComboBox}">
+            <Setter Property="Margin"
+                        Value="1" />
+            <Setter Property="materialDesign:HintAssist.FloatingScale"
+                        Value="0.8" />
+            <Setter Property="Padding"
+                        Value="8" />
+        </Style>
+
+        <Style x:Key="ModernDatePicker"
+                   TargetType="DatePicker"
+                   BasedOn="{StaticResource MaterialDesignOutlinedDatePicker}">
+            <Setter Property="Margin"
+                        Value="1" />
+            <Setter Property="materialDesign:HintAssist.FloatingScale"
+                        Value="0.8" />
+            <Setter Property="Padding"
+                        Value="7.5" />
+        </Style>
+        <Style x:Key="Warning"
+                   TargetType="materialDesign:PackIcon">
+            <Setter Property="HorizontalAlignment"
+                        Value="Right" />
+            <Setter Property="VerticalAlignment"
+                        Value="Center" />
+            <Setter Property="Foreground"
+                        Value="Red" />
+            <Setter Property="Background"
+                        Value="Transparent" />
+            <Setter Property="Width"
+                        Value="20" />
+            <Setter Property="Height"
+                        Value="20" />
+            <Setter Property="Margin"
+                        Value="5,0" />
+            <Setter Property="ToolTipService.InitialShowDelay"
+                        Value="0" />
+            <Setter Property="Background"
+                        Value="Transparent" />
+            <Style.Triggers>
+                <DataTrigger Binding="{Binding isValid}"
+                                 Value="true">
+                    <Setter Property="Visibility"
+                                Value="Hidden" />
+                </DataTrigger>
+            </Style.Triggers>
+        </Style>
+
+        <Style TargetType="DataGridRow"
+                   BasedOn="{StaticResource MaterialDesignDataGridRow}">
+            <Setter Property="DetailsVisibility"
+                        Value="Collapsed" />
+            <Style.Triggers>
+                <DataTrigger Binding="{Binding IsExpanded}"
+                                 Value="True">
+                    <Setter Property="DetailsVisibility"
+                                Value="Visible" />
+                </DataTrigger>
+                <DataTrigger Binding="{Binding IsExpanded}"
+                                 Value="False">
+                    <Setter Property="DetailsVisibility"
+                                Value="Collapsed" />
+                </DataTrigger>
+            </Style.Triggers>
+        </Style>
+
+        <Style TargetType="{x:Type DataGridCell}"
+                   BasedOn="{StaticResource MaterialDesignDataGridCell}">
+            <Setter Property="VerticalContentAlignment"
+                        Value="Stretch" />
+            <Setter Property="HorizontalContentAlignment"
+                        Value="Stretch" />
+            <Setter Property="HorizontalAlignment"
+                        Value="Stretch" />
+            <Setter Property="VerticalAlignment"
+                        Value="Stretch" />
+            <Setter Property="Padding" Value="10 10 10 0" />
+        </Style>
+
+        <Style TargetType="{x:Type DataGridColumnHeader}"
+                   BasedOn="{StaticResource MaterialDesignDataGridColumnHeader}">
+            <Setter Property="VerticalContentAlignment"
+                        Value="Stretch" />
+            <Setter Property="HorizontalContentAlignment"
+                        Value="Left" />
+            <Setter Property="HorizontalAlignment"
+                        Value="Stretch" />
+            <Setter Property="VerticalAlignment"
+                        Value="Stretch" />
+            <Setter Property="FontWeight"
+                        Value="Bold" />
+            <Setter Property="Padding"
+                        Value="10 4 10 4" />
+        </Style>
+
+        <Style TargetType="DataGrid"
+                   BasedOn="{StaticResource MaterialDesignDataGrid}">
+            <Setter Property="HorizontalContentAlignment"
+                        Value="Stretch" />
+            <Setter Property="VerticalContentAlignment"
+                        Value="Center" />
+            <Setter Property="RowStyle"
+                        Value="{StaticResource MaterialDesignDataGridRow}" />
+            <Setter Property="CellStyle"
+                        Value="{StaticResource MaterialDesignDataGridCell}" />
+            <Setter Property="RowHeaderStyle"
+                        Value="{StaticResource MaterialDesignDataGridColumnHeader}" />
+            <!--<Setter Property="materialDesign:DataGridAssist.CellPadding"
+                        Value="4 0 4 0" />-->
+        </Style>
+
+        <Style x:Key="MaterialDesignIconButton"
+                   TargetType="{x:Type Button}"
+                   BasedOn="{StaticResource MaterialDesignRaisedButton}">
+            <Setter Property="Background"
+                        Value="{DynamicResource MaterialDesign.Brush.Primary}" />
+            <Setter Property="BorderBrush"
+                        Value="{DynamicResource MaterialDesign.Brush.Primary}" />
+            <Setter Property="BorderThickness"
+                        Value="1" />
+            <Setter Property="Foreground"
+                        Value="{DynamicResource MaterialDesign.Brush.Primary.Foreground}" />
+            <Setter Property="Height"
+                        Value="32" />
+            <Setter Property="Width"
+                        Value="52" />
+            <Setter Property="Padding"
+                        Value="16,0,16,0" />
+            <Setter Property="Margin"
+                        Value="0,-5,5,5" />
+            <Setter Property="HorizontalContentAlignment"
+                        Value="Center" />
+            <Setter Property="VerticalContentAlignment"
+                        Value="Center" />
+            <Setter Property="ToolTipService.InitialShowDelay"
+                        Value="0" />
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="{x:Type Button}">
+                        <Border x:Name="border"
+                                    Background="{TemplateBinding Background}"
+                                    BorderBrush="{TemplateBinding BorderBrush}"
+                                    BorderThickness="{TemplateBinding BorderThickness}"
+                                    CornerRadius="{Binding Path=(materialDesign:ButtonAssist.CornerRadius), RelativeSource={RelativeSource TemplatedParent}}"
+                                    Effect="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=(materialDesign:ElevationAssist.Elevation), Converter={x:Static materialDesign:ShadowConverter.Instance}}">
+                            <ContentControl HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
+                                                VerticalAlignment="{TemplateBinding VerticalContentAlignment}">
+                                <ContentControl.Content>
+                                    <materialDesign:PackIcon Kind="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=Tag}"
+                                                                 Width="20"
+                                                                 Height="20"
+                                                                 Foreground="White"
+                                                                 VerticalAlignment="Center"
+                                                                 HorizontalAlignment="Center"
+                                                                 RenderTransformOrigin="0.5,0.5">
+                                    </materialDesign:PackIcon>
+                                </ContentControl.Content>
+                            </ContentControl>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver"
+                                         Value="True">
+                                <Setter TargetName="border"
+                                            Property="materialDesign:ShadowAssist.Darken"
+                                            Value="True" />
+                            </Trigger>
+                            <Trigger Property="IsKeyboardFocused"
+                                         Value="True">
+                                <Setter TargetName="border"
+                                            Property="materialDesign:ShadowAssist.Darken"
+                                            Value="True" />
+                            </Trigger>
+                            <Trigger Property="IsEnabled"
+                                         Value="False">
+                                <Setter Property="Opacity"
+                                            Value="0.38" />
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <Style x:Key="MaterialDesignRaisedToggleButton"
+                   TargetType="{x:Type ToggleButton}"
+                   BasedOn="{StaticResource MaterialDesignRaisedButton}">
+            <Setter Property="Background"
+                        Value="{DynamicResource MaterialDesign.Brush.Primary}" />
+            <Setter Property="BorderBrush"
+                        Value="{DynamicResource MaterialDesign.Brush.Primary}" />
+            <Setter Property="BorderThickness"
+                        Value="1" />
+            <Setter Property="Foreground"
+                        Value="{DynamicResource MaterialDesign.Brush.Primary.Foreground}" />
+            <Setter Property="Height"
+                        Value="32" />
+            <Setter Property="Width"
+                        Value="52" />
+            <Setter Property="Padding"
+                        Value="16,0,16,0" />
+            <Setter Property="Margin"
+                        Value="5,-5,5,5" />
+            <Setter Property="HorizontalContentAlignment"
+                        Value="Center" />
+            <Setter Property="VerticalContentAlignment"
+                        Value="Center" />
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="{x:Type ToggleButton}">
+                        <Border x:Name="border"
+                                    Background="{TemplateBinding Background}"
+                                    BorderBrush="{TemplateBinding BorderBrush}"
+                                    BorderThickness="{TemplateBinding BorderThickness}"
+                                    CornerRadius="{Binding Path=(materialDesign:ButtonAssist.CornerRadius), RelativeSource={RelativeSource TemplatedParent}}"
+                                    Effect="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=(materialDesign:ElevationAssist.Elevation), Converter={x:Static materialDesign:ShadowConverter.Instance}}">
+                            <VisualStateManager.VisualStateGroups>
+                                <VisualStateGroup x:Name="CheckStates">
+                                    <!-- Checked State -->
+                                    <VisualState x:Name="Checked">
+                                        <Storyboard>
+                                            <DoubleAnimationUsingKeyFrames Storyboard.TargetName="iconTransform"
+                                                                               Storyboard.TargetProperty="Angle">
+                                                <EasingDoubleKeyFrame KeyTime="0:0:0.2"
+                                                                          Value="180" />
+                                            </DoubleAnimationUsingKeyFrames>
+                                        </Storyboard>
+                                    </VisualState>
+                                    <!-- Unchecked State -->
+                                    <VisualState x:Name="Unchecked">
+                                        <Storyboard>
+                                            <DoubleAnimationUsingKeyFrames Storyboard.TargetName="iconTransform"
+                                                                               Storyboard.TargetProperty="Angle">
+                                                <EasingDoubleKeyFrame KeyTime="0:0:0.2"
+                                                                          Value="0" />
+                                            </DoubleAnimationUsingKeyFrames>
+                                        </Storyboard>
+                                    </VisualState>
+                                </VisualStateGroup>
+                            </VisualStateManager.VisualStateGroups>
+                            <materialDesign:PackIcon x:Name="icon"
+                                                         Kind="ChevronDown"
+                                                         Width="20"
+                                                         Height="20"
+                                                         Foreground="White"
+                                                         VerticalAlignment="Center"
+                                                         HorizontalAlignment="Center"
+                                                         RenderTransformOrigin="0.5,0.5">
+                                <materialDesign:PackIcon.RenderTransform>
+                                    <RotateTransform x:Name="iconTransform"
+                                                         Angle="0" />
+                                </materialDesign:PackIcon.RenderTransform>
+                            </materialDesign:PackIcon>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver"
+                                         Value="True">
+                                <Setter TargetName="border"
+                                            Property="materialDesign:ShadowAssist.Darken"
+                                            Value="True" />
+                            </Trigger>
+                            <Trigger Property="IsKeyboardFocused"
+                                         Value="True">
+                                <Setter TargetName="border"
+                                            Property="materialDesign:ShadowAssist.Darken"
+                                            Value="True" />
+                            </Trigger>
+                            <Trigger Property="IsEnabled"
+                                         Value="False">
+                                <Setter Property="Opacity"
+                                            Value="0.38" />
+                            </Trigger>
+                            <Trigger Property="IsChecked"
+                                         Value="True">
+                                <Setter TargetName="border"
+                                            Property="Background"
+                                            Value="{DynamicResource MaterialDesign.Brush.Primary.Dark}" />
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+    </UserControl.Resources>
+    
+    <Grid Margin="10" Background="White">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+
+        <!-- Header -->
+        <TextBlock Grid.Row="0"
+                   Text="Thêm phiếu mượn"
+                   FontSize="20"
+                   FontWeight="Bold"
+                   Margin="0,0,0,10" />
+
+        <!-- Reader Selection -->
+        <Grid Grid.Row="1"
+              HorizontalAlignment="Left"
+              VerticalAlignment="Center">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="Auto" />
+            </Grid.ColumnDefinitions>
+            <StackPanel Grid.ColumnSpan="2"
+                        Orientation="Horizontal">
+                <ComboBox x:Name="cboDocGia"
+                          Grid.Column="0"
+                          DisplayMemberPath="IDTaiKhoanNavigation.TenTaiKhoan"
+                          SelectedValuePath="ID"
+                          IsEditable="True"
+                          Style="{StaticResource ModernComboBox}"
+                          IsTextSearchEnabled="True"
+                          VerticalAlignment="Center"
+                          IsSynchronizedWithCurrentItem="False"
+                          Width="300"
+                          HorizontalAlignment="Left"
+                          materialDesign:HintAssist.Hint="Chọn độc giả"
+                          materialDesign:HintAssist.FloatingScale="0.8"
+                          SelectionChanged="cboDocGia_SelectionChanged">
+                </ComboBox>
+                <materialDesign:PackIcon Kind="AlertCircleOutline"
+                                         x:Name="icDocGiaError"
+                                         Visibility="Collapsed"
+                                         Style="{StaticResource Warning}" />
+            </StackPanel>
+        </Grid>
+        <!-- Search Section -->
+        <StackPanel Grid.Row="2" Height="Auto"
+                    Margin="0,0,0,10">
+            <TextBlock Text="Tìm kiếm sách:" FontWeight="Bold" FontSize="16"
+                       Margin="0,0,0,5" />
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="*" />
+                </Grid.ColumnDefinitions>
+
+                <TextBox x:Name="txtSearchBook"
+                         Style="{StaticResource MaterialDesignOutlinedTextBox}"
+                         materialDesign:HintAssist.Hint="Thông Tin"
+                         Width="350"
+                         Padding="10"
+                         HorizontalAlignment="Left"
+                         TextChanged="txtSearchBook_TextChanged"
+                         Margin="0,0,10,0" />
+
+                <ComboBox Grid.Column="1"
+                          x:Name="cboSearchType"
+                          materialDesign:HintAssist.Hint="Thuộc Tính"
+                          HorizontalAlignment="Left"
+                          Width="120"
+                          Padding="10"
+                          SelectedIndex="0"
+                          Style="{StaticResource MaterialDesignOutlinedComboBox}">
+                    <ComboBoxItem Content="Tất cả" IsSelected="True"/>
+                    <ComboBoxItem Content="Mã sách" />
+                    <ComboBoxItem Content="Tên sách" />
+                    <ComboBoxItem Content="Thể loại" />
+                    <ComboBoxItem Content="Tác giả" />
+                </ComboBox>
+            </Grid>
+        </StackPanel>
+
+        <!-- Available Books -->
+        <Grid Grid.Row="3" Width="Auto"
+              Margin="0,0,0,10">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="*" />
+            </Grid.RowDefinitions>
+
+            <TextBlock Text="Sách có sẵn:"
+                       FontWeight="Bold" />
+            <DataGrid Grid.Row="1"
+                      x:Name="dgAvailableBooks"
+                      AutoGenerateColumns="False"
+                      SelectionMode="Extended"
+                      IsReadOnly="True"
+                      Style="{StaticResource MaterialDesignDataGrid}">
+                <DataGrid.Columns>
+                    <DataGridTextColumn Header="Mã sách"
+                                        Binding="{Binding MaSach}"
+                                        Width="1.5*" />
+                    <DataGridTextColumn Header="Tên sách"
+                                        Binding="{Binding TuaSach}"
+                                        Width="2.5*" />
+                    <DataGridTextColumn Header="Tác giả"
+                                        Binding="{Binding DSTacGia}"
+                                        Width="2.5*" />
+                    <DataGridTextColumn Header="Thể loại"
+                                        Binding="{Binding DSTheLoai}"
+                                        Width="2.5*" />
+                    <DataGridTextColumn Header="Tình trạng"
+                                        Binding="{Binding Book.IDTinhTrangNavigation.TenTinhTrang}"
+                                        IsReadOnly="True"
+                                        Width="2*" />
+                    <DataGridTextColumn Header="Mượn tối đa (tuần)"
+                                        Binding="{Binding HanMuonToiDa}"
+                                        Width="2*" />
+                    <DataGridTemplateColumn Header="Thao tác"
+                                            Width="1.5*"
+                                            IsReadOnly="True">
+                        <DataGridTemplateColumn.CellTemplate>
+                            <DataTemplate>
+                                <Button ToolTip="Chọn"
+                                        Click="btnSelectBook_Click"
+                                        Tag="BookPlusOutline"
+                                        Style="{StaticResource MaterialDesignIconButton}"
+                                        DataContext="{Binding}" />
+                            </DataTemplate>
+                        </DataGridTemplateColumn.CellTemplate>
+                    </DataGridTemplateColumn>
+                </DataGrid.Columns>
+            </DataGrid>
+        </Grid>
+
+        <!-- Selected Books Header -->
+        <TextBlock Grid.Row="4"
+                   Text="Sách đã chọn:"
+                   FontWeight="Bold"
+                   Margin="0,0,0,5" />
+
+        <!-- Selected Books -->
+        <DataGrid Grid.Row="5"
+                  x:Name="dgSelectedBooks"
+                  AutoGenerateColumns="False"
+                  Margin="0,0,0,10"
+                  Style="{StaticResource MaterialDesignDataGrid}"
+                  CanUserAddRows="False">
+            <DataGrid.Columns>
+                <DataGridTextColumn Header="Mã sách"
+                                    Binding="{Binding MaSach}"
+                                    IsReadOnly="True"
+                                    Width="2*" />
+                <DataGridTextColumn Header="Tên sách"
+                                    Binding="{Binding IDTuaSachNavigation.TenTuaSach}"
+                                    IsReadOnly="True"
+                                    Width="2.75*" />
+                <materialDesign:DataGridTextColumn Header="Tác giả"
+                                                   Binding="{Binding DSTacGia}"
+                                                   Width="2.75*"
+                                                   IsReadOnly="True" />
+                <DataGridTextColumn Header="Thể loại"
+                                    Binding="{Binding DSTheLoai}"
+                                    IsReadOnly="True"
+                                    Width="2.75*" />
+                <DataGridTextColumn Header="Tình trạng"
+                                    Binding="{Binding Book.IDTinhTrangNavigation.TenTinhTrang}"
+                                    IsReadOnly="True"
+                                    Width="2*" />
+                <DataGridTextColumn Header="Hạn trả"
+                                    Binding="{Binding CustomReturnDate, StringFormat=dd/MM/yyyy}"
+                                    IsReadOnly="True"
+                                    Width="2*" />
+                <DataGridTemplateColumn Header="Số tuần mượn"
+                                        Width="2*">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <Grid>
+                                <TextBlock Text="{Binding CustomBorrowWeeks}" />
+                                <!--<materialDesign:PackIcon Style="{StaticResource Warning}"/>-->
+                            </Grid>
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                    <DataGridTemplateColumn.CellEditingTemplate>
+                        <DataTemplate>
+                            <Grid>
+                                <TextBox AcceptsReturn="False"
+                                         Style="{StaticResource MaterialDesignOutlinedTextBox}"
+                                         Foreground="{DynamicResource SecondaryHueMidBrush}"
+                                         materialDesign:ValidationAssist.HorizontalAlignment="Left"
+                                         Padding="7"
+                                         materialDesign:ValidationAssist.Background="Transparent"
+                                         Text="{Binding CustomBorrowWeeks, UpdateSourceTrigger=PropertyChanged, ValidatesOnDataErrors=True}" />
+                                <!--<materialDesign:PackIcon Kind="AlertCircleOutline"
+                                    Style="{StaticResource Warning}"/>-->
+                            </Grid>
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellEditingTemplate>
+                </DataGridTemplateColumn>
+                <DataGridTemplateColumn Header="Thao tác"
+                                        Width="2*"
+                                        IsReadOnly="True">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <Button ToolTip="Xóa"
+                                    Click="btnRemoveBook_Click"
+                                    Tag="BookRemoveOutline"
+                                    Style="{StaticResource MaterialDesignIconButton}" />
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
+            </DataGrid.Columns>
+        </DataGrid>
+
+        <!-- Buttons -->
+        <StackPanel Grid.Row="6"
+                    Orientation="Horizontal"
+                    HorizontalAlignment="Right">
+            <Button Content="Lưu"
+                    Width="100"
+                    Margin="0,0,10,0"
+                    Click="btnSave_Click"
+                    Foreground="White">
+            </Button>
+            <Button Content="Hủy"
+                    Width="100"
+                    Click="btnCancel_Click"
+                    Foreground="White">
+            </Button>
+        </StackPanel>
+    </Grid>
+</UserControl> 

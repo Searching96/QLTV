@@ -38,6 +38,31 @@
                 <Button x:Name="btnFnQuanLySach" Content="Quản Lý Sách" Background="DodgerBlue" 
                         Foreground="White" Click="btnFnQuanLySach_Click"/>
             </StackPanel>
+
+            <StackPanel DockPanel.Dock="Top">
+                <Button x:Name="btnFnQuanLyTaiKhoan" Content="Quản Lý Tài Khoản" Background="DodgerBlue" 
+                        Foreground="White" Click="btnFnQuanLyTaiKhoan_Click"/>
+            </StackPanel>
+
+            <StackPanel DockPanel.Dock="Top">
+                <Button x:Name="btnFnQuanLyDocGia" Content="Quản Lý Độc Giả" Background="DodgerBlue" 
+                        Foreground="White" Click="btnFnQuanLyDocGia_Click"/>
+            </StackPanel>
+
+            <StackPanel DockPanel.Dock="Top">
+                <Button x:Name="btnFnQuanLyMuonTra" Content="Quản Lý Mượn Trả" Background="DodgerBlue" 
+                        Foreground="White" Click="btnFnQuanLyMuonTra_Click"/>
+            </StackPanel>
+
+            <StackPanel DockPanel.Dock="Top">
+                <Button x:Name="btnFnBaoCaoThongKe" Content="Báo Cáo Thống Kê" Background="DodgerBlue" 
+                        Foreground="White" Click="btnFnBaoCaoThongKe_Click"/>
+            </StackPanel>
+
+            <StackPanel DockPanel.Dock="Top">
+                <Button x:Name="btnFnQuyDinh" Content="Quy Định" Background="DodgerBlue" 
+                        Foreground="White" Click="btnFnQuyDinh_Click"/>
+            </StackPanel>
         </DockPanel>
         
         <!--Main Content-->
