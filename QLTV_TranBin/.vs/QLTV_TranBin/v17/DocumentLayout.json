@@ -3,44 +3,64 @@
   "WorkspaceRootPath": "E:\\Repos_DoAn\\QLTV_TranBin\\QLTV_TranBin\\",
   "Documents": [
     {
-      "AbsoluteMoniker": "D:0:0:{E1D170E5-EC57-455A-B5C1-C7727498CBEA}|QLTV_TranBin.csproj|e:\\repos_doan\\qltv_tranbin\\qltv_tranbin\\utrangchu.xaml.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{E1D170E5-EC57-455A-B5C1-C7727498CBEA}|QLTV_TranBin.csproj|solutionrelative:utrangchu.xaml.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{E1D170E5-EC57-455A-B5C1-C7727498CBEA}|QLTV_TranBin.csproj|e:\\repos_doan\\qltv_tranbin\\qltv_tranbin\\chitiettaikhoan.xaml.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{E1D170E5-EC57-455A-B5C1-C7727498CBEA}|QLTV_TranBin.csproj|solutionrelative:chitiettaikhoan.xaml.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{E1D170E5-EC57-455A-B5C1-C7727498CBEA}|QLTV_TranBin.csproj|e:\\repos_doan\\qltv_tranbin\\qltv_tranbin\\wuserwindow.xaml.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{E1D170E5-EC57-455A-B5C1-C7727498CBEA}|QLTV_TranBin.csproj|solutionrelative:wuserwindow.xaml.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{E1D170E5-EC57-455A-B5C1-C7727498CBEA}|QLTV_TranBin.csproj|e:\\repos_doan\\qltv_tranbin\\qltv_tranbin\\chitiettaikhoan.xaml||{F11ACC28-31D1-4C80-A34B-F4E09D3D753C}",
+      "RelativeMoniker": "D:0:0:{E1D170E5-EC57-455A-B5C1-C7727498CBEA}|QLTV_TranBin.csproj|solutionrelative:chitiettaikhoan.xaml||{F11ACC28-31D1-4C80-A34B-F4E09D3D753C}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{E1D170E5-EC57-455A-B5C1-C7727498CBEA}|QLTV_TranBin.csproj|e:\\repos_doan\\qltv_tranbin\\qltv_tranbin\\wuserwindow.xaml||{F11ACC28-31D1-4C80-A34B-F4E09D3D753C}",
-      "RelativeMoniker": "D:0:0:{E1D170E5-EC57-455A-B5C1-C7727498CBEA}|QLTV_TranBin.csproj|solutionrelative:wuserwindow.xaml||{F11ACC28-31D1-4C80-A34B-F4E09D3D753C}"
+      "AbsoluteMoniker": "D:0:0:{E1D170E5-EC57-455A-B5C1-C7727498CBEA}|QLTV_TranBin.csproj|e:\\repos_doan\\qltv_tranbin\\qltv_tranbin\\baocaothongke.xaml||{F11ACC28-31D1-4C80-A34B-F4E09D3D753C}",
+      "RelativeMoniker": "D:0:0:{E1D170E5-EC57-455A-B5C1-C7727498CBEA}|QLTV_TranBin.csproj|solutionrelative:baocaothongke.xaml||{F11ACC28-31D1-4C80-A34B-F4E09D3D753C}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{E1D170E5-EC57-455A-B5C1-C7727498CBEA}|QLTV_TranBin.csproj|e:\\repos_doan\\qltv_tranbin\\qltv_tranbin\\loginscreen.xaml||{F11ACC28-31D1-4C80-A34B-F4E09D3D753C}",
-      "RelativeMoniker": "D:0:0:{E1D170E5-EC57-455A-B5C1-C7727498CBEA}|QLTV_TranBin.csproj|solutionrelative:loginscreen.xaml||{F11ACC28-31D1-4C80-A34B-F4E09D3D753C}"
+      "AbsoluteMoniker": "D:0:0:{E1D170E5-EC57-455A-B5C1-C7727498CBEA}|QLTV_TranBin.csproj|e:\\repos_doan\\qltv_tranbin\\qltv_tranbin\\cquang\\awthemdocgia.xaml||{F11ACC28-31D1-4C80-A34B-F4E09D3D753C}",
+      "RelativeMoniker": "D:0:0:{E1D170E5-EC57-455A-B5C1-C7727498CBEA}|QLTV_TranBin.csproj|solutionrelative:cquang\\awthemdocgia.xaml||{F11ACC28-31D1-4C80-A34B-F4E09D3D753C}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{E1D170E5-EC57-455A-B5C1-C7727498CBEA}|QLTV_TranBin.csproj|e:\\repos_doan\\qltv_tranbin\\qltv_tranbin\\signinscreen.xaml||{F11ACC28-31D1-4C80-A34B-F4E09D3D753C}",
-      "RelativeMoniker": "D:0:0:{E1D170E5-EC57-455A-B5C1-C7727498CBEA}|QLTV_TranBin.csproj|solutionrelative:signinscreen.xaml||{F11ACC28-31D1-4C80-A34B-F4E09D3D753C}"
+      "AbsoluteMoniker": "D:0:0:{E1D170E5-EC57-455A-B5C1-C7727498CBEA}|QLTV_TranBin.csproj|e:\\repos_doan\\qltv_tranbin\\qltv_tranbin\\cquang\\awratingwindow.xaml||{F11ACC28-31D1-4C80-A34B-F4E09D3D753C}",
+      "RelativeMoniker": "D:0:0:{E1D170E5-EC57-455A-B5C1-C7727498CBEA}|QLTV_TranBin.csproj|solutionrelative:cquang\\awratingwindow.xaml||{F11ACC28-31D1-4C80-A34B-F4E09D3D753C}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{E1D170E5-EC57-455A-B5C1-C7727498CBEA}|QLTV_TranBin.csproj|e:\\repos_doan\\qltv_tranbin\\qltv_tranbin\\utrangchu.xaml||{F11ACC28-31D1-4C80-A34B-F4E09D3D753C}",
-      "RelativeMoniker": "D:0:0:{E1D170E5-EC57-455A-B5C1-C7727498CBEA}|QLTV_TranBin.csproj|solutionrelative:utrangchu.xaml||{F11ACC28-31D1-4C80-A34B-F4E09D3D753C}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{E1D170E5-EC57-455A-B5C1-C7727498CBEA}|QLTV_TranBin.csproj|e:\\repos_doan\\qltv_tranbin\\qltv_tranbin\\createaccount.xaml||{F11ACC28-31D1-4C80-A34B-F4E09D3D753C}",
-      "RelativeMoniker": "D:0:0:{E1D170E5-EC57-455A-B5C1-C7727498CBEA}|QLTV_TranBin.csproj|solutionrelative:createaccount.xaml||{F11ACC28-31D1-4C80-A34B-F4E09D3D753C}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{E1D170E5-EC57-455A-B5C1-C7727498CBEA}|QLTV_TranBin.csproj|e:\\repos_doan\\qltv_tranbin\\qltv_tranbin\\quanlytaikhoan.xaml||{F11ACC28-31D1-4C80-A34B-F4E09D3D753C}",
-      "RelativeMoniker": "D:0:0:{E1D170E5-EC57-455A-B5C1-C7727498CBEA}|QLTV_TranBin.csproj|solutionrelative:quanlytaikhoan.xaml||{F11ACC28-31D1-4C80-A34B-F4E09D3D753C}"
+      "AbsoluteMoniker": "D:0:0:{E1D170E5-EC57-455A-B5C1-C7727498CBEA}|QLTV_TranBin.csproj|e:\\repos_doan\\qltv_tranbin\\qltv_tranbin\\cquang\\awphieuthutienphat.xaml||{F11ACC28-31D1-4C80-A34B-F4E09D3D753C}",
+      "RelativeMoniker": "D:0:0:{E1D170E5-EC57-455A-B5C1-C7727498CBEA}|QLTV_TranBin.csproj|solutionrelative:cquang\\awphieuthutienphat.xaml||{F11ACC28-31D1-4C80-A34B-F4E09D3D753C}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{E1D170E5-EC57-455A-B5C1-C7727498CBEA}|QLTV_TranBin.csproj|e:\\repos_doan\\qltv_tranbin\\qltv_tranbin\\cquang\\auinterface.xaml||{F11ACC28-31D1-4C80-A34B-F4E09D3D753C}",
       "RelativeMoniker": "D:0:0:{E1D170E5-EC57-455A-B5C1-C7727498CBEA}|QLTV_TranBin.csproj|solutionrelative:cquang\\auinterface.xaml||{F11ACC28-31D1-4C80-A34B-F4E09D3D753C}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{E1D170E5-EC57-455A-B5C1-C7727498CBEA}|QLTV_TranBin.csproj|e:\\repos_doan\\qltv_tranbin\\qltv_tranbin\\chitiettaikhoan.xaml.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{E1D170E5-EC57-455A-B5C1-C7727498CBEA}|QLTV_TranBin.csproj|solutionrelative:chitiettaikhoan.xaml.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{E1D170E5-EC57-455A-B5C1-C7727498CBEA}|QLTV_TranBin.csproj|e:\\repos_doan\\qltv_tranbin\\qltv_tranbin\\loginscreen.xaml||{F11ACC28-31D1-4C80-A34B-F4E09D3D753C}",
+      "RelativeMoniker": "D:0:0:{E1D170E5-EC57-455A-B5C1-C7727498CBEA}|QLTV_TranBin.csproj|solutionrelative:loginscreen.xaml||{F11ACC28-31D1-4C80-A34B-F4E09D3D753C}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{E1D170E5-EC57-455A-B5C1-C7727498CBEA}|QLTV_TranBin.csproj|e:\\repos_doan\\qltv_tranbin\\qltv_tranbin\\utrangchu.xaml.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{E1D170E5-EC57-455A-B5C1-C7727498CBEA}|QLTV_TranBin.csproj|solutionrelative:utrangchu.xaml.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{E1D170E5-EC57-455A-B5C1-C7727498CBEA}|QLTV_TranBin.csproj|e:\\repos_doan\\qltv_tranbin\\qltv_tranbin\\createaccount.xaml||{F11ACC28-31D1-4C80-A34B-F4E09D3D753C}",
+      "RelativeMoniker": "D:0:0:{E1D170E5-EC57-455A-B5C1-C7727498CBEA}|QLTV_TranBin.csproj|solutionrelative:createaccount.xaml||{F11ACC28-31D1-4C80-A34B-F4E09D3D753C}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{E1D170E5-EC57-455A-B5C1-C7727498CBEA}|QLTV_TranBin.csproj|e:\\repos_doan\\qltv_tranbin\\qltv_tranbin\\utrangchu.xaml||{F11ACC28-31D1-4C80-A34B-F4E09D3D753C}",
+      "RelativeMoniker": "D:0:0:{E1D170E5-EC57-455A-B5C1-C7727498CBEA}|QLTV_TranBin.csproj|solutionrelative:utrangchu.xaml||{F11ACC28-31D1-4C80-A34B-F4E09D3D753C}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{E1D170E5-EC57-455A-B5C1-C7727498CBEA}|QLTV_TranBin.csproj|e:\\repos_doan\\qltv_tranbin\\qltv_tranbin\\wuserwindow.xaml||{F11ACC28-31D1-4C80-A34B-F4E09D3D753C}",
+      "RelativeMoniker": "D:0:0:{E1D170E5-EC57-455A-B5C1-C7727498CBEA}|QLTV_TranBin.csproj|solutionrelative:wuserwindow.xaml||{F11ACC28-31D1-4C80-A34B-F4E09D3D753C}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{E1D170E5-EC57-455A-B5C1-C7727498CBEA}|QLTV_TranBin.csproj|e:\\repos_doan\\qltv_tranbin\\qltv_tranbin\\createaccount.xaml.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{E1D170E5-EC57-455A-B5C1-C7727498CBEA}|QLTV_TranBin.csproj|solutionrelative:createaccount.xaml.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{E1D170E5-EC57-455A-B5C1-C7727498CBEA}|QLTV_TranBin.csproj|e:\\repos_doan\\qltv_tranbin\\qltv_tranbin\\signinscreen.xaml||{F11ACC28-31D1-4C80-A34B-F4E09D3D753C}",
+      "RelativeMoniker": "D:0:0:{E1D170E5-EC57-455A-B5C1-C7727498CBEA}|QLTV_TranBin.csproj|solutionrelative:signinscreen.xaml||{F11ACC28-31D1-4C80-A34B-F4E09D3D753C}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{E1D170E5-EC57-455A-B5C1-C7727498CBEA}|QLTV_TranBin.csproj|e:\\repos_doan\\qltv_tranbin\\qltv_tranbin\\quanlytaikhoan.xaml||{F11ACC28-31D1-4C80-A34B-F4E09D3D753C}",
+      "RelativeMoniker": "D:0:0:{E1D170E5-EC57-455A-B5C1-C7727498CBEA}|QLTV_TranBin.csproj|solutionrelative:quanlytaikhoan.xaml||{F11ACC28-31D1-4C80-A34B-F4E09D3D753C}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{E1D170E5-EC57-455A-B5C1-C7727498CBEA}|QLTV_TranBin.csproj|e:\\repos_doan\\qltv_tranbin\\qltv_tranbin\\viewmodels\\clclockviewmodel.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
@@ -86,20 +106,12 @@
       "RelativeMoniker": "D:0:0:{E1D170E5-EC57-455A-B5C1-C7727498CBEA}|QLTV_TranBin.csproj|solutionrelative:cquang\\awphieuthutienphat.xaml.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{E1D170E5-EC57-455A-B5C1-C7727498CBEA}|QLTV_TranBin.csproj|e:\\repos_doan\\qltv_tranbin\\qltv_tranbin\\cquang\\awphieuthutienphat.xaml||{F11ACC28-31D1-4C80-A34B-F4E09D3D753C}",
-      "RelativeMoniker": "D:0:0:{E1D170E5-EC57-455A-B5C1-C7727498CBEA}|QLTV_TranBin.csproj|solutionrelative:cquang\\awphieuthutienphat.xaml||{F11ACC28-31D1-4C80-A34B-F4E09D3D753C}"
-    },
-    {
       "AbsoluteMoniker": "D:0:0:{E1D170E5-EC57-455A-B5C1-C7727498CBEA}|QLTV_TranBin.csproj|e:\\repos_doan\\qltv_tranbin\\qltv_tranbin\\qltv_tb.sql||{CC5D8DF0-88F4-4BB2-9DBB-B48CEE65C30A}",
       "RelativeMoniker": "D:0:0:{E1D170E5-EC57-455A-B5C1-C7727498CBEA}|QLTV_TranBin.csproj|solutionrelative:qltv_tb.sql||{CC5D8DF0-88F4-4BB2-9DBB-B48CEE65C30A}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{E1D170E5-EC57-455A-B5C1-C7727498CBEA}|QLTV_TranBin.csproj|e:\\repos_doan\\qltv_tranbin\\qltv_tranbin\\dulieu.sql||{CC5D8DF0-88F4-4BB2-9DBB-B48CEE65C30A}",
       "RelativeMoniker": "D:0:0:{E1D170E5-EC57-455A-B5C1-C7727498CBEA}|QLTV_TranBin.csproj|solutionrelative:dulieu.sql||{CC5D8DF0-88F4-4BB2-9DBB-B48CEE65C30A}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{E1D170E5-EC57-455A-B5C1-C7727498CBEA}|QLTV_TranBin.csproj|e:\\repos_doan\\qltv_tranbin\\qltv_tranbin\\baocaothongke.xaml||{F11ACC28-31D1-4C80-A34B-F4E09D3D753C}",
-      "RelativeMoniker": "D:0:0:{E1D170E5-EC57-455A-B5C1-C7727498CBEA}|QLTV_TranBin.csproj|solutionrelative:baocaothongke.xaml||{F11ACC28-31D1-4C80-A34B-F4E09D3D753C}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{E1D170E5-EC57-455A-B5C1-C7727498CBEA}|QLTV_TranBin.csproj|e:\\repos_doan\\qltv_tranbin\\qltv_tranbin\\ucchitietsach.xaml||{F11ACC28-31D1-4C80-A34B-F4E09D3D753C}",
@@ -155,7 +167,7 @@
       "DocumentGroups": [
         {
           "DockedWidth": 225,
-          "SelectedChildIndex": 7,
+          "SelectedChildIndex": 8,
           "Children": [
             {
               "$type": "Bookmark",
@@ -167,7 +179,56 @@
             },
             {
               "$type": "Document",
+              "DocumentIndex": 1,
+              "Title": "ChiTietTaiKhoan.xaml",
+              "DocumentMoniker": "E:\\Repos_DoAn\\QLTV_TranBin\\QLTV_TranBin\\ChiTietTaiKhoan.xaml",
+              "RelativeDocumentMoniker": "ChiTietTaiKhoan.xaml",
+              "ToolTip": "E:\\Repos_DoAn\\QLTV_TranBin\\QLTV_TranBin\\ChiTietTaiKhoan.xaml",
+              "RelativeToolTip": "ChiTietTaiKhoan.xaml",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003549|",
+              "WhenOpened": "2024-12-13T03:37:15.815Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
               "DocumentIndex": 3,
+              "Title": "AWThemDocGia.xaml",
+              "DocumentMoniker": "E:\\Repos_DoAn\\QLTV_TranBin\\QLTV_TranBin\\CQuang\\AWThemDocGia.xaml",
+              "RelativeDocumentMoniker": "CQuang\\AWThemDocGia.xaml",
+              "ToolTip": "E:\\Repos_DoAn\\QLTV_TranBin\\QLTV_TranBin\\CQuang\\AWThemDocGia.xaml",
+              "RelativeToolTip": "CQuang\\AWThemDocGia.xaml",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003549|",
+              "WhenOpened": "2024-12-13T03:36:39.085Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 4,
+              "Title": "AWRatingWindow.xaml",
+              "DocumentMoniker": "E:\\Repos_DoAn\\QLTV_TranBin\\QLTV_TranBin\\CQuang\\AWRatingWindow.xaml",
+              "RelativeDocumentMoniker": "CQuang\\AWRatingWindow.xaml",
+              "ToolTip": "E:\\Repos_DoAn\\QLTV_TranBin\\QLTV_TranBin\\CQuang\\AWRatingWindow.xaml",
+              "RelativeToolTip": "CQuang\\AWRatingWindow.xaml",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003549|",
+              "WhenOpened": "2024-12-13T03:36:35.209Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 8,
+              "Title": "UTrangChu.xaml.cs",
+              "DocumentMoniker": "E:\\Repos_DoAn\\QLTV_TranBin\\QLTV_TranBin\\UTrangChu.xaml.cs",
+              "RelativeDocumentMoniker": "UTrangChu.xaml.cs",
+              "ToolTip": "E:\\Repos_DoAn\\QLTV_TranBin\\QLTV_TranBin\\UTrangChu.xaml.cs",
+              "RelativeToolTip": "UTrangChu.xaml.cs",
+              "ViewState": "AgIAANkAAAAAAAAAAAAqwLkAAABDAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-12-13T03:35:37.453Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 7,
               "Title": "LoginScreen.xaml",
               "DocumentMoniker": "E:\\Repos_DoAn\\QLTV_TranBin\\QLTV_TranBin\\LoginScreen.xaml",
               "RelativeDocumentMoniker": "LoginScreen.xaml",
@@ -180,18 +241,31 @@
             {
               "$type": "Document",
               "DocumentIndex": 2,
-              "Title": "WUserWindow.xaml",
-              "DocumentMoniker": "E:\\Repos_DoAn\\QLTV_TranBin\\QLTV_TranBin\\WUserWindow.xaml",
-              "RelativeDocumentMoniker": "WUserWindow.xaml",
-              "ToolTip": "E:\\Repos_DoAn\\QLTV_TranBin\\QLTV_TranBin\\WUserWindow.xaml",
-              "RelativeToolTip": "WUserWindow.xaml",
+              "Title": "BaoCaoThongKe.xaml",
+              "DocumentMoniker": "E:\\Repos_DoAn\\QLTV_TranBin\\QLTV_TranBin\\BaoCaoThongKe.xaml",
+              "RelativeDocumentMoniker": "BaoCaoThongKe.xaml",
+              "ToolTip": "E:\\Repos_DoAn\\QLTV_TranBin\\QLTV_TranBin\\BaoCaoThongKe.xaml",
+              "RelativeToolTip": "BaoCaoThongKe.xaml",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003549|",
-              "WhenOpened": "2024-12-11T08:56:49.288Z",
+              "WhenOpened": "2024-11-22T07:46:29.183Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 5,
+              "DocumentIndex": 0,
+              "Title": "ChiTietTaiKhoan.xaml.cs",
+              "DocumentMoniker": "E:\\Repos_DoAn\\QLTV_TranBin\\QLTV_TranBin\\ChiTietTaiKhoan.xaml.cs",
+              "RelativeDocumentMoniker": "ChiTietTaiKhoan.xaml.cs",
+              "ToolTip": "E:\\Repos_DoAn\\QLTV_TranBin\\QLTV_TranBin\\ChiTietTaiKhoan.xaml.cs",
+              "RelativeToolTip": "ChiTietTaiKhoan.xaml.cs",
+              "ViewState": "AgIAAJEBAAAAAAAAAADgv5oBAAA9AAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-12-02T14:08:23.117Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 10,
               "Title": "UTrangChu.xaml",
               "DocumentMoniker": "E:\\Repos_DoAn\\QLTV_TranBin\\QLTV_TranBin\\UTrangChu.xaml",
               "RelativeDocumentMoniker": "UTrangChu.xaml",
@@ -203,44 +277,79 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 6,
+              "DocumentIndex": 9,
               "Title": "CreateAccount.xaml",
               "DocumentMoniker": "E:\\Repos_DoAn\\QLTV_TranBin\\QLTV_TranBin\\CreateAccount.xaml",
               "RelativeDocumentMoniker": "CreateAccount.xaml",
               "ToolTip": "E:\\Repos_DoAn\\QLTV_TranBin\\QLTV_TranBin\\CreateAccount.xaml",
               "RelativeToolTip": "CreateAccount.xaml",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003549|",
-              "WhenOpened": "2024-11-28T06:07:57.857Z"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 1,
-              "Title": "WUserWindow.xaml.cs",
-              "DocumentMoniker": "E:\\Repos_DoAn\\QLTV_TranBin\\QLTV_TranBin\\WUserWindow.xaml.cs",
-              "RelativeDocumentMoniker": "WUserWindow.xaml.cs",
-              "ToolTip": "E:\\Repos_DoAn\\QLTV_TranBin\\QLTV_TranBin\\WUserWindow.xaml.cs",
-              "RelativeToolTip": "WUserWindow.xaml.cs",
-              "ViewState": "AgIAAKoAAAAAAAAAAAAwwOYAAAAJAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-12-10T15:04:07.092Z",
+              "WhenOpened": "2024-11-28T06:07:57.857Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 0,
-              "Title": "UTrangChu.xaml.cs",
-              "DocumentMoniker": "E:\\Repos_DoAn\\QLTV_TranBin\\QLTV_TranBin\\UTrangChu.xaml.cs",
-              "RelativeDocumentMoniker": "UTrangChu.xaml.cs",
-              "ToolTip": "E:\\Repos_DoAn\\QLTV_TranBin\\QLTV_TranBin\\UTrangChu.xaml.cs",
-              "RelativeToolTip": "UTrangChu.xaml.cs",
-              "ViewState": "AgIAAPAAAAAAAAAAAAAiwPkAAABHAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-12-10T14:37:00.365Z",
+              "DocumentIndex": 11,
+              "Title": "WUserWindow.xaml",
+              "DocumentMoniker": "E:\\Repos_DoAn\\QLTV_TranBin\\QLTV_TranBin\\WUserWindow.xaml",
+              "RelativeDocumentMoniker": "WUserWindow.xaml",
+              "ToolTip": "E:\\Repos_DoAn\\QLTV_TranBin\\QLTV_TranBin\\WUserWindow.xaml",
+              "RelativeToolTip": "WUserWindow.xaml",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003549|",
+              "WhenOpened": "2024-12-11T08:56:49.288Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 7,
+              "DocumentIndex": 12,
+              "Title": "CreateAccount.xaml.cs",
+              "DocumentMoniker": "E:\\Repos_DoAn\\QLTV_TranBin\\QLTV_TranBin\\CreateAccount.xaml.cs",
+              "RelativeDocumentMoniker": "CreateAccount.xaml.cs",
+              "ToolTip": "E:\\Repos_DoAn\\QLTV_TranBin\\QLTV_TranBin\\CreateAccount.xaml.cs",
+              "RelativeToolTip": "CreateAccount.xaml.cs",
+              "ViewState": "AgIAAAEBAAAAAAAAAAAAAAoBAAA8AAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-12-13T03:20:05.887Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 13,
+              "Title": "SignInScreen.xaml",
+              "DocumentMoniker": "E:\\Repos_DoAn\\QLTV_TranBin\\QLTV_TranBin\\SignInScreen.xaml",
+              "RelativeDocumentMoniker": "SignInScreen.xaml",
+              "ToolTip": "E:\\Repos_DoAn\\QLTV_TranBin\\QLTV_TranBin\\SignInScreen.xaml",
+              "RelativeToolTip": "SignInScreen.xaml",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003549|",
+              "WhenOpened": "2024-11-26T08:33:30.885Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 6,
+              "Title": "AUInterface.xaml",
+              "DocumentMoniker": "E:\\Repos_DoAn\\QLTV_TranBin\\QLTV_TranBin\\CQuang\\AUInterface.xaml",
+              "RelativeDocumentMoniker": "CQuang\\AUInterface.xaml",
+              "ToolTip": "E:\\Repos_DoAn\\QLTV_TranBin\\QLTV_TranBin\\CQuang\\AUInterface.xaml",
+              "RelativeToolTip": "CQuang\\AUInterface.xaml",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003549|",
+              "WhenOpened": "2024-12-06T12:53:00.533Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 5,
+              "Title": "AWPhieuThuTienPhat.xaml",
+              "DocumentMoniker": "E:\\Repos_DoAn\\QLTV_TranBin\\QLTV_TranBin\\CQuang\\AWPhieuThuTienPhat.xaml",
+              "RelativeDocumentMoniker": "CQuang\\AWPhieuThuTienPhat.xaml",
+              "ToolTip": "E:\\Repos_DoAn\\QLTV_TranBin\\QLTV_TranBin\\CQuang\\AWPhieuThuTienPhat.xaml",
+              "RelativeToolTip": "CQuang\\AWPhieuThuTienPhat.xaml",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003549|",
+              "WhenOpened": "2024-12-05T06:46:08.082Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 14,
               "Title": "QuanLyTaiKhoan.xaml",
               "DocumentMoniker": "E:\\Repos_DoAn\\QLTV_TranBin\\QLTV_TranBin\\QuanLyTaiKhoan.xaml",
               "RelativeDocumentMoniker": "QuanLyTaiKhoan.xaml",
@@ -251,30 +360,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 4,
-              "Title": "SignInScreen.xaml",
-              "DocumentMoniker": "E:\\Repos_DoAn\\QLTV_TranBin\\QLTV_TranBin\\SignInScreen.xaml",
-              "RelativeDocumentMoniker": "SignInScreen.xaml",
-              "ToolTip": "E:\\Repos_DoAn\\QLTV_TranBin\\QLTV_TranBin\\SignInScreen.xaml",
-              "RelativeToolTip": "SignInScreen.xaml",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003549|",
-              "WhenOpened": "2024-11-26T08:33:30.885Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 8,
-              "Title": "AUInterface.xaml",
-              "DocumentMoniker": "E:\\Repos_DoAn\\QLTV_TranBin\\QLTV_TranBin\\CQuang\\AUInterface.xaml",
-              "RelativeDocumentMoniker": "CQuang\\AUInterface.xaml",
-              "ToolTip": "E:\\Repos_DoAn\\QLTV_TranBin\\QLTV_TranBin\\CQuang\\AUInterface.xaml",
-              "RelativeToolTip": "CQuang\\AUInterface.xaml",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003549|",
-              "WhenOpened": "2024-12-06T12:53:00.533Z"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 11,
+              "DocumentIndex": 16,
               "Title": "AUInterface.xaml.cs",
               "DocumentMoniker": "E:\\Repos_DoAn\\QLTV_TranBin\\QLTV_TranBin\\CQuang\\AUInterface.xaml.cs",
               "RelativeDocumentMoniker": "CQuang\\AUInterface.xaml.cs",
@@ -286,7 +372,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 10,
+              "DocumentIndex": 15,
               "Title": "CLClockViewModel.cs",
               "DocumentMoniker": "E:\\Repos_DoAn\\QLTV_TranBin\\QLTV_TranBin\\ViewModels\\CLClockViewModel.cs",
               "RelativeDocumentMoniker": "ViewModels\\CLClockViewModel.cs",
@@ -298,7 +384,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 12,
+              "DocumentIndex": 17,
               "Title": "SignInScreen.xaml.cs",
               "DocumentMoniker": "E:\\Repos_DoAn\\QLTV_TranBin\\QLTV_TranBin\\SignInScreen.xaml.cs",
               "RelativeDocumentMoniker": "SignInScreen.xaml.cs",
@@ -310,19 +396,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 9,
-              "Title": "ChiTietTaiKhoan.xaml.cs",
-              "DocumentMoniker": "E:\\Repos_DoAn\\QLTV_TranBin\\QLTV_TranBin\\ChiTietTaiKhoan.xaml.cs",
-              "RelativeDocumentMoniker": "ChiTietTaiKhoan.xaml.cs",
-              "ToolTip": "E:\\Repos_DoAn\\QLTV_TranBin\\QLTV_TranBin\\ChiTietTaiKhoan.xaml.cs",
-              "RelativeToolTip": "ChiTietTaiKhoan.xaml.cs",
-              "ViewState": "AgIAALwAAAAAAAAAAAAjwOEAAABfAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-12-02T14:08:23.117Z"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 14,
+              "DocumentIndex": 19,
               "Title": "AccountViewModel.cs",
               "DocumentMoniker": "E:\\Repos_DoAn\\QLTV_TranBin\\QLTV_TranBin\\ViewModels\\AccountViewModel.cs",
               "RelativeDocumentMoniker": "ViewModels\\AccountViewModel.cs",
@@ -334,7 +408,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 16,
+              "DocumentIndex": 21,
               "Title": "DocGiaViewModel.cs",
               "DocumentMoniker": "E:\\Repos_DoAn\\QLTV_TranBin\\QLTV_TranBin\\ViewModels\\DocGiaViewModel.cs",
               "RelativeDocumentMoniker": "ViewModels\\DocGiaViewModel.cs",
@@ -346,7 +420,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 13,
+              "DocumentIndex": 18,
               "Title": "TAIKHOAN.cs",
               "DocumentMoniker": "E:\\Repos_DoAn\\QLTV_TranBin\\QLTV_TranBin\\Models\\TAIKHOAN.cs",
               "RelativeDocumentMoniker": "Models\\TAIKHOAN.cs",
@@ -358,7 +432,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 17,
+              "DocumentIndex": 22,
               "Title": "ThongBaoList.cs",
               "DocumentMoniker": "E:\\Repos_DoAn\\QLTV_TranBin\\QLTV_TranBin\\ViewModels\\ThongBaoList.cs",
               "RelativeDocumentMoniker": "ViewModels\\ThongBaoList.cs",
@@ -370,7 +444,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 15,
+              "DocumentIndex": 20,
               "Title": "DOCGIA.cs",
               "DocumentMoniker": "E:\\Repos_DoAn\\QLTV_TranBin\\QLTV_TranBin\\Models\\DOCGIA.cs",
               "RelativeDocumentMoniker": "Models\\DOCGIA.cs",
@@ -382,7 +456,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 18,
+              "DocumentIndex": 23,
               "Title": "ThongBao.cs",
               "DocumentMoniker": "E:\\Repos_DoAn\\QLTV_TranBin\\QLTV_TranBin\\ViewModels\\ThongBao.cs",
               "RelativeDocumentMoniker": "ViewModels\\ThongBao.cs",
@@ -394,7 +468,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 19,
+              "DocumentIndex": 24,
               "Title": "WUserWindow.xaml.cs",
               "DocumentMoniker": "E:\\Repos_DoAn\\QLTV_TranBin\\WUserWindow.xaml.cs",
               "RelativeDocumentMoniker": "..\\WUserWindow.xaml.cs",
@@ -406,7 +480,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 20,
+              "DocumentIndex": 25,
               "Title": "AWPhieuThuTienPhat.xaml.cs",
               "DocumentMoniker": "E:\\Repos_DoAn\\QLTV_TranBin\\QLTV_TranBin\\CQuang\\AWPhieuThuTienPhat.xaml.cs",
               "RelativeDocumentMoniker": "CQuang\\AWPhieuThuTienPhat.xaml.cs",
@@ -418,18 +492,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 21,
-              "Title": "AWPhieuThuTienPhat.xaml",
-              "DocumentMoniker": "E:\\Repos_DoAn\\QLTV_TranBin\\QLTV_TranBin\\CQuang\\AWPhieuThuTienPhat.xaml",
-              "RelativeDocumentMoniker": "CQuang\\AWPhieuThuTienPhat.xaml",
-              "ToolTip": "E:\\Repos_DoAn\\QLTV_TranBin\\QLTV_TranBin\\CQuang\\AWPhieuThuTienPhat.xaml",
-              "RelativeToolTip": "CQuang\\AWPhieuThuTienPhat.xaml",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003549|",
-              "WhenOpened": "2024-12-05T06:46:08.082Z"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 22,
+              "DocumentIndex": 26,
               "Title": "QLTV_TB.sql",
               "DocumentMoniker": "E:\\Repos_DoAn\\QLTV_TranBin\\QLTV_TranBin\\QLTV_TB.sql",
               "RelativeDocumentMoniker": "QLTV_TB.sql",
@@ -440,7 +503,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 23,
+              "DocumentIndex": 27,
               "Title": "DuLieu.sql",
               "DocumentMoniker": "E:\\Repos_DoAn\\QLTV_TranBin\\QLTV_TranBin\\DuLieu.sql",
               "RelativeDocumentMoniker": "DuLieu.sql",
@@ -451,18 +514,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 24,
-              "Title": "BaoCaoThongKe.xaml",
-              "DocumentMoniker": "E:\\Repos_DoAn\\QLTV_TranBin\\QLTV_TranBin\\BaoCaoThongKe.xaml",
-              "RelativeDocumentMoniker": "BaoCaoThongKe.xaml",
-              "ToolTip": "E:\\Repos_DoAn\\QLTV_TranBin\\QLTV_TranBin\\BaoCaoThongKe.xaml",
-              "RelativeToolTip": "BaoCaoThongKe.xaml",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003549|",
-              "WhenOpened": "2024-11-22T07:46:29.183Z"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 25,
+              "DocumentIndex": 28,
               "Title": "UCChiTietSach.xaml",
               "DocumentMoniker": "E:\\Repos_DoAn\\QLTV_TranBin\\QLTV_TranBin\\UCChiTietSach.xaml",
               "RelativeDocumentMoniker": "UCChiTietSach.xaml",
@@ -473,7 +525,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 26,
+              "DocumentIndex": 29,
               "Title": "BaoCaoThongKe.xaml.cs",
               "DocumentMoniker": "E:\\Repos_DoAn\\QLTV_TranBin\\QLTV_TranBin\\BaoCaoThongKe.xaml.cs",
               "RelativeDocumentMoniker": "BaoCaoThongKe.xaml.cs",
@@ -485,7 +537,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 27,
+              "DocumentIndex": 30,
               "Title": "TinhTheLoaiMuon.cs",
               "DocumentMoniker": "E:\\Repos_DoAn\\QLTV_TranBin\\QLTV_TranBin\\Chart\\CaculateCharts\\TinhTheLoaiMuon.cs",
               "RelativeDocumentMoniker": "Chart\\CaculateCharts\\TinhTheLoaiMuon.cs",
@@ -497,7 +549,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 28,
+              "DocumentIndex": 31,
               "Title": "PHANQUYEN.cs",
               "DocumentMoniker": "E:\\Repos_DoAn\\QLTV_TranBin\\QLTV_TranBin\\Models\\PHANQUYEN.cs",
               "RelativeDocumentMoniker": "Models\\PHANQUYEN.cs",
@@ -509,7 +561,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 29,
+              "DocumentIndex": 32,
               "Title": "LOAIDOCGIA.cs",
               "DocumentMoniker": "E:\\Repos_DoAn\\QLTV_TranBin\\QLTV_TranBin\\Models\\LOAIDOCGIA.cs",
               "RelativeDocumentMoniker": "Models\\LOAIDOCGIA.cs",
@@ -521,7 +573,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 30,
+              "DocumentIndex": 33,
               "Title": "UCChiTietSach.xaml.cs",
               "DocumentMoniker": "E:\\Repos_DoAn\\QLTV_TranBin\\QLTV_TranBin\\UCChiTietSach.xaml.cs",
               "RelativeDocumentMoniker": "UCChiTietSach.xaml.cs",
@@ -533,7 +585,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 31,
+              "DocumentIndex": 34,
               "Title": "ADMIN.cs",
               "DocumentMoniker": "E:\\Repos_DoAn\\QLTV_TranBin\\QLTV_TranBin\\Models\\ADMIN.cs",
               "RelativeDocumentMoniker": "Models\\ADMIN.cs",
@@ -545,7 +597,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 33,
+              "DocumentIndex": 36,
               "Title": "Settings.settings",
               "DocumentMoniker": "E:\\Repos_DoAn\\QLTV_TranBin\\QLTV_TranBin\\Properties\\Settings.settings",
               "RelativeDocumentMoniker": "Properties\\Settings.settings",
@@ -556,7 +608,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 32,
+              "DocumentIndex": 35,
               "Title": "RoleViewModel.cs",
               "DocumentMoniker": "E:\\Repos_DoAn\\QLTV_TranBin\\QLTV_TranBin\\ViewModels\\RoleViewModel.cs",
               "RelativeDocumentMoniker": "ViewModels\\RoleViewModel.cs",
@@ -568,7 +620,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 36,
+              "DocumentIndex": 39,
               "Title": "ChartUpdater.cs",
               "DocumentMoniker": "C:\\Users\\ACER\\AppData\\Local\\Temp\\.vsdbgsrc\\322467f2f0ff3a5e25c957bc22f206f4ea97f7e0913122ec8a210a8849f21412\\ChartUpdater.cs",
               "ToolTip": "C:\\Users\\ACER\\AppData\\Local\\Temp\\.vsdbgsrc\\322467f2f0ff3a5e25c957bc22f206f4ea97f7e0913122ec8a210a8849f21412\\ChartUpdater.cs",
@@ -578,7 +630,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 34,
+              "DocumentIndex": 37,
               "Title": "ResourcePart.cs",
               "DocumentMoniker": "C:\\Users\\ACER\\AppData\\Local\\Temp\\.vsdbgsrc\\eb92e277c464108612c0a4b5e2252fce96abde584950a65087ada459b840fe37\\ResourcePart.cs",
               "ToolTip": "C:\\Users\\ACER\\AppData\\Local\\Temp\\.vsdbgsrc\\eb92e277c464108612c0a4b5e2252fce96abde584950a65087ada459b840fe37\\ResourcePart.cs",
@@ -588,7 +640,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 35,
+              "DocumentIndex": 38,
               "Title": "TheLoaiMuon.cs",
               "DocumentMoniker": "E:\\Repos_DoAn\\QLTV_TranBin\\QLTV_TranBin\\Chart\\ModelCharts\\TheLoaiMuon.cs",
               "RelativeDocumentMoniker": "Chart\\ModelCharts\\TheLoaiMuon.cs",

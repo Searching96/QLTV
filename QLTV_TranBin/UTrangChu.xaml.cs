@@ -72,12 +72,12 @@ namespace QLTV_TranBin
             }
             private void LoadTuaSachByTheLoai()
             {
-                using (var context = new QLTV2Context())
-                {
-                    TuaSachByTheLoai = new Dictionary<int, ObservableCollection<TUASACH>>();
+            using (var context = new QLTV2Context())
+            {
+                TuaSachByTheLoai = new Dictionary<int, ObservableCollection<TUASACH>>();
 
-                    foreach (var theLoai in TheLoaiList)
-                    {
+                foreach (var theLoai in TheLoaiList)
+                {
                     var tuaSachs = context.TUASACH
                     .Where(t => t.TUASACH_THELOAI
                         .Any(ttl => ttl.IDTheLoai == theLoai.ID) && !t.IsDeleted) // Lọc theo thể loại từ bảng TUASACH_THELOAI
@@ -87,9 +87,9 @@ namespace QLTV_TranBin
                     //foreach (var tuasach in tuaSachs)
                     //    MessageBox.Show(tuasach.TenTuaSach);
                     TuaSachByTheLoai[theLoai.ID] = new ObservableCollection<TUASACH>(tuaSachs);
-                        
-                    }
+
                 }
+            }
             }
             public ObservableCollection<TUASACH> TuaSachList { get; set; }
 
@@ -139,29 +139,29 @@ namespace QLTV_TranBin
                     using (var context = new QLTV2Context())
                     {
 
-                        // Truy vấn lấy danh sách thể loại được mượn nhiều nhất
-                        var topTheLoai = context.CTPHIEUMUON
-                            .Include(ctpm => ctpm.IDSachNavigation)
-                            .ThenInclude(sach => sach.IDTuaSachNavigation)
-                            .ThenInclude(tuaSach => tuaSach.TUASACH_THELOAI) // Bao gồm bảng TUASACH_THELOAI
-                            .ThenInclude(tuasachTheLoai => tuasachTheLoai.IDTheLoaiNavigation) // Bao gồm thông tin Thể loại
-                            .ToList() // Lấy toàn bộ dữ liệu ra trước
-                            .SelectMany(ctpm => ctpm.IDSachNavigation.IDTuaSachNavigation.TUASACH_THELOAI) // Lấy tất cả các thể loại của tựa sách
-                            .Select(tuasachTheLoai => tuasachTheLoai.IDTheLoaiNavigation) // Chỉ lấy thông tin thể loại
-                            .GroupBy(theloai => theloai.ID) // Nhóm theo ID thể loại
-                            .Select(g => new
-                            {
-                                TheLoai = g.FirstOrDefault(),
-                                SoLuotMuon = g.Count()
-                            })
-                            .OrderByDescending(x => x.SoLuotMuon)
-                            .Take(5)
-                            .Select(x => x.TheLoai)
-                            .ToList(); // Chuyển kết quả cuối cùng thành danh sách
-                        // Gán danh sách vào ObservableCollection để hiển thị trên giao diện
-                        TheLoaiMuonNhieuList = new ObservableCollection<THELOAI>(topTheLoai);
-                        
-                    }
+                    // Truy vấn lấy danh sách thể loại được mượn nhiều nhất
+                    var topTheLoai = context.CTPHIEUMUON
+                        .Include(ctpm => ctpm.IDSachNavigation)
+                        .ThenInclude(sach => sach.IDTuaSachNavigation)
+                        .ThenInclude(tuaSach => tuaSach.TUASACH_THELOAI) // Bao gồm bảng TUASACH_THELOAI
+                        .ThenInclude(tuasachTheLoai => tuasachTheLoai.IDTheLoaiNavigation) // Bao gồm thông tin Thể loại
+                        .ToList() // Lấy toàn bộ dữ liệu ra trước
+                        .SelectMany(ctpm => ctpm.IDSachNavigation.IDTuaSachNavigation.TUASACH_THELOAI) // Lấy tất cả các thể loại của tựa sách
+                        .Select(tuasachTheLoai => tuasachTheLoai.IDTheLoaiNavigation) // Chỉ lấy thông tin thể loại
+                        .GroupBy(theloai => theloai.ID) // Nhóm theo ID thể loại
+                        .Select(g => new
+                        {
+                            TheLoai = g.FirstOrDefault(),
+                            SoLuotMuon = g.Count()
+                        })
+                        .OrderByDescending(x => x.SoLuotMuon)
+                        .Take(5)
+                        .Select(x => x.TheLoai)
+                        .ToList(); // Chuyển kết quả cuối cùng thành danh sách
+                                   // Gán danh sách vào ObservableCollection để hiển thị trên giao diện
+                    TheLoaiMuonNhieuList = new ObservableCollection<THELOAI>(topTheLoai);
+
+                }
                 }
                 catch (Exception ex)
                 {
@@ -177,7 +177,7 @@ namespace QLTV_TranBin
 
                 foreach (var theLoai in TheLoaiMuonNhieuList)
                 {
-                    
+
                     // Truy vấn 5 cuốn sách mượn nhiều nhất trong thể loại
                     var tuaSachs = context.CTPHIEUMUON
                         .Include(ctpm => ctpm.IDSachNavigation) // Bao gồm thông tin Sách

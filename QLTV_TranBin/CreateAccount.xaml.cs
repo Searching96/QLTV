@@ -275,17 +275,29 @@ namespace QLTV_TranBin
             // Kiểm tra các trường bắt buộc
             if (string.IsNullOrEmpty(username) || string.IsNullOrEmpty(email))
             {
-                MessageBox.Show("Please fill in all required fields!", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                MessageBox.Show("Vui lòng điền đầy đủ thông tin!", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
                 return;
             }
 
             // Kiểm tra số điện thoại chỉ chứa số
             if (string.IsNullOrEmpty(phoneNumber) || !phoneNumber.All(char.IsDigit))
             {
-                MessageBox.Show("Phone number must contain only numbers!", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                MessageBox.Show("Số điện thoại chỉ chứa số!", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
                 return;
             }
-
+            if (birthday.HasValue && ngaymo.HasValue && ngaydong.HasValue) // Kiểm tra nếu tất cả đều có giá trị
+            {
+                if (birthday.Value >= ngaymo.Value || birthday.Value >= ngaydong.Value)
+                {
+                    MessageBox.Show("Ngày sinh nhật phải nhỏ hơn ngày mở và ngày đóng!", "Lỗi", MessageBoxButton.OK, MessageBoxImage.Warning);
+                }
+                else if (ngaymo.Value >= ngaydong.Value)
+                {
+                    MessageBox.Show("Ngày mở phải nhỏ hơn ngày đóng!", "Lỗi", MessageBoxButton.OK, MessageBoxImage.Warning);
+                }
+                
+            }
+            
             try
             {
                 using (var context = new QLTV2Context())
@@ -295,7 +307,7 @@ namespace QLTV_TranBin
                     var existingAccount = context.TAIKHOAN.FirstOrDefault(tk => tk.Email == email);
                     if (existingAccount != null)
                     {
-                        MessageBox.Show("Email already exists!", "Error", MessageBoxButton.OK, MessageBoxImage.Warning);
+                        MessageBox.Show("Email đã tồn tại!", "Error", MessageBoxButton.OK, MessageBoxImage.Warning);
                         return;
                     }
 
@@ -320,6 +332,7 @@ namespace QLTV_TranBin
                         if (cbPhanQuyen.SelectedItem is PHANQUYEN selectedRole)
                         {
                             idLoaiDocGia = selectedRole.ID; // Lấy ID phân quyền làm IDLoaiDocGia
+                            MessageBox.Show(idLoaiDocGia.ToString());
                         }
                     }
                     else if (cbAdmin.IsChecked == true) // Nếu chọn "Admin" và chọn từ ComboBox
@@ -328,6 +341,7 @@ namespace QLTV_TranBin
                         if (cbPhanQuyen.SelectedItem is PHANQUYEN selectedRole)
                         {
                             phanQuyen = selectedRole.ID; // Lấy ID phân quyền từ ComboBox
+                            
                         }
                         else
                         {
@@ -376,14 +390,16 @@ namespace QLTV_TranBin
                         var newDocGia = new DOCGIA
                         {
                             IDTaiKhoan = newAccount.ID,
-                            IDLoaiDocGia = idLoaiDocGia ?? 0  // Gán IDLoaiDocGia từ phân quyền
+                            IDLoaiDocGia = idLoaiDocGia ?? 0,  // Gán IDLoaiDocGia từ phân quyền
+                            TongNo = 0,
+                            GioiThieu = "Chưa có giới thiệu"
                         };
                         context.DOCGIA.Add(newDocGia);
                     }
-                    MessageBox.Show("Check");
+                    
                     context.SaveChanges();
                     // Thông báo đăng ký thành công
-                    MessageBox.Show("Sign up successful!", "Success", MessageBoxButton.OK, MessageBoxImage.Information);
+                    MessageBox.Show("Đăng ký thành công!", "Success", MessageBoxButton.OK, MessageBoxImage.Information);
 
                     // Gửi email cho người dùng (sử dụng MailKit hoặc phương thức khác)
                     SendEmailUsingMailKit(email, password);
@@ -395,7 +411,21 @@ namespace QLTV_TranBin
             }
             catch (Exception ex)
             {
-                MessageBox.Show($"An error occurred: {ex.Message}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                // Lấy thông tin lỗi gốc và các lỗi lồng nhau
+                var errorMessage = new StringBuilder();
+                errorMessage.AppendLine("An error occurred:");
+                errorMessage.AppendLine(ex.Message); // Lỗi chính
+
+                var innerException = ex.InnerException;
+                while (innerException != null)
+                {
+                    errorMessage.AppendLine("Inner Exception:");
+                    errorMessage.AppendLine(innerException.Message); // Thêm lỗi lồng nhau
+                    innerException = innerException.InnerException;
+                }
+
+                // Hiển thị thông báo lỗi chi tiết
+                MessageBox.Show(errorMessage.ToString(), "Error", MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
 
@@ -455,7 +485,7 @@ namespace QLTV_TranBin
 
         private void txtUsername_TextChanged(object sender, TextChangedEventArgs e)
         {
-            if (string.IsNullOrWhiteSpace(txtFullName.Text))
+            if (string.IsNullOrWhiteSpace(txtUsername.Text))
             {
                 icUsernameError.ToolTip = "Tên tài khoản không được để trống!";
                 icUsernameError.Visibility = Visibility.Visible;
@@ -466,7 +496,7 @@ namespace QLTV_TranBin
         }
         private void txtFullName_TextChanged(object sender, TextChangedEventArgs e)
         {
-            if (string.IsNullOrWhiteSpace(txtUsername.Text))
+            if (string.IsNullOrWhiteSpace(txtFullName.Text))
             {
                 icFullNameError.ToolTip = "Họ và tên không được để trống!";
                 icFullNameError.Visibility = Visibility.Visible;

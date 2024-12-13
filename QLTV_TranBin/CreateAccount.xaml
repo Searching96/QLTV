@@ -7,7 +7,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:QLTV_TranBin"
         mc:Ignorable="d"
-        Title="CreateAccount" Height="520" Width="720" WindowStartupLocation="CenterScreen">
+        Title="Tạo tài khoản mới" Height="550" Width="720" WindowStartupLocation="CenterScreen">
     <Window.Resources>
         <Style x:Key="DataDisplayTextBox" TargetType="TextBox" BasedOn="{StaticResource MaterialDesignOutlinedTextBox}">
             <Setter Property="Padding" Value="5.5"/>
