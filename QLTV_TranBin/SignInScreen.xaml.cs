@@ -147,7 +147,7 @@ namespace QLTV_TranBin
             {
                 IDTaiKhoan = user.ID,
                 SessionToken = Guid.NewGuid().ToString(),
-                ExpiryTime = DateTime.Now.AddMinutes(30)
+                ExpiryTime = DateTime.Now.AddMinutes(720)
             };
 
             _context.ACTIVE_SESSION.Add(session);
