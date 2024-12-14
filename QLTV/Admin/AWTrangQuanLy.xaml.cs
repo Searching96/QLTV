@@ -1,4 +1,7 @@
 ﻿using MaterialDesignColors;
+using QLTV.Models;
+using QLTV.Properties;
+using System.Linq;
 using System.Text;
 using System.Windows;
 using System.Windows.Controls;
@@ -61,6 +64,34 @@ namespace QLTV.Admin
         {
             UcQuyDinh qd = new UcQuyDinh();
             ADMainContent.Content = qd;
+        }
+
+        private void DangXuat_Click(object sender, RoutedEventArgs e)
+        {
+            var _context = new QLTVContext();
+            string sessionToken = Settings.Default.SessionToken;
+            int userID = Settings.Default.CurrentUserID;
+            var session = _context.ACTIVE_SESSION.FirstOrDefault(s => s.SessionToken == sessionToken);
+            var user = _context.TAIKHOAN.FirstOrDefault(u => u.ID == userID);
+            if (session != null)
+            {
+                _context.ACTIVE_SESSION.Remove(session);
+                _context.SaveChanges();
+            }
+            if (user != null)
+            {
+                user.TrangThai = false;
+                _context.SaveChanges();
+            }
+
+            Settings.Default.SessionToken = string.Empty;
+            Settings.Default.Save();
+            Settings.Default.CurrentUserID = -1;
+            Settings.Default.Save();
+
+            LoginScreen loginScreen = new LoginScreen();
+            loginScreen.Show();
+            this.Close();
         }
     }
 }

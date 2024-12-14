@@ -37,6 +37,9 @@
 
                 <!--Button dieu huong-->
                 <StackPanel DockPanel.Dock="Top">
+                    <Button x:Name="btnFnTrangChu" Content="Mượn Sách" Background="DodgerBlue" 
+                            Click="btnFnTrangChu_Click"/>
+                    
                     <Button x:Name="btnFnMuonSach" Content="Mượn Sách" Background="DodgerBlue" 
                             Click="btnFnMuonSach_Click"/>
 
@@ -45,12 +48,17 @@
 
                     <Button x:Name="btnFnSachDangMuon" Content="Sách Đang Mượn" Background="DodgerBlue"
                             Click="btnFnSachDangMuon_Click"/>
+
+                    <Button Content="Đăng xuất" VerticalAlignment="Top" 
+                            Width="100" Margin="5" Click="DangXuat_Click" Background="Orange" BorderBrush="Orange"/>
                 </StackPanel>
             </DockPanel>
 
             <!--Main Content-->
             <Grid Grid.Row="1" Grid.Column="1" Margin="5, 5, 0, 0">
-                <Frame x:Name="USMainContent" NavigationUIVisibility="Hidden"/>
+                <Frame VerticalContentAlignment="Stretch"
+                       HorizontalContentAlignment="Stretch"
+                       x:Name="USMainContent" NavigationUIVisibility="Hidden"/>
             </Grid>
         </Grid>
     </Grid>

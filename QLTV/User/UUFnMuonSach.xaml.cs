@@ -1,6 +1,7 @@
 ﻿using MaterialDesignColors;
 using Microsoft.EntityFrameworkCore;
 using QLTV.Models;
+using QLTV.Properties;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -34,7 +35,7 @@ namespace QLTV.User
         private IEnumerable<SachCoSanViewModel> filteredBooks;
         private ObservableCollection<SachDaChonViewModel> _selectedBooks;
         private CollectionViewSource viewSource;
-        private DOCGIA docGia;
+        private DOCGIA docGia = new DOCGIA();
         
         private class SachCoSanViewModel
         {
@@ -303,13 +304,15 @@ namespace QLTV.User
             using (var context = new QLTVContext())
             {
                 docGia = context.DOCGIA
-                    .Skip(1)
                     .Include(dg => dg.IDLoaiDocGiaNavigation)
                     .Include(dg => dg.PHIEUMUON)
                         .ThenInclude(pm => pm.CTPHIEUMUON)
                     .Include(dg => dg.PHIEUMUON)
                         .ThenInclude(pm => pm.CTPHIEUTRA)
+                    .Where(dg => dg.IDTaiKhoanNavigation.ID == Settings.Default.CurrentUserID)
                     .FirstOrDefault();
+
+                MessageBox.Show(Settings.Default.CurrentUserID.ToString());
 
                 int daMuon = docGia.PHIEUMUON.Sum(dg => dg.CTPHIEUMUON.Count - dg.CTPHIEUTRA.Count);
 
@@ -448,7 +451,9 @@ namespace QLTV.User
                     // Tạo mới phiếu mượn
                     var phieuMuon = new PHIEUMUON
                     {
-                        IDDocGia = context.DOCGIA
+                        IDDocGia=  context.DOCGIA
+                            .Include(dg => dg.IDTaiKhoanNavigation)
+                            .Where(dg => dg.IDTaiKhoanNavigation.ID == Settings.Default.CurrentUserID)
                             .Select(dg => dg.ID)
                             .FirstOrDefault(),
                         NgayMuon = DateTime.Now,

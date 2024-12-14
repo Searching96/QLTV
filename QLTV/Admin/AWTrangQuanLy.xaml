@@ -63,6 +63,9 @@
                 <Button x:Name="btnFnQuyDinh" Content="Quy Định" Background="DodgerBlue" 
                         Foreground="White" Click="btnFnQuyDinh_Click"/>
             </StackPanel>
+
+            <Button Content="Đăng xuất" VerticalAlignment="Top" 
+                    Width="100" Margin="5" Click="DangXuat_Click" Background="Orange" BorderBrush="Orange"/>
         </DockPanel>
         
         <!--Main Content-->

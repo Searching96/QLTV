@@ -221,8 +221,8 @@
                 </Grid>
             </Grid>
 
-            <Button x:Name ="btnSignUp" Margin="0,20" Content="Sửa" Foreground="#ffffff" 
-                    FontSize="18" materialDesign:ButtonAssist.CornerRadius="22" Height="45" Width="120" 
+            <Button x:Name ="btnSignUp" Margin="0,20" Content="Sửa" Foreground="Black" 
+                    FontSize="18" materialDesign:ButtonAssist.CornerRadius="10" Height="45" Width="120" 
                     Click="btnSave_Click"/>
         </StackPanel>
 

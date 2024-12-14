@@ -7,6 +7,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
+using QLTV.Properties;
 using System.Windows.Data;
 using System.Windows.Documents;
 using System.Windows.Input;
@@ -22,6 +23,8 @@ namespace QLTV.User
     /// </summary>
     public partial class UUFnSachDangMuon : UserControl
     {
+        DOCGIA docGiaHT = new DOCGIA();
+
         public class SachDangMuonViewModel
         {
             public string MaSach { get; set; }
@@ -46,7 +49,11 @@ namespace QLTV.User
             using (var context = new QLTVContext())
             {
                 // Lấy DOCGIA hiện tại (giả sử bạn đã có ID của độc giả hiện tại)
-                var docGiaId = 1; // Giả sử lấy ID độc giả đầu tiên, bạn có thể thay đổi theo yêu cầu thực tế
+                var docGiaId = context.DOCGIA
+                    .Include(dg => dg.IDTaiKhoanNavigation)
+                    .Where(dg => dg.IDTaiKhoanNavigation.ID == Settings.Default.CurrentUserID)
+                    .Select(dg => dg.ID)
+                    .FirstOrDefault();
 
                 // Truy vấn các sách chưa trả của độc giả này
                 var dsSachDangMuon = context.CTPHIEUMUON

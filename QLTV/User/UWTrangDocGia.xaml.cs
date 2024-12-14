@@ -1,4 +1,6 @@
-﻿using System;
+﻿using QLTV.Models;
+using QLTV.Properties;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -25,6 +27,7 @@ namespace QLTV.User
         {
             InitializeComponent();
             OpeningUC = new List<UserControl>();
+            USMainContent.Content = new UTrangChu();
         }
 
         private void OpenUC(UserControl uc)
@@ -42,6 +45,11 @@ namespace QLTV.User
             }
         }
 
+        private void btnFnTrangChu_Click(object sender, RoutedEventArgs e)
+        {
+            OpenUC(new UTrangChu());
+        }
+
         private void btnFnMuonSach_Click(object sender, RoutedEventArgs e)
         {
             OpenUC(new UUFnMuonSach());
@@ -55,6 +63,34 @@ namespace QLTV.User
         private void btnFnSachDangMuon_Click(object sender, RoutedEventArgs e)
         {
             OpenUC(new UUFnSachDangMuon());
+        }
+
+        private void DangXuat_Click(object sender, RoutedEventArgs e)
+        {
+            var _context = new QLTVContext();
+            string sessionToken = Settings.Default.SessionToken;
+            int userID = Settings.Default.CurrentUserID;
+            var session = _context.ACTIVE_SESSION.FirstOrDefault(s => s.SessionToken == sessionToken);
+            var user = _context.TAIKHOAN.FirstOrDefault(u => u.ID == userID);
+            if (session != null)
+            {
+                _context.ACTIVE_SESSION.Remove(session);
+                _context.SaveChanges();
+            }
+            if (user != null)
+            {
+                user.TrangThai = false;
+                _context.SaveChanges();
+            }
+
+            Settings.Default.SessionToken = string.Empty;
+            Settings.Default.Save();
+            Settings.Default.CurrentUserID = -1;
+            Settings.Default.Save();
+
+            LoginScreen loginScreen = new LoginScreen();
+            loginScreen.Show();
+            this.Close();
         }
     }
 }

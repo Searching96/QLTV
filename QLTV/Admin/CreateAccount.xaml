@@ -7,7 +7,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:QLTV.Admin"
         mc:Ignorable="d"
-        Title="CreateAccount" Height="520" Width="720" WindowStartupLocation="CenterScreen">
+        Title="CreateAccount" Height="550" Width="720" WindowStartupLocation="CenterScreen">
     <Window.Resources>
         <Style x:Key="DataDisplayTextBox" TargetType="TextBox" BasedOn="{StaticResource MaterialDesignOutlinedTextBox}">
             <Setter Property="Padding" Value="5.5"/>
@@ -66,20 +66,21 @@
                 </Grid.RowDefinitions>
 
                 <!-- Username -->
-                <TextBox Grid.Row="0" x:Name="txtFullName"  Margin="10,10"
+                <TextBox Grid.Row="0" Margin="10,10"
+                         x:Name="txtHoVaTen"
                          materialDesign:HintAssist.FloatingOffset="0,-20" materialDesign:HintAssist.Hint="Họ và tên"
                         materialDesign:TextFieldAssist.HasLeadingIcon="True" materialDesign:TextFieldAssist.LeadingIcon="User"
                         Style="{StaticResource DataDisplayTextBox}" TextChanged="txtFullName_TextChanged" />
-                        <materialDesign:PackIcon x:Name="icFullNameError" Grid.Row="0" Margin="0,0,15,0"
+                        <materialDesign:PackIcon x:Name="icFullNameError" Grid.Row="0" Margin="0,0,15,0" Visibility="Collapsed"
                         Style="{StaticResource ErrorIcon}"/>
-                <GroupBox Grid.Row="1" Margin="10,10" Header="Giới tính" >
+                <GroupBox Grid.Row="1" Margin="10,10" Header="Giới tính" Padding="0">
                 <Grid>
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="1*" />
                         <ColumnDefinition Width="1*" />
                     </Grid.ColumnDefinitions>
-                    <CheckBox Grid.Column="0" x:Name="cbNam" Content="Nam" Checked="cbNam_Checked" Unchecked="cbNam_Unchecked" />
-                    <CheckBox Grid.Column="1" x:Name="cbNu" Content="Nữ" Checked="cbNu_Checked" Unchecked="cbNu_Unchecked" />
+                    <RadioButton Grid.Column="0" x:Name="cbNam" Margin="10, 0, 0, 0" Content="Nam" Checked="cbNam_Checked" Unchecked="cbNam_Unchecked" />
+                    <RadioButton Grid.Column="1" x:Name="cbNu" Content="Nữ" Checked="cbNu_Checked" Unchecked="cbNu_Unchecked" />
                 </Grid>
                 </GroupBox >
                 <TextBox Grid.Row="2" x:Name="txtUsername"  Margin="10,10"
@@ -117,7 +118,7 @@
                 <Grid Grid.Row="0" Grid.Column="1" Margin="10,10,10,10">
                     <DatePicker  x:Name="dpBirthday"  materialDesign:HintAssist.Hint="Sinh nhật"
                     Style="{StaticResource ModernDatePicker}" materialDesign:TextFieldAssist.HasLeadingIcon="True"
-                    materialDesign:TextFieldAssist.LeadingIcon="Cake" VerticalContentAlignment="Center"  >
+                    materialDesign:TextFieldAssist.LeadingIcon="Cake" VerticalContentAlignment="Center" Language="vi-VN">
                         <DatePicker.CalendarStyle>
                             <Style TargetType="Calendar" BasedOn="{StaticResource MaterialDesignCalendarPortrait}">
                                 <Style.Resources>
@@ -154,8 +155,8 @@
                         <ColumnDefinition Width="1*" />
                         <ColumnDefinition Width="1*" />
                     </Grid.ColumnDefinitions>
-                    <CheckBox Grid.Column="0" x:Name="cbDocGia" Content="Độc giả" Checked="cbDocGia_Checked" Unchecked="cbDocGia_Unchecked" />
-                    <CheckBox Grid.Column="1" x:Name="cbAdmin" Content="Admin" Checked="cbAdmin_Checked" Unchecked="cbAdmin_Unchecked" />
+                    <RadioButton Grid.Column="0" x:Name="cbDocGia" Content="Độc giả" Checked="cbDocGia_Checked" Unchecked="cbDocGia_Unchecked" />
+                    <RadioButton Grid.Column="1" x:Name="cbAdmin" Content="Admin" Checked="cbAdmin_Checked" Unchecked="cbAdmin_Unchecked" />
                 </Grid>
                 </GroupBox>
 
@@ -168,10 +169,10 @@
                 <!-- Ngày Mở -->
                 <Grid Grid.Row="3" Grid.Column="1" Margin="10,10">
                     <DatePicker  x:Name="dpNgayMo" IsEnabled="True" 
-                    materialDesign:HintAssist.Hint="Pick Date" materialDesign:TextFieldAssist.HasClearButton="True"
+                    materialDesign:HintAssist.Hint="Ngày Mở" materialDesign:TextFieldAssist.HasClearButton="True"
                    Style="{StaticResource ModernDatePicker}" VerticalContentAlignment="Center" 
                                  materialDesign:TextFieldAssist.HasLeadingIcon="True" 
-                                 materialDesign:TextFieldAssist.LeadingIcon="OpenInApp" />
+                                 materialDesign:TextFieldAssist.LeadingIcon="OpenInApp" Language="vi-VN" SelectedDateChanged="dpNgayMo_SelectedDateChanged"/>
                     <materialDesign:PackIcon x:Name="icNgayMoError" HorizontalAlignment="Right" Margin="0,0,25,0"  
 >
                         <!-- Thêm DataTrigger vào Style hiện tại -->
@@ -195,7 +196,7 @@
                 <!-- Ngày Đóng -->
                 <Grid Grid.Row="4" Grid.Column="1"  Margin="10,10,10,10">
                     <DatePicker  x:Name="dpNgayDong" IsEnabled="True"
-                    materialDesign:HintAssist.Hint="Pick Date" materialDesign:TextFieldAssist.HasClearButton="True"
+                    materialDesign:HintAssist.Hint="Ngày Đóng" materialDesign:TextFieldAssist.HasClearButton="True" Language="vi-VN" SelectedDateChanged="dpNgayDong_SelectedDateChanged"
                     Style="{StaticResource ModernDatePicker}" VerticalContentAlignment="Center" materialDesign:TextFieldAssist.HasLeadingIcon="True" materialDesign:TextFieldAssist.LeadingIcon="CloseBox" />
                     <materialDesign:PackIcon x:Name="icNgayDongError" HorizontalAlignment="Right" Margin="0,0,25,0"  
 >
@@ -220,8 +221,8 @@
 
 
                 <!-- Button -->
-                <Button Grid.Row="6" Grid.Column="0" Grid.ColumnSpan="2" x:Name="btnSignUp" Margin="10,10" Content="Create" Foreground="#ffffff" FontSize="18"
-            materialDesign:ButtonAssist.CornerRadius="22" Height="45" Width="120" Click="btnSignUp_Click" />
+                <Button Grid.Row="6" Grid.Column="0" Grid.ColumnSpan="2" x:Name="btnSignUp" Margin="10,10" Content="Tạo" Foreground="Black" FontSize="18"
+                        materialDesign:ButtonAssist.CornerRadius="10" Height="45" Width="120" Click="btnSignUp_Click" />
             </Grid>
 
         </Border>

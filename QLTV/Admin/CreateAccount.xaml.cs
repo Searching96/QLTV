@@ -32,6 +32,9 @@ namespace QLTV.Admin
         {
             InitializeComponent();
             DataContext = this;
+            icSinhNhatError.Visibility = Visibility.Collapsed;
+            icNgayMoError.Visibility = Visibility.Collapsed;
+            icNgayDongError.Visibility = Visibility.Collapsed;
             LoadRoles();
         }
         private void cbDocGia_Checked(object sender, RoutedEventArgs e)
@@ -260,7 +263,7 @@ namespace QLTV.Admin
         private void btnSignUp_Click(object sender, RoutedEventArgs e)
         {
             // Lấy dữ liệu từ các TextBox và PasswordBox
-            string hoten = txtFullName.Text;
+            string hoten = txtHoVaTen.Text;
             string username = txtUsername.Text.Trim();
             string email = txtEmail.Text.Trim();
             string address = txtAddress.Text.Trim();
@@ -271,18 +274,26 @@ namespace QLTV.Admin
             Random random = new Random();
             string password = random.Next(100000, 999999).ToString(); // Tạo mật khẩu tạm thời
 
+            if (ngaymo > ngaydong)
+            {
+                icNgayMoError.ToolTip = "Ngày mở không được lớn hơn Ngày đóng";
+                icNgayMoError.Visibility = Visibility.Visible;
+                icNgayDongError.ToolTip = "Ngày đóng không được nhỏ hơn Ngày mở";
+                icNgayDongError.Visibility = Visibility.Visible;
+                return;
+            }
 
             // Kiểm tra các trường bắt buộc
             if (string.IsNullOrEmpty(username) || string.IsNullOrEmpty(email))
             {
-                MessageBox.Show("Please fill in all required fields!", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                MessageBox.Show("Hãy điền tất cả các trường đang trống!", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
                 return;
             }
 
             // Kiểm tra số điện thoại chỉ chứa số
             if (string.IsNullOrEmpty(phoneNumber) || !phoneNumber.All(char.IsDigit))
             {
-                MessageBox.Show("Phone number must contain only numbers!", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                icPhoneNumberError.ToolTip = "SDT không được bỏ trống và chỉ chứa số";
                 return;
             }
 
@@ -295,7 +306,7 @@ namespace QLTV.Admin
                     var existingAccount = context.TAIKHOAN.FirstOrDefault(tk => tk.Email == email);
                     if (existingAccount != null)
                     {
-                        MessageBox.Show("Email already exists!", "Error", MessageBoxButton.OK, MessageBoxImage.Warning);
+                        MessageBox.Show("Email đã tồn tài!", "Lỗi", MessageBoxButton.OK, MessageBoxImage.Warning);
                         return;
                     }
 
@@ -358,39 +369,39 @@ namespace QLTV.Admin
                         NgayMo = ngaymo.HasValue ? ngaymo.Value : default(DateTime),
                         NgayDong = ngaydong.HasValue ? ngaydong.Value : default(DateTime),
                     };
-                    
+
                     // Thêm tài khoản mới vào cơ sở dữ liệu
                     context.TAIKHOAN.Add(newAccount);
-                    
+
                     context.SaveChanges();
-                    if(phanQuyen != 4)
+                    if (phanQuyen != 4)
                     {
                         var newAdmin = new ADMIN
                         {
                             IDTaiKhoan = newAccount.ID
                         };
                         context.ADMIN.Add(newAdmin);
-                    } 
+                    }
                     else
                     {
                         var newDocGia = new DOCGIA
                         {
                             IDTaiKhoan = newAccount.ID,
-                            IDLoaiDocGia = idLoaiDocGia ?? 0  // Gán IDLoaiDocGia từ phân quyền
+                            IDLoaiDocGia = idLoaiDocGia ?? 0,  // Gán IDLoaiDocGia từ phân quyền
+                            GioiThieu = string.Empty
                         };
                         context.DOCGIA.Add(newDocGia);
                     }
-                    MessageBox.Show("Check");
                     context.SaveChanges();
                     // Thông báo đăng ký thành công
-                    MessageBox.Show("Sign up successful!", "Success", MessageBoxButton.OK, MessageBoxImage.Information);
+                    MessageBox.Show("Đăng ký tài khoản thành công!", "Thông Báo", MessageBoxButton.OK, MessageBoxImage.Information);
 
                     // Gửi email cho người dùng (sử dụng MailKit hoặc phương thức khác)
                     SendEmailUsingMailKit(email, password);
                     ClearFields();
                     // Reset các trường nhập liệu
                     ReloadRequested?.Invoke();
-                    
+
                 }
             }
             catch (Exception ex)
@@ -402,7 +413,7 @@ namespace QLTV.Admin
         // Hàm reset các trường nhập liệu
         private void ClearFields()
         {
-            txtFullName.Text = string.Empty;
+            txtHoVaTen.Text = string.Empty;
             cbNam.IsChecked = false;
             cbNu.IsChecked = false;
             txtUsername.Text = string.Empty;
@@ -455,7 +466,7 @@ namespace QLTV.Admin
 
         private void txtUsername_TextChanged(object sender, TextChangedEventArgs e)
         {
-            if (string.IsNullOrWhiteSpace(txtFullName.Text))
+            if (string.IsNullOrWhiteSpace(txtUsername.Text))
             {
                 icUsernameError.ToolTip = "Tên tài khoản không được để trống!";
                 icUsernameError.Visibility = Visibility.Visible;
@@ -466,7 +477,7 @@ namespace QLTV.Admin
         }
         private void txtFullName_TextChanged(object sender, TextChangedEventArgs e)
         {
-            if (string.IsNullOrWhiteSpace(txtUsername.Text))
+            if (string.IsNullOrWhiteSpace(txtHoVaTen.Text))
             {
                 icFullNameError.ToolTip = "Họ và tên không được để trống!";
                 icFullNameError.Visibility = Visibility.Visible;
@@ -513,6 +524,26 @@ namespace QLTV.Admin
             icPhoneNumberError.Visibility = Visibility.Collapsed;
         }
 
-        
+        private void dpNgayDong_SelectedDateChanged(object sender, SelectionChangedEventArgs e)
+        {
+
+        }
+
+        private void dpNgayMo_SelectedDateChanged(object sender, SelectionChangedEventArgs e)
+        {
+            if (dpNgayDong.SelectedDate != null && dpNgayMo.SelectedDate != null)
+            {
+                if (dpNgayDong.SelectedDate < dpNgayMo.SelectedDate)
+                {
+                    icNgayMoError.ToolTip = "Ngày Mở không được lớn hơn Ngày Đóng";
+                    icNgayMoError.Visibility = Visibility.Visible;
+                    icNgayDongError.ToolTip = "Ngày Đóng không được nhỏ hơn Ngày Mở";
+                    icNgayDongError.Visibility = Visibility.Visible;
+                }
+            }
+
+            icNgayMoError.Visibility = Visibility.Collapsed;
+            icNgayDongError.Visibility = Visibility.Collapsed;
+        }
     }
 }
