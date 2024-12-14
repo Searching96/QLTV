@@ -41,7 +41,7 @@ namespace QLTV.Admin
 
         private void btnFnQuanLyDocGia_Click(object sender, RoutedEventArgs e)
         {
-            UQuanLyDocGia qldg = new UQuanLyDocGia();
+            AUQuanLyDocGia qldg = new AUQuanLyDocGia();
             ADMainContent.Content = qldg;
         }
 

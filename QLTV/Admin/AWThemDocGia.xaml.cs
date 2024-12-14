@@ -1,38 +1,33 @@
 ﻿using MaterialDesignThemes.Wpf;
-using QLTV.Models;
+using Microsoft.EntityFrameworkCore;
 using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.Text.RegularExpressions;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
 using System.Windows.Input;
+using QLTV.Models;
 using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Shapes;
+using System.Collections.ObjectModel;
+using System.Collections.Generic;
 
 namespace QLTV.Admin
 {
-    /// <summary>
-    /// Interaction logic for AWThemDocGia.xaml
-    /// </summary>
     public partial class AWThemDocGia : Window
     {
-        private QLTVContext _context;
+        private QLTVContext _context; 
         private string _tenTaiKhoan;
         private string _tenLoaiDocGia;
 
-        public AWThemDocGia(QLTVContext context, string tenTaiKhoan, string tenLoaiDocGia)
+        public AWThemDocGia(QLTVContext context, string tenTaiKhoan, string tenLoaiDocGia) 
         {
             InitializeComponent();
             _context = context; // Gán context
             _tenTaiKhoan = tenTaiKhoan;
             _tenLoaiDocGia = tenLoaiDocGia;
             LoadLoaiDocGia();
-            LoadTenTaiKhoan();
+            LoadTenTaiKhoan(); 
+            SetDefaultDates();
 
             cbbTenLoaiDocGia.SelectedItem = _tenLoaiDocGia;
         }
@@ -46,6 +41,12 @@ namespace QLTV.Admin
                 .ToList();
 
             cbbTenTaiKhoan.ItemsSource = dsTenTaiKhoan;
+        }
+
+        private void SetDefaultDates()
+        {
+            dpNgayLapThe.SelectedDate = DateTime.Now;
+            dpNgayHetHan.SelectedDate = DateTime.Now.AddYears(1);
         }
 
         private void LoadLoaiDocGia()
@@ -122,6 +123,69 @@ namespace QLTV.Admin
             icTongNoError.Visibility = Visibility.Collapsed;
         }
 
+        private void dpNgayLapThe_Loaded(object sender, RoutedEventArgs e)
+        {
+            // Tìm TextBox bên trong DatePicker
+            var textBox = (dpNgayLapThe.Template.FindName("PART_TextBox", dpNgayLapThe) as TextBox);
+            if (textBox != null)
+            {
+                textBox.TextChanged += NgayLapThe_TextChanged;
+            }
+        }
+
+        private void NgayLapThe_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            var textBox = sender as TextBox;
+
+            // Danh sách định dạng hỗ trợ nhiều cách nhập ngày
+            string[] formats = { "dd/MM/yyyy", "d/M/yyyy", "dd/M/yyyy", "d/MM/yyyy" };
+            if (!DateTime.TryParseExact(textBox.Text, formats, null, System.Globalization.DateTimeStyles.AllowWhiteSpaces, out DateTime ngayLapThe))
+            {
+                icNgayLapTheError.ToolTip = "Ngày Lập Thẻ không hợp lệ (định dạng đúng: dd/MM/yyyy)";
+                icNgayLapTheError.Visibility = Visibility.Visible;
+                return;
+            }
+
+            // Kiểm tra ngày lập thẻ không được sau ngày hiện tại
+            if (ngayLapThe > DateTime.Now)
+            {
+                icNgayLapTheError.ToolTip = "Ngày Lập Thẻ không được sau ngày hiện tại";
+                icNgayLapTheError.Visibility = Visibility.Visible;
+                return;
+            }
+
+            // Nếu hợp lệ, ẩn thông báo lỗi và cập nhật ngày hết hạn
+            icNgayLapTheError.Visibility = Visibility.Collapsed;
+            dpNgayHetHan.SelectedDate = ngayLapThe.AddYears(1);
+        }
+
+        private void dpNgayHetHan_Loaded(object sender, RoutedEventArgs e)
+        {
+            // Tìm TextBox bên trong DatePicker
+            var textBox = (dpNgayHetHan.Template.FindName("PART_TextBox", dpNgayHetHan) as TextBox);
+            if (textBox != null)
+            {
+                textBox.TextChanged += NgayHetHan_TextChanged;
+            }
+        }
+
+        private void NgayHetHan_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            var textBox = sender as TextBox;
+
+            // Danh sách định dạng hỗ trợ nhiều cách nhập ngày
+            string[] formats = { "dd/MM/yyyy", "d/M/yyyy", "dd/M/yyyy", "d/MM/yyyy" };
+            if (!DateTime.TryParseExact(textBox.Text, formats, null, System.Globalization.DateTimeStyles.AllowWhiteSpaces, out DateTime ngayHetHan))
+            {
+                icNgayLapTheError.ToolTip = "Ngày Hết Hạn không hợp lệ (định dạng đúng: dd/MM/yyyy)";
+                icNgayLapTheError.Visibility = Visibility.Visible;
+                return;
+            }
+
+            // Nếu hợp lệ, ẩn thông báo lỗi
+            icNgayLapTheError.Visibility = Visibility.Collapsed;
+        }
+
         private void btnThem_Click(object sender, RoutedEventArgs e)
         {
             try
@@ -158,6 +222,8 @@ namespace QLTV.Admin
                 string loaiDocGia = cbbTenLoaiDocGia.SelectedItem.ToString();
                 string gioiThieu = tbxGioiThieu.Text;
                 decimal tongNo = decimal.Parse(tbxTongNo.Text);
+                DateTime ngayLapThe = dpNgayLapThe.SelectedDate.Value;
+                DateTime ngayHetHan = dpNgayHetHan.SelectedDate.Value;
 
                 // Lấy ID của Loại Độc Giả
                 int idLoaiDocGia = _context.LOAIDOCGIA
@@ -171,7 +237,7 @@ namespace QLTV.Admin
                     .Select(tk => tk.ID)
                     .FirstOrDefault();
 
-                if (idTaiKhoan != 0)
+                if (idTaiKhoan != 0) 
                 {
                     // Create a new DOCGIA record
                     var newDocGia = new DOCGIA()
@@ -179,10 +245,18 @@ namespace QLTV.Admin
                         IDTaiKhoan = idTaiKhoan,
                         IDLoaiDocGia = idLoaiDocGia,
                         GioiThieu = gioiThieu,
-                        TongNo = tongNo
+                        TongNo = tongNo,
                     };
 
                     _context.DOCGIA.Add(newDocGia);
+                    _context.SaveChanges();
+
+                    var taiKhoan = _context.TAIKHOAN
+                        .Where(tk => tk.ID == idTaiKhoan)
+                        .FirstOrDefault();
+
+                    taiKhoan.NgayMo = ngayLapThe;
+                    taiKhoan.NgayDong = ngayHetHan;
                     _context.SaveChanges();
 
                     MessageBox.Show("Thêm độc giả thành công!", "Thông báo", MessageBoxButton.OK, MessageBoxImage.Information);

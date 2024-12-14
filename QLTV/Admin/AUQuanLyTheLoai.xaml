@@ -159,30 +159,31 @@
                        FontSize="26" VerticalAlignment="Center" Margin="5"/>
             <Grid Grid.Column="1">
                 <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="1*"/>
+                    <ColumnDefinition Width="Auto"/>
                     <ColumnDefinition Width="2.5*"/>
                     <ColumnDefinition Width="1*"/>
                     <ColumnDefinition Width="Auto"/>
                 </Grid.ColumnDefinitions>
 
-                <TextBlock Text="Tìm Kiếm:" Grid.Column="0" FontSize="14" VerticalAlignment="Center"/>
+                <TextBlock Text="Tìm Kiếm:  " Grid.Column="0" FontWeight="SemiBold" FontSize="14" VerticalAlignment="Center"/>
 
                 <TextBox x:Name="tbxThongTinTimKiem" Grid.Column="1" VerticalAlignment="Center"
                          Style="{StaticResource DataDisplayTextBox}"
-                         Padding="8"
+                         Padding="7.8"
                          materialDesign:HintAssist.Hint="Từ Khóa"
                          materialDesign:HintAssist.FloatingScale="0.8"/>
 
                 <ComboBox x:Name="cbbThuocTinhTimKiem" Grid.Column="2" 
                           VerticalAlignment="Center"
                           Style="{StaticResource ModernComboBox}"
+                          Padding="7.8"
                           materialDesign:HintAssist.Hint="Thuộc Tính"
                           materialDesign:HintAssist.FloatingScale="0.8">
                     <ComboBoxItem Content="Tên Thể Loại"/>
                     <ComboBoxItem Content="Mô Tả"/>
                 </ComboBox>
 
-                <Button x:Name="btnTimKiem" Grid.Column="3" Click="btnTimKiem_Click" Padding="0" Width="25">
+                <Button x:Name="btnTimKiem" Grid.Column="3" Click="btnTimKiem_Click" Padding="0" Width="30">
                     <materialDesign:PackIcon Kind="Magnify" Width="22" Height="22"/>
                 </Button>
             </Grid>

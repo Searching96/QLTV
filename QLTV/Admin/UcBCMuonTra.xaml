@@ -315,7 +315,7 @@
             </Setter>
         </Style>
     </UserControl.Resources>
-    <Grid>
+    <Grid Background="White">
         <TabControl HorizontalContentAlignment="Left">
             <!-- Borrowing Tab -->
             <TabItem Header="Báo cáo mượn sách">
@@ -352,8 +352,9 @@
                                                  materialDesign:HintAssist.Hint="Từ ngày"
                                                  materialDesign:TextFieldAssist.HasClearButton="True"
                                                  materialDesign:HintAssist.FloatingScale="0.9"
-                                                 Margin="5,0"
-                                                 Style="{StaticResource MaterialDesignFloatingHintDatePicker}"
+                                                 Margin="10,0"
+                                                 Padding="8"
+                                                 Style="{StaticResource MaterialDesignOutlinedDatePicker}"
                                                  SelectedDateChanged="dpEndDayMS_SelectionChanged" />
                                     <DatePicker  x:Name="dpEndDayMS"
                                                  Width="100"
@@ -361,7 +362,8 @@
                                                  materialDesign:TextFieldAssist.HasClearButton="True"
                                                  materialDesign:HintAssist.FloatingScale="0.9"
                                                  Margin="5,0"
-                                                 Style="{StaticResource MaterialDesignFloatingHintDatePicker}"
+                                                 Padding="8"
+                                                 Style="{StaticResource MaterialDesignOutlinedDatePicker}"
                                                  SelectedDateChanged="dpEndDayMS_SelectionChanged" />
                                 </StackPanel>
 
@@ -619,18 +621,22 @@
                                 <DatePicker  x:Name="dpStartDayTT"
                                              Width="100"
                                              materialDesign:HintAssist.Hint="Từ ngày"
-                                             materialDesign:TextFieldAssist.HasClearButton="True"
                                              materialDesign:HintAssist.FloatingScale="0.9"
-                                             Margin="5,0"
-                                             Style="{StaticResource MaterialDesignFloatingHintDatePicker}"
+                                             materialDesign:TextFieldAssist.HasClearButton="False"
+                                             Margin="10,0"
+                                             Height="35"
+                                             Padding="8"
+                                             Style="{StaticResource MaterialDesignOutlinedDatePicker}"
                                              SelectedDateChanged="dpEndDayTT_SelectionChanged" />
                                 <DatePicker  x:Name="dpEndDayTT"
                                              Width="100"
                                              materialDesign:HintAssist.Hint="Đến ngày"
-                                             materialDesign:TextFieldAssist.HasClearButton="True"
                                              materialDesign:HintAssist.FloatingScale="0.9"
+                                             materialDesign:TextFieldAssist.HasClearButton="False"
                                              Margin="5,0"
-                                             Style="{StaticResource MaterialDesignFloatingHintDatePicker}"
+                                             Height="35"
+                                             Padding="8"
+                                             Style="{StaticResource MaterialDesignOutlinedDatePicker}"
                                              SelectedDateChanged="dpEndDayTT_SelectionChanged" />
                             </StackPanel>
 

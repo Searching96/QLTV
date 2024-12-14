@@ -18,9 +18,6 @@ using System.Linq;
 
 namespace QLTV.Admin
 {
-    /// <summary>
-    /// Interaction logic for AWPhieuThuTienPhat.xaml
-    /// </summary>
     public partial class AWPhieuThuTienPhat : Window
     {
         private readonly QLTVContext _context = new QLTVContext(); 
@@ -28,16 +25,15 @@ namespace QLTV.Admin
         public AWPhieuThuTienPhat(PHIEUTHUTIENPHAT receipt)
         {
             InitializeComponent();
-            _context = new QLTVContext(); // Khởi tạo _context
+            _context = new QLTVContext(); 
             LoadPenaltyReceipt(receipt);
         }
 
         private void LoadPenaltyReceipt(PHIEUTHUTIENPHAT receipt)
         {
             // Lấy thông tin độc giả
-            var docGia = _context.DOCGIA
-                .Include(d => d.IDTaiKhoanNavigation) // Include related data
-                .FirstOrDefault(d => d.ID == receipt.IDDocGia); // Execute the query
+            var docGia = _context.DOCGIA.Include(d => d.IDTaiKhoanNavigation)
+                .FirstOrDefault(d => d.ID == receipt.IDDocGia);
 
             if (docGia == null)
             {
@@ -49,7 +45,7 @@ namespace QLTV.Admin
             tbxMaPhieuThu.Text = receipt.MaPTTP;
             tbxNgayThu.Text = receipt.NgayThu.ToString("dd/MM/yyyy");
             tbxMaDocGia.Text = docGia.MaDocGia;
-            tbxTenDocGia.Text = docGia.IDTaiKhoanNavigation.TenTaiKhoan;
+            tbxTenDocGia.Text = docGia.IDTaiKhoanNavigation.TenTaiKhoan; 
             tbxSoTienThu.Text = receipt.SoTienThu.ToString("N2");
             tbxConNo.Text = receipt.ConLai.ToString("N2");
             tbxTongNo.Text = receipt.TongNo.ToString("N2");

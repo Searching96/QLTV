@@ -17,6 +17,7 @@ using System.Windows.Navigation;
 using System.Windows.Shapes;
 using System.Windows.Xps;
 using System.Windows.Xps.Packaging;
+using Microsoft.EntityFrameworkCore;
 
 namespace QLTV.Admin
 {
@@ -30,7 +31,18 @@ namespace QLTV.Admin
         public UcXuatPhieuTra(PHIEUTRA _phieuTra)
         {
             InitializeComponent();
-            phieuTra = _phieuTra;
+            using (var context = new QLTVContext())
+                phieuTra = context.PHIEUTRA
+                                .Include(pt => pt.CTPHIEUTRA)
+                                    .ThenInclude(ctpt => ctpt.IDTinhTrangTraNavigation)
+                                .Include(pt => pt.CTPHIEUTRA)
+                                    .ThenInclude(ctpt => ctpt.IDPhieuMuonNavigation)
+                                        .ThenInclude(pm => pm.IDDocGiaNavigation)
+                                            .ThenInclude(dg => dg.IDTaiKhoanNavigation)
+                                .Include(pt => pt.CTPHIEUTRA)
+                                    .ThenInclude(ctpt => ctpt.IDSachNavigation)
+                                        .ThenInclude(s => s.IDTuaSachNavigation)
+                                .First(pt => pt.ID == _phieuTra.ID);
             int count = phieuTra.CTPHIEUTRA.Count();
             decimal TongTienPhat = phieuTra.CTPHIEUTRA.Sum(pt => pt.TienPhat);
             string DocGia = _phieuTra.CTPHIEUTRA.First().IDPhieuMuonNavigation.IDDocGiaNavigation.IDTaiKhoanNavigation.TenTaiKhoan;
@@ -39,6 +51,7 @@ namespace QLTV.Admin
             tb_TongTienPhat.Text = $"Tổng tiền phạt : {TongTienPhat} (VND)";
             DataContext = phieuTra;
         }
+
         private void btnInPhieu_Click(object sender, RoutedEventArgs e)
         {
             // Mở hộp thoại lưu file

@@ -1,0 +1,119 @@
+﻿<Window x:Class="QLTV.Admin.AWThemPhieuThuTienPhat"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:QLTV.Admin"
+        xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+        mc:Ignorable="d"
+        Title="Thêm Phiếu Thu Tiền Phạt" Height="450" Width="350"
+        WindowStartupLocation="CenterScreen">
+    <Window.Resources>
+        <Style x:Key="DataDisplayTextBox" TargetType="TextBox" BasedOn="{StaticResource MaterialDesignOutlinedTextBox}">
+            <Setter Property="Padding" Value="5.5"/>
+            <Setter Property="Height" Value="40"/>
+            <Setter Property="materialDesign:HintAssist.FloatingScale" Value="0.8"/>
+        </Style>
+
+        <Style x:Key="ErrorIcon" TargetType="materialDesign:PackIcon">
+            <Setter Property="Kind" Value="AlertCircleOutline"/>
+            <Setter Property="Width" Value="20"/>
+            <Setter Property="Height" Value="20"/>
+            <Setter Property="HorizontalAlignment" Value="Right"/>
+            <Setter Property="VerticalAlignment" Value="Center"/>
+            <Setter Property="Foreground" Value="Red"/>
+            <Setter Property="Background" Value="White"/>
+            <Setter Property="Visibility" Value="Collapsed"/>
+            <Setter Property="ToolTipService.InitialShowDelay" Value="0"/>
+        </Style>
+
+        <Style x:Key="ModernComboBox" TargetType="ComboBox" BasedOn="{StaticResource MaterialDesignOutlinedComboBox}">
+            <Setter Property="Margin" Value="1"/>
+            <Setter Property="Height" Value="40"/>
+            <Setter Property="materialDesign:HintAssist.FloatingScale" Value="0.8"/>
+            <Setter Property="Padding" Value="8"/>
+        </Style>
+
+        <Style x:Key="ModernDatePicker" TargetType="DatePicker" BasedOn="{StaticResource MaterialDesignOutlinedDatePicker}">
+            <Setter Property="Margin" Value="1"/>
+            <Setter Property="Height" Value="40"/>
+            <Setter Property="materialDesign:HintAssist.FloatingScale" Value="0.8"/>
+            <Setter Property="Padding" Value="7.5"/>
+        </Style>
+    </Window.Resources>
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="8*"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+
+        <TextBlock Text="Thêm Phiếu Thu" Grid.Row="0" FontSize="24"
+                   FontWeight="Bold" HorizontalAlignment="Center"
+                   VerticalAlignment="Center"/>
+
+        <Grid Grid.Row="1">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+            </Grid.RowDefinitions>
+
+            <ComboBox x:Name="cbbTenTaiKhoan" Grid.Row="0"
+                      Style="{StaticResource ModernComboBox}"
+                      Margin="5"
+                      materialDesign:HintAssist.Hint="Tên Độc Giả"
+                      materialDesign:TextFieldAssist.HasLeadingIcon="True"
+                      materialDesign:TextFieldAssist.LeadingIcon="Account"
+                      IsEditable="True"
+                      IsTextSearchEnabled="False"
+                      SelectedValue="{x:Null}"
+                      IsSynchronizedWithCurrentItem="False"
+                      materialDesign:TextFieldAssist.HasClearButton="True"
+                      SelectionChanged="cbbTenTaiKhoan_SelectionChanged"/>
+
+            <materialDesign:PackIcon x:Name="icTenTaiKhoanError" Grid.Row="0"
+                                    Style="{StaticResource ErrorIcon}"
+                                    Margin="0,0,25,0"/>
+
+            <DatePicker x:Name="dpNgayThu" Grid.Row="1"
+                        Style="{StaticResource ModernDatePicker}"
+                        Margin="5"
+                        materialDesign:HintAssist.Hint="Ngày Thu"
+                        materialDesign:TextFieldAssist.HasLeadingIcon="True"
+                        materialDesign:TextFieldAssist.LeadingIcon="Calendar"
+                        xmlns:sys="clr-namespace:System;assembly=mscorlib"
+                        SelectedDate="{x:Static sys:DateTime.Now}"
+                        IsEnabled="True"
+                        Loaded="dpNgayThu_Loaded"
+                        FirstDayOfWeek="Monday"
+                        Language="vi-VN"/>
+
+            <materialDesign:PackIcon x:Name="icNgayThuError" Grid.Row="1"
+                                    Style="{StaticResource ErrorIcon}"
+                                    Margin="0,0,10,0"/>
+
+            <TextBox x:Name="tbxSoTienThu" Grid.Row="2"
+                     Style="{StaticResource DataDisplayTextBox}"
+                     Margin="5"
+                     materialDesign:HintAssist.Hint="Số Tiền Thu"
+                     materialDesign:TextFieldAssist.HasLeadingIcon="True"
+                     materialDesign:TextFieldAssist.LeadingIcon="Cash"
+                     TextChanged="tbxSoTienThu_TextChanged"/>
+
+            <materialDesign:PackIcon x:Name="icSoTienThuError" Grid.Row="2"
+                                    Style="{StaticResource ErrorIcon}"
+                                    Margin="0,0,10,0"/>
+
+            <TextBox x:Name="tbxDangNo" Grid.Row="3"
+                     Style="{StaticResource DataDisplayTextBox}"
+                     Margin="5"
+                     materialDesign:HintAssist.Hint="Đang Nợ"
+                     materialDesign:TextFieldAssist.HasLeadingIcon="True"
+                     materialDesign:TextFieldAssist.LeadingIcon="Cash"/>
+        </Grid>
+        <Button x:Name="btnThem" Grid.Row="2" Content="Thêm" Margin="0, 5, 0, 5"
+                HorizontalAlignment="Center" VerticalAlignment="Center" Click="btnThem_Click"/>
+    </Grid>
+</Window>

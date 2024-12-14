@@ -223,9 +223,7 @@ namespace QLTV.Admin
     public partial class UcBCMuonTra : UserControl
     {
         private ObservableCollection<DSBCMuonSachModel> _borrowReports;
-        private ObservableCollection<DSBCMuonSachModel> _filteredBorrowReports;
         private ObservableCollection<DSBCTraTreModel> _lateReturnReports;
-        private ObservableCollection<DSBCTraTreModel> _filteredLateReturnReports;
         private ChartViewModel BCMSLineChartModel;
         private ChartViewModel BCMSPieChartModel;
         private ChartViewModel BCTTLineChartModel;
@@ -283,13 +281,8 @@ namespace QLTV.Admin
                     var borrowReports = await _context.BCMUONSACH
                         .Include(p => p.CTBCMUONSACH)
                             .ThenInclude(ct => ct.IDTheLoaiNavigation)
+                        .Where(bc => bc.Thang >= begin && bc.Thang <= end)
                         .ToListAsync();
-
-                    // Clear collections to avoid duplicates
-                    if (_borrowReports != null)
-                        _borrowReports.Clear();
-                    if (_filteredBorrowReports != null)
-                        _filteredBorrowReports.Clear();
 
                     // Process borrow reports into ObservableCollection
                     _borrowReports = new ObservableCollection<DSBCMuonSachModel>(
@@ -346,59 +339,8 @@ namespace QLTV.Admin
                             .ToList()
                     );
 
-                    // Filter by the date range
-                    _filteredBorrowReports = new ObservableCollection<DSBCMuonSachModel>(
-                        _borrowReports
-                            .Where(r => r.Month >= begin && r.Month <= end)
-                            .Select(r =>
-                            {
-                                // Filter borrow details within the range
-                                var filteredDSBCMuonSach = new ObservableCollection<BCMuonSachModel>(
-                                    r.DSBCMuonSach.Where(bc => bc.BCMuonSach.Thang >= begin && bc.BCMuonSach.Thang <= end).ToList()
-                                );
-
-                                // Check for existing totals and calculate if needed
-                                if (!filteredDSBCMuonSach.Any(bc => bc.BCMuonSach.MaBCMuonSach == "Tổng"))
-                                {
-                                    var totalBorrowCount = filteredDSBCMuonSach.Sum(bc => bc.BCMuonSach.TongSoLuotMuon);
-                                    var totalBCMuonSach = new BCMUONSACH
-                                    {
-                                        MaBCMuonSach = "Tổng",
-                                        Thang = r.Month,
-                                        TongSoLuotMuon = totalBorrowCount,
-                                        CTBCMUONSACH = filteredDSBCMuonSach
-                                            .SelectMany(bc => bc.BCMuonSach.CTBCMUONSACH)
-                                            .GroupBy(ct => ct.IDTheLoai)
-                                            .Select(grp => new CTBCMUONSACH
-                                            {
-                                                IDBCMuonSach = 0,
-                                                IDTheLoai = grp.Key,
-                                                SoLuotMuon = grp.Sum(ct => ct.SoLuotMuon),
-                                                TiLe = totalBorrowCount == 0 ? 0 : grp.Sum(ct => ct.SoLuotMuon) / (double)totalBorrowCount,
-                                                IDTheLoaiNavigation = grp.First().IDTheLoaiNavigation
-                                            })
-                                            .ToList()
-                                    };
-
-                                    filteredDSBCMuonSach.Insert(0, new BCMuonSachModel
-                                    {
-                                        BCMuonSach = totalBCMuonSach,
-                                        IsExpanded = false
-                                    });
-                                }
-
-                                return new DSBCMuonSachModel
-                                {
-                                    Month = r.Month,
-                                    DSBCMuonSach = filteredDSBCMuonSach,
-                                    IsExpanded = false
-                                };
-                            })
-                            .ToList()
-                    );
-
                     // Update the data source for the UI
-                    dgBorrowingReports.ItemsSource = _filteredBorrowReports;
+                    dgBorrowingReports.ItemsSource = _borrowReports;
                 }
             }
             catch (Exception ex)
@@ -414,11 +356,14 @@ namespace QLTV.Admin
             {
                 using (var _context = new QLTVContext())
                 {
+                    // Load late return reports data from the database
                     var lateReturnReports = await _context.BCTRATRE
                         .Include(p => p.CTBCTRATRE)
                             .ThenInclude(ct => ct.IDPhieuTraNavigation)
+                        .Where(bc => bc.Ngay >= begin && bc.Ngay <= end)
                         .ToListAsync();
 
+                    // Process late return reports into ObservableCollection
                     _lateReturnReports = new ObservableCollection<DSBCTraTreModel>(
                         lateReturnReports
                             .GroupBy(bc => new { bc.Ngay.Year, bc.Ngay.Month })
@@ -442,30 +387,13 @@ namespace QLTV.Admin
                             .ToList()
                     );
 
-                    _filteredLateReturnReports = new ObservableCollection<DSBCTraTreModel>(
-                        _lateReturnReports
-                            .Where(r => r.Month >= begin && r.Month <= end)
-                            .Select(r =>
-                            {
-                                var filteredDSBCTraTre = new ObservableCollection<BCTraTreModel>(
-                                    r.DSBCTraTre.Where(bc => bc.BCTraTre.Ngay >= begin && bc.BCTraTre.Ngay <= end).ToList()
-                                );
-
-                                return new DSBCTraTreModel
-                                {
-                                    Month = r.Month,
-                                    DSBCTraTre = filteredDSBCTraTre,
-                                    IsExpanded = false
-                                };
-                            })
-                            .ToList()
-                    );
-
-                    dgLateReturnReports.ItemsSource = _filteredLateReturnReports;
+                    // Update the data source for the UI
+                    dgLateReturnReports.ItemsSource = _lateReturnReports;
                 }
             }
             catch (Exception ex)
             {
+                // Show error message in case of failure
                 MessageBox.Show($"Lỗi khi tải dữ liệu: {ex.Message}", "Lỗi", MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
@@ -474,8 +402,8 @@ namespace QLTV.Admin
 
         private async Task PopulateBCMSChartAndDataGrid(DateTime? begin = null, DateTime? end = null)
         {
-            DateTime startDate = begin ?? new DateTime(1970, 1, 1);
-            DateTime endDate = end ?? DateTime.Now;
+            DateTime startDate = begin ?? new DateTime(2022, 1, 1);
+            DateTime endDate = end ?? DateTime.Now.AddDays(1);
 
             await LoadBorrowReportsData(startDate, endDate);
             await LoadLateReturnsReportData(startDate, endDate);
@@ -485,55 +413,65 @@ namespace QLTV.Admin
 
         private void PopulateBCMSYearComboBox()
         {
-            var NamBCMS = _borrowReports
-                .Select(r => r.Month.Year.ToString())
-                .Distinct()
-                .OrderBy(y => y)
-                .ToList();
+            using (var context = new QLTVContext())
+            {
+                var NamBCMS = context.BCMUONSACH
+                    .Select(r => r.Thang.Year.ToString())
+                    .Distinct()
+                    .OrderBy(y => y)
+                    .ToList();
 
-            // Nạp các tuỳ chọn cho combobox Năm của Báo cáo mượn sách
-            NamBCMS.Insert(0, "Tất cả"); // Thêm tuỳ chọn "Tất cả"
-            cbYearMS.ItemsSource = NamBCMS;
-            cbYearMS.SelectedIndex = 0;
+                // Nạp các tuỳ chọn cho combobox Năm của Báo cáo mượn sách
+                NamBCMS.Insert(0, "Tất cả"); // Thêm tuỳ chọn "Tất cả"
+                cbYearMS.ItemsSource = NamBCMS;
+                cbYearMS.SelectedIndex = 0;
+            }
         }
 
         private void PopulateBCMSMonthComboBox(string? selectedYear)
         {
-            var ThangBCMS = _borrowReports
-                .Select(r => r.Month)
-                .Distinct()
-                .OrderBy(m => m.Year)
-                .ThenBy(m => m.Month)
-                .Select(m => m.ToString("MM/yyyy"))
-                .ToList();
+            using (var context = new QLTVContext())
+            {
+                var ThangBCMS = context.BCMUONSACH
+                    .Select(r => r.Thang)
+                    .OrderBy(m => m.Year)
+                    .ThenBy(m => m.Month)
+                    .Select(m => m.ToString("MM/yyyy"))
+                    .Distinct()
+                    .ToList();
 
-            cbStartMonthMS.ItemsSource = ThangBCMS;
-            cbEndMonthMS.ItemsSource = ThangBCMS;
-            cbStartMonthMS.SelectedIndex = 0;
-            cbEndMonthMS.SelectedIndex = cbEndMonthMS.Items.Count - 1;
+                cbStartMonthMS.ItemsSource = ThangBCMS;
+                cbEndMonthMS.ItemsSource = ThangBCMS;
+                cbStartMonthMS.SelectedIndex = 0;
+                cbEndMonthMS.SelectedIndex = cbEndMonthMS.Items.Count - 1;
+            }
         }
 
         private void PopulateBCMSQuarterComboBox(string? selectedYear)
         {
-            var QuyBCMS = _borrowReports
-                .Where(r => selectedYear == "Tất cả" || r.Month.Year == int.Parse(selectedYear))
-                .Select(r =>
-                {
-                    var month = r.Month.Month;
-                    return month switch
+            using (var context = new QLTVContext())
+            {
+                var QuyBCMS = context.BCMUONSACH
+                    .Where(r => selectedYear == "Tất cả" || r.Thang.Year == (selectedYear != null ? int.Parse(selectedYear) : 0))
+                    .AsEnumerable()
+                    .Select(r =>
                     {
-                        >= 1 and <= 3 => "Quý 1",
-                        >= 4 and <= 6 => "Quý 2",
-                        >= 7 and <= 9 => "Quý 3",
-                        _ => "Quý 4"
-                    };
-                })
-                .Distinct()
-                .OrderBy(q => q)
-                .ToList();
-            QuyBCMS.Insert(0, "Tất cả");
-            cbQuarterMS.ItemsSource = QuyBCMS;
-            cbQuarterMS.SelectedIndex = 0;
+                        var month = r.Thang.Month;
+                        return month switch
+                        {
+                            >= 1 and <= 3 => "Quý 1",
+                            >= 4 and <= 6 => "Quý 2",
+                            >= 7 and <= 9 => "Quý 3",
+                            _ => "Quý 4"
+                        };
+                    })
+                    .Distinct()
+                    .OrderBy(q => q)
+                    .ToList();
+                QuyBCMS.Insert(0, "Tất cả");
+                cbQuarterMS.ItemsSource = QuyBCMS;
+                cbQuarterMS.SelectedIndex = 0;
+            }
         }
 
         private void lbBCMSChartMode_SelectionChanged(object sender, SelectionChangedEventArgs e)
@@ -546,22 +484,27 @@ namespace QLTV.Admin
             {
                 case "Ngày":
                     spDayMS.Visibility = Visibility.Visible;
+                    icMSTimePickerError.Visibility = Visibility.Collapsed;
                     break;
                 case "Tháng":
                     spMonthMS.Visibility = Visibility.Visible;
                     PopulateBCMSMonthComboBox(null);
+                    icMSTimePickerError.Visibility = Visibility.Collapsed;
                     break;
                 case "Quý":
+
                     cbQuarterMS.Visibility = Visibility.Visible;
                     cbYearMS.Visibility = Visibility.Visible;
                     if (cbYearMS.ItemsSource == null)
                         PopulateBCMSYearComboBox();
                     PopulateBCMSQuarterComboBox((cbYearMS as ComboBox)?.SelectedItem as string);
+                    icMSTimePickerError.Visibility = Visibility.Collapsed;
                     break;
                 case "Năm":
                     cbYearMS.Visibility = Visibility.Visible;
                     if (cbYearMS.ItemsSource == null)
                         PopulateBCMSYearComboBox();
+                    icMSTimePickerError.Visibility = Visibility.Collapsed;
                     break;
                 default:
                     break;
@@ -595,32 +538,32 @@ namespace QLTV.Admin
             var values = new ChartValues<int>();
             var labels = new List<string>();
 
-            foreach (var report in _filteredBorrowReports)
+            // Create a dictionary to store borrow counts for each date
+            var borrowCounts = _borrowReports
+                .SelectMany(report => report.DSBCMuonSach)
+                .Where(bcMuonSach => bcMuonSach.BCMuonSach.Thang >= begin && bcMuonSach.BCMuonSach.Thang <= end && bcMuonSach.BCMuonSach.MaBCMuonSach != "Tổng")
+                .GroupBy(bcMuonSach => bcMuonSach.BCMuonSach.Thang.Date)
+                .ToDictionary(g => g.Key, g => g.Sum(bcMuonSach => bcMuonSach.BCMuonSach.TongSoLuotMuon));
+
+            // Iterate through each day in the date range
+            for (var date = begin.Date; date <= end.Date; date = date.AddDays(1))
             {
-                foreach (var bcMuonSach in report.DSBCMuonSach)
+                if (borrowCounts.TryGetValue(date, out var borrowCount))
                 {
-                    if (bcMuonSach.BCMuonSach.Thang >= begin &&
-                        bcMuonSach.BCMuonSach.Thang <= end &&
-                        bcMuonSach.BCMuonSach.MaBCMuonSach != "Tổng")
-                    {
-                        var daysInMonth = DateTime.DaysInMonth(bcMuonSach.BCMuonSach.Thang.Year, bcMuonSach.BCMuonSach.Thang.Month);
-                        for (int day = 1; day <= daysInMonth; day++)
-                        {
-                            var currentDate = new DateTime(bcMuonSach.BCMuonSach.Thang.Year, bcMuonSach.BCMuonSach.Thang.Month, day);
-                            if (currentDate >= begin && currentDate <= end)
-                            {
-                                values.Add(bcMuonSach.BCMuonSach.TongSoLuotMuon / daysInMonth);
-                                labels.Add(currentDate.ToString("dd/MM/yyyy"));
-                            }
-                        }
-                    }
+                    values.Add(borrowCount);
                 }
+                else
+                {
+                    values.Add(0);
+                }
+                labels.Add(date.ToString("dd/MM/yyyy"));
             }
 
             BCMSLineChartModel.CurrentChartValues.Add(new LineSeries
             {
                 Title = "Số lượt mượn",
-                Values = values
+                Values = values,
+                LineSmoothness = 0.2
             });
 
             BCMSLineChartModel.CurrentLabels = labels;
@@ -639,7 +582,7 @@ namespace QLTV.Admin
 
             var genreBorrowCounts = new Dictionary<string, int>();
 
-            foreach (var report in _filteredBorrowReports)
+            foreach (var report in _borrowReports)
             {
                 foreach (var bcMuonSach in report.DSBCMuonSach)
                 {
@@ -711,8 +654,8 @@ namespace QLTV.Admin
                 DateTime begin, end;
                 if (selectedYear == "Tất cả")
                 {
-                    begin = _borrowReports.Min(r => r.Month);
-                    end = _borrowReports.Max(r => r.Month);
+                    begin = new DateTime(2022, 1, 1);
+                    end = DateTime.Now.AddDays(1);
                 }
                 else
                 {
@@ -728,6 +671,7 @@ namespace QLTV.Admin
             if (!IsLoaded) return;
             var selectedQuarter = (sender as ComboBox)?.SelectedItem as string;
             var selectedYear = cbYearMS.SelectedItem as string;
+            if (selectedYear == "Tất cả") return;
             if (selectedQuarter != null && int.TryParse(selectedYear, out int year))
             {
                 DateTime begin, end;
@@ -874,8 +818,8 @@ namespace QLTV.Admin
 
         private async Task PopulateBCTTChartAndDataGrid(DateTime? begin = null, DateTime? end = null)
         {
-            DateTime startDate = begin ?? new DateTime(1970, 1, 1);
-            DateTime endDate = end ?? DateTime.Now;
+            DateTime startDate = begin ?? new DateTime(2022, 1, 1);
+            DateTime endDate = end ?? DateTime.Now.AddDays(1);
 
             await LoadBorrowReportsData(startDate, endDate);
             await LoadLateReturnsReportData(startDate, endDate);
@@ -886,55 +830,65 @@ namespace QLTV.Admin
 
         private void PopulateBCTTYearComboBox()
         {
-            var NamBCTT = _lateReturnReports
-                .Select(r => r.Month.Year.ToString())
-                .Distinct()
-                .OrderBy(y => y)
-                .ToList();
+            using (var context = new QLTVContext())
+            {
+                var NamBCTT = context.BCTRATRE
+                    .Select(r => r.Ngay.Year.ToString())
+                    .Distinct()
+                    .OrderBy(y => y)
+                    .ToList();
 
-            // Nạp các tuỳ chọn năm cho combobox của Báo cáo trả trễ
-            NamBCTT.Insert(0, "Tất cả"); // Thêm tuỳ chọn "Tất cả" option
-            cbYearTT.ItemsSource = NamBCTT;
-            cbYearTT.SelectedIndex = 0;
+                // Nạp các tuỳ chọn năm cho combobox của Báo cáo trả trễ
+                NamBCTT.Insert(0, "Tất cả"); // Thêm tuỳ chọn "Tất cả" option
+                cbYearTT.ItemsSource = NamBCTT;
+                cbYearTT.SelectedIndex = 0;
+            }
         }
 
         private void PopulateBCTTMonthComboBox(string? selectedYear)
         {
-            var ThangBCTT = _lateReturnReports
-                .Select(r => r.Month)
-                .Distinct()
-                .OrderBy(m => m.Year)
-                .ThenBy(m => m.Month)
-                .Select(m => m.ToString("MM/yyyy"))
-                .ToList();
+            using (var context = new QLTVContext())
+            {
+                var ThangBCTT = context.BCTRATRE
+                    .Select(r => r.Ngay)
+                    .OrderBy(m => m.Year)
+                    .ThenBy(m => m.Month)
+                    .Select(m => m.ToString("MM/yyyy"))
+                    .Distinct()
+                    .ToList();
 
-            cbStartMonthTT.ItemsSource = ThangBCTT;
-            cbEndMonthTT.ItemsSource = ThangBCTT;
-            cbStartMonthTT.SelectedIndex = 0;
-            cbEndMonthTT.SelectedIndex = cbEndMonthTT.Items.Count - 1;
+                cbStartMonthTT.ItemsSource = ThangBCTT;
+                cbEndMonthTT.ItemsSource = ThangBCTT;
+                cbStartMonthTT.SelectedIndex = 0;
+                cbEndMonthTT.SelectedIndex = cbEndMonthTT.Items.Count - 1;
+            }
         }
 
         private void PopulateBCTTQuarterComboBox(string? selectedYear)
         {
-            var QuyBCTT = _lateReturnReports
-                .Where(r => selectedYear == "Tất cả" || r.Month.Year == int.Parse(selectedYear))
-                .Select(r =>
-                {
-                    var month = r.Month.Month;
-                    return month switch
+            using (var context = new QLTVContext())
+            {
+                var QuyBCTT = context.BCTRATRE
+                    .Where(r => selectedYear == "Tất cả" || r.Ngay.Year == int.Parse(selectedYear))
+                    .AsEnumerable()
+                    .Select(r =>
                     {
-                        >= 1 and <= 3 => "Quý 1",
-                        >= 4 and <= 6 => "Quý 2",
-                        >= 7 and <= 9 => "Quý 3",
-                        _ => "Quý 4"
-                    };
-                })
-                .Distinct()
-                .OrderBy(q => q)
-                .ToList();
-            QuyBCTT.Insert(0, "Tất cả");
-            cbQuarterTT.ItemsSource = QuyBCTT;
-            cbQuarterTT.SelectedIndex = 0;
+                        var month = r.Ngay.Month;
+                        return month switch
+                        {
+                            >= 1 and <= 3 => "Quý 1",
+                            >= 4 and <= 6 => "Quý 2",
+                            >= 7 and <= 9 => "Quý 3",
+                            _ => "Quý 4"
+                        };
+                    })
+                    .Distinct()
+                    .OrderBy(q => q)
+                    .ToList();
+                QuyBCTT.Insert(0, "Tất cả");
+                cbQuarterTT.ItemsSource = QuyBCTT;
+                cbQuarterTT.SelectedIndex = 0;
+            }
         }
 
         private void lbBCTTChartMode_SelectionChanged(object sender, SelectionChangedEventArgs e)
@@ -996,7 +950,7 @@ namespace QLTV.Admin
             var values = new ChartValues<int>();
             var labels = new List<string>();
 
-            var dailyCounts = _filteredLateReturnReports
+            var dailyCounts = _lateReturnReports
                 .SelectMany(report => report.DSBCTraTre)
                 .Where(bcTraTre => bcTraTre.BCTraTre.Ngay >= begin && bcTraTre.BCTraTre.Ngay <= end)
                 .GroupBy(bcTraTre => bcTraTre.BCTraTre.Ngay.Date)
@@ -1012,7 +966,8 @@ namespace QLTV.Admin
             BCTTLineChartModel.CurrentChartValues.Add(new LineSeries
             {
                 Title = "Số lượt trả trễ",
-                Values = values
+                Values = values,
+                LineSmoothness = 0.2
             });
 
             BCTTLineChartModel.CurrentLabels = labels;
@@ -1069,7 +1024,7 @@ namespace QLTV.Admin
 
             var overdueTimes = new Dictionary<string, int>();
 
-            foreach (var report in _filteredLateReturnReports)
+            foreach (var report in _lateReturnReports)
             {
                 foreach (var bcTraTre in report.DSBCTraTre)
                 {
@@ -1134,6 +1089,7 @@ namespace QLTV.Admin
                 DateTime begin, end;
                 if (selectedYear == "Tất cả")
                 {
+                    cbQuarterTT.SelectedIndex = 0;
                     begin = _borrowReports.Min(r => r.Month);
                     end = _borrowReports.Max(r => r.Month);
                 }
