@@ -6,199 +6,412 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:QLTV.User"
              mc:Ignorable="d" 
-             d:DesignHeight="720" d:DesignWidth="1080">
+             d:DesignHeight="720" d:DesignWidth="1120">
     <ScrollViewer Width="Auto" HorizontalAlignment="Stretch" Background="#f5f5f5" VerticalScrollBarVisibility="Auto">
         <Grid  HorizontalAlignment="Center">
             <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="1080"/>
             </Grid.ColumnDefinitions>
             <Grid.RowDefinitions>
-                <RowDefinition Height="350"/>
-                <RowDefinition Height="350"/>
-                <RowDefinition Height="1000"/>
+                <RowDefinition Height="120"/>
+                <!-- Đây là Grid.Row=0 -->
+                <RowDefinition Height="*"/>
+                <!-- TabControl sẽ nằm ở đây -->
             </Grid.RowDefinitions>
             <Grid Grid.Row="0">
                 <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="1.6*"/>
+
                     <ColumnDefinition Width="1*"/>
                 </Grid.ColumnDefinitions>
-                <Border Grid.Column="0">
-                    <Rectangle Margin="5">
-                        <Rectangle.Fill>
-                            <ImageBrush x:Name="dashboard1" ImageSource="pack://application:,,,/Images/dashboard1.jpg" Stretch="Fill"/>
-                        </Rectangle.Fill>
-                    </Rectangle>
-                </Border>
-                <Grid Grid.Column="1">
+
+
+
+
+                <Grid Grid.Column="2" >
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="1*"/>
+                        <ColumnDefinition Width="1*"/>
+                    </Grid.ColumnDefinitions>
+                    <Grid Grid.Column="0">
+                        <Button x:Name="btnThongBao" Height="100" Width="150" Margin="10,0" Foreground="Orange" 
+    Style="{StaticResource MaterialDesignFlatButton}" 
+    Click="btnThongBao_Click">
+                            <StackPanel Orientation="Vertical">
+                                <materialDesign:Badged HorizontalAlignment="Center"
+            Badge="{Binding ThongBaoList.ThongBao.Count}" 
+
+            BadgeColorZoneMode="SecondaryMid">
+                                    <materialDesign:PackIcon Kind="Bell" Width="40" Height="40" Margin="5"  />
+                                </materialDesign:Badged>
+                                <TextBlock Text="Thông báo" FontSize="20" VerticalAlignment="Center"/>
+                            </StackPanel>
+                        </Button>
+
+
+                        <Popup x:Name="popupThongBao" PlacementTarget="{Binding ElementName=btnThongBao}" 
+    Placement="Bottom" StaysOpen="False" Width="320">
+                            <Border Background="{DynamicResource MaterialDesignPaper}" 
+            BorderBrush="{DynamicResource MaterialDesignDivider}" 
+            BorderThickness="1" Padding="10" CornerRadius="5">
+                                <ScrollViewer VerticalScrollBarVisibility="Auto" MaxHeight="400">
+                                    <ItemsControl ItemsSource="{Binding ThongBaoList.ThongBao}">
+                                        <ItemsControl.ItemTemplate>
+                                            <DataTemplate>
+                                                <Border BorderBrush="{DynamicResource MaterialDesignDivider}" 
+                            BorderThickness="0 0 0 1" Padding="5">
+                                                    <StackPanel Orientation="Horizontal" Margin="5">
+                                                        <!-- Biểu tượng trong hình tròn -->
+                                                        <Grid Width="30" Height="30" Margin="0,0,10,0">
+                                                            <!-- Vẽ hình tròn -->
+                                                            <Ellipse Fill="{DynamicResource PrimaryHueLightBrush}" 
+                                        Stroke="{DynamicResource PrimaryHueDarkBrush}" 
+                                        StrokeThickness="1"/>
+                                                            <!-- Biểu tượng Material Design -->
+                                                            <materialDesign:PackIcon Kind="{Binding Icon}" 
+                                                         Width="20" Height="20" 
+                                                         HorizontalAlignment="Center" 
+                                                         VerticalAlignment="Center" 
+                                                         Foreground="{DynamicResource PrimaryTextColor}" />
+                                                        </Grid>
+                                                        <!-- Nội dung thông báo -->
+                                                        <StackPanel>
+                                                            <TextBlock Text="{Binding Title}" 
+                                            FontWeight="Bold" 
+                                            Foreground="{DynamicResource PrimaryTextColor}" />
+                                                            <TextBlock Text="{Binding Message}" MaxWidth="230" 
+                                           TextWrapping="Wrap" 
+                                           Foreground="{DynamicResource SecondaryTextColor}" />
+                                                        </StackPanel>
+                                                    </StackPanel>
+                                                </Border>
+                                            </DataTemplate>
+                                        </ItemsControl.ItemTemplate>
+                                    </ItemsControl>
+                                </ScrollViewer>
+                            </Border>
+                        </Popup>
+
+                    </Grid>
+
+                    <Grid Grid.Column="2">
+                        <!-- Nút Tài Khoản -->
+                        <Button x:Name="btnTaiKhoan" Height="100" Width="150"  Foreground="Orange"  
+                                Style="{StaticResource MaterialDesignFlatButton}" 
+                                Click="btnTaiKhoan_Click">
+                            <StackPanel Orientation="Vertical">
+                                <materialDesign:PackIcon Kind="Account" Width="40" Height="40" Margin="5" HorizontalAlignment="Center" />
+                                <TextBlock Text="Tài khoản" FontSize="20" VerticalAlignment="Center"/>
+                            </StackPanel>
+                        </Button>
+
+                        <!-- Popup -->
+                        <Popup x:Name="popupTaiKhoan" StaysOpen="False" PlacementTarget="{Binding ElementName=btnTaiKhoan}" Placement="Bottom">
+                            <Border Background="White"  BorderBrush="Gray" BorderThickness="1" Padding="5">
+                                <StackPanel >
+                                    <!-- Nút Chi Tiết -->
+                                    <Button Content="Chi tiết" Width="100" Margin="5" Click="ChiTiet_Click" Background="Orange" BorderBrush="Orange"/>
+                                    <!-- Nút Đăng Xuất -->
+                                    <Button Content="Đăng xuất" Width="100" Margin="5" Click="DangXuat_Click" Background="Orange" BorderBrush="Orange"/>
+                                </StackPanel>
+                            </Border>
+                        </Popup>
+                    </Grid>
+                </Grid>
+            </Grid>
+            <TabControl x:Name="MainTabControl" Margin="10" Grid.Row="1" Width="1080">
+                <TabControl.Resources>
+                    <!-- Style cho TabItem -->
+                    <Style TargetType="{x:Type TabItem}">
+                        <!-- Template để thay đổi giao diện tổng thể của TabItem -->
+                        <Setter Property="Template">
+                            <Setter.Value>
+                                <ControlTemplate TargetType="{x:Type TabItem}">
+                                    <Grid>
+                                        <!-- Border TabItem -->
+                                        <Border x:Name="Border"
+                                CornerRadius="10,10,0,0"
+                                Background="Transparent"
+                                BorderThickness="0,0,0,3">
+                                            <!-- Nội dung Header của TabItem -->
+                                            <ContentPresenter x:Name="ContentSite"
+                  VerticalAlignment="Center"
+                  HorizontalAlignment="Left"
+                  ContentSource="Header"
+                  Margin="10,2"/>
+                                        </Border>
+                                    </Grid>
+                                    <!-- Trigger thay đổi màu khi Tab được chọn -->
+                                    <ControlTemplate.Triggers>
+                                        <Trigger Property="IsSelected" Value="True">
+                                            <Setter TargetName="Border" Property="Background" Value="Orange"/>
+                                        </Trigger>
+                                    </ControlTemplate.Triggers>
+                                </ControlTemplate>
+                            </Setter.Value>
+                        </Setter>
+
+                        <!-- Giao diện cho Header -->
+                        <Setter Property="HeaderTemplate">
+                            <Setter.Value>
+                                <DataTemplate>
+                                    <Grid Height="45" HorizontalAlignment="Stretch" VerticalAlignment="Center">
+                                        <!-- Cột định nghĩa các phần tử bên trong Header -->
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="Auto" />
+                                            <ColumnDefinition Width="*" />
+                                            <ColumnDefinition Width="Auto" />
+                                        </Grid.ColumnDefinitions>
+
+                                        <!-- PackIcon Shape -->
+                                        <materialDesign:PackIcon
+                                Grid.Column="0"
+                                Kind="Shape"
+                                Foreground="DimGray"
+                                Width="16"
+                                Height="16"
+                                VerticalAlignment="Center"
+                                Margin="0,0,5,0" />
+
+                                        <!-- TextBlock hiển thị tên tab -->
+                                        <TextBlock Grid.Column="1"
+                               FontSize="15"
+                               Text="{Binding}" 
+                               FontWeight="Bold" 
+                               Foreground="DimGray"
+                               VerticalAlignment="Center" 
+                               HorizontalAlignment="Left" 
+                               Margin="0,0,5,0" />
+
+                                        <!-- Button đóng tab -->
+                                        <Button Grid.Column="2"
+                                Click="CloseTab_Click"
+                                VerticalAlignment="Center"
+                                HorizontalAlignment="Right" 
+                                Background="Transparent"
+                                Padding="0">
+                                            <Button.Template>
+                                                <ControlTemplate>
+                                                    <Border x:Name="border"
+                                BorderThickness="0" 
+                                Background="Transparent" 
+                                Width="20" 
+                                Height="20" 
+                                CornerRadius="10">
+                                                        <materialDesign:PackIcon
+                                Kind="Close" Height="15" Width="15"
+                                Foreground="Red"
+                                VerticalAlignment="Center"
+                                HorizontalAlignment="Center" />
+                                                    </Border>
+                                                    <ControlTemplate.Triggers>
+                                                        <Trigger Property="IsMouseOver" Value="True">
+                                                            <Setter TargetName="border" Property="Background" Value="#77808080" />
+                                                        </Trigger>
+                                                    </ControlTemplate.Triggers>
+                                                </ControlTemplate>
+                                            </Button.Template>
+                                        </Button>
+                                    </Grid>
+                                </DataTemplate>
+                            </Setter.Value>
+                        </Setter>
+                    </Style>
+                </TabControl.Resources>
+                <TabItem Header="Trang Chủ">
+                <Grid>
                     <Grid.RowDefinitions>
-                        <RowDefinition Height="1*"/>
-                        <RowDefinition Height="1*"/>
+                       
+                        <RowDefinition Height="350"/>
+                        <RowDefinition Height="320"/>
+                        <RowDefinition Height="1000"/>
                     </Grid.RowDefinitions>
                     <Grid Grid.Row="0">
-                        <Rectangle Margin="5">
-                            <Rectangle.Fill>
-                                <ImageBrush x:Name="dashboard" ImageSource="pack://application:,,,/Images/dashboard.jpg" Stretch="Fill"/>
-                            </Rectangle.Fill>
-                        </Rectangle>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="1.6*"/>
+                            <ColumnDefinition Width="1*"/>
+                        </Grid.ColumnDefinitions>
+                        <Border Grid.Column="0">
+                            <Rectangle Margin="5">
+                                <Rectangle.Fill>
+                                    <ImageBrush x:Name="dashboard1" ImageSource="pack://application:,,,/Images/dashboard1.jpg" Stretch="Fill"/>
+                                </Rectangle.Fill>
+                            </Rectangle>
+                        </Border>
+                        <Grid Grid.Column="1">
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="1*"/>
+                                <RowDefinition Height="1*"/>
+                            </Grid.RowDefinitions>
+                            <Grid Grid.Row="0">
+                                <Rectangle Margin="5">
+                                    <Rectangle.Fill>
+                                        <ImageBrush x:Name="dashboard" ImageSource="pack://application:,,,/Images/dashboard.jpg" Stretch="Fill"/>
+                                    </Rectangle.Fill>
+                                </Rectangle>
+                            </Grid>
+                            <Grid Grid.Row="1">
+                                <Rectangle Margin="5">
+                                    <Rectangle.Fill>
+                                        <ImageBrush x:Name="dashboard2" ImageSource="pack://application:,,,/Images/dashboard2.jpg" Stretch="Fill"/>
+                                    </Rectangle.Fill>
+                                </Rectangle>
+                            </Grid>
+                        </Grid>
                     </Grid>
                     <Grid Grid.Row="1">
-                        <Rectangle Margin="5">
-                            <Rectangle.Fill>
-                                <ImageBrush x:Name="dashboard2" ImageSource="pack://application:,,,/Images/dashboard2.jpg" Stretch="Fill"/>
-                            </Rectangle.Fill>
-                        </Rectangle>
-                    </Grid>
-                </Grid>
-            </Grid>
-            <Grid Grid.Row="1">
-                <TabControl x:Name="tabControl"
-                            
-                            VerticalAlignment="Stretch"
-                            ItemsSource="{Binding TheLoaiList}"
-                            SelectedItem="{Binding SelectedTheLoai}"
-                            SelectionChanged="TabControl_SelectionChanged">
-                    <TabControl.ItemTemplate>
-                        <DataTemplate>
-                            <StackPanel Orientation="Horizontal" Height="45" Margin="-5">
-                                <materialDesign:PackIcon Kind="BookOutline" Foreground="DimGray" Width="16" Height="16" Margin="0,0,5,0" VerticalAlignment="Center" />
-                                <TextBlock Text="{Binding TenTheLoai}" FontWeight="Bold" FontSize="16" Foreground="DimGray" VerticalAlignment="Center" />
-                            </StackPanel>
-                        </DataTemplate>
-                    </TabControl.ItemTemplate>
-                    <TabControl.ContentTemplate>
-                        <DataTemplate>
-                            <Grid Background="AliceBlue">
-                                <ItemsControl ItemsSource="{Binding DataContext.TuaSachList, RelativeSource={RelativeSource AncestorType=TabControl}}">
-                                    <ItemsControl.ItemsPanel>
-                                        <ItemsPanelTemplate>
-                                            <StackPanel Orientation="Horizontal"/>
-                                        </ItemsPanelTemplate>
-                                    </ItemsControl.ItemsPanel>
-                                    <ItemsControl.ItemTemplate>
-                                        <DataTemplate>
-                                            <Button Width="180" Height="250" Margin="5" Click="btnSach_Click" Tag="{Binding}" 
-                                                    Background="Transparent" BorderBrush="Orange">
-                                                <Grid>
-                                                    <Grid.RowDefinitions>
-                                                        <RowDefinition Height="190"/>
-                                                        <RowDefinition Height="60"/>
-                                                    </Grid.RowDefinitions>
-                                                    <Rectangle Height="190" Width="140">
-                                                        <Rectangle.Fill>
-                                                            <ImageBrush ImageSource="{Binding BiaSach}" Stretch="Fill"/>
-                                                        </Rectangle.Fill>
-                                                    </Rectangle>
-                                                    <TextBlock Grid.Row="1" Text="{Binding TenTuaSach}" 
-                                                               TextAlignment="Center" FontSize="16" 
-                                                               Width="160"
-                                                               TextWrapping="Wrap" />
-                                                </Grid>
-                                            </Button>
-                                        </DataTemplate>
-                                    </ItemsControl.ItemTemplate>
-                                </ItemsControl>
-                            </Grid>
-                        </DataTemplate>
-                    </TabControl.ContentTemplate>
-                </TabControl>
+                        <TabControl x:Name="tabControl"
+                 
+                 VerticalAlignment="Stretch"
+                 ItemsSource="{Binding TheLoaiList}"
+                 SelectedItem="{Binding SelectedTheLoai}"
+                 SelectionChanged="TabControl_SelectionChanged">
+                            <TabControl.ItemTemplate>
+                                <DataTemplate>
+                                    <StackPanel Orientation="Horizontal" >
+                                        <materialDesign:PackIcon Kind="BookOutline" Foreground="DimGray" Width="15" Height="15" Margin="0,0,5,0" VerticalAlignment="Center" />
+                                        <TextBlock Text="{Binding TenTheLoai}" FontWeight="Bold" FontSize="15" Foreground="DimGray" VerticalAlignment="Center" />
+                                    </StackPanel>
+                                </DataTemplate>
+                            </TabControl.ItemTemplate>
+                            <TabControl.ContentTemplate>
+                                <DataTemplate>
+                                    <Grid Background="AliceBlue">
+                                        <ItemsControl ItemsSource="{Binding DataContext.TuaSachList, RelativeSource={RelativeSource AncestorType=TabControl}}">
+                                            <ItemsControl.ItemsPanel>
+                                                <ItemsPanelTemplate>
+                                                    <StackPanel Orientation="Horizontal"/>
+                                                </ItemsPanelTemplate>
+                                            </ItemsControl.ItemsPanel>
+                                            <ItemsControl.ItemTemplate>
+                                                <DataTemplate>
+                                                    <Button Width="160" Height="240" Margin="5" Click="btnSach_Click" Tag="{Binding}" 
+                                         Background="Transparent" BorderBrush="Orange">
+                                                        <Grid>
+                                                            <Grid.RowDefinitions>
+                                                                <RowDefinition Height="160"/>
+                                                                <RowDefinition Height="60"/>
+                                                            </Grid.RowDefinitions>
+                                                            <Rectangle Height="150" Width="140">
+                                                                <Rectangle.Fill>
+                                                                    <ImageBrush ImageSource="{Binding BiaSach}" Stretch="Fill"/>
+                                                                </Rectangle.Fill>
+                                                            </Rectangle>
+                                                            <TextBlock Grid.Row="1" Text="{Binding TenTuaSach}" 
+                                                    FontSize="15" TextAlignment="Center" 
+                                                     MaxWidth="150"
+                                                     TextWrapping="Wrap" />
+                                                        </Grid>
+                                                    </Button>
+                                                </DataTemplate>
+                                            </ItemsControl.ItemTemplate>
+                                        </ItemsControl>
+                                    </Grid>
+                                </DataTemplate>
+                            </TabControl.ContentTemplate>
+                        </TabControl>
 
-            </Grid>
-            <Grid Grid.Row="2">
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="60"/>
-                    <RowDefinition Height="940"/>
-                </Grid.RowDefinitions>
-                <Grid Grid.Row="0" Background="#FFF1B561" Margin="0,5">
-                    <TextBlock Margin="10,0,0,0" Text="Bảng xếp hạng sách mượn nhiều tuần" 
-                               VerticalAlignment="Center"
-                               HorizontalAlignment="Left"
-                               FontWeight="Bold" FontSize="25" Foreground="White" />
-                </Grid>
-                <TabControl Grid.Row="1" x:Name="tcSachMuonNhieu" Margin="0,10"
-                            
-                            VerticalAlignment="Stretch"
-                            ItemsSource="{Binding TheLoaiMuonNhieuList}"
-                            
-                            SelectionChanged="tcMuonNhieu_SelectionChanged">
-                    <TabControl.ItemTemplate>
-                        <DataTemplate>
-                            <StackPanel Orientation="Horizontal" Height="45">
-                                <TextBlock Text="{Binding TenTheLoai}" FontWeight="Bold" FontSize="16" Foreground="DimGray" VerticalAlignment="Center" />
-                            </StackPanel>
-                        </DataTemplate>
-                    </TabControl.ItemTemplate>
-                    <TabControl.ContentTemplate>
-                        <DataTemplate>
-                            <Grid Margin="0,5 ">
-                                <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="1*"/>
-                                    <ColumnDefinition Width="0.1*"/>
-                                    <ColumnDefinition Width="1*"/> 
-                                </Grid.ColumnDefinitions>
-                                <ItemsControl Grid.Column="0" Margin="0,5" ItemsSource="{Binding DataContext.TuaSachMuonNhieuList, RelativeSource={RelativeSource AncestorType=TabControl}}">
-                                    <ItemsControl.ItemsPanel>
-                                        <ItemsPanelTemplate>
-                                            <StackPanel Orientation="Vertical" />
-                                        </ItemsPanelTemplate>
-                                    </ItemsControl.ItemsPanel>
-                                    <ItemsControl.ItemTemplate>
-                                        <DataTemplate>
-                                            <Button Width="500" HorizontalAlignment="Center" Height="150" BorderBrush="Orange" 
-                                                    Background="Transparent"  Margin="5" HorizontalContentAlignment="Left"
-                                                    MouseEnter="Button_MouseEnter"
-                                                    Click="btnSach_Click" Tag="{Binding}">
-                                                <Grid HorizontalAlignment="Left">
-                                                    <Grid.ColumnDefinitions>
-                                                        <ColumnDefinition Width="*" />
-                                                        <ColumnDefinition Width="3*" />
-                                                    </Grid.ColumnDefinitions>
-                                                    <Rectangle Width="75" Height="100" Margin="5" Grid.Column="0" >
-                                                        <Rectangle.Fill>
-                                                            <ImageBrush ImageSource="{Binding BiaSach}" Stretch="Fill"/>
-                                                        </Rectangle.Fill>
-                                                    </Rectangle>
-                                                    <StackPanel Grid.Column="1">
-                                                        <TextBlock Text="{Binding TenTuaSach}" FontWeight="Bold" FontSize="16" Foreground="Black" />
-                                                        <TextBlock Text="{Binding TenTacGia}" FontSize="14" Foreground="Gray" />
-                                                    </StackPanel>
-                                                </Grid>
-                                            </Button>
-                                        </DataTemplate>
-                                    </ItemsControl.ItemTemplate>
-                                </ItemsControl>
-                                <Rectangle Grid.Column="1" Width="1" Fill="Gray" Margin="5,5" />
-                                <Grid Grid.Column="2" DataContext="{Binding SelectedTuaSach, RelativeSource={RelativeSource AncestorType=UserControl}}">
-                                    <Grid>
+                    </Grid>
+                    <Grid Grid.Row="2">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="60"/>
+                            <RowDefinition Height="940"/>
+                        </Grid.RowDefinitions>
+                        <Grid Grid.Row="0" Background="#FFF1B561" Margin="0,5">
+                            <TextBlock Margin="10,0,0,0" Text="Bảng xếp hạng sách mượn nhiều" 
+                    VerticalAlignment="Center"
+                    HorizontalAlignment="Left"
+                    FontWeight="Bold" FontSize="25" Foreground="White" />
+                        </Grid>
+                        <TabControl Grid.Row="1" x:Name="tcSachMuonNhieu" Margin="0,10"
+                 
+                 VerticalAlignment="Stretch"
+                 ItemsSource="{Binding TheLoaiMuonNhieuList}"
+                 
+                 SelectionChanged="tcMuonNhieu_SelectionChanged">
+                            <TabControl.ItemTemplate>
+                                <DataTemplate>
+                                    <StackPanel Orientation="Horizontal">
+                                        <TextBlock Text="{Binding TenTheLoai}" FontWeight="Bold" FontSize="15" Foreground="DimGray" VerticalAlignment="Center" />
+                                    </StackPanel>
+                                </DataTemplate>
+                            </TabControl.ItemTemplate>
+                            <TabControl.ContentTemplate>
+                                <DataTemplate>
+                                    <Grid Margin="0,5 ">
                                         <Grid.ColumnDefinitions>
                                             <ColumnDefinition Width="1*"/>
-                                            <ColumnDefinition Width="2*"/>
+                                            <ColumnDefinition Width="0.1*"/>
+                                            <ColumnDefinition Width="1*"/>
                                         </Grid.ColumnDefinitions>
-                                        <Rectangle Margin="5,20,5,0" Height="190" Width="145" VerticalAlignment="Top">
-                                            <Rectangle.Fill>
-                                                <ImageBrush ImageSource="{Binding BiaSach}" Stretch="Fill"/>
-                                            </Rectangle.Fill>
-                                        </Rectangle>
-                                        <StackPanel Margin="10" Grid.Column="1">
-                                            <TextBlock Text="{Binding TenTuaSach}" FontWeight="Bold" Margin="0,0,0,5" FontSize="24"/>
-                                            <TextBlock FontSize="18">
-                                                    <Run Text="Tác giả: " />
-                                                    <Run Text="{Binding TacGia}"/>
-                                            </TextBlock>
-                                            <TextBlock FontSize="18" TextWrapping="Wrap" Margin="0,0,0,10">
-                                                <Run Text="Mô tả: " />
-                                                <Run Text="{Binding MoTa}"/>
-                                            </TextBlock>
+                                        <ItemsControl Grid.Column="0" Margin="0,5" ItemsSource="{Binding DataContext.TuaSachMuonNhieuList, RelativeSource={RelativeSource AncestorType=TabControl}}">
+                                            <ItemsControl.ItemsPanel>
+                                                <ItemsPanelTemplate>
+                                                    <StackPanel Orientation="Vertical" />
+                                                </ItemsPanelTemplate>
+                                            </ItemsControl.ItemsPanel>
+                                            <ItemsControl.ItemTemplate>
+                                                <DataTemplate>
+                                                    <Button Width="500" HorizontalAlignment="Center" Height="150" BorderBrush="Orange" 
+                                         Background="Transparent"  Margin="5" HorizontalContentAlignment="Left"
+                                         MouseEnter="Button_MouseEnter"
+                                         Click="btnSach_Click" Tag="{Binding}">
+                                                        <Grid HorizontalAlignment="Left">
+                                                            <Grid.ColumnDefinitions>
+                                                                <ColumnDefinition Width="*" />
+                                                                <ColumnDefinition Width="3*" />
+                                                            </Grid.ColumnDefinitions>
+                                                            <Rectangle Width="75" Height="100" Margin="5" Grid.Column="0" >
+                                                                <Rectangle.Fill>
+                                                                    <ImageBrush ImageSource="{Binding BiaSach}" Stretch="Fill"/>
+                                                                </Rectangle.Fill>
+                                                            </Rectangle>
+                                                            <StackPanel Grid.Column="1">
+                                                                <TextBlock Text="{Binding TenTuaSach}" FontWeight="Bold" FontSize="16" Foreground="Black" />
+                                                                <TextBlock Text="{Binding TenTacGia}" FontSize="14" Foreground="Gray" />
+                                                            </StackPanel>
+                                                        </Grid>
+                                                    </Button>
+                                                </DataTemplate>
+                                            </ItemsControl.ItemTemplate>
+                                        </ItemsControl>
+                                        <Rectangle Grid.Column="1" Width="1" Fill="Gray" Margin="5,5" />
+                                        <Grid Grid.Column="2" DataContext="{Binding SelectedTuaSach, RelativeSource={RelativeSource AncestorType=UserControl}}">
+                                            <Grid>
+                                                <Grid.ColumnDefinitions>
+                                                    <ColumnDefinition Width="1*"/>
+                                                    <ColumnDefinition Width="2*"/>
+                                                </Grid.ColumnDefinitions>
+                                                <Rectangle Margin="5,20,5,0" Height="190" Width="145" VerticalAlignment="Top">
+                                                    <Rectangle.Fill>
+                                                        <ImageBrush ImageSource="{Binding BiaSach}" Stretch="Fill"/>
+                                                    </Rectangle.Fill>
+                                                </Rectangle>
+                                                <StackPanel Margin="10" Grid.Column="1">
+                                                    <TextBlock Text="{Binding TenTuaSach}" FontWeight="Bold" Margin="0,0,0,5" FontSize="24"/>
+                                                    <TextBlock FontSize="18">
+                                         <Run Text="Tác giả: " />
+                                         <Run Text="{Binding TacGia}"/>
+                                                    </TextBlock>
+                                                    <TextBlock FontSize="18" TextWrapping="Wrap" Margin="0,0,0,10">
+                                     <Run Text="Mô tả: " />
+                                     <Run Text="{Binding MoTa}"/>
+                                                    </TextBlock>
 
 
-                                            <!-- Thêm các thông tin khác nếu cần -->
-                                        </StackPanel>
+                                                    <!-- Thêm các thông tin khác nếu cần -->
+                                                </StackPanel>
+                                            </Grid>
+                                        </Grid>
                                     </Grid>
-                                </Grid>
-                            </Grid>
-                        </DataTemplate>
-                    </TabControl.ContentTemplate>
-                </TabControl>
-            </Grid>
+                                </DataTemplate>
+                            </TabControl.ContentTemplate>
+                        </TabControl>
+                    </Grid>
+                    
+                </Grid>
+                </TabItem>
+            </TabControl>
+           
         </Grid>
     </ScrollViewer>
 </UserControl>

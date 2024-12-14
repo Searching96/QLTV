@@ -78,12 +78,12 @@ namespace QLTV.User
 
                     foreach (var theLoai in TheLoaiList)
                     {
-                    var tuaSachs = context.TUASACH
-                    .Where(t => t.TUASACH_THELOAI
-                        .Any(ttl => ttl.IDTheLoai == theLoai.ID) && !t.IsDeleted) // Lọc theo thể loại từ bảng TUASACH_THELOAI
-                    .OrderBy(t => Guid.NewGuid()) // Lấy tựa sách ngẫu nhiên
-                    .Take(4) // Lấy 4 tựa sách ngẫu nhiên
-                    .ToList();
+                        var tuaSachs = context.TUASACH
+                        .Where(t => t.TUASACH_THELOAI
+                            .Any(ttl => ttl.IDTheLoai == theLoai.ID) && !t.IsDeleted) // Lọc theo thể loại từ bảng TUASACH_THELOAI
+                        .OrderBy(t => Guid.NewGuid()) // Lấy tựa sách ngẫu nhiên
+                        .Take(4) // Lấy 4 tựa sách ngẫu nhiên
+                        .ToList();
                     //foreach (var tuasach in tuaSachs)
                     //    MessageBox.Show(tuasach.TenTuaSach);
                     TuaSachByTheLoai[theLoai.ID] = new ObservableCollection<TUASACH>(tuaSachs);
@@ -122,15 +122,15 @@ namespace QLTV.User
                 {
                     using (var context = new QLTVContext())
                     {
-                        // Lấy 4 thể loại ngẫu nhiên
-                        var randomTheLoai = context.THELOAI
-                            .Where(t => !t.IsDeleted)
-                            .OrderBy(t => Guid.NewGuid())
-                            .Take(4)
-                            .ToList();
+                // Lấy 4 thể loại ngẫu nhiên
+                var randomTheLoai = context.THELOAI
+                    .Where(t => !t.IsDeleted)
+                    .OrderBy(t => Guid.NewGuid())
+                    .Take(4)
+                    .ToList();
 
-                        TheLoaiList = new ObservableCollection<THELOAI>(randomTheLoai);
-                    }
+                TheLoaiList = new ObservableCollection<THELOAI>(randomTheLoai);
+            }
                 }
             private void LoadTheLoaiMuonNhieu()
             {

@@ -61,6 +61,7 @@
             <Grid Grid.Row="1" Grid.Column="1" Margin="5, 5, 0, 0">
                 <Frame VerticalContentAlignment="Stretch"
                        HorizontalContentAlignment="Stretch"
+                       Source="UTrangChu.xaml"
                        x:Name="USMainContent" NavigationUIVisibility="Hidden"/>
             </Grid>
         </Grid>
