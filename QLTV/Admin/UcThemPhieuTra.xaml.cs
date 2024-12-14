@@ -236,7 +236,12 @@ namespace QLTV.Admin
 
             //Khởi tạo các chi tiết phiếu mượn tương ứng
             _returnDetails.Clear();
-            foreach (var ctpm in selectedReader.PHIEUMUON.Where(pm => pm.CTPHIEUMUON.Count != pm.CTPHIEUTRA.Count).SelectMany(pm => pm.CTPHIEUMUON).ToList())
+            foreach (var ctpm in selectedReader.PHIEUMUON
+                .Where(pm => pm.CTPHIEUMUON.Count != pm.CTPHIEUTRA.Count)
+                .SelectMany(pm => pm.CTPHIEUMUON.Where(ct => !pm.CTPHIEUTRA
+                    .Any(ptr => ptr.IDPhieuMuon == ct.IDPhieuMuon 
+                        && ptr.IDSach == ct.IDSach)))
+                .ToList())
             {
                 var ctpt = new CTPHIEUTRA
                 {

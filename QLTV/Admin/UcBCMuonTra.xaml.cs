@@ -279,16 +279,25 @@ namespace QLTV.Admin
             {
                 using (var _context = new QLTVContext())
                 {
+                    // Load borrowing reports data from the database
                     var borrowReports = await _context.BCMUONSACH
                         .Include(p => p.CTBCMUONSACH)
                             .ThenInclude(ct => ct.IDTheLoaiNavigation)
                         .ToListAsync();
 
+                    // Clear collections to avoid duplicates
+                    if (_borrowReports != null)
+                        _borrowReports.Clear();
+                    if (_filteredBorrowReports != null)
+                        _filteredBorrowReports.Clear();
+
+                    // Process borrow reports into ObservableCollection
                     _borrowReports = new ObservableCollection<DSBCMuonSachModel>(
                         borrowReports
                             .GroupBy(bc => new { bc.Thang.Year, bc.Thang.Month })
                             .Select(g =>
                             {
+                                // Create detailed borrowing report models
                                 var dsBCMuonSach = new ObservableCollection<BCMuonSachModel>(
                                     g.Select(b => new BCMuonSachModel
                                     {
@@ -297,37 +306,35 @@ namespace QLTV.Admin
                                     }).ToList()
                                 );
 
-                                var totalBCMuonSach = new BCMUONSACH
+                                // Calculate totals for the group
+                                if (!dsBCMuonSach.Any(bc => bc.BCMuonSach.MaBCMuonSach == "Tổng"))
                                 {
-                                    MaBCMuonSach = "Tổng",
-                                    Thang = new DateTime(g.Key.Year, g.Key.Month, 1),
-                                    TongSoLuotMuon = dsBCMuonSach.Sum(bc => bc.BCMuonSach.TongSoLuotMuon),
-                                    CTBCMUONSACH = new List<CTBCMUONSACH>()
-                                };
-
-                                var totalCTBCMUONSACH = g
-                                    .SelectMany(bc => bc.CTBCMUONSACH)
-                                    .GroupBy(ct => ct.IDTheLoai)
-                                    .Select(grp => new CTBCMUONSACH
+                                    var totalBorrowCount = dsBCMuonSach.Sum(bc => bc.BCMuonSach.TongSoLuotMuon);
+                                    var totalBCMuonSach = new BCMUONSACH
                                     {
-                                        IDBCMuonSach = 0,
-                                        IDTheLoai = grp.Key,
-                                        SoLuotMuon = grp.Sum(ct => ct.SoLuotMuon),
-                                        TiLe = grp.Sum(ct => ct.SoLuotMuon) / (double)totalBCMuonSach.TongSoLuotMuon,
-                                        IDTheLoaiNavigation = grp.First().IDTheLoaiNavigation,
-                                        IDBCMuonSachNavigation = totalBCMuonSach
-                                    })
-                                    .ToList();
+                                        MaBCMuonSach = "Tổng",
+                                        Thang = new DateTime(g.Key.Year, g.Key.Month, 1),
+                                        TongSoLuotMuon = totalBorrowCount,
+                                        CTBCMUONSACH = g
+                                            .SelectMany(bc => bc.CTBCMUONSACH)
+                                            .GroupBy(ct => ct.IDTheLoai)
+                                            .Select(grp => new CTBCMUONSACH
+                                            {
+                                                IDBCMuonSach = 0,
+                                                IDTheLoai = grp.Key,
+                                                SoLuotMuon = grp.Sum(ct => ct.SoLuotMuon),
+                                                TiLe = totalBorrowCount == 0 ? 0 : grp.Sum(ct => ct.SoLuotMuon) / (double)totalBorrowCount,
+                                                IDTheLoaiNavigation = grp.First().IDTheLoaiNavigation
+                                            })
+                                            .ToList()
+                                    };
 
-                                totalBCMuonSach.CTBCMUONSACH = totalCTBCMUONSACH;
-
-                                var totalBCMuonSachModel = new BCMuonSachModel
-                                {
-                                    BCMuonSach = totalBCMuonSach,
-                                    IsExpanded = false,
-                                };
-
-                                dsBCMuonSach.Insert(0, totalBCMuonSachModel);
+                                    dsBCMuonSach.Insert(0, new BCMuonSachModel
+                                    {
+                                        BCMuonSach = totalBCMuonSach,
+                                        IsExpanded = false
+                                    });
+                                }
 
                                 return new DSBCMuonSachModel
                                 {
@@ -339,46 +346,46 @@ namespace QLTV.Admin
                             .ToList()
                     );
 
+                    // Filter by the date range
                     _filteredBorrowReports = new ObservableCollection<DSBCMuonSachModel>(
                         _borrowReports
                             .Where(r => r.Month >= begin && r.Month <= end)
                             .Select(r =>
                             {
+                                // Filter borrow details within the range
                                 var filteredDSBCMuonSach = new ObservableCollection<BCMuonSachModel>(
                                     r.DSBCMuonSach.Where(bc => bc.BCMuonSach.Thang >= begin && bc.BCMuonSach.Thang <= end).ToList()
                                 );
 
-                                var totalBCMuonSach = new BCMUONSACH
+                                // Check for existing totals and calculate if needed
+                                if (!filteredDSBCMuonSach.Any(bc => bc.BCMuonSach.MaBCMuonSach == "Tổng"))
                                 {
-                                    MaBCMuonSach = "Tổng",
-                                    Thang = r.Month,
-                                    TongSoLuotMuon = filteredDSBCMuonSach.Sum(bc => bc.BCMuonSach.TongSoLuotMuon),
-                                    CTBCMUONSACH = new List<CTBCMUONSACH>()
-                                };
-
-                                var totalCTBCMUONSACH = filteredDSBCMuonSach
-                                    .SelectMany(bc => bc.BCMuonSach.CTBCMUONSACH)
-                                    .GroupBy(ct => ct.IDTheLoai)
-                                    .Select(grp => new CTBCMUONSACH
+                                    var totalBorrowCount = filteredDSBCMuonSach.Sum(bc => bc.BCMuonSach.TongSoLuotMuon);
+                                    var totalBCMuonSach = new BCMUONSACH
                                     {
-                                        IDBCMuonSach = 0,
-                                        IDTheLoai = grp.Key,
-                                        SoLuotMuon = grp.Sum(ct => ct.SoLuotMuon),
-                                        TiLe = grp.Sum(ct => ct.SoLuotMuon) / (double)totalBCMuonSach.TongSoLuotMuon,
-                                        IDTheLoaiNavigation = grp.First().IDTheLoaiNavigation,
-                                        IDBCMuonSachNavigation = totalBCMuonSach
-                                    })
-                                    .ToList();
+                                        MaBCMuonSach = "Tổng",
+                                        Thang = r.Month,
+                                        TongSoLuotMuon = totalBorrowCount,
+                                        CTBCMUONSACH = filteredDSBCMuonSach
+                                            .SelectMany(bc => bc.BCMuonSach.CTBCMUONSACH)
+                                            .GroupBy(ct => ct.IDTheLoai)
+                                            .Select(grp => new CTBCMUONSACH
+                                            {
+                                                IDBCMuonSach = 0,
+                                                IDTheLoai = grp.Key,
+                                                SoLuotMuon = grp.Sum(ct => ct.SoLuotMuon),
+                                                TiLe = totalBorrowCount == 0 ? 0 : grp.Sum(ct => ct.SoLuotMuon) / (double)totalBorrowCount,
+                                                IDTheLoaiNavigation = grp.First().IDTheLoaiNavigation
+                                            })
+                                            .ToList()
+                                    };
 
-                                totalBCMuonSach.CTBCMUONSACH = totalCTBCMUONSACH;
-
-                                var totalBCMuonSachModel = new BCMuonSachModel
-                                {
-                                    BCMuonSach = totalBCMuonSach,
-                                    IsExpanded = false,
-                                };
-
-                                filteredDSBCMuonSach.Insert(0, totalBCMuonSachModel);
+                                    filteredDSBCMuonSach.Insert(0, new BCMuonSachModel
+                                    {
+                                        BCMuonSach = totalBCMuonSach,
+                                        IsExpanded = false
+                                    });
+                                }
 
                                 return new DSBCMuonSachModel
                                 {
@@ -390,11 +397,13 @@ namespace QLTV.Admin
                             .ToList()
                     );
 
+                    // Update the data source for the UI
                     dgBorrowingReports.ItemsSource = _filteredBorrowReports;
                 }
             }
             catch (Exception ex)
             {
+                // Show error message in case of failure
                 MessageBox.Show($"Lỗi khi tải dữ liệu: {ex.Message}", "Lỗi", MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
