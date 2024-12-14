@@ -63,9 +63,25 @@ namespace QLTV.Admin
         public AWTrangQuanLy()
         {
             InitializeComponent();
+            PhanQuyen();
             OpeningUC = new List<UserControl>();
             spClock.DataContext = new ClockViewModel();
             LoadTaiKhoan();
+        }
+
+        private void PhanQuyen()
+        {
+            int idPhanQuyen = Settings.Default.CurrentUserPhanQuyen;
+            if (idPhanQuyen == 2) // Quan Ly Tai Khoan
+            {
+                btnFnQuanLySach.Visibility = Visibility.Collapsed;
+                btnFnQuanLyMuonTra.Visibility = Visibility.Collapsed;
+            }
+            else if (idPhanQuyen == 3) // Thu Thu
+            {
+                btnFnQuanLyTaiKhoan.Visibility = Visibility.Collapsed;
+                btnFnQuanLyDocGia.Visibility = Visibility.Collapsed;
+            }    
         }
 
         private void OpenUC(UserControl uc)

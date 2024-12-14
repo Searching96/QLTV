@@ -126,7 +126,7 @@
         x:Name="btnFnQuanLySach" Background="DodgerBlue" 
         Foreground="White" Click="btnFnQuanLySach_Click" HorizontalContentAlignment="Left" Padding="0">
                 <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
-                    <materialDesign:PackIcon Kind="Shape" Width="20" Height="20" Margin="5,0,5,0"/>
+                    <materialDesign:PackIcon Kind="Book" Width="20" Height="20" Margin="5,0,5,0"/>
                     <TextBlock Text="Quản Lý Sách" VerticalAlignment="Center"/>
                 </StackPanel>
             </Button>
@@ -153,7 +153,7 @@
         x:Name="btnFnQuanLyMuonTra" Background="DodgerBlue" 
         Foreground="White" Click="btnFnQuanLyMuonTra_Click" HorizontalContentAlignment="Left" Padding="0">
                 <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
-                    <materialDesign:PackIcon Kind="Book" Width="20" Height="20" Margin="5,0,5,0"/>
+                    <materialDesign:PackIcon Kind="ImportExportBold" Width="20" Height="20" Margin="5,0,5,0"/>
                     <TextBlock Text="Quản Lý Mượn Trả" VerticalAlignment="Center"/>
                 </StackPanel>
             </Button>
