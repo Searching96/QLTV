@@ -49,6 +49,9 @@
                     <Button x:Name="btnFnSachDangMuon" Content="Sách Đang Mượn" Background="DodgerBlue"
                             Click="btnFnSachDangMuon_Click"/>
 
+                    <Button x:Name="btnFnLichSuMuonTra" Content="LS MTra" Background="DodgerBlue"
+                            Click="btnFnLichSuMuonTra_Click"/>
+
                     <Button Content="Đăng xuất" VerticalAlignment="Top" 
                             Width="100" Margin="5" Click="DangXuat_Click" Background="Orange" BorderBrush="Orange"/>
                 </StackPanel>

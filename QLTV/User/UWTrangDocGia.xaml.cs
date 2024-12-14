@@ -92,5 +92,10 @@ namespace QLTV.User
             loginScreen.Show();
             this.Close();
         }
+
+        private void btnFnLichSuMuonTra_Click(object sender, RoutedEventArgs e)
+        {
+            OpenUC(new UUFnLichSuMuonTra());
+        }
     }
 }
