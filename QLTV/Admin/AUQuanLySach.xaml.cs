@@ -710,6 +710,7 @@ namespace QLTV.Admin
                 dpNgayNhap.Text = "";
                 tbxTriGia.Text = "";
                 cbbTinhTrang.Text = "";
+                imgBiaSach.Source = null;
             }
         }
 
@@ -998,8 +999,10 @@ namespace QLTV.Admin
                             string viTri = worksheet.Cells[row, 4].Text;
                             string nhaXuatBan = worksheet.Cells[row, 5].Text;
                             int namXuatBan = int.Parse(worksheet.Cells[row, 6].Text);
-                            DateTime ngayNhap = DateTime.ParseExact(worksheet.Cells[row, 7].Text, "dd/MM/yyyy", CultureInfo.InvariantCulture);
-                            decimal triGia = decimal.Parse(worksheet.Cells[row, 8].Text);
+                            DateTime ngayNhap = DateTime.ParseExact(worksheet.Cells[row, 7].Text,
+                                new[] { "dd/MM/yyyy", "d/M/yyyy", "dd/M/yyyy", "d/MM/yyyy" },
+                                CultureInfo.InvariantCulture,
+                                DateTimeStyles.None); decimal triGia = decimal.Parse(worksheet.Cells[row, 8].Text);
                             string tenTinhTrang = worksheet.Cells[row, 9].Text;
 
                             // Tìm tình trạng
