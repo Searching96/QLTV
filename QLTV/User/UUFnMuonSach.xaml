@@ -151,7 +151,6 @@
                         <DataTemplate>
                             <Grid>
                                 <TextBlock Text="{Binding SoTuanMuon}" />
-                                <!--<materialDesign:PackIcon Style="{StaticResource Warning}"/>-->
                             </Grid>
                         </DataTemplate>
                     </DataGridTemplateColumn.CellTemplate>
@@ -164,9 +163,7 @@
                                          materialDesign:ValidationAssist.HorizontalAlignment="Left"
                                          Padding="7"
                                          materialDesign:ValidationAssist.Background="Transparent"
-                                         Text="{Binding CustomBorrowWeeks, UpdateSourceTrigger=PropertyChanged, ValidatesOnDataErrors=True}" />
-                                <!--<materialDesign:PackIcon Kind="AlertCircleOutline"
-                                    Style="{StaticResource Warning}"/>-->
+                                         Text="{Binding SoTuanMuon, UpdateSourceTrigger=PropertyChanged, ValidatesOnDataErrors=True}" />
                             </Grid>
                         </DataTemplate>
                     </DataGridTemplateColumn.CellEditingTemplate>

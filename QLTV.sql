@@ -394,41 +394,17 @@ foreign key ([IDTheLoai]) references [THELOAI]([ID]);
 alter table [PHIEUTHUTIENPHAT] add constraint [FK_PHIEUTHUTIENPHAT_IDDocGia]
 foreign key ([IDDocGia]) references [DOCGIA]([ID]);
 
-insert into THAMSO(ThoiGian, TuoiToiThieu, TienPhatTraTreMotNgay, TiLeDenBu)
-values('2024/11/10', 10, 5000, 2)
+INSERT INTO THAMSO (ThoiGian, TuoiToiThieu, TienPhatTraTreMotNgay, TiLeDenBu) VALUES
+('2023-09-01', 10, 5000, 2.0),
+('2023-10-01', 11, 6000, 2.1),
+('2023-12-01', 10, 5000, 1.9),
+('2024-01-01', 13, 7000, 2.3),
+('2024-04-01', 11, 6500, 2.4),
+('2024-05-01', 13, 7000, 2.2),
+('2024-06-01', 12, 5000, 2.0),
+('2024-09-01', 14, 7500, 2.5),
+('2024-10-01', 13, 7000, 2.3);
 
-insert into TUASACH(TenTuaSach, HanMuonToiDa, MoTa) values('Two Dimensions', 2, N'Giữa hai the gioi ta thay duoc dieu gi');
-insert into THELOAI(TenTheLoai, MoTa) values('Khong xac dinh', 'mo ta')
-insert into TACGIA(TenTacGia, NamSinh, QuocTich) values('Aurora', 2077, 'Somewhere')
-
-insert into TUASACH_TACGIA(IDTuaSach, IDTacGia) values(1, 1)
-insert into TUASACH_THELOAI(IDTuaSach, IDTheLoai) values(1, 1)
-
-INSERT INTO TACGIA(TenTacGia, NamSinh, QuocTich) VALUES ('William Shakespeare', 1564, 'England');
-INSERT INTO TACGIA(TenTacGia, NamSinh, QuocTich) VALUES ('Jane Austen', 1775, 'England');
-INSERT INTO TACGIA(TenTacGia, NamSinh, QuocTich) VALUES ('Mark Twain', 1835, 'United States');
-INSERT INTO TACGIA(TenTacGia, NamSinh, QuocTich) VALUES ('Leo Tolstoy', 1828, 'Russia');
-INSERT INTO TACGIA(TenTacGia, NamSinh, QuocTich) VALUES ('Victor Hugo', 1802, 'France');
-INSERT INTO TACGIA(TenTacGia, NamSinh, QuocTich) VALUES ('Gabriel Garcia Marquez', 1927, 'Colombia');
-INSERT INTO TACGIA(TenTacGia, NamSinh, QuocTich) VALUES ('Haruki Murakami', 1949, 'Japan');
-INSERT INTO TACGIA(TenTacGia, NamSinh, QuocTich) VALUES ('Nguyen Du', 1766, 'Vietnam');
-INSERT INTO TACGIA(TenTacGia, NamSinh, QuocTich) VALUES ('Chinua Achebe', 1930, 'Nigeria');
-
-INSERT INTO THELOAI(TenTheLoai, MoTa) VALUES (N'Văn học cổ điển', 'mo ta');
-INSERT INTO THELOAI(TenTheLoai, MoTa) VALUES (N'Khoa học viễn tưởng', 'mo ta');
-INSERT INTO THELOAI(TenTheLoai, MoTa) VALUES (N'Kinh dị', 'mo ta');
-INSERT INTO THELOAI(TenTheLoai, MoTa) VALUES (N'Hồi ký', 'mo ta');
-INSERT INTO THELOAI(TenTheLoai, MoTa) VALUES (N'Trinh thám', 'mo ta');
-INSERT INTO THELOAI(TenTheLoai, MoTa) VALUES (N'Lãng mạn', 'mo ta');
-INSERT INTO THELOAI(TenTheLoai, MoTa) VALUES (N'Tâm lý học', 'mo ta');
-INSERT INTO THELOAI(TenTheLoai, MoTa) VALUES (N'Giáo dục', 'mo ta');
-INSERT INTO THELOAI(TenTheLoai, MoTa) VALUES (N'Thần thoại', 'mo ta');
-INSERT INTO THELOAI(TenTheLoai, MoTa) VALUES (N'Thiếu nhi', 'mo ta');
-INSERT INTO THELOAI(TenTheLoai, MoTa) VALUES (N'Kinh doanh', 'mo ta');
-INSERT INTO THELOAI(TenTheLoai, MoTa) VALUES (N'Kỹ năng số', 'mo ta');
-INSERT INTO THELOAI(TenTheLoai, MoTa) VALUES (N'Lịch sử', 'mo ta');
-INSERT INTO THELOAI(TenTheLoai, MoTa) VALUES (N'Chính trị', 'mo ta');
-INSERT INTO THELOAI(TenTheLoai, MoTa) VALUES (N'Khoa học tự nhiên', 'mo ta');
 
 insert into TINHTRANG(TenTinhTrang, MucHuHong) values(N'Mới', 0);
 insert into TINHTRANG(TenTinhTrang, MucHuHong) values(N'Hỏng nhẹ', 25);
@@ -437,64 +413,104 @@ insert into TINHTRANG(TenTinhTrang, MucHuHong) values(N'Hỏng nặng', 75);
 insert into TINHTRANG(TenTinhTrang, MucHuHong) values(N'Hỏng hoàn toàn', 100);
 insert into TINHTRANG(TenTinhTrang, MucHuHong) values(N'Mất', 100);
 
-insert into SACH(IDTuaSach, NamXuatBan, NhaXuatBan, NgayNhap, TriGia, IDTinhTrang, ViTri) values(1 , 2077, 'Su That', '1/1/2049', 100000, 1, 'L02P01K12');
-insert into SACH(IDTuaSach, NamXuatBan, NhaXuatBan, NgayNhap, TriGia, IDTinhTrang, ViTri) values(1 , 2011, 'Su That', '1/1/2009', 90000, 1, 'L02P01K11');
+--insert into SACH(IDTuaSach, NamXuatBan, NhaXuatBan, NgayNhap, TriGia, IDTinhTrang, ViTri) values(1 , 2077, 'Su That', '1/1/2049', 100000, 1, 'L02P01K12');
+--insert into SACH(IDTuaSach, NamXuatBan, NhaXuatBan, NgayNhap, TriGia, IDTinhTrang, ViTri) values(1 , 2011, 'Su That', '1/1/2009', 90000, 1, 'L02P01K11');
 
 set dateformat ymd
 go
 
--- Insert dữ liệu vào PHANQUYEN và thiết lập SuperAdmin
-INSERT INTO [PHANQUYEN](MaHanhDong, MoTa) 
+﻿-- Thêm dữ liệu cho bảng PHANQUYEN
+INSERT INTO PHANQUYEN (MaHanhDong, MoTa, IsDeleted) VALUES
+('SieuQuanTri', N'Siêu quản trị viên', 0),
+('QuanLyTaiKhoan', N'Quản lý tài khoản', 0),
+('ThuThu', N'Thủ thư', 0),
+('DocGia', N'Độc giả', 0);
+
+-- Thêm dữ liệu cho bảng LOAIDOCGIA
+INSERT INTO LOAIDOCGIA (TenLoaiDocGia, SoSachMuonToiDa, IsDeleted) VALUES
+(N'Sinh viên', 5, 0),
+(N'Giáo viên', 10, 0),
+(N'Cán bộ', 7, 0),
+(N'Khách', 3, 0),
+(N'VIP', 15, 0),
+(N'Thân thiết', 12, 0),
+(N'Mới', 3, 0),
+(N'Thử nghiệm', 1, 0),
+(N'Học sinh', 4, 0),
+(N'Người cao tuổi', 5, 0),
+(N'Trẻ em', 3, 0),
+(N'Người khuyết tật', 7, 0),
+(N'Doanh nghiệp', 10, 0),
+(N'Tổ chức', 20, 0),
+(N'Gia đình', 8, 0),
+(N'Nhóm bạn', 5, 0),
+(N'Cộng đồng', 10, 0),
+(N'Hội viên', 7, 0),
+(N'Thành viên', 5, 0),
+(N'Đặc biệt', 15, 0);
+
+INSERT INTO TAIKHOAN 
+    (TenTaiKhoan, MatKhau, HoTen, Email, GioiTinh, SinhNhat, DiaChi, SDT, TrangThai, IDPhanQuyen, IsDeleted, NgayMo, NgayDong)
 VALUES
-('SuperAdmin', N'Siêu Quản Trị'),
-('QLTK', N'Quản Lý Tài Khoản'),
-('ThuThu', N'Thủ Thư'),
-('DG', N'Độc Giả');
+-- Admin Users
+(N'Admin1', 'adminpass1', N'Nguyễn Văn Admin1', 'admin1@gmail.com', N'Nam', '1990-01-01', N'Hà Nội', '0911111111', 1, 1, 0, '2024-01-01', '2025-01-01'),
+(N'Admin2', 'adminpass2', N'Nguyễn Văn Admin2', 'admin2@gmail.com', N'Nam', '1991-02-02', N'Hồ Chí Minh', '0922222222', 1, 1, 0, '2024-01-01', '2025-01-01'),
 
--- Insert dữ liệu vào TAIKHOAN và chỉ định SuperAdmin
-INSERT INTO [TAIKHOAN](TenTaiKhoan, MatKhau, HoTen, Email, GioiTinh, SinhNhat, DiaChi, SDT, Avatar, TrangThai, IDPhanQuyen, IsDeleted, NgayMo, NgayDong)
-VALUES
-(N'sa', 'sa123',  N'super admin', 'sa@gm.com', N'Nam', '1999-01-02', N'Right here', '0999987789', 'D:\WPF\QLTVReal - User\QLTV\Image\DefaultAvatar.png', 0, 1, 0, '2024-01-01', '2025-01-01'),
-('sv001', 'password', N'Nguyễn Văn Anh', 'nguyenvana@example.com', N'Nam', '1995-01-01', N'Hà Nội', '0123456789', 'D:\WPF\QLTVReal - User\QLTV\Image\DefaultAvatar.png', 1, 4, 0, '2022-01-01', '2023-01-01'),
-('gv001', 'password', N'Trần Thị Vân', 'tranthib@example.com', N'Nữ', '1980-05-15', N'Hồ Chí Minh', '0987654321', 'D:\WPF\QLTVReal - User\QLTV\Image\DefaultAvatar.png', 1, 4, 0, '2022-01-01', '2023-01-01'),
-('nv001', 'password', N'Lê Văn Cao', 'levanc@example.com', N'Nam', '1990-07-20', N'Đà Nẵng', '0912345678', 'D:\WPF\QLTVReal - User\QLTV\Image\DefaultAvatar.png', 1, 4, 0, '2022-01-01', '2023-01-01'),
-('hs001', 'password', N'Phạm Minh Đức', 'phamminhd@example.com', N'Nam', '2005-03-12', N'Quảng Ninh', '0911223344', 'D:\WPF\QLTVReal - User\QLTV\Image\DefaultAvatar.png', 1, 4, 0, '2022-01-01', '2023-01-01'),
-('kl001', 'password', N'Hồ Thị Kỷ', 'hothie@example.com', N'Nữ', '1992-11-22', N'Huế', '0933445566', 'D:\WPF\QLTVReal - User\QLTV\Image\DefaultAvatar.png', 1, 4, 0, '2022-01-01', '2023-01-01'),
-('cs001', 'password', N'Ngô Văn Hải', 'ngovanf@example.com', N'Nam', '1988-09-10', N'Bắc Ninh', '0915556677', 'D:\WPF\QLTVReal - User\QLTV\Image\DefaultAvatar.png', 1, 4, 0, '2022-01-01', '2023-01-01'),
-('tv001', 'password', N'Phan Thị Giang Mai', 'phanthig@example.com', N'Nữ', '1975-06-18', N'Hải Phòng', '0922334455', 'D:\WPF\QLTVReal - User\QLTV\Image\DefaultAvatar.png', 1, 4, 0, '2022-01-01', '2023-01-01'),
-('vip001', 'password', N'Lý Văn Hào', 'lyvanh@example.com', N'Nam', '1985-02-22', N'Hà Nội', '0933445567', 'D:\WPF\QLTVReal - User\QLTV\Image\DefaultAvatar.png', 1, 4, 0, '2022-01-01', '2023-01-01'),
-('std001', 'password', N'Nguyễn Thị Yên', 'nguyenthii@example.com', N'Nữ', '2000-10-30', N'Bình Dương', '0945567788', 'D:\WPF\QLTVReal - User\QLTV\Image\DefaultAvatar.png', 1, 4, 0, '2022-01-01', '2023-01-01'),
-('rs001', 'password', N'Trịnh Văn Chương', 'trinhvanj@example.com', N'Nam', '1972-04-12', N'Quảng Nam', '0956678899', 'D:\WPF\QLTVReal - User\QLTV\Image\DefaultAvatar.png', 1, 4, 0, '2022-01-01', '2023-01-01');
+-- Manager Users
+(N'Manager1', 'managerpass1', N'Trần Thị Manager1', 'manager1@gmail.com', N'Nữ', '1992-03-03', N'Đà Nẵng', '0933333333', 1, 2, 0, '2024-01-01', '2025-01-01'),
+(N'Manager2', 'managerpass2', N'Trần Thị Manager2', 'manager2@gmail.com', N'Nữ', '1993-04-04', N'Cần Thơ', '0944444444', 1, 2, 0, '2024-01-01', '2025-01-01'),
 
--- Insert dữ liệu vào LOAIDOCGIA
-INSERT INTO LOAIDOCGIA (TenLoaiDocGia, SoSachMuonToiDa, IsDeleted)
-VALUES 
-('Sinh viên', 5, 0),
-('Giảng viên', 10, 0),
-('Nhân viên', 3, 0),
-('Học sinh', 4, 0),
-('Khách vãng lai', 1, 0),
-('Cựu sinh viên', 2, 0),
-('Thư viện viên', 7, 0),
-('Độc giả VIP', 15, 0),
-('Độc giả thông thường', 6, 0),
-('Người nghiên cứu', 12, 0);
+-- Regular Users
+(N'User1', 'userpass1', N'Nguyễn Văn Bình', 'user1@gmail.com', N'Nam', '1998-09-09', N'Hà Nội', '0999999999', 1, 4, 0, '2024-01-01', '2025-01-01'),
+(N'User2', 'userpass2', N'Trần Minh Khoa', 'user2@gmail.com', N'Nam', '1999-10-10', N'Đà Nẵng', '0909090909', 1, 4, 0, '2024-01-01', '2025-01-01'),
+(N'User3', 'userpass3', N'Nguyễn Thị Lan', 'user3@gmail.com', N'Nữ', '2000-11-11', N'Hải Phòng', '0910101010', 1, 4, 0, '2024-01-01', '2025-01-01'),
+(N'User4', 'userpass4', N'Lê Thị Mai', 'user4@gmail.com', N'Nữ', '2001-12-12', N'Hồ Chí Minh', '0920202020', 1, 4, 0, '2024-01-01', '2025-01-01'),
+(N'User5', 'userpass5', N'Phạm Văn Dũng', 'user5@gmail.com', N'Nam', '2002-01-01', N'Cần Thơ', '0930303030', 1, 4, 0, '2024-01-01', '2025-01-01'),
+(N'User6', 'userpass6', N'Vũ Minh Anh', 'user6@gmail.com', N'Nam', '2003-02-02', N'Nha Trang', '0940404040', 1, 4, 0, '2024-01-01', '2025-01-01'),
+(N'User7', 'userpass7', N'Hoàng Thị Hương', 'user7@gmail.com', N'Nữ', '2004-03-03', N'Đà Lạt', '0950505050', 1, 4, 0, '2024-01-01', '2025-01-01'),
+(N'User8', 'userpass8', N'Nguyễn Thị Bích', 'user8@gmail.com', N'Nữ', '2005-04-04', N'Vũng Tàu', '0960606060', 1, 4, 0, '2024-01-01', '2025-01-01'),
 
--- Insert dữ liệu vào ADMIN chỉ định SuperAdmin
-INSERT INTO ADMIN (IDTaiKhoan)
-VALUES 
+-- Additional Users
+(N'Guest1', 'guestpass1', N'Nguyễn Văn Hải', 'guest1@gmail.com', N'Nam', '2006-05-05', N'Hà Nội', '0970707070', 1, 4, 0, '2024-01-01', '2025-01-01'),
+(N'Guest2', 'guestpass2', N'Trần Thị Thu', 'guest2@gmail.com', N'Nữ', '2007-06-06', N'Hồ Chí Minh', '0980808080', 1, 4, 0, '2024-01-01', '2025-01-01'),
+(N'Guest3', 'guestpass3', N'Lê Văn Nam', 'guest3@gmail.com', N'Nam', '2008-07-07', N'Cần Thơ', '0990909090', 1, 4, 0, '2024-01-01', '2025-01-01'),
+(N'Guest4', 'guestpass4', N'Phan Thị Hiền', 'guest4@gmail.com', N'Nữ', '2009-08-08', N'Nha Trang', '0911111112', 1, 4, 0, '2024-01-01', '2025-01-01'),
+(N'Guest5', 'guestpass5', N'Nguyễn Văn Đức', 'guest5@gmail.com', N'Nam', '2010-09-09', N'Đà Lạt', '0922222223', 1, 4, 0, '2024-01-01', '2025-01-01'),
+
+-- Test Users
+(N'TestUser1', 'testpass1', N'Trần Thị Hà', 'test1@gmail.com', N'Nữ', '2011-10-10', N'Hà Nội', '0933333334', 1, 4, 0, '2024-01-01', '2025-01-01'),
+(N'TestUser2', 'testpass2', N'Nguyễn Văn Minh', 'test2@gmail.com', N'Nam', '2012-11-11', N'Đà Nẵng', '0944444445', 1, 4, 0, '2024-01-01', '2025-01-01'),
+(N'TestUser3', 'testpass3', N'Lê Thị Thanh', 'test3@gmail.com', N'Nữ', '2013-12-12', N'Hồ Chí Minh', '0955555556', 1, 4, 0, '2024-01-01', '2025-01-01'),
+(N'TestUser4', 'testpass4', N'Phạm Văn An', 'test4@gmail.com', N'Nam', '2014-01-01', N'Cần Thơ', '0966666667', 1, 4, 0, '2024-01-01', '2025-01-01'),
+(N'TestUser5', 'testpass5', N'Nguyễn Thị Ngọc', 'test5@gmail.com', N'Nữ', '2015-02-02', N'Nha Trang', '0977777778', 1, 4, 0, '2024-01-01', '2025-01-01');
+
+
+-- Thêm dữ liệu cho bảng ADMIN
+INSERT INTO ADMIN (IDTaiKhoan) VALUES
 (1);
 
--- Insert thêm dữ liệu vào DOCGIA
-INSERT INTO DOCGIA (IDTaiKhoan, IDLoaiDocGia, GioiThieu, TongNo)
-VALUES 
-(2, 1, N'Sinh viên năm 3', 0),
-(3, 2, N'Giảng viên khoa CNTT', 0),
-(4, 3, N'Nhân viên thư viện', 0),
-(5, 4, N'Học sinh lớp 12', 0),
-(6, 5, N'Khách vãng lai đến mượn sách', 50000),
-(7, 6, N'Cựu sinh viên mới tốt nghiệp', 0),
-(8, 7, N'Thư viện viên nhiều kinh nghiệm', 0),
-(9, 8, N'Độc giả VIP với thẻ ưu đãi', 0),
-(10, 9, N'Độc giả thông thường', 0),
-(11, 10, N'Người nghiên cứu trong lĩnh vực khoa học', 0);
+
+INSERT INTO DOCGIA (IDTaiKhoan, IDLoaiDocGia, GioiThieu, TongNo) VALUES
+-- Regular Users
+(4, 1, N'Độc giả Sinh viên - Nguyễn Văn Bình', 0),
+(5, 2, N'Độc giả Giáo viên - Trần Minh Khoa', 0),
+(6, 3, N'Độc giả Cán bộ - Nguyễn Thị Lan', 0),
+(7, 4, N'Độc giả Khách - Lê Thị Mai', 0),
+(8, 5, N'Độc giả VIP - Phạm Văn Dũng', 0),
+(9, 6, N'Độc giả Thân thiết - Vũ Minh Anh', 0),
+(10, 7, N'Độc giả Mới - Hoàng Thị Hương', 0),
+(11, 8, N'Độc giả Thử nghiệm - Nguyễn Thị Bích', 0),
+
+-- Additional Users
+(12, 9, N'Độc giả Học sinh - Nguyễn Văn Hải', 0),
+(13, 10, N'Độc giả Người cao tuổi - Trần Thị Thu', 0),
+(14, 11, N'Độc giả Trẻ em - Lê Văn Nam', 0),
+(15, 12, N'Độc giả Người khuyết tật - Phan Thị Hiền', 0),
+(16, 13, N'Độc giả Doanh nghiệp - Nguyễn Văn Đức', 0),
+
+-- Test Users
+(17, 14, N'Độc giả Tổ chức - Trần Thị Hà', 0),
+(18, 15, N'Độc giả Gia đình - Nguyễn Văn Minh', 0),
+(19, 16, N'Độc giả Nhóm bạn - Lê Thị Thanh', 0),
+(20, 17, N'Độc giả Cộng đồng - Phạm Văn An', 0),
+(21, 18, N'Độc giả Hội viên - Nguyễn Thị Ngọc', 0);

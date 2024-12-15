@@ -635,7 +635,7 @@ namespace QLTV.Admin
 
                 // STEP 2: Generate Borrow Tickets In Memory
                 var borrowTickets = new List<PHIEUMUON>();
-                var startDate = new DateTime(2023, 1, 1);
+                var startDate = new DateTime(2023, 9, 1);
                 var endDate = DateTime.Now;
 
                 for (var currentDate = startDate; currentDate <= endDate; currentDate = currentDate.AddDays(1))
