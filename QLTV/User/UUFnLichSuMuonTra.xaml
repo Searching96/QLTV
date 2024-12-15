@@ -314,10 +314,10 @@
             </Setter>
         </Style>
     </UserControl.Resources>
-    <Grid>
+    <Grid Background="White">
         <TabControl HorizontalContentAlignment="Left">
             <!-- Borrowing Tab -->
-            <TabItem Header="Mượn sách">
+            <TabItem Header="Phiếu Mượn">
                 <Grid Margin="10">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="Auto" />
@@ -345,12 +345,6 @@
                                      materialDesign:HintAssist.Hint="Tìm kiếm phiếu mượn"
                                      materialDesign:HintAssist.FloatingScale="1"
                                      TextChanged="txtSearchBorrow_TextChanged" />
-                            <Button ToolTip="Thêm phiếu mượn"
-                                    Click="btnAddBorrow_Click"
-                                    Style="{StaticResource MaterialDesignIconButton}"
-                                    Height="50"
-                                    Tag="BookMultipleAdd"
-                                    Margin="0" />
                         </StackPanel>
                         <ComboBox Style="{StaticResource ModernComboBox}"
                                   x:Name="cboLoc"
@@ -437,7 +431,7 @@
             </TabItem>
 
             <!-- Returning Tab -->
-            <TabItem Header="Trả sách">
+            <TabItem Header="Phiếu Trả">
                 <Grid Margin="10">
                     <Grid.RowDefinitions>
                         <RowDefinition Height="Auto" />
@@ -455,12 +449,6 @@
                                  materialDesign:HintAssist.Hint="Tìm kiếm phiếu trả..."
                                  TextChanged="txtSearchReturn_TextChanged"
                                  materialDesign:HintAssist.FloatingScale="1" />
-                        <Button Style="{StaticResource MaterialDesignIconButton}"
-                                Height="50"
-                                Margin="0"
-                                ToolTip="Thêm phiếu trả"
-                                Click="btnAddReturn_Click"
-                                Tag="BookMinusMultiple" />
                     </StackPanel>
                     <!-- Returning DataGrid -->
                     <DataGrid x:Name="dgReturns"

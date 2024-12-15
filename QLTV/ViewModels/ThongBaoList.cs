@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using System.Collections.ObjectModel;
 using QLTV.Models;
 using Microsoft.EntityFrameworkCore;
+using System.Windows;
 namespace QLTV.ViewModels
 {
     public class ThongBaoList
@@ -26,6 +27,7 @@ namespace QLTV.ViewModels
 
                 if (taiKhoan != null)
                 {
+                    
                     var ngayHienTai = DateTime.Now;
                     var khoangCach = taiKhoan.NgayDong - ngayHienTai;
 
@@ -40,6 +42,7 @@ namespace QLTV.ViewModels
                             $"Tài khoản sẽ hết hạn trong {khoangCach.Days} ngày. \nVui lòng gia hạn tài khoản để tiếp tục sử dụng.",
                             "warning_icon"
                         ));
+                        
                     }
                     else
                     {

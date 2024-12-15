@@ -15,13 +15,17 @@
 
         <StackPanel Grid.Row="0" Orientation="Horizontal" 
                     HorizontalAlignment="Stretch" Background="White">
-            <Button x:Name="btnQuanLyTuaSach" Content="Quản Lý Tựa Sách" Margin="5" Click="btnQuanLyTuaSach_Click"/>
-            <Button x:Name="btnQuanLyTacGia" Content="Quản Lý Tác Giả" Margin="5" Click="btnQuanLyTacGia_Click"/>
-            <Button x:Name="btnQuanLyTheLoai" Content="Quản Lý Thể Loại" Margin="5" Click="btnQuanLyTheLoai_Click"/>
-            <Button x:Name="btnQuanLySach" Content="Quản Lý Sách" Margin="5" Click="btnQuanLySach_Click"/>
+            <Button x:Name="btnQuanLyTuaSach" Content="Quản Lý Tựa Sách" 
+                    Width="150" Margin="5" Click="btnQuanLyTuaSach_Click"/>
+            <Button x:Name="btnQuanLyTacGia" Content="Quản Lý Tác Giả" 
+                    Width="150" Margin="5" Click="btnQuanLyTacGia_Click"/>
+            <Button x:Name="btnQuanLyTheLoai" Content="Quản Lý Thể Loại" 
+                    Width="150" Margin="5" Click="btnQuanLyTheLoai_Click"/>
+            <Button x:Name="btnQuanLySach" Content="Quản Lý Sách" 
+                    Width="150" Margin="5" Click="btnQuanLySach_Click"/>
         </StackPanel>
 
-        <Frame x:Name="frFnQuanLySach" Grid.Row="1" Margin="0, 5, 0, 0" Background="White">
+        <Frame x:Name="frFnQuanLySach" Grid.Row="1" Margin="0, 0, 0, 0" Background="White">
 
         </Frame>
     </Grid>

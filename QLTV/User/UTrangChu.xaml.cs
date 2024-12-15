@@ -1,5 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using QLTV.Models;
+using QLTV.Properties;
+using QLTV.ViewModels;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -24,202 +26,172 @@ namespace QLTV.User
     /// </summary>
     public partial class UTrangChu : UserControl, INotifyPropertyChanged
     {
-            private ObservableCollection<THELOAI> _theLoaiList;
+        private ObservableCollection<THELOAI> _theLoaiList;
 
-            public ObservableCollection<THELOAI> TheLoaiList
+        public ObservableCollection<THELOAI> TheLoaiList
 
+        {
+            get => _theLoaiList;
+            set
             {
-                get => _theLoaiList;
-                set
-                {
-                    _theLoaiList = value;
-                    OnPropertyChanged(nameof(TheLoaiList));
-                }
+                _theLoaiList = value;
+                OnPropertyChanged(nameof(TheLoaiList));
             }
-            private ObservableCollection<THELOAI> _theLoaiMuonNhieuList;
+        }
+        
+        private Dictionary<int, ObservableCollection<TUASACH>> _tuaSachByTheLoai;
 
-            public ObservableCollection<THELOAI> TheLoaiMuonNhieuList
-
+        public Dictionary<int, ObservableCollection<TUASACH>> TuaSachByTheLoai
+        {
+            get => _tuaSachByTheLoai;
+            set
             {
-                get => _theLoaiMuonNhieuList;
-                set
-                {
-                    _theLoaiMuonNhieuList = value;
-                    OnPropertyChanged(nameof(TheLoaiMuonNhieuList));
-                }
+                _tuaSachByTheLoai = value;
+                OnPropertyChanged(nameof(TuaSachByTheLoai));
             }
-            private Dictionary<int, ObservableCollection<TUASACH>> _tuaSachByTheLoai;
-
-            public Dictionary<int, ObservableCollection<TUASACH>> TuaSachByTheLoai
+        }
+        
+        private void LoadTuaSachByTheLoai()
+        {
+            using (var context = new QLTVContext())
             {
-                get => _tuaSachByTheLoai;
-                set
-                {
-                    _tuaSachByTheLoai = value;
-                    OnPropertyChanged(nameof(TuaSachByTheLoai));
-                }
-            }
-            private Dictionary<int, ObservableCollection<TUASACH>> _tuaSachByTheLoaiMuonNhieu;
-
-            public Dictionary<int, ObservableCollection<TUASACH>> TuaSachByTheLoaiMuonNhieu
-            {
-                get => _tuaSachByTheLoaiMuonNhieu;
-                set
-                {
-                    _tuaSachByTheLoaiMuonNhieu = value;
-                    OnPropertyChanged(nameof(TuaSachByTheLoaiMuonNhieu));
-                }
-            }
-            private void LoadTuaSachByTheLoai()
-            {
-                using (var context = new QLTVContext())
-                {
-                    TuaSachByTheLoai = new Dictionary<int, ObservableCollection<TUASACH>>();
+                TuaSachByTheLoai = new Dictionary<int, ObservableCollection<TUASACH>>();
 
                     foreach (var theLoai in TheLoaiList)
                     {
-                        var tuaSachs = context.TUASACH
-                        .Where(t => t.TUASACH_THELOAI
-                            .Any(ttl => ttl.IDTheLoai == theLoai.ID) && !t.IsDeleted) // Lọc theo thể loại từ bảng TUASACH_THELOAI
-                        .OrderBy(t => Guid.NewGuid()) // Lấy tựa sách ngẫu nhiên
-                        .Take(4) // Lấy 4 tựa sách ngẫu nhiên
-                        .ToList();
+                    var tuaSachs = context.TUASACH
+                    .Where(t => t.TUASACH_THELOAI
+                        .Any(ttl => ttl.IDTheLoai == theLoai.ID) && !t.IsDeleted) // Lọc theo thể loại từ bảng TUASACH_THELOAI
+                    .OrderBy(t => Guid.NewGuid()) // Lấy tựa sách ngẫu nhiên
+                    .Take(4) // Lấy 4 tựa sách ngẫu nhiên
+                    .ToList();
                     //foreach (var tuasach in tuaSachs)
                     //    MessageBox.Show(tuasach.TenTuaSach);
                     TuaSachByTheLoai[theLoai.ID] = new ObservableCollection<TUASACH>(tuaSachs);
-                        
-                    }
+
                 }
             }
-            public ObservableCollection<TUASACH> TuaSachList { get; set; }
+        }
+        public ObservableCollection<TUASACH> TuaSachList { get; set; }
 
-            private void TabControl_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        private void TabControl_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            if (tabControl.SelectedItem is THELOAI selectedTheLoai && TuaSachByTheLoai.ContainsKey(selectedTheLoai.ID))
             {
-                if (tabControl.SelectedItem is THELOAI selectedTheLoai && TuaSachByTheLoai.ContainsKey(selectedTheLoai.ID))
-                {
-                
+
                 TuaSachList = TuaSachByTheLoai[selectedTheLoai.ID];
                     OnPropertyChanged(nameof(TuaSachList));
                 }
                 
             }
             public ObservableCollection<TUASACH> TuaSachMuonNhieuList { get; set; }
-            private void tcMuonNhieu_SelectionChanged(object sender, SelectionChangedEventArgs e)
-            {
-                if ((sender as TabControl)?.SelectedItem is THELOAI SelectedTheLoaiMuonNhieu)
-                {
-                    
-                    if (TuaSachByTheLoaiMuonNhieu.ContainsKey(SelectedTheLoaiMuonNhieu.ID))
-                    {
-                        
-                        TuaSachMuonNhieuList = TuaSachByTheLoaiMuonNhieu[SelectedTheLoaiMuonNhieu.ID];
-                        OnPropertyChanged(nameof(TuaSachMuonNhieuList));  // Quan trọng để cập nhật giao diện
-                    }
-                }
             
-            }
-                private void LoadTheLoai()
-                {
-                    using (var context = new QLTVContext())
-                    {
-                // Lấy 4 thể loại ngẫu nhiên
-                var randomTheLoai = context.THELOAI
-                    .Where(t => !t.IsDeleted)
-                    .OrderBy(t => Guid.NewGuid())
-                    .Take(4)
-                    .ToList();
-
-                TheLoaiList = new ObservableCollection<THELOAI>(randomTheLoai);
-            }
-                }
-            private void LoadTheLoaiMuonNhieu()
+            private void LoadTheLoai()
             {
-                try
+                using (var context = new QLTVContext())
                 {
-                    using (var context = new QLTVContext())
-                    {
-
-                        // Truy vấn lấy danh sách thể loại được mượn nhiều nhất
-                        var topTheLoai = context.CTPHIEUMUON
-                            .Include(ctpm => ctpm.IDSachNavigation)
-                            .ThenInclude(sach => sach.IDTuaSachNavigation)
-                            .ThenInclude(tuaSach => tuaSach.TUASACH_THELOAI) // Bao gồm bảng TUASACH_THELOAI
-                            .ThenInclude(tuasachTheLoai => tuasachTheLoai.IDTheLoaiNavigation) // Bao gồm thông tin Thể loại
-                            .ToList() // Lấy toàn bộ dữ liệu ra trước
-                            .SelectMany(ctpm => ctpm.IDSachNavigation.IDTuaSachNavigation.TUASACH_THELOAI) // Lấy tất cả các thể loại của tựa sách
-                            .Select(tuasachTheLoai => tuasachTheLoai.IDTheLoaiNavigation) // Chỉ lấy thông tin thể loại
-                            .GroupBy(theloai => theloai.ID) // Nhóm theo ID thể loại
-                            .Select(g => new
-                            {
-                                TheLoai = g.FirstOrDefault(),
-                                SoLuotMuon = g.Count()
-                            })
-                            .OrderByDescending(x => x.SoLuotMuon)
-                            .Take(5)
-                            .Select(x => x.TheLoai)
-                            .ToList(); // Chuyển kết quả cuối cùng thành danh sách
-                        // Gán danh sách vào ObservableCollection để hiển thị trên giao diện
-                        TheLoaiMuonNhieuList = new ObservableCollection<THELOAI>(topTheLoai);
-                        
-                    }
-                }
-                catch (Exception ex)
-                {
-                    // Xử lý ngoại lệ nếu có
-                    MessageBox.Show($"Lỗi khi tải thể loại mượn nhiều: {ex.Message}");
-                }
-            }
-        private void LoadTuaSachByTheLoaiMuonNhieu()
-        {
-            using (var context = new QLTVContext())
-            {
-                TuaSachByTheLoaiMuonNhieu = new Dictionary<int, ObservableCollection<TUASACH>>();
-
-                foreach (var theLoai in TheLoaiMuonNhieuList)
-                {
-                    
-                    // Truy vấn 5 cuốn sách mượn nhiều nhất trong thể loại
-                    var tuaSachs = context.CTPHIEUMUON
-                        .Include(ctpm => ctpm.IDSachNavigation) // Bao gồm thông tin Sách
-                        .ThenInclude(sach => sach.IDTuaSachNavigation) // Bao gồm thông tin Tựa sách
-                        .ThenInclude(tuasach => tuasach.TUASACH_THELOAI)
-                        .ThenInclude(tuasachTheLoai => tuasachTheLoai.IDTheLoaiNavigation) // Bao gồm thông tin Thể loại
-                        .Where(ctpm => ctpm.IDSachNavigation.IDTuaSachNavigation.TUASACH_THELOAI
-                        .Any(tl => tl.IDTheLoai == theLoai.ID)) // Lọc theo thể loại
-                        .GroupBy(ctpm => ctpm.IDSachNavigation.IDTuaSachNavigation) // Nhóm theo Tựa sách
-                        .Select(g => new
-                        {
-                            TuaSach = g.Key,
-                            SoLuotMuon = g.Count() // Đếm số lần mượn
-                        })
-                        .OrderByDescending(x => x.SoLuotMuon) // Sắp xếp giảm dần theo số lượt mượn
-                        .Take(5) // Lấy 5 tựa sách mượn nhiều nhất
-                        .Select(x => x.TuaSach) // Chỉ lấy đối tượng Tựa sách
+                    // Lấy 4 thể loại ngẫu nhiên
+                    var randomTheLoai = context.THELOAI
+                        .Where(t => !t.IsDeleted)
+                        .OrderBy(t => Guid.NewGuid())
+                        .Take(4)
                         .ToList();
-                    // Gán danh sách tựa sách vào Dictionary
-                    TuaSachByTheLoaiMuonNhieu[theLoai.ID] = new ObservableCollection<TUASACH>(tuaSachs);
+
+                    TheLoaiList = new ObservableCollection<THELOAI>(randomTheLoai);
                 }
+            }
+
+
+
+
+        private ObservableCollection<TUASACH> _sachMuonNhieuTuan;
+        private ObservableCollection<TUASACH> _sachMuonNhieuThang;
+        private ObservableCollection<TUASACH> _sachMuonNhieuNam;
+
+        public ObservableCollection<TUASACH> SachMuonNhieuTuan
+        {
+            get => _sachMuonNhieuTuan;
+            set
+            {
+                _sachMuonNhieuTuan = value;
+                OnPropertyChanged(nameof(SachMuonNhieuTuan));
             }
         }
 
-        
-        
+        public ObservableCollection<TUASACH> SachMuonNhieuThang
+        {
+            get => _sachMuonNhieuThang;
+            set
+            {
+                _sachMuonNhieuThang = value;
+                OnPropertyChanged(nameof(SachMuonNhieuThang));
+            }
+        }
+        public ObservableCollection<TUASACH> SachMuonNhieuNam
+        {
+            get => _sachMuonNhieuNam;
+            set
+            {
+                _sachMuonNhieuNam = value;
+                OnPropertyChanged(nameof(SachMuonNhieuNam));
+            }
+        }
+        private ObservableCollection<PHIEUMUON> _danhSachPhieuMuon;
+        public ObservableCollection<PHIEUMUON> DanhSachPhieuMuon
+        {
+            get => _danhSachPhieuMuon;
+            set
+            {
+                _danhSachPhieuMuon = value;
+                OnPropertyChanged(nameof(DanhSachPhieuMuon));
+            }
+        }
+        public ObservableCollection<PHIEUMUON> GetAllPhieuMuon()
+        {
+            using (var context = new QLTVContext()) // Khởi tạo DbContext
+            {
+                // Lấy tất cả các phiếu mượn từ bảng PHIEUMUON
+                var phieuMuons = context.PHIEUMUON
+                                        .Where(pm => !pm.IsDeleted) // Lọc các phiếu mượn chưa bị xóa
+                                        .OrderBy(pm => pm.NgayMuon) // Sắp xếp theo ngày mượn
+                                        .Include(pm => pm.CTPHIEUMUON) // Bao gồm các chi tiết phiếu mượn nếu cần
+                                        .ThenInclude(ct => ct.IDSachNavigation) // Bao gồm thông tin sách nếu cần
+                                        .ToList(); // Thực thi truy vấn và lấy kết quả
+
+                // Chuyển đổi danh sách phiếu mượn thành ObservableCollection để binding trong UI
+                return new ObservableCollection<PHIEUMUON>(phieuMuons);
+            }
+        }
+        public void LoadSachPhoBien()
+        {
+            using (var context = new QLTVContext())
+            {
+                DanhSachPhieuMuon = GetAllPhieuMuon();
+                SachMuonNhieuTuan = ThongKeSach.GetSachMuonNhieuTheoThoiGian(context.PHIEUMUON, "tuan"); // Truyền DbSet vào phương thức
+                
+                SachMuonNhieuThang = ThongKeSach.GetSachMuonNhieuTheoThoiGian(context.PHIEUMUON, "thang");
+               
+                SachMuonNhieuNam = ThongKeSach.GetSachMuonNhieuTheoThoiGian(context.PHIEUMUON, "nam");
+                
+            }
+        }
+
 
         public event PropertyChangedEventHandler PropertyChanged;
 
-            protected virtual void OnPropertyChanged(string propertyName)
-            {
-                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
-            }
-            public UTrangChu()
-            {
-                InitializeComponent();
-                
-                LoadTheLoai();
-                LoadTuaSachByTheLoai(); // Thêm phương thức tải tựa sách theo thể loại
-                LoadTheLoaiMuonNhieu(); 
-                LoadTuaSachByTheLoaiMuonNhieu();
-                DataContext = this; // Gán DataContext chính là UserControl
+        protected virtual void OnPropertyChanged(string propertyName)
+        {
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+        }
+        public UTrangChu()
+        {
+            InitializeComponent();
+
+            LoadTheLoai();
+            LoadTuaSachByTheLoai(); // Thêm phương thức tải tựa sách theo thể loại
+            LoadSachPhoBien();
+            tcSachMuonNhieu.DataContext = this;
+            DataContext = this; // Gán DataContext chính là UserControl
         }
         private void btnSach_Click(object sender, RoutedEventArgs e)
         {
@@ -255,5 +227,7 @@ namespace QLTV.User
             }
         }
 
+        
+        
     }
 }

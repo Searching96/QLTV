@@ -239,8 +239,6 @@ create table [THAMSO]
 	[TiLeDenBu] decimal(4, 2) not null
 )
 
-alter table THAMSO add TiLeDenBu decimal(4, 2) not null
-
 create table [DANHGIA]
 (
 	[ID] int identity(1,1) constraint [PK_DANHGIA] primary key,
@@ -452,19 +450,3 @@ INSERT INTO [ADMIN] ([IDTaiKhoan])
 SELECT [ID]
 FROM [TAIKHOAN]
 WHERE [IDPhanQuyen] BETWEEN 1 AND 3;
-
-select * from TUASACH;	
-select * from SACH;
-select * from TINHTRANG;
-select * from TACGIA;
-select * from PHIEUMUON;
-select * from CTPHIEUMUON;
-select * from PHANQUYEN;
-select * from TAIKHOAN;
-update taikhoan
-set matkhau = 'dg123' where id = 6;
-delete from PHANQUYEN where id != 1
-update PHIEUMUON
-set IsPending = 0;
-select * from PHIEUMUON;
-select * from DANHGIA;

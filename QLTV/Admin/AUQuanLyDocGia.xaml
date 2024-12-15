@@ -69,7 +69,7 @@
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
 
-        <!-- Top Bar -->
+        <!-- Top Bar --><!--
         <Grid Background="White" Grid.Row="0">
             <Grid.Effect>
                 <DropShadowEffect BlurRadius="10" 
@@ -100,7 +100,7 @@
                     </Button>
                 </StackPanel>
             </DockPanel>
-        </Grid>
+        </Grid>-->
 
         <TabControl Grid.Row="1" Style="{StaticResource MaterialDesignTabControl}" SelectionChanged="TabControl_SelectionChanged">
 

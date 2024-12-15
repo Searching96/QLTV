@@ -48,7 +48,6 @@
     <Grid Background="White">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
-            <RowDefinition Height="5"/>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="420*"/>
             <RowDefinition Height="Auto"/>
@@ -259,10 +258,8 @@
             </Grid>
         </Grid>
 
-        <Grid Grid.Row="1" Background="{x:Static qltv:App.BgColor}"/>
-        
         <!--Grid cho title Data Grid va Thanh Search-->
-        <Grid Grid.Row="2">
+        <Grid Grid.Row="1">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="1*"/>
                 <ColumnDefinition Width="1*"/>
@@ -344,7 +341,7 @@
             </Grid>
         </Grid>
 
-        <DataGrid x:Name="dgTuaSach" Grid.Row="3" SelectionMode="Single"
+        <DataGrid x:Name="dgTuaSach" Grid.Row="2" SelectionMode="Single"
                   SelectionUnit="FullRow" IsReadOnly="True" AutoGenerateColumns="False"
                   SelectionChanged="dgTuaSach_SelectionChanged"
                   materialDesign:DataGridAssist.CornerRadius="4" HorizontalAlignment="Stretch">
@@ -382,7 +379,7 @@
         </DataGrid>
 
         <!-- Paging Controls -->
-        <StackPanel Orientation="Horizontal" Grid.Row="4" 
+        <StackPanel Orientation="Horizontal" Grid.Row="3" 
                     HorizontalAlignment="Center" VerticalAlignment="Bottom">
             <Button Click="btnPrevious_Click" Width="20" Height="20" Padding="0">
                 <materialDesign:PackIcon Kind="ChevronLeft"/>

@@ -322,12 +322,14 @@
             <ColumnDefinition Width="Auto" />
             <ColumnDefinition Width="*" />
         </Grid.ColumnDefinitions>
-        <Border BorderBrush="{DynamicResource MaterialDesign.Brush.Primary}"
+        <StackPanel>
+            <TextBlock Text="Các Quy Định Của Thư Viện" HorizontalAlignment="Center" FontSize="24" FontWeight="Bold"/>
+            <Border BorderBrush="{DynamicResource MaterialDesign.Brush.Primary}"
                 BorderThickness="1"
                 Margin="20">
-            <StackPanel Grid.Column="0"
+                <StackPanel Grid.Column="0"
                         Margin="20">
-                <TextBox materialDesign:HintAssist.FloatingScale="0.80"
+                    <TextBox materialDesign:HintAssist.FloatingScale="0.80"
                          materialDesign:HintAssist.Hint="Tuổi tối thiểu"
                          materialDesign:TextFieldAssist.TextBoxViewMargin="1 0 1 0"
                          FontSize="20"
@@ -335,7 +337,7 @@
                          Style="{StaticResource MaterialDesignFloatingHintTextBox}"
                          Text="{Binding TuoiToiThieu, ValidatesOnDataErrors=True}"
                          IsEnabled="{Binding isEditable}" />
-                <TextBox materialDesign:HintAssist.FloatingScale="0.80"
+                    <TextBox materialDesign:HintAssist.FloatingScale="0.80"
                          materialDesign:HintAssist.Hint="Tiền phạt trả trễ một ngày"
                          materialDesign:TextFieldAssist.TextBoxViewMargin="1 0 1 0"
                          FontSize="20"
@@ -344,7 +346,7 @@
                          Text="{Binding TienPhatTraTreMotNgay, ValidatesOnDataErrors=True}"
                          materialDesign:TextFieldAssist.SuffixText="(VND)"
                          IsEnabled="{Binding isEditable}" />
-                <TextBox materialDesign:HintAssist.FloatingScale="0.80"
+                    <TextBox materialDesign:HintAssist.FloatingScale="0.80"
                          materialDesign:HintAssist.Hint="Tỉ lệ đền bù"
                          materialDesign:TextFieldAssist.TextBoxViewMargin="1 0 1 0"
                          FontSize="20"
@@ -354,19 +356,19 @@
                          materialDesign:TextFieldAssist.SuffixText="(%)"
                          IsEnabled="{Binding isEditable}" />
 
-                <Grid>
-                    <Button Style="{StaticResource MaterialDesignRaisedButton}"
+                    <Grid>
+                        <Button Style="{StaticResource MaterialDesignRaisedButton}"
                             Content="{Binding isEditable, Converter={StaticResource BooleanToContentConverter}, ConverterParameter='Chỉnh sửa:Lưu', FallbackValue='Chỉnh sửa'}"
                             HorizontalAlignment="Left"
                             Click="btnChinhSua_Click" />
-                    <Button Style="{StaticResource MaterialDesignRaisedButton}"
+                        <Button Style="{StaticResource MaterialDesignRaisedButton}"
                             Content="Huỷ"
                             HorizontalAlignment="Right"
                             Visibility="{Binding isEditable, Converter={StaticResource BooleanToVisibilityConverter}, FallbackValue=Hidden}"
                             Click="btnHuy_Click" />
-                </Grid>
-            </StackPanel>
-
-        </Border>
+                    </Grid>
+                </StackPanel>
+            </Border>
+        </StackPanel>
     </Grid>
 </UserControl>

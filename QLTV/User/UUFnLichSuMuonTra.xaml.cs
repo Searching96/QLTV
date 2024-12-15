@@ -29,7 +29,7 @@ namespace QLTV.User
             {
                 currentDocGia = context.DOCGIA
                     .Include(dg => dg.IDTaiKhoanNavigation)
-                    .Where(dg => dg.IDLoaiDocGiaNavigation.ID == Settings.Default.CurrentUserID)
+                    .Where(dg => dg.IDTaiKhoanNavigation.ID == Settings.Default.CurrentUserID)
                     .FirstOrDefault();
             }
             LoadData();
@@ -90,24 +90,6 @@ namespace QLTV.User
             }
         }
 
-        private void btnAddBorrow_Click(object sender, RoutedEventArgs e)
-        {
-            var window = new Window
-            {
-                Title = "Thêm phiếu mượn",
-                Content = new UcThemPhieuMuon(),
-                Width = 800,
-                Height = 600,
-                WindowStartupLocation = WindowStartupLocation.CenterScreen,
-                ResizeMode = ResizeMode.CanResizeWithGrip
-            };
-
-            if (window.ShowDialog() == true)
-            {
-                LoadData();
-            }
-        }
-
         private void btnViewDetail_Click(object sender, RoutedEventArgs e)
         {
             var button = sender as ToggleButton;
@@ -132,7 +114,8 @@ namespace QLTV.User
             {
                 try
                 {
-                    using (var _context = new QLTVContext())                    {
+                    using (var _context = new QLTVContext())
+                    {
                         if (!borrowViewModel.phieuMuon.IsPending)
                         {
                             MessageBox.Show("Không thể xóa phiếu mượn đã được duyệt!", "Lỗi",
@@ -140,12 +123,12 @@ namespace QLTV.User
                             return;
                         }
                         // Xoá mềm phiếu mượn
-                        borrowViewModel.phieuMuon.IsDeleted = true;
+                        _context.PHIEUMUON.First(pm => pm.ID == borrowViewModel.phieuMuon.ID).IsDeleted = true;
 
                         // Khôi phục tình trạng mượn của các quyển sách có trong phiếu mượn
                         foreach (var ctborrowViewModel in borrowViewModel.ctPhieuMuon)
                         {
-                            var sach = ctborrowViewModel.IDSachNavigation;
+                            var sach = _context.SACH.First(s => s.ID == ctborrowViewModel.IDSachNavigation.ID);
                             if (sach != null)
                             {
                                 sach.IsAvailable = true;
@@ -162,24 +145,6 @@ namespace QLTV.User
                     MessageBox.Show($"Lỗi khi xóa phiếu mượn: {ex.Message}", "Lỗi",
                         MessageBoxButton.OK, MessageBoxImage.Error);
                 }
-            }
-        }
-
-        private void btnAddReturn_Click(object sender, RoutedEventArgs e)
-        {
-            var window = new Window
-            {
-                Title = "Thêm phiếu trả",
-                Content = new UcThemPhieuTra(),
-                Width = 800,
-                Height = 600,
-                WindowStartupLocation = WindowStartupLocation.CenterScreen,
-                ResizeMode = ResizeMode.NoResize
-            };
-
-            if (window.ShowDialog() == true)
-            {
-                LoadData();
             }
         }
 

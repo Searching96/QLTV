@@ -2,6 +2,7 @@
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:QLTV.Admin"
         xmlns:qltv="clr-namespace:QLTV"
@@ -11,61 +12,180 @@
     <Grid Background="{x:Static qltv:App.BgColor}">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
-            <RowDefinition Height="*"/>
+            <RowDefinition Height="1*"/>
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="0.2*"/>
+            <ColumnDefinition Width="Auto"/>
             <ColumnDefinition Width="1*"/>
         </Grid.ColumnDefinitions>
 
         <!--Tieu de-->
-        <StackPanel Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2">
-            
-        </StackPanel> 
+        <Border Grid.Row="0" Grid.ColumnSpan="2" Background="LightBlue" VerticalAlignment="Top" Height="75"  >
+            <Grid  VerticalAlignment="Center"  >
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="1*"/>
+                    <ColumnDefinition Width="1*"/>
+                    <ColumnDefinition Width="0.5*"/>
+                    <ColumnDefinition Width="1*"/>
+                    <ColumnDefinition Width="0.75*"/>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="Auto"/>
+                </Grid.ColumnDefinitions>
+                <!-- Logo and App Name -->
+
+                <Button x:Name="btnMenu" Background="Transparent" Padding="0" 
+                        Style="{StaticResource MaterialDesignFlatButton}"
+                        Foreground="Black"
+                        Width="40" Height="40" Margin="5, 0, 5, 0"
+                        Click="btnMenu_Click">
+                    <materialDesign:PackIcon Kind="Menu" Width="40" Height="40"/>
+                </Button>
+                <TextBlock Grid.Column="1" Text="LIBRA" FontSize="25" FontWeight="Bold" 
+                           VerticalAlignment="Center" HorizontalAlignment="Left" Margin="85,0,0,0" />
+                <Rectangle Grid.Column="1" Width="75" HorizontalAlignment="Left" Margin="5,0,0,0">
+                    <Rectangle.Fill>
+                        <ImageBrush x:Name="AnhLib" ImageSource="pack://application:,,,/Images/LogoTV.png" Stretch="Fill"/>
+                    </Rectangle.Fill>
+                </Rectangle>
+
+                <!-- Welcome Message -->
+                <TextBlock Text="Xin chào, Quản Trị Viên" Grid.Column="2" FontSize="20"  HorizontalAlignment="Left" VerticalAlignment="Center"/>
+
+                <!-- Spacer to push clock and user info to the right -->
+
+                <Border Background="#2c3e50" CornerRadius="10" Grid.Column="4" HorizontalAlignment="Center" Width="209" Height="50" RenderTransformOrigin="0.5,0.5">
+
+                    <StackPanel x:Name="spClock" VerticalAlignment="Center">
+                        <TextBlock Text="{Binding CurrentTime}" 
+                            FontSize="28" 
+                            Foreground="#ecf0f1" 
+                            HorizontalAlignment="Center"
+                            VerticalAlignment="Top" 
+                            FontWeight="Bold"/>
+                        <TextBlock Text="{Binding CurrentDate}" 
+                            FontSize="8" 
+                            Foreground="#bdc3c7" 
+                            HorizontalAlignment="Center"
+                            Margin="0,-5,0,0"/>
+                    </StackPanel>
+                </Border>
+
+                <!-- Clock Section -->
+
+                <!-- User Profile Section -->
+                <StackPanel x:Name="spTaiKhoan" Orientation="Horizontal" Grid.Column="5" Margin="10,0" HorizontalAlignment="Left" VerticalAlignment="Center">
+                    <StackPanel>
+                        <TextBlock x:Name="tbxTenTK" Text="{Binding TenTaiKhoan}" FontSize="16" FontWeight="Bold"/>
+                        <TextBlock x:Name="tbxPhanQuyen" Text="{Binding PhanQuyen}" FontSize="14"/>
+                    </StackPanel>
+                    <Border Width="50" Height="50" Padding="3" Background="Red" Margin="10,0,0,0"  CornerRadius="100" DockPanel.Dock="Top" VerticalAlignment="Center">
+                        <Ellipse>
+                            <Ellipse.Fill>
+                                <ImageBrush ImageSource="{Binding Avatar}"/>
+                            </Ellipse.Fill>
+                        </Ellipse>
+                    </Border>
+                </StackPanel>
+
+                <!-- Notification Icon -->
+                <Button x:Name="btnNotification" Grid.Column="6" 
+                        Style="{StaticResource MaterialDesignFlatButton}"
+                        Foreground="Black"
+                        Background="Transparent" Padding="0" 
+                        Width="35" Height="35" Margin="5, 0, 5, 0"
+                        Click="btnNotification_Click">
+                    <materialDesign:PackIcon Kind="Notifications" Width="35" Height="35"/>
+                </Button>
+                
+                <Button x:Name="btnCloseAllPage" Grid.Column="7" 
+                        Style="{StaticResource MaterialDesignFlatButton}"
+                        Foreground="Black"
+                        Background="Transparent" Padding="0" 
+                        Width="35" Height="35" Margin="5, 0, 5, 0"
+                        Click="btnCloseAllPage_Click">
+                    <materialDesign:PackIcon Kind="CloseOutline" Width="35" Height="35"/>
+                </Button>
+            </Grid>
+        </Border>
         
         <!--Thanh Menu ben trai-->
-        <DockPanel Grid.Row="1" Grid.Column="0" Margin="0, 5, 0, 0" 
+        <DockPanel x:Name="dpMenu" Grid.Row="1" Grid.Column="0" Margin="0, 0, 0, 0" Width="200"
                    Background="{x:Static qltv:App.AdminPriColor}">
-            <TextBlock Text="Quản Lý Thư Viện" DockPanel.Dock="Top" Foreground="White" HorizontalAlignment="Stretch" 
-                       FontSize="14" FontWeight="Bold" Margin="5, 25, 0, 10" TextAlignment="Center"/>
-            <TextBlock Text="Admin" DockPanel.Dock="Top" Foreground="White"
-                       FontSize="14" TextAlignment="Center"/>
+            <materialDesign:PackIcon Kind="LibraryOutline" DockPanel.Dock="Top" 
+                                     Height="80" Width="80" Margin="0, 5, 0, 5"
+                                     Foreground="White"
+                                     VerticalAlignment="Center"
+                                     HorizontalAlignment="Center"/>
 
-            <Separator Margin="25" DockPanel.Dock="top" Background="DodgerBlue" Height="1"/>
-            
-            <!--Button dieu huong-->
-            <StackPanel DockPanel.Dock="Top">
-                <Button x:Name="btnFnQuanLySach" Content="Quản Lý Sách" Background="DodgerBlue" 
-                        Foreground="White" Click="btnFnQuanLySach_Click"/>
-            </StackPanel>
+            <TextBlock Text="Menu Bar" DockPanel.Dock="Top" HorizontalAlignment="Center" Margin="5" 
+                       Foreground="White"
+                       FontSize="20" FontWeight="SemiBold"/>
 
-            <StackPanel DockPanel.Dock="Top">
-                <Button x:Name="btnFnQuanLyTaiKhoan" Content="Quản Lý Tài Khoản" Background="DodgerBlue" 
-                        Foreground="White" Click="btnFnQuanLyTaiKhoan_Click"/>
-            </StackPanel>
+            <Button Margin="20, 0, 20, 10" DockPanel.Dock="Top" 
+        x:Name="btnFnQuanLySach" Background="DodgerBlue" 
+        Foreground="White" Click="btnFnQuanLySach_Click" HorizontalContentAlignment="Left" Padding="0">
+                <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                    <materialDesign:PackIcon Kind="Book" Width="20" Height="20" Margin="5,0,5,0"/>
+                    <TextBlock Text="Quản Lý Sách" VerticalAlignment="Center"/>
+                </StackPanel>
+            </Button>
 
-            <StackPanel DockPanel.Dock="Top">
-                <Button x:Name="btnFnQuanLyDocGia" Content="Quản Lý Độc Giả" Background="DodgerBlue" 
-                        Foreground="White" Click="btnFnQuanLyDocGia_Click"/>
-            </StackPanel>
+            <Button Margin="20, 0, 20, 10" DockPanel.Dock="Top" 
+        x:Name="btnFnQuanLyTaiKhoan" Background="DodgerBlue" 
+        Foreground="White" Click="btnFnQuanLyTaiKhoan_Click" HorizontalContentAlignment="Left" Padding="0">
+                <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                    <materialDesign:PackIcon Kind="Account" Width="20" Height="20" Margin="5,0,5,0"/>
+                    <TextBlock Text="Quản Lý Tài Khoản" VerticalAlignment="Center"/>
+                </StackPanel>
+            </Button>
 
-            <StackPanel DockPanel.Dock="Top">
-                <Button x:Name="btnFnQuanLyMuonTra" Content="Quản Lý Mượn Trả" Background="DodgerBlue" 
-                        Foreground="White" Click="btnFnQuanLyMuonTra_Click"/>
-            </StackPanel>
+            <Button Margin="20, 0, 20, 10" DockPanel.Dock="Top" 
+        x:Name="btnFnQuanLyDocGia" Background="DodgerBlue" 
+        Foreground="White" Click="btnFnQuanLyDocGia_Click" HorizontalContentAlignment="Left" Padding="0">
+                <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                    <materialDesign:PackIcon Kind="BookAccount" Width="20" Height="20" Margin="5,0,5,0"/>
+                    <TextBlock Text="Quản Lý Độc Giả" VerticalAlignment="Center"/>
+                </StackPanel>
+            </Button>
 
-            <StackPanel DockPanel.Dock="Top">
-                <Button x:Name="btnFnBaoCaoThongKe" Content="Báo Cáo Thống Kê" Background="DodgerBlue" 
-                        Foreground="White" Click="btnFnBaoCaoThongKe_Click"/>
-            </StackPanel>
+            <Button Margin="20, 0, 20, 10" DockPanel.Dock="Top" 
+        x:Name="btnFnQuanLyMuonTra" Background="DodgerBlue" 
+        Foreground="White" Click="btnFnQuanLyMuonTra_Click" HorizontalContentAlignment="Left" Padding="0">
+                <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                    <materialDesign:PackIcon Kind="ImportExportBold" Width="20" Height="20" Margin="5,0,5,0"/>
+                    <TextBlock Text="Quản Lý Mượn Trả" VerticalAlignment="Center"/>
+                </StackPanel>
+            </Button>
 
-            <StackPanel DockPanel.Dock="Top">
-                <Button x:Name="btnFnQuyDinh" Content="Quy Định" Background="DodgerBlue" 
-                        Foreground="White" Click="btnFnQuyDinh_Click"/>
-            </StackPanel>
+            <Button Margin="20, 0, 20, 10" DockPanel.Dock="Top" 
+        x:Name="btnFnBaoCaoThongKe" Background="DodgerBlue" 
+        Foreground="White" Click="btnFnBaoCaoThongKe_Click" HorizontalContentAlignment="Left" Padding="0">
+                <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                    <materialDesign:PackIcon Kind="ChartBar" Width="20" Height="20" Margin="5,0,5,0"/>
+                    <TextBlock Text="Báo Cáo Thống Kê" VerticalAlignment="Center"/>
+                </StackPanel>
+            </Button>
 
-            <Button Content="Đăng xuất" VerticalAlignment="Top" 
-                    Width="100" Margin="5" Click="DangXuat_Click" Background="Orange" BorderBrush="Orange"/>
+            <Button Margin="20, 0, 20, 10" DockPanel.Dock="Top" 
+        x:Name="btnFnQuyDinh" Background="DodgerBlue" 
+        Foreground="White" Click="btnFnQuyDinh_Click" HorizontalContentAlignment="Left" Padding="0">
+                <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                    <materialDesign:PackIcon Kind="ClipboardText" Width="20" Height="20" Margin="5,0,5,0"/>
+                    <TextBlock Text="Quy Định" VerticalAlignment="Center"/>
+                </StackPanel>
+            </Button>
+
+
+
+            <Button DockPanel.Dock="Bottom" VerticalAlignment="Bottom"
+                    Width="100" Margin="5, 5, 5, 20" Click="DangXuat_Click" 
+                    Background="LightBlue" Padding="5" BorderBrush="LightBlue" BorderThickness="0">
+                <StackPanel Orientation="Horizontal">
+                    <materialDesign:PackIcon Kind="Logout" Width="20" Height="20" Margin="0,0,5,0" />
+                    <TextBlock Text="Đăng xuất" VerticalAlignment="Center" />
+                </StackPanel>
+            </Button>
         </DockPanel>
         
         <!--Main Content-->

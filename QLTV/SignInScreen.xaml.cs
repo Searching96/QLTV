@@ -129,7 +129,7 @@ namespace QLTV
             else
             {
                 // Hiển thị thông báo nếu tài khoản không hợp lệ hoặc mật khẩu sai
-                MessageBox.Show("Invalid username or password!", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                MessageBox.Show("Tên đăng nhập hoặc mật khẩu không đúng!", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
         private bool IsSessionValid(int userId)
