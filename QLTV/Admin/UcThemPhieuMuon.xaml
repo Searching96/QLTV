@@ -321,6 +321,7 @@
             <RowDefinition Height="Auto" />
             <RowDefinition Height="*" />
             <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
 
         <!-- Header -->
@@ -547,5 +548,14 @@
                     Foreground="White">
             </Button>
         </StackPanel>
+        <Grid Grid.Row="7" Margin="5">
+            <StackPanel>
+                <Button Content="Generate Borrow Tickets"
+                        Click="GenerateBorrowTickets_Click" />
+                <TextBlock x:Name="ResultTextBlock"
+                           TextWrapping="Wrap"
+                           Margin="10" />
+            </StackPanel>
+        </Grid>
     </Grid>
 </UserControl> 

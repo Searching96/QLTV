@@ -1,4 +1,9 @@
-﻿create database [QLTV_Merged]
+﻿use [master]
+go
+alter database [QLTV_Merged] set single_user with rollback immediate
+drop database [QLTV_Merged]
+
+create database [QLTV_Merged]
 go
 use [QLTV_Merged]
 go
@@ -438,15 +443,58 @@ insert into SACH(IDTuaSach, NamXuatBan, NhaXuatBan, NgayNhap, TriGia, IDTinhTran
 set dateformat ymd
 go
 
-insert into [PHANQUYEN](MaHanhDong, MoTa) values('SuperAdmin', N'Siêu Quản Trị');
-insert into [PHANQUYEN](MaHanhDong, MoTa) values('QLTK', N'Quản Lý Tài Khoản');
-insert into [PHANQUYEN](MaHanhDong, MoTa) values('ThuThu', N'Thủ Thư');
-insert into [PHANQUYEN](MaHanhDong, MoTa) values('DG', N'Độc Giả');
+-- Insert dữ liệu vào PHANQUYEN và thiết lập SuperAdmin
+INSERT INTO [PHANQUYEN](MaHanhDong, MoTa) 
+VALUES
+('SuperAdmin', N'Siêu Quản Trị'),
+('QLTK', N'Quản Lý Tài Khoản'),
+('ThuThu', N'Thủ Thư'),
+('DG', N'Độc Giả');
 
-insert into [TAIKHOAN](TenTaiKhoan, Hoten, GioiTinh, MatKhau, Email, SinhNhat, DiaChi, SDT, TrangThai, IDPhanQuyen, NgayMo, NgayDong)
-values (N'sa', N'super admin', N'Nam', 'sa123', 'sa@gm.com', '1999-01-02', N'Right here', '0999987789', 0, 1, '2024-01-01', '2025-01-01');
+-- Insert dữ liệu vào TAIKHOAN và chỉ định SuperAdmin
+INSERT INTO [TAIKHOAN](TenTaiKhoan, MatKhau, HoTen, Email, GioiTinh, SinhNhat, DiaChi, SDT, Avatar, TrangThai, IDPhanQuyen, IsDeleted, NgayMo, NgayDong)
+VALUES
+(N'sa', 'sa123',  N'super admin', 'sa@gm.com', N'Nam', '1999-01-02', N'Right here', '0999987789', 'D:\WPF\QLTVReal - User\QLTV\Image\DefaultAvatar.png', 0, 1, 0, '2024-01-01', '2025-01-01'),
+('sv001', 'password', N'Nguyễn Văn Anh', 'nguyenvana@example.com', N'Nam', '1995-01-01', N'Hà Nội', '0123456789', 'D:\WPF\QLTVReal - User\QLTV\Image\DefaultAvatar.png', 1, 4, 0, '2022-01-01', '2023-01-01'),
+('gv001', 'password', N'Trần Thị Vân', 'tranthib@example.com', N'Nữ', '1980-05-15', N'Hồ Chí Minh', '0987654321', 'D:\WPF\QLTVReal - User\QLTV\Image\DefaultAvatar.png', 1, 4, 0, '2022-01-01', '2023-01-01'),
+('nv001', 'password', N'Lê Văn Cao', 'levanc@example.com', N'Nam', '1990-07-20', N'Đà Nẵng', '0912345678', 'D:\WPF\QLTVReal - User\QLTV\Image\DefaultAvatar.png', 1, 4, 0, '2022-01-01', '2023-01-01'),
+('hs001', 'password', N'Phạm Minh Đức', 'phamminhd@example.com', N'Nam', '2005-03-12', N'Quảng Ninh', '0911223344', 'D:\WPF\QLTVReal - User\QLTV\Image\DefaultAvatar.png', 1, 4, 0, '2022-01-01', '2023-01-01'),
+('kl001', 'password', N'Hồ Thị Kỷ', 'hothie@example.com', N'Nữ', '1992-11-22', N'Huế', '0933445566', 'D:\WPF\QLTVReal - User\QLTV\Image\DefaultAvatar.png', 1, 4, 0, '2022-01-01', '2023-01-01'),
+('cs001', 'password', N'Ngô Văn Hải', 'ngovanf@example.com', N'Nam', '1988-09-10', N'Bắc Ninh', '0915556677', 'D:\WPF\QLTVReal - User\QLTV\Image\DefaultAvatar.png', 1, 4, 0, '2022-01-01', '2023-01-01'),
+('tv001', 'password', N'Phan Thị Giang Mai', 'phanthig@example.com', N'Nữ', '1975-06-18', N'Hải Phòng', '0922334455', 'D:\WPF\QLTVReal - User\QLTV\Image\DefaultAvatar.png', 1, 4, 0, '2022-01-01', '2023-01-01'),
+('vip001', 'password', N'Lý Văn Hào', 'lyvanh@example.com', N'Nam', '1985-02-22', N'Hà Nội', '0933445567', 'D:\WPF\QLTVReal - User\QLTV\Image\DefaultAvatar.png', 1, 4, 0, '2022-01-01', '2023-01-01'),
+('std001', 'password', N'Nguyễn Thị Yên', 'nguyenthii@example.com', N'Nữ', '2000-10-30', N'Bình Dương', '0945567788', 'D:\WPF\QLTVReal - User\QLTV\Image\DefaultAvatar.png', 1, 4, 0, '2022-01-01', '2023-01-01'),
+('rs001', 'password', N'Trịnh Văn Chương', 'trinhvanj@example.com', N'Nam', '1972-04-12', N'Quảng Nam', '0956678899', 'D:\WPF\QLTVReal - User\QLTV\Image\DefaultAvatar.png', 1, 4, 0, '2022-01-01', '2023-01-01');
 
-INSERT INTO [ADMIN] ([IDTaiKhoan])
-SELECT [ID]
-FROM [TAIKHOAN]
-WHERE [IDPhanQuyen] BETWEEN 1 AND 3;
+-- Insert dữ liệu vào LOAIDOCGIA
+INSERT INTO LOAIDOCGIA (TenLoaiDocGia, SoSachMuonToiDa, IsDeleted)
+VALUES 
+('Sinh viên', 5, 0),
+('Giảng viên', 10, 0),
+('Nhân viên', 3, 0),
+('Học sinh', 4, 0),
+('Khách vãng lai', 1, 0),
+('Cựu sinh viên', 2, 0),
+('Thư viện viên', 7, 0),
+('Độc giả VIP', 15, 0),
+('Độc giả thông thường', 6, 0),
+('Người nghiên cứu', 12, 0);
+
+-- Insert dữ liệu vào ADMIN chỉ định SuperAdmin
+INSERT INTO ADMIN (IDTaiKhoan)
+VALUES 
+(1);
+
+-- Insert thêm dữ liệu vào DOCGIA
+INSERT INTO DOCGIA (IDTaiKhoan, IDLoaiDocGia, GioiThieu, TongNo)
+VALUES 
+(2, 1, N'Sinh viên năm 3', 0),
+(3, 2, N'Giảng viên khoa CNTT', 0),
+(4, 3, N'Nhân viên thư viện', 0),
+(5, 4, N'Học sinh lớp 12', 0),
+(6, 5, N'Khách vãng lai đến mượn sách', 50000),
+(7, 6, N'Cựu sinh viên mới tốt nghiệp', 0),
+(8, 7, N'Thư viện viên nhiều kinh nghiệm', 0),
+(9, 8, N'Độc giả VIP với thẻ ưu đãi', 0),
+(10, 9, N'Độc giả thông thường', 0),
+(11, 10, N'Người nghiên cứu trong lĩnh vực khoa học', 0);

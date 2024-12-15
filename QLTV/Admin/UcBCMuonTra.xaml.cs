@@ -342,10 +342,14 @@ namespace QLTV.Admin
         {
             await PopulateBCMSChartAndDataGrid();
             PopulateBCMSMonthComboBox(DateTime.Now.Year.ToString());
+            PopulateBCMSYearComboBox();
+
             await PopulateBCTTChartAndDataGrid();
             PopulateBCTTMonthComboBox(DateTime.Now.Year.ToString());
+            PopulateBCTTYearComboBox();
             await PopulateBCTPChartAndDataGrid();
             PopulateBCTPMonthComboBox(DateTime.Now.Year.ToString());
+            PopulateBCTPYearComboBox();
         }
 
         private void btnViewDetail_Click(object sender, RoutedEventArgs e)
@@ -505,7 +509,7 @@ namespace QLTV.Admin
 
         private async Task PopulateBCMSChartAndDataGrid(DateTime? begin = null, DateTime? end = null)
         {
-            DateTime startDate = begin ?? DateTime.Now.AddDays(-30);
+            DateTime startDate = begin ?? DateTime.Now.AddYears(-1);
             DateTime endDate = end ?? DateTime.Now.AddDays(1);
 
             await LoadBorrowReportsData(startDate, endDate);
@@ -757,7 +761,7 @@ namespace QLTV.Admin
                 DateTime begin, end;
                 if (selectedYear == "Tất cả")
                 {
-                    begin = _borrowReports.Count != 0 ? _borrowReports.Min(bc => bc.Month) : DateTime.Now.AddDays(-30);
+                    begin = _borrowReports.Count != 0 ? _borrowReports.Min(bc => bc.Month) : DateTime.Now.AddYears(-1);
                     end = DateTime.Now.AddDays(1);
                 }
                 else
@@ -921,7 +925,7 @@ namespace QLTV.Admin
 
         private async Task PopulateBCTTChartAndDataGrid(DateTime? begin = null, DateTime? end = null)
         {
-            DateTime startDate = begin ?? DateTime.Now.AddDays(-30);
+            DateTime startDate = begin ?? DateTime.Now.AddYears(-1);
             DateTime endDate = end ?? DateTime.Now.AddDays(1);
 
             await LoadBorrowReportsData(startDate, endDate);
@@ -1156,7 +1160,7 @@ namespace QLTV.Admin
                 if (selectedYear == "Tất cả")
                 {
                     cbQuarterTT.SelectedIndex = 0;
-                    begin = _lateReturnReports.Count != 0 ? _lateReturnReports.Min(r => r.Month) : DateTime.Now.AddDays(-30);
+                    begin = _lateReturnReports.Count != 0 ? _lateReturnReports.Min(r => r.Month) : DateTime.Now.AddYears(-1);
                     end = DateTime.Now.AddDays(1);
                 }
                 else
@@ -1318,7 +1322,7 @@ namespace QLTV.Admin
 
         private async Task PopulateBCTPChartAndDataGrid(DateTime? begin = null, DateTime? end = null)
         {
-            DateTime startDate = begin ?? DateTime.Now.AddDays(-30);
+            DateTime startDate = begin ?? DateTime.Now.AddYears(-1);
             DateTime endDate = end ?? DateTime.Now.AddDays(1);
 
             await LoadBCTPData(startDate, endDate);
@@ -1350,6 +1354,7 @@ namespace QLTV.Admin
                                         Ngay = dg.Key,
                                         SoTien = dg.Sum(f => f.CTPHIEUTRA.Sum(ct => ct.TienPhat))
                                     })
+                                    .Where(dg => dg.SoTien != 0)
                                     .ToList();
 
                                 var BCTienPhat = new ObservableCollection<BCTienPhatModel>(dailyFines);
@@ -1362,6 +1367,7 @@ namespace QLTV.Admin
                                     IsExpanded = false
                                 };
                             })
+                            .Where(bc => bc.TongTienPhat != 0)
                             .ToList()
                     );
 
@@ -1608,7 +1614,7 @@ namespace QLTV.Admin
                 DateTime begin, end;
                 if (selectedYear == "Tất cả")
                 {
-                    begin = _borrowReports.Count != 0 ? _borrowReports.Min(bc => bc.Month) : DateTime.Now.AddDays(-30);
+                    begin = _borrowReports.Count != 0 ? _borrowReports.Min(bc => bc.Month) : DateTime.Now.AddYears(-1);
                     end = DateTime.Now.AddDays(1);
                 }
                 else

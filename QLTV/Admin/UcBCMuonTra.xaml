@@ -323,8 +323,8 @@
                 <Grid>
                     <Grid.RowDefinitions>
                         <RowDefinition Height="Auto" />
-                        <RowDefinition Height="4*" />
                         <RowDefinition Height="6*" />
+                        <RowDefinition Height="4*" />
                     </Grid.RowDefinitions>
                     <!-- ListBox for Selection -->
                     <StackPanel Orientation="Horizontal">
@@ -334,10 +334,10 @@
                                  Margin="5,2,5,0"
                                  SelectionChanged="lbBCMSChartMode_SelectionChanged">
                             <ListBoxItem Content="Ngày" />
-                            <ListBoxItem Content="Tháng"
-                                         IsSelected="True" />
+                            <ListBoxItem Content="Tháng" />
                             <ListBoxItem Content="Quý" />
-                            <ListBoxItem Content="Năm" />
+                            <ListBoxItem Content="Năm"
+                                         IsSelected="True" />
                         </ListBox>
 
                         <!-- Container for Pickers -->
@@ -374,7 +374,7 @@
                             <!-- Month Selector for "Tháng" -->
                             <StackPanel x:Name="spMonthMS"
                                         Orientation="Horizontal"
-                                        Visibility="Visible">
+                                        Visibility="Collapsed">
                                 <ComboBox Style="{StaticResource ModernComboBox}"
                                           x:Name="cbStartMonthMS"
                                           Width="100"
@@ -408,7 +408,7 @@
                                           x:Name="cbYearMS"
                                           Width="100"
                                           Margin="10,0"
-                                          Visibility="Collapsed"
+                                          Visibility="Visible"
                                           IsEditable="False"
                                           materialDesign:HintAssist.Hint="Năm"
                                           materialDesign:HintAssist.FloatingScale="0.8"
@@ -596,8 +596,8 @@
                 <Grid>
                     <Grid.RowDefinitions>
                         <RowDefinition Height="Auto" />
-                        <RowDefinition Height="4*" />
                         <RowDefinition Height="6*" />
+                        <RowDefinition Height="4*" />
                     </Grid.RowDefinitions>
 
                     <!-- ListBox for Selection -->
@@ -608,10 +608,10 @@
                                  Margin="5,2,5,0"
                                  SelectionChanged="lbBCTTChartMode_SelectionChanged">
                             <ListBoxItem Content="Ngày" />
-                            <ListBoxItem Content="Tháng"
-                                         IsSelected="True" />
+                            <ListBoxItem Content="Tháng" />
                             <ListBoxItem Content="Quý" />
-                            <ListBoxItem Content="Năm" />
+                            <ListBoxItem Content="Năm"
+                                         IsSelected="True" />
                         </ListBox>
 
                         <!-- Container for Pickers -->
@@ -646,7 +646,7 @@
                             <!-- Month Selector for "Tháng" -->
                             <StackPanel x:Name="spMonthTT"
                                         Orientation="Horizontal"
-                                        Visibility="Visible">
+                                        Visibility="Collapsed">
                                 <ComboBox Style="{StaticResource ModernComboBox}"
                                           x:Name="cbStartMonthTT"
                                           Width="100"
@@ -680,7 +680,7 @@
                                           x:Name="cbYearTT"
                                           Width="100"
                                           Margin="10,0"
-                                          Visibility="Collapsed"
+                                          Visibility="Visible"
                                           IsEditable="False"
                                           materialDesign:HintAssist.Hint="Năm"
                                           materialDesign:HintAssist.FloatingScale="0.8"
@@ -874,8 +874,8 @@
                 <Grid>
                     <Grid.RowDefinitions>
                         <RowDefinition Height="Auto" />
-                        <RowDefinition Height="4*" />
                         <RowDefinition Height="6*" />
+                        <RowDefinition Height="4*" />
                     </Grid.RowDefinitions>
 
                     <!-- ListBox for Selection -->
@@ -886,10 +886,10 @@
                                  Margin="5,2,5,0"
                                  SelectionChanged="lbBCTPChartMode_SelectionChanged">
                             <ListBoxItem Content="Ngày" />
-                            <ListBoxItem Content="Tháng"
-                                         IsSelected="True" />
+                            <ListBoxItem Content="Tháng" />
                             <ListBoxItem Content="Quý" />
-                            <ListBoxItem Content="Năm" />
+                            <ListBoxItem Content="Năm"
+                                         IsSelected="True" />
                         </ListBox>
 
                         <!-- Container for Pickers -->
@@ -924,7 +924,7 @@
                             <!-- Month Selector for "Tháng" -->
                             <StackPanel x:Name="spMonthBCTP"
                                         Orientation="Horizontal"
-                                        Visibility="Visible">
+                                        Visibility="Collapsed">
                                 <ComboBox Style="{StaticResource ModernComboBox}"
                                           x:Name="cbStartMonthBCTP"
                                           Width="100"
@@ -958,7 +958,7 @@
                                           x:Name="cbYearBCTP"
                                           Width="100"
                                           Margin="10,0"
-                                          Visibility="Collapsed"
+                                          Visibility="Visible"
                                           IsEditable="False"
                                           materialDesign:HintAssist.Hint="Năm"
                                           materialDesign:HintAssist.FloatingScale="0.8"
