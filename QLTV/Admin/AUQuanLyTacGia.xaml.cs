@@ -566,14 +566,17 @@ namespace QLTV.Admin
                         lstDongBiLoi.Add(row);
                 }
 
-                MessageBoxResult mbrXacNhan = MessageBox.Show(
-                    $"Có {lstDongBiLoi.Count} dòng bị lỗi. Bạn có muốn tiếp tục nhập dữ liệu bỏ qua các dòng đó không?",
-                    "Xác nhận nhập",
-                    MessageBoxButton.YesNo,
-                    MessageBoxImage.Warning);
+                if (lstDongBiLoi.Count > 0)
+                {
+                    MessageBoxResult mbrXacNhan = MessageBox.Show(
+                        $"Có {lstDongBiLoi.Count} dòng bị lỗi. Bạn có muốn tiếp tục nhập dữ liệu bỏ qua các dòng đó không?",
+                        "Xác nhận nhập",
+                        MessageBoxButton.YesNo,
+                        MessageBoxImage.Warning);
 
-                if (mbrXacNhan != MessageBoxResult.Yes)
-                    return -1;
+                    if (mbrXacNhan != MessageBoxResult.Yes)
+                        return -1;
+                }
 
                 for (int row = 2; row <= worksheet.Dimension.End.Row; row++)
                 {

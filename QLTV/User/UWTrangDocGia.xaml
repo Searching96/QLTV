@@ -7,7 +7,7 @@
         xmlns:local="clr-namespace:QLTV.User"
         xmlns:qltv="clr-namespace:QLTV"
         mc:Ignorable="d"
-        Title="UWTrangDocGia" Height="750" Width="1250"
+        Title="TRANG ĐỘC GIẢ" Height="750" Width="1250"
         WindowStartupLocation="CenterScreen">
     <Grid>
         <Grid Background="{x:Static qltv:App.BgColor}">
@@ -44,7 +44,7 @@
                         Click="btnMenu_Click">
                         <materialDesign:PackIcon Kind="Menu" Width="40" Height="40"/>
                     </Button>
-                    <TextBlock Grid.Column="1" Text="LIBRA" FontSize="25" FontWeight="Bold" 
+                    <TextBlock Grid.Column="1" Text="LIMEN" FontSize="25" FontWeight="Bold" 
                            VerticalAlignment="Center" HorizontalAlignment="Left" Margin="85,0,0,0" />
                     <Rectangle Grid.Column="1" Width="75" HorizontalAlignment="Left" Margin="5,0,0,0">
                         <Rectangle.Fill>

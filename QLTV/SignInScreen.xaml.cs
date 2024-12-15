@@ -74,11 +74,7 @@ namespace QLTV
             var user = ValidateUser(username, password);
             if (user != null)
             {
-                if (user.NgayDong < DateTime.Now)
-                {
-                    MessageBox.Show("Tài khoản quản trị viên của bạn đã hết hạn!", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
-                    return;
-                }
+
 
                 user.TrangThai = true;
                 _context.SaveChanges();
@@ -88,7 +84,12 @@ namespace QLTV
                     // Nếu session hợp lệ, tự động đăng nhập và mở MainWindow
                     if (user.IDPhanQuyen < 4)
                     {
-                        
+                        if (user.NgayDong < DateTime.Now)
+                        {
+                            MessageBox.Show("Tài khoản quản trị viên của bạn đã hết hạn!", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                            return;
+                        }
+
                         AWTrangQuanLy ms = new AWTrangQuanLy();
                         ms.Show();
                     }
