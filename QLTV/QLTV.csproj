@@ -18,6 +18,7 @@
     <None Remove="Images\dashboard.jpg" />
     <None Remove="Images\dashboard1.jpg" />
     <None Remove="Images\dashboard2.jpg" />
+    <None Remove="Images\DashboardAdmin.jpg" />
     <None Remove="Images\DefaultAvatar.jpg" />
     <None Remove="Images\LogoTV.png" />
   </ItemGroup>
@@ -37,7 +38,9 @@
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
+    <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
     <PackageReference Include="PDFsharp" Version="6.1.1" />
+    <PackageReference Include="RestSharp" Version="112.1.0" />
   </ItemGroup>
 
   <ItemGroup>
@@ -48,6 +51,9 @@
       <CopyToOutputDirectory>Never</CopyToOutputDirectory>
     </Resource>
     <Resource Include="Images\dashboard2.jpg">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Images\DashboardAdmin.jpg">
       <CopyToOutputDirectory>Never</CopyToOutputDirectory>
     </Resource>
     <Resource Include="Images\DefaultAvatar.jpg">

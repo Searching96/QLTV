@@ -29,7 +29,7 @@ namespace QLTV.User
     /// <summary>
     /// Interaction logic for ChiTietTaiKhoan.xaml
     /// </summary>
-    
+
 
     public partial class ChiTietTaiKhoan : UserControl
     {
@@ -57,12 +57,12 @@ namespace QLTV.User
         {
             InitializeComponent();
             DataContextChanged += ChiTietTaiKhoan_DataContextChanged; // Gắn sự kiện DataContextChanged
-            
+
         }
 
-        
 
-        private void LoadLoaiTaiKhoanData(AccountViewModel _currentAccount )
+
+        private void LoadLoaiTaiKhoanData(AccountViewModel _currentAccount)
         {
             // Khởi tạo danh sách
             LoaiTaiKhoanItems = new ObservableCollection<string>();
@@ -84,14 +84,14 @@ namespace QLTV.User
                     }
 
                     // Tìm loại độc giả hiện tại của tài khoản này từ bảng DOCGIA
-                    
+
                     var tk = db.TAIKHOAN.FirstOrDefault(t => t.MaTaiKhoan == _currentAccount.MaTaiKhoan && !t.IsDeleted);
-                    
+
                     var currentLoaiDocGia = db.DOCGIA
                                               .Where(dg => dg.IDTaiKhoan == tk.ID)
                                               .Select(dg => dg.IDLoaiDocGiaNavigation.TenLoaiDocGia)
                                               .FirstOrDefault();
-                    
+
                     if (currentLoaiDocGia != null)
                     {
                         temp = currentLoaiDocGia;
@@ -111,7 +111,7 @@ namespace QLTV.User
                     }
 
                     // Tìm quyền hiện tại của tài khoản từ bảng PHANQUYEN
-                    
+
                     var currentMoTa = db.PHANQUYEN
                                         .Where(pq => !pq.IsDeleted && pq.ID == _currentAccount.IDPhanQuyen)
                                         .Select(pq => pq.MoTa)
@@ -120,7 +120,7 @@ namespace QLTV.User
                     if (currentMoTa != null)
                     {
                         temp = currentMoTa;
-                        
+
                     }
                 }
             }
@@ -129,24 +129,24 @@ namespace QLTV.User
             cbLoaiTaiKhoan.ItemsSource = LoaiTaiKhoanItems;
             SelectedLoaiTaiKhoan = temp;
             cbLoaiTaiKhoan.Text = SelectedLoaiTaiKhoan;
-            
+
         }
 
         public void LoadData()
         {
-            
-            if(_currentAccount?.IDPhanQuyen == 4)
+
+            if (_currentAccount?.IDPhanQuyen == 4)
             {
                 txtNgayDong.Text = "Ngày hết hạn";
                 txtNgayMo.Text = "Ngày lập thẻ";
-                
+
             }
             else
             {
                 txtNgayDong.Text = "Ngày kết thúc";
                 txtNgayMo.Text = "Ngày vào làm";
             }
-            
+
 
         }
 
@@ -154,11 +154,11 @@ namespace QLTV.User
         {
             // Gán DataContext mới vào _currentAccount
             _currentAccount = DataContext as AccountViewModel;
-            
+
             if (_currentAccount != null)
             {
-                
-                AccountViewModel temp  = _currentAccount;
+
+                AccountViewModel temp = _currentAccount;
                 LoadData();
                 LoadLoaiTaiKhoanData(temp);
             }
@@ -193,7 +193,7 @@ namespace QLTV.User
                 using (var context = new QLTVContext())
                 {
                     // Lấy thông tin từ các TextBox
-                    
+
                     var taiKhoan = context.TAIKHOAN
                         .Include(t => t.IDPhanQuyenNavigation) // Tải bảng PHANQUYEN liên quan
                         .FirstOrDefault(u => u.MaTaiKhoan == _currentAccount.MaTaiKhoan && !u.IsDeleted);
@@ -257,7 +257,7 @@ namespace QLTV.User
 
                         // Cập nhật thông tin DOCGIA
                         docGia.IDLoaiDocGia = loaiDocGia.ID;
-                        
+
                     }
                     else
                     {
@@ -308,7 +308,7 @@ namespace QLTV.User
                 txtSDT.IsReadOnly = false;
                 cbLoaiTaiKhoan.IsEnabled = false;
                 dpNgayDangKy.IsEnabled = false;
-                dpNgayHetHan.IsEnabled = false;                
+                dpNgayHetHan.IsEnabled = false;
             }
             else
             {
@@ -432,6 +432,12 @@ namespace QLTV.User
             }
 
             icPhoneNumberError.Visibility = Visibility.Collapsed;
+        }
+
+        private void btnPayment_Click(object sender, RoutedEventArgs e)
+        {
+            UWThanhToanNo uWThanhToanNo = new UWThanhToanNo(Convert.ToInt32(_currentAccount.TongNo));
+            uWThanhToanNo.Show();
         }
     }
 }

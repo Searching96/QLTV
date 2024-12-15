@@ -28,7 +28,7 @@ namespace QLTV.Admin
     {
         public List<UserControl> OpeningUC;
 
-        public class TaiKhoanViewModel
+        public class TKDisplayViewModel
         {
             public string TenTaiKhoan { get; set; }
             public string PhanQuyen { get; set; }
@@ -42,19 +42,13 @@ namespace QLTV.Admin
                 var taiKhoan = context.TAIKHOAN
                     .Include(tk => tk.IDPhanQuyenNavigation)
                     .Where(tk => tk.ID == Settings.Default.CurrentUserID)
-                    .Select(tk => new TaiKhoanViewModel
+                    .Select(tk => new TKDisplayViewModel
                     {
                         TenTaiKhoan = tk.TenTaiKhoan,
                         PhanQuyen = tk.IDPhanQuyenNavigation.MoTa,
                         Avatar = tk.Avatar,
                     })
                     .FirstOrDefault();
-
-                if (taiKhoan == null)
-                {
-                    MessageBox.Show("Không tìm thấy thông tin tài khoản.");
-                    return;
-                }
 
                 spTaiKhoan.DataContext = taiKhoan;
             }
@@ -67,6 +61,13 @@ namespace QLTV.Admin
             OpeningUC = new List<UserControl>();
             spClock.DataContext = new ClockViewModel();
             LoadTaiKhoan();
+
+            var image = new Image
+            {
+                Source = new BitmapImage(new Uri("/Images/DashboardAdmin.jpg", UriKind.Relative)),
+                Stretch = Stretch.Fill
+            };
+            ADMainContent.Content = image;
         }
 
         private void PhanQuyen()
@@ -174,6 +175,13 @@ namespace QLTV.Admin
         {
             ADMainContent.Content = null;
             OpeningUC.Clear();
+
+            var image = new Image
+            {
+                Source = new BitmapImage(new Uri("/Images/DashboardAdmin.jpg", UriKind.Relative)),
+                Stretch = Stretch.Fill
+            };
+            ADMainContent.Content = image;
         }
 
         private void btnNotification_Click(object sender, RoutedEventArgs e)

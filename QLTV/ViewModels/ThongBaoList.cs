@@ -33,7 +33,7 @@ namespace QLTV.ViewModels
                     ThongBao.Clear();
 
                     // Thêm thông báo về hạn tài khoản
-                    if (khoangCach.TotalDays <= 7)
+                    if (khoangCach.TotalDays <= 7 && khoangCach.TotalDays > 0)
                     {
                         ThongBao.Add(new ThongBao(
                             "Cảnh báo hết hạn tài khoản",
@@ -44,8 +44,8 @@ namespace QLTV.ViewModels
                     else
                     {
                         ThongBao.Add(new ThongBao(
-                            "Trạng thái tài khoản",
-                            "Tài khoản của bạn vẫn còn hạn sử dụng.",
+                            "Cảnh báo hết hạn tài khoản",
+                            "Tài khoản của bạn đã hết hạn sử dụng. Vui lòng gia hạn tài khoản để tiếp tục sử dụng.",
                             "AccountAlert"
                         ));
                     }
@@ -77,7 +77,7 @@ namespace QLTV.ViewModels
                             if (khoangCach.TotalDays <= 7 && khoangCach.TotalDays >= 0)
                             {
                                 ThongBao.Add(new ThongBao(
-                                    "Đã đến hạn trả sách",
+                                    "Sắp đến hạn trả sách",
                                     $"Sách mượn từ phiếu {phieuMuon.MaPhieuMuon} sắp đến hạn trả trong {khoangCach.Days} ngày. Vui lòng trả sách đúng hạn.",
                                     "book_warning_icon"
                                 ));

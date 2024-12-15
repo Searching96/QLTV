@@ -189,7 +189,7 @@
         </DockPanel>
         
         <!--Main Content-->
-        <Grid Grid.Row="1" Grid.Column="1" Margin="5, 5, 0, 0">
+        <Grid Grid.Row="1" Grid.Column="1" Margin="5, 5, 0, 0" Background="White">
             <Frame x:Name="ADMainContent" NavigationUIVisibility="Hidden"/>
         </Grid>
     </Grid>

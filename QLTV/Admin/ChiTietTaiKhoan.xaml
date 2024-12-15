@@ -136,7 +136,7 @@
                                                 Style="{StaticResource ErrorIcon}"/>
                     </Grid>
                     <Grid Grid.Row="3" Grid.Column="1">
-                        <DatePicker x:Name="dpNgaySinh" Text="{Binding NgaySinh}"  VerticalAlignment="Center" IsEnabled="False"/>
+                        <DatePicker x:Name="dpNgaySinh" Text="{Binding NgaySinh}"  VerticalAlignment="Center" IsEnabled="False" Language="vi-VN"/>
                         <materialDesign:PackIcon x:Name="icSinhNhatError" HorizontalAlignment="Right" Margin="0,0,25,0"  
 >
                             <!-- Thêm DataTrigger vào Style hiện tại -->
@@ -175,7 +175,8 @@
                                 
                               IsEnabled="False"/>
                     <Grid Grid.Row="7" Grid.Column="1">
-                        <DatePicker x:Name="dpNgayDangKy" Text="{Binding NgayDangKy}"  VerticalAlignment="Center" IsEnabled="False"/>
+                        <DatePicker x:Name="dpNgayDangKy" Text="{Binding NgayDangKy}"  VerticalAlignment="Center" IsEnabled="False"
+                                    Language="vi-VN"/>
                         <materialDesign:PackIcon x:Name="icNgayMoError" HorizontalAlignment="Right" Margin="0,0,25,0"  
 >
                             <!-- Thêm DataTrigger vào Style hiện tại -->
@@ -197,7 +198,8 @@
                         </materialDesign:PackIcon>
                     </Grid>
                     <Grid Grid.Row="8" Grid.Column="1">
-                        <DatePicker x:Name="dpNgayHetHan" Text="{Binding NgayHetHan}"  VerticalAlignment="Center" IsEnabled="False"/>
+                        <DatePicker x:Name="dpNgayHetHan" Text="{Binding NgayHetHan}"  VerticalAlignment="Center" IsEnabled="False"
+                                    Language="vi-VN"/>
                         <materialDesign:PackIcon x:Name="icNgayDongError" HorizontalAlignment="Right" Margin="0,0,25,0"  
 >
                             <!-- Thêm DataTrigger vào Style hiện tại -->

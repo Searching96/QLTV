@@ -1036,6 +1036,7 @@ namespace QLTV.Admin
 
 
         // Import and Export 
+        // Import and Export 
         private void ImportExcel_Click(object sender, RoutedEventArgs e)
         {
             try
@@ -1046,6 +1047,7 @@ namespace QLTV.Admin
                 if (openFileDialog.ShowDialog() == true)
                 {
                     var filePath = openFileDialog.FileName;
+                    bool importSuccess = true; // Biến theo dõi trạng thái import
 
                     using (var package = new ExcelPackage(new FileInfo(filePath)))
                     {
@@ -1065,14 +1067,16 @@ namespace QLTV.Admin
                             if (!DateTime.TryParseExact(worksheet.Cells[row, 3].Value?.ToString(), "dd/MM/yyyy", CultureInfo.InvariantCulture, DateTimeStyles.None, out ngayLapThe))
                             {
                                 MessageBox.Show($"Lỗi khi chuyển đổi ngày lập thẻ tại dòng {row}. Vui lòng kiểm tra lại định dạng (dd/MM/yyyy).", "Lỗi", MessageBoxButton.OK, MessageBoxImage.Error);
-                                continue; // Bỏ qua dòng này và tiếp tục với dòng tiếp theo
+                                importSuccess = false;
+                                break; // Bỏ qua dòng này và tiếp tục với dòng tiếp theo
                             }
 
                             DateTime ngayHetHan;
                             if (!DateTime.TryParseExact(worksheet.Cells[row, 4].Value?.ToString(), "dd/MM/yyyy", CultureInfo.InvariantCulture, DateTimeStyles.None, out ngayHetHan))
                             {
                                 MessageBox.Show($"Lỗi khi chuyển đổi ngày hết hạn tại dòng {row}. Vui lòng kiểm tra lại định dạng (dd/MM/yyyy).", "Lỗi", MessageBoxButton.OK, MessageBoxImage.Error);
-                                continue;
+                                importSuccess = false;
+                                break;
                             }
 
                             decimal tongNo = decimal.Parse(worksheet.Cells[row, 5].Value?.ToString());
@@ -1085,7 +1089,8 @@ namespace QLTV.Admin
                             if (taiKhoan == null || loaiDocGia == null)
                             {
                                 MessageBox.Show($"Tên tài khoản hoặc tên loại độc giả không hợp lệ tại dòng {row}. Vui lòng kiểm tra lại dữ liệu Excel.", "Lỗi", MessageBoxButton.OK, MessageBoxImage.Error);
-                                continue; // Dừng import nếu có lỗi
+                                importSuccess = false;
+                                break; // Dừng import nếu có lỗi
                             }
 
                             // Tạo độc giả mới (không cần truyền MaDocGia)
@@ -1106,7 +1111,9 @@ namespace QLTV.Admin
 
                             row++;
                         }
-
+                    }
+                    if (importSuccess)
+                    {
                         LoadReadersData(); // Cập nhật lại DataGrid
                         MessageBox.Show("Nhập dữ liệu từ Excel thành công!", "Thông báo", MessageBoxButton.OK, MessageBoxImage.Information);
                     }

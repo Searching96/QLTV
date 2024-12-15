@@ -11,11 +11,11 @@ namespace QLTV.GridViewModels
     {
         public int ID { get; set; }
         public string? MaTaiKhoan { get; set; }
-        public string? TenNguoiDung {  get; set; }
-        public string? GioiTinh {  get; set; }   
+        public string? TenNguoiDung { get; set; }
+        public string? GioiTinh { get; set; }
         public string TenTaiKhoan { get; set; } = null!;
         public string? DiaChi { get; set; }
-        public string? Avatar {  get; set; }
+        public string? Avatar { get; set; }
         public string Email { get; set; } = null!;
         public string SDT { get; set; } = null!;
         public DateTime NgaySinh { get; set; }
@@ -23,6 +23,7 @@ namespace QLTV.GridViewModels
         public DateTime NgayHetHan { get; set; }
         public int IDPhanQuyen { get; set; }
         public string? LoaiTaiKhoan { get; set; }
+        public decimal? TongNo { get; set; }
         public string BgColor { get; set; } = null!;
         public string Character => string.IsNullOrEmpty(TenTaiKhoan) ? "" : TenTaiKhoan[0].ToString().ToUpper();
 

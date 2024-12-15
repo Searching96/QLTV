@@ -93,7 +93,7 @@
 
                     <!-- Notification Icon -->
                     <Grid Grid.Column="6">
-                        <Button x:Name="btnThongBao" Height="35" Width="35" Margin="10,0" Padding="0"
+                        <Button x:Name="btnThongBao" Height="60" Width="60" Margin="10,0" Padding="0"
     Style="{StaticResource MaterialDesignFlatButton}" 
     Click="btnThongBao_Click">
                             <StackPanel Orientation="Vertical">
@@ -101,7 +101,7 @@
             Badge="{Binding ThongBaoList.ThongBao.Count}" 
 
             BadgeColorZoneMode="SecondaryMid">
-                                    <materialDesign:PackIcon Kind="Bell" Width="35" Height="35" Foreground="Black"/>
+                                    <materialDesign:PackIcon Kind="Bell" Width="30" Height="30" Foreground="Black"/>
                                 </materialDesign:Badged>
                             </StackPanel>
                         </Button>

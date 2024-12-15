@@ -3,10 +3,12 @@ using QLTV.Admin;
 using QLTV.GridViewModels;
 using QLTV.Models;
 using QLTV.Properties;
+using QLTV.ViewModels;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
@@ -35,6 +37,23 @@ namespace QLTV.User
             public string Avatar { get; set; }
         }
 
+        private ThongBaoList _thongBaoList;
+
+        public ThongBaoList ThongBaoList
+        {
+            get => _thongBaoList;
+            set
+            {
+                _thongBaoList = value;
+                OnPropertyChanged();
+            }
+        }
+        public event PropertyChangedEventHandler PropertyChanged;
+        protected void OnPropertyChanged([CallerMemberName] string propertyName = null)
+        {
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+        }
+
         public void LoadTaiKhoan()
         {
             using (var context = new QLTVContext())
@@ -51,14 +70,27 @@ namespace QLTV.User
                     })
                     .FirstOrDefault();
 
-                if (docGia == null)
-                {
-                    MessageBox.Show("Không tìm thấy thông tin tài khoản.");
-                    return;
-                }
-
                 spTaiKhoan.DataContext = docGia;
+
+                // Ẩn mượn đi
+                var NgayHH = context.DOCGIA
+                    .Include(dg => dg.IDTaiKhoanNavigation)
+                    .Include(dg => dg.IDLoaiDocGiaNavigation)
+                    .Where(dg => dg.IDTaiKhoanNavigation.ID == Settings.Default.CurrentUserID)
+                    .Select(dg => dg.IDTaiKhoanNavigation.NgayDong)
+                    .FirstOrDefault();
+
+                if (NgayHH < DateTime.Now)
+                    btnFnMuonSach.Visibility = Visibility.Collapsed;
             }
+        }
+
+        public void LoadNotifi()
+        {
+            int currentUserId = Settings.Default.CurrentUserID;
+            ThongBaoList.LoadThongBao(currentUserId);
+            // Tải dữ liệu thông báo khi khởi động
+
         }
 
         public UWTrangDocGia()
@@ -67,7 +99,17 @@ namespace QLTV.User
             spClock.DataContext = new ClockViewModel();
             LoadTaiKhoan();
             OpeningUC = new List<UserControl>();
-            USMainContent.Content = new UTrangChu();
+
+            var image = new Image
+            {
+                Source = new BitmapImage(new Uri("/Images/DashboardAdmin.jpg", UriKind.Relative)),
+                Stretch = Stretch.Fill
+            };
+            USMainContent.Content = image;
+
+            ThongBaoList = new ThongBaoList();
+            LoadNotifi();
+            DataContext = this;
         }
 
         private void OpenUC(UserControl uc)
@@ -150,6 +192,12 @@ namespace QLTV.User
         {
             USMainContent.Content = null;
             OpeningUC.Clear();
+            var image = new Image
+            {
+                Source = new BitmapImage(new Uri("/Images/DashboardAdmin.jpg", UriKind.Relative)),
+                Stretch = Stretch.Fill
+            };
+            USMainContent.Content = image;
         }
 
         private void btnThongBao_Click(object sender, RoutedEventArgs e)
@@ -181,6 +229,8 @@ namespace QLTV.User
                     return;
                 }
 
+                var dg = dbContext.DOCGIA.FirstOrDefault(dg => dg.IDTaiKhoan == taiKhoan.ID);
+
                 var accountViewModel = new AccountViewModel
                 {
                     ID = taiKhoan.ID,
@@ -197,7 +247,7 @@ namespace QLTV.User
                     NgayHetHan = taiKhoan.NgayDong,
                     IDPhanQuyen = taiKhoan.IDPhanQuyen,
                     LoaiTaiKhoan = taiKhoan.IDPhanQuyenNavigation.MoTa,
-
+                    TongNo = dg?.TongNo,
                 };
 
                 // Mở tab tài khoản chi tiết
