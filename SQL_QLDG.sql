@@ -487,6 +487,13 @@ INSERT INTO TAIKHOAN (TenTaiKhoan, MatKhau, HoTen, Email, GioiTinh, SinhNhat, Di
 ('user14', 'pass14', N'Trần Thị Thảo', 'thaotran@example.com', N'Nữ', '1987-02-14', N'290 Đường O', '0987654315', 0, 4, '2023-02-01', '2024-02-01'),
 ('user15', 'pass15', N'Lê Văn Tùng', 'tungle@example.com', N'Nam', '1986-03-15', N'312 Đường P', '0123456782', 0, 4, '2023-03-01', '2024-03-01');
 
+INSERT INTO TAIKHOAN (TenTaiKhoan, MatKhau, HoTen, Email, GioiTinh, SinhNhat, DiaChi, SDT, TrangThai, IDPhanQuyen, NgayMo, NgayDong) VALUES
+('user16', 'pass16', N'Nguyễn Thị Ánh', 'anhnguyen@example.com', N'Nữ', '1985-04-16', N'334 Đường Q', '0123456781', 0, 4, '2023-04-01', '2024-04-01'),
+('user17', 'pass17', N'Trần Văn Bảo', 'baotran@example.com', N'Nam', '1984-05-17', N'356 Đường R', '0987654314', 0, 4, '2023-05-01', '2024-05-01'),
+('user18', 'pass18', N'Lê Thị Chi', 'chile@example.com', N'Nữ', '1983-06-18', N'378 Đường S', '0123456780', 0, 4, '2023-06-01', '2024-06-01'),
+('user19', 'pass19', N'Phạm Văn Đức', 'ducpham@example.com', N'Nam', '1982-07-19', N'390 Đường T', '0987654313', 0, 4, '2023-07-01', '2024-07-01'),
+('user20', 'pass20', N'Hoàng Thị  Giang', 'gianghoang@example.com', N'Nữ', '1981-08-20', N'412 Đường U', '0123456779', 0, 4, '2023-08-01', '2024-08-01');
+
 INSERT INTO DOCGIA (IDTaiKhoan, IDLoaiDocGia, GioiThieu) VALUES
 (2, 1, N'Sinh viên năm 3'),
 (3, 2, N'Giáo viên Toán'),
