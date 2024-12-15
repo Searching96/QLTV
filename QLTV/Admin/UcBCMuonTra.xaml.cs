@@ -341,11 +341,11 @@ namespace QLTV.Admin
         private async Task LoadData()
         {
             await PopulateBCMSChartAndDataGrid();
-            PopulateBCMSYearComboBox();
+            PopulateBCMSMonthComboBox(DateTime.Now.Year.ToString());
             await PopulateBCTTChartAndDataGrid();
-            PopulateBCTTYearComboBox();
+            PopulateBCTTMonthComboBox(DateTime.Now.Year.ToString());
             await PopulateBCTPChartAndDataGrid();
-            PopulateBCTPYearComboBox();
+            PopulateBCTPMonthComboBox(DateTime.Now.Year.ToString());
         }
 
         private void btnViewDetail_Click(object sender, RoutedEventArgs e)
@@ -505,7 +505,7 @@ namespace QLTV.Admin
 
         private async Task PopulateBCMSChartAndDataGrid(DateTime? begin = null, DateTime? end = null)
         {
-            DateTime startDate = begin ?? new DateTime(2022, 1, 1);
+            DateTime startDate = begin ?? DateTime.Now.AddDays(-30);
             DateTime endDate = end ?? DateTime.Now.AddDays(1);
 
             await LoadBorrowReportsData(startDate, endDate);
@@ -728,7 +728,7 @@ namespace QLTV.Admin
                     Title = genre.Key,
                     DataLabels = false,
                     Fill = genre.Color,
-                    LabelPoint = chartPoint => $"{chartPoint.SeriesView.Title}: {chartPoint.Y} lượt mượn",
+                    LabelPoint = chartPoint => $"{chartPoint.Y} lượt mượn",
                     ToolTip = new DefaultTooltip
                     {
                         SelectionMode = TooltipSelectionMode.OnlySender
@@ -757,7 +757,7 @@ namespace QLTV.Admin
                 DateTime begin, end;
                 if (selectedYear == "Tất cả")
                 {
-                    begin = new DateTime(2022, 1, 1);
+                    begin = _borrowReports.Count != 0 ? _borrowReports.Min(bc => bc.Month) : DateTime.Now.AddDays(-30);
                     end = DateTime.Now.AddDays(1);
                 }
                 else
@@ -921,7 +921,7 @@ namespace QLTV.Admin
 
         private async Task PopulateBCTTChartAndDataGrid(DateTime? begin = null, DateTime? end = null)
         {
-            DateTime startDate = begin ?? new DateTime(2022, 1, 1);
+            DateTime startDate = begin ?? DateTime.Now.AddDays(-30);
             DateTime endDate = end ?? DateTime.Now.AddDays(1);
 
             await LoadBorrowReportsData(startDate, endDate);
@@ -1156,8 +1156,8 @@ namespace QLTV.Admin
                 if (selectedYear == "Tất cả")
                 {
                     cbQuarterTT.SelectedIndex = 0;
-                    begin = _borrowReports.Min(r => r.Month);
-                    end = _borrowReports.Max(r => r.Month);
+                    begin = _lateReturnReports.Count != 0 ? _lateReturnReports.Min(r => r.Month) : DateTime.Now.AddDays(-30);
+                    end = DateTime.Now.AddDays(1);
                 }
                 else
                 {
@@ -1318,7 +1318,7 @@ namespace QLTV.Admin
 
         private async Task PopulateBCTPChartAndDataGrid(DateTime? begin = null, DateTime? end = null)
         {
-            DateTime startDate = begin ?? new DateTime(2022, 1, 1);
+            DateTime startDate = begin ?? DateTime.Now.AddDays(-30);
             DateTime endDate = end ?? DateTime.Now.AddDays(1);
 
             await LoadBCTPData(startDate, endDate);
@@ -1392,7 +1392,7 @@ namespace QLTV.Admin
                     tienPhatMerged.Add(new TienPhatTraTreReport
                     {
                         StartMonth = start,
-                        EndMonth = thamsoList.Last().ThoiGian,
+                        EndMonth = DateTime.Now,
                         TienPhatTraTreMotNgay = currentTienPhat
                     });
 
@@ -1421,7 +1421,7 @@ namespace QLTV.Admin
                     tiLeDenBuMerged.Add(new TiLeDenBuReport
                     {
                         StartMonth = start,
-                        EndMonth = thamsoList.Last().ThoiGian,
+                        EndMonth = DateTime.Now,
                         TiLeDenBu = currentTiLeDenBu
                     });
 
@@ -1608,7 +1608,7 @@ namespace QLTV.Admin
                 DateTime begin, end;
                 if (selectedYear == "Tất cả")
                 {
-                    begin = new DateTime(2022, 1, 1);
+                    begin = _borrowReports.Count != 0 ? _borrowReports.Min(bc => bc.Month) : DateTime.Now.AddDays(-30);
                     end = DateTime.Now.AddDays(1);
                 }
                 else

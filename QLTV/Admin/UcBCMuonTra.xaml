@@ -334,10 +334,10 @@
                                  Margin="5,2,5,0"
                                  SelectionChanged="lbBCMSChartMode_SelectionChanged">
                             <ListBoxItem Content="Ngày" />
-                            <ListBoxItem Content="Tháng" />
-                            <ListBoxItem Content="Quý" />
-                            <ListBoxItem Content="Năm"
+                            <ListBoxItem Content="Tháng"
                                          IsSelected="True" />
+                            <ListBoxItem Content="Quý" />
+                            <ListBoxItem Content="Năm" />
                         </ListBox>
 
                         <!-- Container for Pickers -->
@@ -354,7 +354,8 @@
                                              materialDesign:TextFieldAssist.HasClearButton="True"
                                              materialDesign:HintAssist.FloatingScale="0.9"
                                              Margin="10,0"
-                                             Height="34" Padding="8"
+                                             Height="34"
+                                             Padding="8"
                                              Style="{StaticResource MaterialDesignOutlinedDatePicker}"
                                              SelectedDateChanged="dpEndDayMS_SelectionChanged" />
                                 <DatePicker  x:Name="dpEndDayMS"
@@ -363,7 +364,8 @@
                                              materialDesign:TextFieldAssist.HasClearButton="True"
                                              materialDesign:HintAssist.FloatingScale="0.9"
                                              Margin="5,0"
-                                             Height="34" Padding="8"
+                                             Height="34"
+                                             Padding="8"
                                              Style="{StaticResource MaterialDesignOutlinedDatePicker}"
                                              SelectedDateChanged="dpEndDayMS_SelectionChanged" />
                             </StackPanel>
@@ -372,7 +374,7 @@
                             <!-- Month Selector for "Tháng" -->
                             <StackPanel x:Name="spMonthMS"
                                         Orientation="Horizontal"
-                                        Visibility="Collapsed">
+                                        Visibility="Visible">
                                 <ComboBox Style="{StaticResource ModernComboBox}"
                                           x:Name="cbStartMonthMS"
                                           Width="100"
@@ -406,7 +408,7 @@
                                           x:Name="cbYearMS"
                                           Width="100"
                                           Margin="10,0"
-                                          Visibility="Visible"
+                                          Visibility="Collapsed"
                                           IsEditable="False"
                                           materialDesign:HintAssist.Hint="Năm"
                                           materialDesign:HintAssist.FloatingScale="0.8"
@@ -606,10 +608,10 @@
                                  Margin="5,2,5,0"
                                  SelectionChanged="lbBCTTChartMode_SelectionChanged">
                             <ListBoxItem Content="Ngày" />
-                            <ListBoxItem Content="Tháng" />
-                            <ListBoxItem Content="Quý" />
-                            <ListBoxItem Content="Năm"
+                            <ListBoxItem Content="Tháng"
                                          IsSelected="True" />
+                            <ListBoxItem Content="Quý" />
+                            <ListBoxItem Content="Năm" />
                         </ListBox>
 
                         <!-- Container for Pickers -->
@@ -625,7 +627,8 @@
                                              materialDesign:TextFieldAssist.HasClearButton="True"
                                              materialDesign:HintAssist.FloatingScale="0.9"
                                              Margin="10,0"
-                                             Height="34" Padding="8"
+                                             Height="34"
+                                             Padding="8"
                                              Style="{StaticResource MaterialDesignOutlinedDatePicker}"
                                              SelectedDateChanged="dpEndDayTT_SelectionChanged" />
                                 <DatePicker  x:Name="dpEndDayTT"
@@ -634,7 +637,8 @@
                                              materialDesign:TextFieldAssist.HasClearButton="True"
                                              materialDesign:HintAssist.FloatingScale="0.9"
                                              Margin="5,0"
-                                             Height="34" Padding="8"
+                                             Height="34"
+                                             Padding="8"
                                              Style="{StaticResource MaterialDesignOutlinedDatePicker}"
                                              SelectedDateChanged="dpEndDayTT_SelectionChanged" />
                             </StackPanel>
@@ -642,7 +646,7 @@
                             <!-- Month Selector for "Tháng" -->
                             <StackPanel x:Name="spMonthTT"
                                         Orientation="Horizontal"
-                                        Visibility="Collapsed">
+                                        Visibility="Visible">
                                 <ComboBox Style="{StaticResource ModernComboBox}"
                                           x:Name="cbStartMonthTT"
                                           Width="100"
@@ -676,7 +680,7 @@
                                           x:Name="cbYearTT"
                                           Width="100"
                                           Margin="10,0"
-                                          Visibility="Visible"
+                                          Visibility="Collapsed"
                                           IsEditable="False"
                                           materialDesign:HintAssist.Hint="Năm"
                                           materialDesign:HintAssist.FloatingScale="0.8"
@@ -882,10 +886,10 @@
                                  Margin="5,2,5,0"
                                  SelectionChanged="lbBCTPChartMode_SelectionChanged">
                             <ListBoxItem Content="Ngày" />
-                            <ListBoxItem Content="Tháng" />
-                            <ListBoxItem Content="Quý" />
-                            <ListBoxItem Content="Năm"
+                            <ListBoxItem Content="Tháng"
                                          IsSelected="True" />
+                            <ListBoxItem Content="Quý" />
+                            <ListBoxItem Content="Năm" />
                         </ListBox>
 
                         <!-- Container for Pickers -->
@@ -900,7 +904,9 @@
                                              materialDesign:HintAssist.Hint="Từ ngày"
                                              materialDesign:TextFieldAssist.HasClearButton="True"
                                              materialDesign:HintAssist.FloatingScale="0.9"
-                                             Margin="10,0" Height="34" Padding="8"
+                                             Margin="10,0"
+                                             Height="34"
+                                             Padding="8"
                                              Style="{StaticResource MaterialDesignOutlinedDatePicker}"
                                              SelectedDateChanged="dpEndDayBCTP_SelectionChanged" />
                                 <DatePicker  x:Name="dpEndDayBCTP"
@@ -908,7 +914,9 @@
                                              materialDesign:HintAssist.Hint="Đến ngày"
                                              materialDesign:TextFieldAssist.HasClearButton="True"
                                              materialDesign:HintAssist.FloatingScale="0.9"
-                                             Margin="5,0" Height="34" Padding="8"
+                                             Margin="5,0"
+                                             Height="34"
+                                             Padding="8"
                                              Style="{StaticResource MaterialDesignOutlinedDatePicker}"
                                              SelectedDateChanged="dpEndDayBCTP_SelectionChanged" />
                             </StackPanel>
@@ -916,7 +924,7 @@
                             <!-- Month Selector for "Tháng" -->
                             <StackPanel x:Name="spMonthBCTP"
                                         Orientation="Horizontal"
-                                        Visibility="Collapsed">
+                                        Visibility="Visible">
                                 <ComboBox Style="{StaticResource ModernComboBox}"
                                           x:Name="cbStartMonthBCTP"
                                           Width="100"
@@ -950,7 +958,7 @@
                                           x:Name="cbYearBCTP"
                                           Width="100"
                                           Margin="10,0"
-                                          Visibility="Visible"
+                                          Visibility="Collapsed"
                                           IsEditable="False"
                                           materialDesign:HintAssist.Hint="Năm"
                                           materialDesign:HintAssist.FloatingScale="0.8"
@@ -1091,10 +1099,10 @@
                             </Grid>
                         </Border>
                         <Border Grid.Column="2"
-                            BorderThickness="1"
-                            BorderBrush="Gray"
-                            CornerRadius="3"
-                            Margin="5">
+                                BorderThickness="1"
+                                BorderBrush="Gray"
+                                CornerRadius="3"
+                                Margin="5">
                             <Grid>
                                 <DataGrid x:Name="dgTiLeDenBuReports"
                                           Grid.Column="1"
