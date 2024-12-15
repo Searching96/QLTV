@@ -521,7 +521,6 @@ Margin="0,5,10,0"/>
                                      materialDesign:HintAssist.Hint="Số Tiền Thu"
                                      materialDesign:TextFieldAssist.HasLeadingIcon="True"
                                      materialDesign:TextFieldAssist.LeadingIcon="Cash"
-                                     TextChanged="SoTienThu_TextChanged"
                                      materialDesign:TextFieldAssist.HasClearButton="False"/>
 
                             <TextBox Grid.Row="1" Grid.Column="0" Margin="0,5,5,0"

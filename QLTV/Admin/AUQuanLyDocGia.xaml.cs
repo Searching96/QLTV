@@ -1036,8 +1036,10 @@ namespace QLTV.Admin
 
 
         // Import and Export 
+        // Import and Export 
         private void ImportExcel_Click(object sender, RoutedEventArgs e)
         {
+            ExcelPackage.LicenseContext = LicenseContext.NonCommercial;
             try
             {
                 OpenFileDialog openFileDialog = new OpenFileDialog();
@@ -1046,81 +1048,121 @@ namespace QLTV.Admin
                 if (openFileDialog.ShowDialog() == true)
                 {
                     var filePath = openFileDialog.FileName;
-                    bool importSuccess = true; // Biến theo dõi trạng thái import
 
                     using (var package = new ExcelPackage(new FileInfo(filePath)))
                     {
-                        var worksheet = package.Workbook.Worksheets[0]; // Lấy sheet đầu tiên
+                        var worksheet = package.Workbook.Worksheets[0];
+                        var rowCount = worksheet.Dimension.Rows;
 
-                        // Bỏ qua dòng tiêu đề
-                        int row = 2;
+                        int soDongThanhCong = 0;
+                        int soDongBiLoi = 0;
+                        List<string> danhSachLoi = new List<string>();
 
-                        while (worksheet.Cells[row, 1].Value != null) // Đọc đến khi gặp dòng trống
+                        for (int row = 2; row <= rowCount; row++)
                         {
-                            // Lấy dữ liệu từ các cột tương ứng, bắt đầu từ cột thứ 1 (không lấy mã độc giả)
-                            string tenTaiKhoan = worksheet.Cells[row, 1].Value?.ToString();
-                            string tenLoaiDocGia = worksheet.Cells[row, 2].Value?.ToString();
+                            List<string> loiTrongDong = new List<string>();
 
-                            // Xử lý ngày tháng, kiểm tra giá trị "0" hoặc trống
-                            DateTime ngayLapThe;
-                            if (!DateTime.TryParseExact(worksheet.Cells[row, 3].Value?.ToString(), "dd/MM/yyyy", CultureInfo.InvariantCulture, DateTimeStyles.None, out ngayLapThe))
+                            try
                             {
-                                MessageBox.Show($"Lỗi khi chuyển đổi ngày lập thẻ tại dòng {row}. Vui lòng kiểm tra lại định dạng (dd/MM/yyyy).", "Lỗi", MessageBoxButton.OK, MessageBoxImage.Error);
-                                importSuccess = false;
-                                break; // Bỏ qua dòng này và tiếp tục với dòng tiếp theo
+                                // Lấy dữ liệu từ các cột tương ứng
+                                string tenTaiKhoan = worksheet.Cells[row, 1].Value?.ToString();
+                                string tenLoaiDocGia = worksheet.Cells[row, 2].Value?.ToString();
+
+                                DateTime ngayLapThe;
+                                if (!DateTime.TryParse(worksheet.Cells[row, 3].Value?.ToString(), out ngayLapThe))
+                                {
+                                    loiTrongDong.Add($"Ngày lập thẻ không hợp lệ.");
+                                }
+
+                                DateTime ngayHetHan;
+                                if (!DateTime.TryParse(worksheet.Cells[row, 4].Value?.ToString(), out ngayHetHan))
+                                {
+                                    loiTrongDong.Add($"Ngày hết hạn không hợp lệ.");
+                                }
+
+                                decimal tongNo;
+                                if (!decimal.TryParse(worksheet.Cells[row, 5].Value?.ToString(), out tongNo))
+                                {
+                                    loiTrongDong.Add($"Tổng nợ không hợp lệ.");
+                                }
+
+                                string gioiThieu = worksheet.Cells[row, 6].Value?.ToString();
+
+                                // Kiểm tra sự tồn tại của Tài khoản và Loại độc giả
+                                var taiKhoan = _context.TAIKHOAN.FirstOrDefault(tk => tk.TenTaiKhoan == tenTaiKhoan);
+                                if (taiKhoan == null)
+                                {
+                                    loiTrongDong.Add($"Tài khoản không tồn tại trong cơ sở dữ liệu: {tenTaiKhoan}.");
+                                }
+
+                                var loaiDocGia = _context.LOAIDOCGIA.FirstOrDefault(ldg => ldg.TenLoaiDocGia == tenLoaiDocGia);
+                                if (loaiDocGia == null)
+                                {
+                                    loiTrongDong.Add($"Loại độc giả không tồn tại trong cơ sở dữ liệu: {tenLoaiDocGia}.");
+                                }
+
+                                // Kiểm tra xem độc giả đã tồn tại chưa (có thể dựa trên tên tài khoản)
+                                var docGiaExists = _context.DOCGIA.Any(dg => dg.IDTaiKhoan == taiKhoan.ID);
+                                if (docGiaExists)
+                                {
+                                    loiTrongDong.Add($"Độc giả với tài khoản '{tenTaiKhoan}' đã tồn tại.");
+                                }
+
+                                // Nếu có lỗi trong dòng, ghi nhận và chuyển sang dòng tiếp theo
+                                if (loiTrongDong.Count > 0)
+                                {
+                                    soDongBiLoi++;
+                                    danhSachLoi.Add($"Dòng {row}: {string.Join(", ", loiTrongDong)}");
+                                    continue;
+                                }
+
+                                // Tạo độc giả mới nếu không có lỗi nào
+                                var newDocGia = new DOCGIA
+                                {
+                                    IDTaiKhoan = taiKhoan.ID,
+                                    IDLoaiDocGia = loaiDocGia.ID,
+                                    TongNo = tongNo,
+                                    GioiThieu = gioiThieu
+                                };
+
+                                _context.DOCGIA.Add(newDocGia);
+                                soDongThanhCong++;
+
+                                // Cập nhật ngày mở và ngày đóng cho tài khoản
+                                taiKhoan.NgayMo = ngayLapThe;
+                                taiKhoan.NgayDong = ngayHetHan;
                             }
-
-                            DateTime ngayHetHan;
-                            if (!DateTime.TryParseExact(worksheet.Cells[row, 4].Value?.ToString(), "dd/MM/yyyy", CultureInfo.InvariantCulture, DateTimeStyles.None, out ngayHetHan))
+                            catch (Exception ex)
                             {
-                                MessageBox.Show($"Lỗi khi chuyển đổi ngày hết hạn tại dòng {row}. Vui lòng kiểm tra lại định dạng (dd/MM/yyyy).", "Lỗi", MessageBoxButton.OK, MessageBoxImage.Error);
-                                importSuccess = false;
-                                break;
+                                soDongBiLoi++;
+                                danhSachLoi.Add($"Dòng {row}: {ex.Message}");
                             }
-
-                            decimal tongNo = decimal.Parse(worksheet.Cells[row, 5].Value?.ToString());
-                            string gioiThieu = worksheet.Cells[row, 6].Value?.ToString();
-
-                            // Tìm ID tương ứng trong database
-                            var taiKhoan = _context.TAIKHOAN.FirstOrDefault(tk => tk.TenTaiKhoan == tenTaiKhoan);
-                            var loaiDocGia = _context.LOAIDOCGIA.FirstOrDefault(ldg => ldg.TenLoaiDocGia == tenLoaiDocGia);
-
-                            if (taiKhoan == null || loaiDocGia == null)
-                            {
-                                MessageBox.Show($"Tên tài khoản hoặc tên loại độc giả không hợp lệ tại dòng {row}. Vui lòng kiểm tra lại dữ liệu Excel.", "Lỗi", MessageBoxButton.OK, MessageBoxImage.Error);
-                                importSuccess = false;
-                                break; // Dừng import nếu có lỗi
-                            }
-
-                            // Tạo độc giả mới (không cần truyền MaDocGia)
-                            var newReader = new DOCGIA
-                            {
-                                IDTaiKhoan = taiKhoan.ID,
-                                IDLoaiDocGia = loaiDocGia.ID,
-                                TongNo = tongNo,
-                                GioiThieu = gioiThieu
-                            };
-
-                            _context.DOCGIA.Add(newReader);
-                            _context.SaveChanges();
-
-                            taiKhoan.NgayMo = ngayLapThe;
-                            taiKhoan.NgayDong = ngayHetHan;
-                            _context.SaveChanges();
-
-                            row++;
                         }
-                    }
-                    if (importSuccess)
-                    {
+
+                        _context.SaveChanges();
+
+                        string ketQua = $"Nhập dữ liệu từ file Excel hoàn tất!\n" +
+                                          $"Số dòng thêm thành công: {soDongThanhCong}\n" +
+                                          $"Số dòng bị lỗi: {soDongBiLoi}";
+
+                        if (soDongBiLoi > 0)
+                        {
+                            string fileLog = "LogLoiImportDocGia.txt";
+                            File.WriteAllLines(fileLog, danhSachLoi);
+                            ketQua += $"\nChi tiết lỗi được ghi tại: {fileLog}";
+                            System.Diagnostics.Process.Start("notepad.exe", fileLog);
+                        }
+
+                        MessageBox.Show(ketQua, "Thông báo", MessageBoxButton.OK, MessageBoxImage.Information);
                         LoadReadersData(); // Cập nhật lại DataGrid
-                        MessageBox.Show("Nhập dữ liệu từ Excel thành công!", "Thông báo", MessageBoxButton.OK, MessageBoxImage.Information);
                     }
                 }
             }
             catch (Exception ex)
             {
-                MessageBox.Show($"Lỗi khi nhập dữ liệu: {ex.Message}", "Lỗi", MessageBoxButton.OK, MessageBoxImage.Error);
+                var innerMessage = ex.InnerException != null ? ex.InnerException.Message : "Không có chi tiết bổ sung.";
+                MessageBox.Show($"Đã xảy ra lỗi khi nhập dữ liệu từ file Excel: {ex.Message}\nChi tiết: {innerMessage}",
+                    "Lỗi", MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
 
