@@ -1046,6 +1046,7 @@ namespace QLTV.Admin
                 if (openFileDialog.ShowDialog() == true)
                 {
                     var filePath = openFileDialog.FileName;
+                    bool importSuccess = true; // Biến theo dõi trạng thái import
 
                     using (var package = new ExcelPackage(new FileInfo(filePath)))
                     {
@@ -1065,14 +1066,16 @@ namespace QLTV.Admin
                             if (!DateTime.TryParseExact(worksheet.Cells[row, 3].Value?.ToString(), "dd/MM/yyyy", CultureInfo.InvariantCulture, DateTimeStyles.None, out ngayLapThe))
                             {
                                 MessageBox.Show($"Lỗi khi chuyển đổi ngày lập thẻ tại dòng {row}. Vui lòng kiểm tra lại định dạng (dd/MM/yyyy).", "Lỗi", MessageBoxButton.OK, MessageBoxImage.Error);
-                                continue; // Bỏ qua dòng này và tiếp tục với dòng tiếp theo
+                                importSuccess = false;
+                                break; // Bỏ qua dòng này và tiếp tục với dòng tiếp theo
                             }
 
                             DateTime ngayHetHan;
                             if (!DateTime.TryParseExact(worksheet.Cells[row, 4].Value?.ToString(), "dd/MM/yyyy", CultureInfo.InvariantCulture, DateTimeStyles.None, out ngayHetHan))
                             {
                                 MessageBox.Show($"Lỗi khi chuyển đổi ngày hết hạn tại dòng {row}. Vui lòng kiểm tra lại định dạng (dd/MM/yyyy).", "Lỗi", MessageBoxButton.OK, MessageBoxImage.Error);
-                                continue;
+                                importSuccess = false;
+                                break;
                             }
 
                             decimal tongNo = decimal.Parse(worksheet.Cells[row, 5].Value?.ToString());
@@ -1085,7 +1088,8 @@ namespace QLTV.Admin
                             if (taiKhoan == null || loaiDocGia == null)
                             {
                                 MessageBox.Show($"Tên tài khoản hoặc tên loại độc giả không hợp lệ tại dòng {row}. Vui lòng kiểm tra lại dữ liệu Excel.", "Lỗi", MessageBoxButton.OK, MessageBoxImage.Error);
-                                continue; // Dừng import nếu có lỗi
+                                importSuccess = false;
+                                break; // Dừng import nếu có lỗi
                             }
 
                             // Tạo độc giả mới (không cần truyền MaDocGia)
@@ -1106,7 +1110,9 @@ namespace QLTV.Admin
 
                             row++;
                         }
-
+                    }
+                    if (importSuccess)
+                    {
                         LoadReadersData(); // Cập nhật lại DataGrid
                         MessageBox.Show("Nhập dữ liệu từ Excel thành công!", "Thông báo", MessageBoxButton.OK, MessageBoxImage.Information);
                     }
@@ -1135,8 +1141,8 @@ namespace QLTV.Admin
 
                         // Tạo tiêu đề cột 
                         worksheet.Cells[1, 1].Value = "Mã độc giả";
-                        worksheet.Cells[1, 2].Value = "Tên tài khoản"; 
-                        worksheet.Cells[1, 3].Value = "Tên loại độc giả"; 
+                        worksheet.Cells[1, 2].Value = "Tên tài khoản";
+                        worksheet.Cells[1, 3].Value = "Tên loại độc giả";
                         worksheet.Cells[1, 4].Value = "Ngày lập thẻ";
                         worksheet.Cells[1, 5].Value = "Ngày hết hạn";
                         worksheet.Cells[1, 6].Value = "Tổng nợ";
@@ -1147,8 +1153,8 @@ namespace QLTV.Admin
                         foreach (var reader in Readers)
                         {
                             worksheet.Cells[row, 1].Value = reader.MaDocGia;
-                            worksheet.Cells[row, 2].Value = reader.IDTaiKhoanNavigation?.TenTaiKhoan; 
-                            worksheet.Cells[row, 3].Value = reader.IDLoaiDocGiaNavigation?.TenLoaiDocGia; 
+                            worksheet.Cells[row, 2].Value = reader.IDTaiKhoanNavigation?.TenTaiKhoan;
+                            worksheet.Cells[row, 3].Value = reader.IDLoaiDocGiaNavigation?.TenLoaiDocGia;
                             worksheet.Cells[row, 6].Value = reader.TongNo;
                             worksheet.Cells[row, 7].Value = reader.GioiThieu;
 
@@ -1350,11 +1356,6 @@ namespace QLTV.Admin
             {
                 icSoSachMuonToiDaError.Visibility = Visibility.Collapsed;
             }
-        }
-
-        // Xử lý sự kiện cho SoTienThu
-        private void SoTienThu_TextChanged(object sender, TextChangedEventArgs e)
-        {
         }
     }
 }
