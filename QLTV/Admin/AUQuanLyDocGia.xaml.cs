@@ -44,6 +44,8 @@ namespace QLTV.Admin
             PenaltyReceipts = new ObservableCollection<PHIEUTHUTIENPHAT>();
             ReaderTypes = new ObservableCollection<LOAIDOCGIA>();
 
+            SachDocGiaContent.Content = new UUFnSachDangMuon();
+
             ReadersDataGrid.ItemsSource = Readers;
             LoadReadersData();
 
