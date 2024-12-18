@@ -1,0 +1,238 @@
+{
+  "Version": 1,
+  "WorkspaceRootPath": "E:\\Visual studio\\Project\\UI_Chung\\",
+  "Documents": [
+    {
+      "AbsoluteMoniker": "D:0:0:{A39D14E6-3199-463E-847C-D8C57DDD8BBF}|UI_Chung.csproj|e:\\visual studio\\project\\ui_chung\\app.xaml||{F11ACC28-31D1-4C80-A34B-F4E09D3D753C}",
+      "RelativeMoniker": "D:0:0:{A39D14E6-3199-463E-847C-D8C57DDD8BBF}|UI_Chung.csproj|solutionrelative:app.xaml||{F11ACC28-31D1-4C80-A34B-F4E09D3D753C}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A39D14E6-3199-463E-847C-D8C57DDD8BBF}|UI_Chung.csproj|e:\\visual studio\\project\\ui_chung\\mainwindow.xaml||{F11ACC28-31D1-4C80-A34B-F4E09D3D753C}",
+      "RelativeMoniker": "D:0:0:{A39D14E6-3199-463E-847C-D8C57DDD8BBF}|UI_Chung.csproj|solutionrelative:mainwindow.xaml||{F11ACC28-31D1-4C80-A34B-F4E09D3D753C}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A39D14E6-3199-463E-847C-D8C57DDD8BBF}|UI_Chung.csproj|e:\\visual studio\\project\\ui_chung\\ucquanlysach.xaml||{F11ACC28-31D1-4C80-A34B-F4E09D3D753C}",
+      "RelativeMoniker": "D:0:0:{A39D14E6-3199-463E-847C-D8C57DDD8BBF}|UI_Chung.csproj|solutionrelative:ucquanlysach.xaml||{F11ACC28-31D1-4C80-A34B-F4E09D3D753C}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A39D14E6-3199-463E-847C-D8C57DDD8BBF}|UI_Chung.csproj|e:\\visual studio\\project\\ui_chung\\uctrangchu.xaml||{F11ACC28-31D1-4C80-A34B-F4E09D3D753C}",
+      "RelativeMoniker": "D:0:0:{A39D14E6-3199-463E-847C-D8C57DDD8BBF}|UI_Chung.csproj|solutionrelative:uctrangchu.xaml||{F11ACC28-31D1-4C80-A34B-F4E09D3D753C}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A39D14E6-3199-463E-847C-D8C57DDD8BBF}|UI_Chung.csproj|e:\\visual studio\\project\\ui_chung\\clclockviewmodel.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{A39D14E6-3199-463E-847C-D8C57DDD8BBF}|UI_Chung.csproj|solutionrelative:clclockviewmodel.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A39D14E6-3199-463E-847C-D8C57DDD8BBF}|UI_Chung.csproj|e:\\visual studio\\project\\ui_chung\\ucquanlimuontra.xaml||{F11ACC28-31D1-4C80-A34B-F4E09D3D753C}",
+      "RelativeMoniker": "D:0:0:{A39D14E6-3199-463E-847C-D8C57DDD8BBF}|UI_Chung.csproj|solutionrelative:ucquanlimuontra.xaml||{F11ACC28-31D1-4C80-A34B-F4E09D3D753C}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A39D14E6-3199-463E-847C-D8C57DDD8BBF}|UI_Chung.csproj|e:\\visual studio\\project\\ui_chung\\ucquanlysach.xaml.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{A39D14E6-3199-463E-847C-D8C57DDD8BBF}|UI_Chung.csproj|solutionrelative:ucquanlysach.xaml.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A39D14E6-3199-463E-847C-D8C57DDD8BBF}|UI_Chung.csproj|e:\\visual studio\\project\\ui_chung\\ucquanlythongtinsach.xaml||{F11ACC28-31D1-4C80-A34B-F4E09D3D753C}",
+      "RelativeMoniker": "D:0:0:{A39D14E6-3199-463E-847C-D8C57DDD8BBF}|UI_Chung.csproj|solutionrelative:ucquanlythongtinsach.xaml||{F11ACC28-31D1-4C80-A34B-F4E09D3D753C}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A39D14E6-3199-463E-847C-D8C57DDD8BBF}|UI_Chung.csproj|e:\\visual studio\\project\\ui_chung\\ucquanlythongtinsach.xaml.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{A39D14E6-3199-463E-847C-D8C57DDD8BBF}|UI_Chung.csproj|solutionrelative:ucquanlythongtinsach.xaml.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A39D14E6-3199-463E-847C-D8C57DDD8BBF}|UI_Chung.csproj|e:\\visual studio\\project\\ui_chung\\ucquanlytacgia.xaml||{F11ACC28-31D1-4C80-A34B-F4E09D3D753C}",
+      "RelativeMoniker": "D:0:0:{A39D14E6-3199-463E-847C-D8C57DDD8BBF}|UI_Chung.csproj|solutionrelative:ucquanlytacgia.xaml||{F11ACC28-31D1-4C80-A34B-F4E09D3D753C}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A39D14E6-3199-463E-847C-D8C57DDD8BBF}|UI_Chung.csproj|e:\\visual studio\\project\\ui_chung\\ucquanlytheloai.xaml||{F11ACC28-31D1-4C80-A34B-F4E09D3D753C}",
+      "RelativeMoniker": "D:0:0:{A39D14E6-3199-463E-847C-D8C57DDD8BBF}|UI_Chung.csproj|solutionrelative:ucquanlytheloai.xaml||{F11ACC28-31D1-4C80-A34B-F4E09D3D753C}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A39D14E6-3199-463E-847C-D8C57DDD8BBF}|UI_Chung.csproj|e:\\visual studio\\project\\ui_chung\\mainwindow.xaml.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{A39D14E6-3199-463E-847C-D8C57DDD8BBF}|UI_Chung.csproj|solutionrelative:mainwindow.xaml.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    }
+  ],
+  "DocumentGroupContainers": [
+    {
+      "Orientation": 0,
+      "VerticalTabListWidth": 256,
+      "DocumentGroups": [
+        {
+          "DockedWidth": 200,
+          "SelectedChildIndex": 7,
+          "Children": [
+            {
+              "$type": "Bookmark",
+              "Name": "ST:0:0:{eefa5220-e298-11d0-8f78-00a0c9110057}"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:0:0:{1c4feeaa-4718-4aa9-859d-94ce25d182ba}"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 2,
+              "Title": "UCQuanLySach.xaml",
+              "DocumentMoniker": "E:\\Visual studio\\Project\\UI_Chung\\UCQuanLySach.xaml",
+              "RelativeDocumentMoniker": "UCQuanLySach.xaml",
+              "ToolTip": "E:\\Visual studio\\Project\\UI_Chung\\UCQuanLySach.xaml",
+              "RelativeToolTip": "UCQuanLySach.xaml",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003549|",
+              "WhenOpened": "2024-11-10T04:54:07.372Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 6,
+              "Title": "UCQuanLySach.xaml.cs",
+              "DocumentMoniker": "E:\\Visual studio\\Project\\UI_Chung\\UCQuanLySach.xaml.cs",
+              "RelativeDocumentMoniker": "UCQuanLySach.xaml.cs",
+              "ToolTip": "E:\\Visual studio\\Project\\UI_Chung\\UCQuanLySach.xaml.cs",
+              "RelativeToolTip": "UCQuanLySach.xaml.cs",
+              "ViewState": "AgIAABkAAAAAAAAAAAAQwFEAAAAIAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-11-10T05:14:10.804Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 4,
+              "Title": "CLClockViewModel.cs",
+              "DocumentMoniker": "E:\\Visual studio\\Project\\UI_Chung\\CLClockViewModel.cs",
+              "RelativeDocumentMoniker": "CLClockViewModel.cs",
+              "ToolTip": "E:\\Visual studio\\Project\\UI_Chung\\CLClockViewModel.cs",
+              "RelativeToolTip": "CLClockViewModel.cs",
+              "ViewState": "AgIAABMAAAAAAAAAAAAQwDQAAAA5AAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-11-10T04:10:27.885Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 5,
+              "Title": "UCQuanLiMuonTra.xaml",
+              "DocumentMoniker": "E:\\Visual studio\\Project\\UI_Chung\\UCQuanLiMuonTra.xaml",
+              "RelativeDocumentMoniker": "UCQuanLiMuonTra.xaml",
+              "ToolTip": "E:\\Visual studio\\Project\\UI_Chung\\UCQuanLiMuonTra.xaml",
+              "RelativeToolTip": "UCQuanLiMuonTra.xaml",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003549|",
+              "WhenOpened": "2024-11-09T07:27:33.31Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 3,
+              "Title": "UCTrangChu.xaml",
+              "DocumentMoniker": "E:\\Visual studio\\Project\\UI_Chung\\UCTrangChu.xaml",
+              "RelativeDocumentMoniker": "UCTrangChu.xaml",
+              "ToolTip": "E:\\Visual studio\\Project\\UI_Chung\\UCTrangChu.xaml",
+              "RelativeToolTip": "UCTrangChu.xaml",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003549|",
+              "WhenOpened": "2024-11-09T07:26:54.365Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "App.xaml",
+              "DocumentMoniker": "E:\\Visual studio\\Project\\UI_Chung\\App.xaml",
+              "RelativeDocumentMoniker": "App.xaml",
+              "ToolTip": "E:\\Visual studio\\Project\\UI_Chung\\App.xaml",
+              "RelativeToolTip": "App.xaml",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003549|",
+              "WhenOpened": "2024-11-09T07:21:08.265Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 7,
+              "Title": "UCQuanLyThongTinSach.xaml",
+              "DocumentMoniker": "E:\\Visual studio\\Project\\UI_Chung\\UCQuanLyThongTinSach.xaml",
+              "RelativeDocumentMoniker": "UCQuanLyThongTinSach.xaml",
+              "ToolTip": "E:\\Visual studio\\Project\\UI_Chung\\UCQuanLyThongTinSach.xaml",
+              "RelativeToolTip": "UCQuanLyThongTinSach.xaml",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003549|",
+              "WhenOpened": "2024-11-10T07:56:20.937Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 1,
+              "Title": "MainWindow.xaml",
+              "DocumentMoniker": "E:\\Visual studio\\Project\\UI_Chung\\MainWindow.xaml",
+              "RelativeDocumentMoniker": "MainWindow.xaml",
+              "ToolTip": "E:\\Visual studio\\Project\\UI_Chung\\MainWindow.xaml",
+              "RelativeToolTip": "MainWindow.xaml",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003549|",
+              "WhenOpened": "2024-11-09T06:52:47.509Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 10,
+              "Title": "UCQuanLyTheLoai.xaml",
+              "DocumentMoniker": "E:\\Visual studio\\Project\\UI_Chung\\UCQuanLyTheLoai.xaml",
+              "RelativeDocumentMoniker": "UCQuanLyTheLoai.xaml",
+              "ToolTip": "E:\\Visual studio\\Project\\UI_Chung\\UCQuanLyTheLoai.xaml",
+              "RelativeToolTip": "UCQuanLyTheLoai.xaml",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003549|",
+              "WhenOpened": "2024-11-10T08:00:07.221Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 9,
+              "Title": "UCQuanLyTacGia.xaml",
+              "DocumentMoniker": "E:\\Visual studio\\Project\\UI_Chung\\UCQuanLyTacGia.xaml",
+              "RelativeDocumentMoniker": "UCQuanLyTacGia.xaml",
+              "ToolTip": "E:\\Visual studio\\Project\\UI_Chung\\UCQuanLyTacGia.xaml",
+              "RelativeToolTip": "UCQuanLyTacGia.xaml",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003549|",
+              "WhenOpened": "2024-11-10T08:00:47.104Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 8,
+              "Title": "UCQuanLyThongTinSach.xaml.cs",
+              "DocumentMoniker": "E:\\Visual studio\\Project\\UI_Chung\\UCQuanLyThongTinSach.xaml.cs",
+              "RelativeDocumentMoniker": "UCQuanLyThongTinSach.xaml.cs",
+              "ToolTip": "E:\\Visual studio\\Project\\UI_Chung\\UCQuanLyThongTinSach.xaml.cs",
+              "RelativeToolTip": "UCQuanLyThongTinSach.xaml.cs",
+              "ViewState": "AgIAABgAAAAAAAAAAAAcwCsAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-11-10T08:02:03.581Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 11,
+              "Title": "MainWindow.xaml.cs",
+              "DocumentMoniker": "E:\\Visual studio\\Project\\UI_Chung\\MainWindow.xaml.cs",
+              "RelativeDocumentMoniker": "MainWindow.xaml.cs",
+              "ToolTip": "E:\\Visual studio\\Project\\UI_Chung\\MainWindow.xaml.cs",
+              "RelativeToolTip": "MainWindow.xaml.cs",
+              "ViewState": "AgIAAEMAAAAAAAAAAAAewFYAAAAkAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-11-09T06:52:45.47Z"
+            }
+          ]
+        },
+        {
+          "DockedWidth": 148,
+          "SelectedChildIndex": -1,
+          "Children": [
+            {
+              "$type": "Bookmark",
+              "Name": "ST:0:0:{1c64b9c2-e352-428e-a56d-0ace190b99a6}"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:0:0:{d78612c7-9962-4b83-95d9-268046dad23a}"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:0:0:{34e76e81-ee4a-11d0-ae2e-00a0c90fffc3}"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:0:0:{3ae79031-e1bc-11d0-8f78-00a0c9110057}"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

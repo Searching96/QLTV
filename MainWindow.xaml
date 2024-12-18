@@ -1,0 +1,112 @@
+﻿<Window x:Class="UI_Chung.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:Icon="http://metro.mahapps.com/winfx/xaml/iconpacks"
+        xmlns:local="clr-namespace:UI_Chung"
+        mc:Ignorable="d"
+        Title="MainWindow" Height="720" Width="1080" WindowStartupLocation="CenterScreen" WindowStyle="None"
+    AllowsTransparency="True" Background="Transparent"  KeyDown="KeyDown_ESC">
+    <Border  CornerRadius="30" Background="#EFF2F7" MouseDown="Border_MouseDown" MouseLeftButtonDown="Border_MouseLeftButtonDown">
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="200"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+
+            <!-- Top Header Bar -->
+            <Border Grid.Row="0" Grid.ColumnSpan="2" CornerRadius="30,30,0,0" Background="White" VerticalAlignment="Top"  Height="77">
+                <StackPanel Orientation="Horizontal" VerticalAlignment="Center" Background="White"  Margin="15,0,17,0" Height="51" >
+                    <!-- Logo and App Name -->
+                    <StackPanel Orientation="Horizontal"  Margin="10,0">
+                        <TextBlock Text="Tên phần mềm" FontSize="16" FontWeight="Bold" VerticalAlignment="Center"/>
+                    </StackPanel>
+
+                    <!-- Welcome Message -->
+                    <TextBlock Text="Xin chào, Quản Trị Viên" FontSize="14" VerticalAlignment="Center" Margin="100,0"/>
+
+                    <!-- Spacer to push clock and user info to the right -->
+                    <StackPanel Width="200" HorizontalAlignment="Stretch"/>
+                    
+                    <!-- Clock Section -->
+
+                    <!-- User Profile Section -->
+                    
+
+                    <!-- Notification Icon -->
+                    <Button Width="30" Height="30" Background="Transparent" BorderThickness="0" VerticalAlignment="Center">
+                        <!-- Icon for Notification Button -->
+                    </Button>
+                </StackPanel>
+            </Border>
+
+            <!-- Left Menu -->
+            <Border Grid.Row="1" Background="#623ED0" CornerRadius="0 50 0 30" Grid.Column="0" Margin="0,5,0,0">
+                <DockPanel>
+                    <!--Menu Logo-->
+
+
+                    <!--Menu Titles-->
+                    <TextBlock Text="Quản lí thư viện" Foreground="White" FontSize="22" FontWeight="SemiBold" DockPanel.Dock="Top" Margin="5 25 0 10" TextAlignment="Center"/>
+                    <TextBlock x:Name ="admintxt" Text="Admin" Foreground="#D0BFFF" FontSize="15" FontWeight="SemiBold" DockPanel.Dock="Top" TextAlignment="Center"/>
+
+                    <!--Menu Separator-->
+                    <Separator Margin="25" Background="#7E5FDC" DockPanel.Dock="Top" Height="0.8"/>
+
+                    <!--Menu Buttons-->
+                    <StackPanel DockPanel.Dock="Top">
+                        <Button x:Name="btnDashBoard" Style="{StaticResource menuButton}" Click="btnDashBoard_Click" >
+                            <StackPanel Orientation="Horizontal">
+                                <Icon:PackIconMaterial Kind="HomeVariant" Style="{StaticResource menuButtonIcon}"/>
+                                <TextBlock Text="Trang chủ"/>
+                            </StackPanel>
+                        </Button>
+                        <Button x:Name="btnQLMT" Style="{StaticResource menuButton}" Click="btnQLMT_Click" >
+                            <StackPanel Orientation="Horizontal">
+                                <Icon:PackIconMaterial Kind="Book" Style="{StaticResource menuButtonIcon}"/>
+                                <TextBlock Text="Quản lí mượn trả"/>
+                            </StackPanel>
+                        </Button>
+                        <Button x:Name="btnBookManage" Style="{StaticResource menuButton}" Click="btnBookManage_Click" >
+                            <StackPanel Orientation="Horizontal">
+                                <Icon:PackIconMaterial Kind="AccountMultipleOutline" Style="{StaticResource menuButtonIcon}"/>
+                                <TextBlock Text="Quản lí Sách"/>
+                            </StackPanel>
+                        </Button>
+                        <Button x:Name ="btnReaderManage" Style="{StaticResource menuButton}" Click="btnReaderManage_Click">
+                            <StackPanel Orientation="Horizontal">
+                                <Icon:PackIconMaterial Kind="CashMultiple" Style="{StaticResource menuButtonIcon}"/>
+                                <TextBlock Text="Quản lí độc giả"/>
+                            </StackPanel>
+                        </Button>
+                        <Button x:Name ="btnStatisticalReport" Style="{StaticResource menuButton}" Click="btnStatisticalReport_Click">
+                            <StackPanel Orientation="Horizontal">
+                                <Icon:PackIconMaterial Kind="ForumOutline" Style="{StaticResource menuButtonIcon}"/>
+                                <TextBlock Text="Báo Cáo Thống Kê"/>
+                            </StackPanel>
+                        </Button>
+                    </StackPanel>
+
+                    <!-- Logout Button -->
+                    <Button x:Name ="btnLogOut" Style="{StaticResource menuButton}" VerticalAlignment="Bottom" DockPanel.Dock="Bottom" Margin="15 0 15 20" Click="btnLogOut_Click" >
+                        <StackPanel Orientation="Horizontal">
+                            <Icon:PackIconMaterial Kind="Logout" Style="{StaticResource menuButtonIcon}"/>
+                            <TextBlock Text="Đăng xuất"/>
+                        </StackPanel>
+                    </Button>
+                </DockPanel>
+            </Border>
+
+            <!-- Main Content Section -->
+            <Grid Grid.Column="1" Grid.Row="1" Margin="5,5,0,0">
+                <Frame x:Name="AdminMain" Margin="0,10,0,0" />
+            </Grid>
+
+        </Grid>
+    </Border>
+</Window>
