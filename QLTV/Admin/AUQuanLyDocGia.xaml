@@ -626,9 +626,9 @@ Height="470"
                                    FontWeight="Bold"
                                    Opacity="0.7"
                                    VerticalAlignment="Center" />
-                    </StackPanel>
-                    <ContentControl x:Name="SachDocGiaContent" />
+                    </StackPanel>    
                 </TabItem.Header>
+                <ContentControl x:Name="SachDocGiaContent" />
             </TabItem>
         </TabControl>
 
