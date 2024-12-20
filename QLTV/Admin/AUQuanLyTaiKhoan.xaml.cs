@@ -55,10 +55,12 @@ namespace QLTV.Admin
                 using (var context = new QLTVContext())
                 {
                     // Tải dữ liệu từ TAIKHOAN và liên kết với DOCGIA hoặc ADMIN dựa trên IDPhanQuyen
+
                     var accounts = context.TAIKHOAN
                         .Where(tk => !tk.IsDeleted)
                         .Select(tk => new AccountViewModel
                         {
+                            ID = tk.ID,
                             MaTaiKhoan = tk.MaTaiKhoan,
                             TenTaiKhoan = tk.TenTaiKhoan,
                             Email = tk.Email,

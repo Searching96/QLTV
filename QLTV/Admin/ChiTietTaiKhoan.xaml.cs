@@ -23,6 +23,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 
 using System.IO;
+using System.Net.WebSockets;
 
 
 namespace QLTV.Admin
@@ -150,6 +151,56 @@ namespace QLTV.Admin
             
 
         }
+        public static int LoadTongSach(int id)
+        {
+            using (var context = new QLTVContext())
+            {
+                var dg = context.DOCGIA.FirstOrDefault(dg => dg.IDTaiKhoan == id);
+                
+                if(dg == null)
+                {
+                    return 0;
+                }
+                var totalBooks = context.PHIEUMUON
+                .Where(pm => pm.IDDocGia == dg.ID)
+                .SelectMany(pm => pm.CTPHIEUMUON)
+                .Count();
+                return totalBooks;
+            }
+        }
+        public static string LoadTheLoaiYeuThich(int id)
+        {
+            using (var context = new QLTVContext())
+            {
+                // Lấy thông tin độc giả
+                var dg = context.DOCGIA.FirstOrDefault(dg => dg.IDTaiKhoan == id);
+
+                // Kiểm tra nếu độc giả không tồn tại
+                if (dg == null)
+                {
+                    return "Độc giả không tồn tại";
+                }
+
+                // Truy vấn thể loại yêu thích
+                var favoriteGenre = context.PHIEUMUON
+                    .Where(pm => pm.IDDocGia == dg.ID) // Lọc phiếu mượn của độc giả
+                    .Include(pm => pm.CTPHIEUMUON) // Include chi tiết phiếu mượn
+                        .ThenInclude(ctpm => ctpm.IDSachNavigation) // Include sách tương ứng
+                            .ThenInclude(sach => sach.IDTuaSachNavigation) // Include tựa sách
+                                .ThenInclude(tuaSach => tuaSach.TUASACH_THELOAI) // Include thể loại
+                                    .ThenInclude(tsTheLoai => tsTheLoai.IDTheLoaiNavigation) // Include tên thể loại
+                    .SelectMany(pm => pm.CTPHIEUMUON) // Lấy tất cả chi tiết phiếu mượn
+                    .Where(ctpm => !ctpm.IDSachNavigation.IsDeleted) // Lọc sách không bị xóa
+                    .SelectMany(ctpm => ctpm.IDSachNavigation.IDTuaSachNavigation.TUASACH_THELOAI) // Lấy thể loại
+                    .GroupBy(tsTheLoai => tsTheLoai.IDTheLoaiNavigation.TenTheLoai) // Nhóm theo tên thể loại
+                    .OrderByDescending(group => group.Count()) // Sắp xếp theo số lượng giảm dần
+                    .Select(group => group.Key) // Lấy tên thể loại
+                    .FirstOrDefault(); // Lấy thể loại có số lượng sách mượn nhiều nhất
+
+                // Trả về kết quả hoặc thông báo nếu không tìm thấy thể loại
+                return favoriteGenre ?? "Không xác định";
+            }
+        }
 
         private void ChiTietTaiKhoan_DataContextChanged(object sender, DependencyPropertyChangedEventArgs e)
         {
@@ -159,6 +210,8 @@ namespace QLTV.Admin
             if (_currentAccount != null)
             {
                 
+                _currentAccount.TongSachMuon = LoadTongSach(_currentAccount.ID);
+                _currentAccount.TheLoaiYeuThich = LoadTheLoaiYeuThich(_currentAccount.ID);
                 AccountViewModel temp  = _currentAccount;
                 LoadData();
                 LoadLoaiTaiKhoanData(temp);
