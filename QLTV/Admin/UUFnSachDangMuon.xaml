@@ -1,0 +1,89 @@
+﻿<UserControl x:Class="QLTV.Admin.UUFnSachDangMuon"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+             xmlns:local="clr-namespace:QLTV.Admin"
+             mc:Ignorable="d"
+             d:DesignHeight="450"
+             d:DesignWidth="800">
+    <UserControl.Resources>
+        <local:NgayConLaiConverter x:Key="NgayConLaiConverter" />
+    </UserControl.Resources>
+    <Grid>
+        <StackPanel>
+            <Grid Margin="7">
+                <ComboBox x:Name="cboDocGia"
+                          Grid.Column="0"
+                          Padding="8"
+                          DisplayMemberPath="IDTaiKhoanNavigation.TenTaiKhoan"
+                          SelectedValuePath="ID"
+                          IsEditable="True"
+                          Style="{StaticResource MaterialDesignOutlinedComboBox}"
+                          IsTextSearchEnabled="True"
+                          VerticalAlignment="Center"
+                          IsSynchronizedWithCurrentItem="False"
+                          Width="300"
+                          HorizontalAlignment="Left"
+                          materialDesign:HintAssist.Hint="Chọn độc giả"
+                          materialDesign:HintAssist.FloatingScale="0.8"
+                          SelectionChanged="cboDocGia_SelectionChanged">
+                </ComboBox>
+                <ComboBox Style="{StaticResource MaterialDesignOutlinedComboBox}"
+                          x:Name="cboLoc"
+                          Padding="8"
+                          HorizontalAlignment="Right"
+                          Grid.Column="1"
+                          Width="200"
+                          IsEditable="False"
+                          materialDesign:HintAssist.Hint="Tình trạng sách"
+                          materialDesign:HintAssist.FloatingScale="0.8"
+                          SelectionChanged="cboLoc_SelectionChanged">
+                    <ComboBoxItem IsSelected="True">Tất cả</ComboBoxItem>
+                    <ComboBoxItem>Đã hết hạn</ComboBoxItem>
+                    <ComboBoxItem>Sắp hết hạn</ComboBoxItem>
+                    <ComboBoxItem>Chưa hết hạn</ComboBoxItem>
+                </ComboBox>
+            </Grid>
+            <Grid>
+                <DataGrid x:Name="dgSachDangMuon"
+                          SelectionMode="Single"
+                          SelectionUnit="FullRow"
+                          IsReadOnly="True"
+                          Margin="5"
+                          VerticalScrollBarVisibility="Auto"
+                          AutoGenerateColumns="False">
+                    <DataGrid.Resources>
+                        <Style TargetType="DataGridColumnHeader"
+                               BasedOn="{StaticResource ResourceKey=MaterialDesignDataGridColumnHeader}">
+                            <Setter Property="FontWeight"
+                                    Value="Bold" />
+                        </Style>
+                    </DataGrid.Resources>
+                    <DataGrid.Columns>
+                        <DataGridTextColumn Header="Tựa Sách"
+                                            Width="*"
+                                            Binding="{Binding TenTuaSach}" />
+                        <DataGridTextColumn Header="Mã Phiếu Mượn"
+                                            Width="*"
+                                            Binding="{Binding MaPhieuMuon}" />
+                        <DataGridTextColumn Header="Vị Trí"
+                                            Width="*"
+                                            Binding="{Binding ViTri}" />
+                        <DataGridTextColumn Header="Tình Trạng"
+                                            Width="*"
+                                            Binding="{Binding TinhTrang}" />
+                        <DataGridTextColumn Header="Ngày Còn Lại"
+                                            Width="*">
+                            <DataGridTextColumn.Binding>
+                                <Binding Path="NgayConLai"
+                                         Converter="{StaticResource NgayConLaiConverter}" />
+                            </DataGridTextColumn.Binding>
+                        </DataGridTextColumn>
+                    </DataGrid.Columns>
+                </DataGrid>
+            </Grid>
+        </StackPanel>
+    </Grid>
+</UserControl>

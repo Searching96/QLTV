@@ -715,6 +715,7 @@ namespace QLTV.Admin
                 // Refresh DataGrid để cập nhật giao diện => đã dùng OnPropChange
             }
         }
+
         private void btnSelectAll_Unchecked(object sender, RoutedEventArgs e)
         {
             var lstTacGia = dgTacGia.ItemsSource as List<TacGiaViewModel>;
@@ -788,6 +789,45 @@ namespace QLTV.Admin
                     }
                 }
             }
+        }
+
+        private void btnChiTiet_Click(object sender, RoutedEventArgs e)
+        {
+            Button button = sender as Button;
+
+            // Lấy DataContext của nút bấm, chính là hàng hiện tại
+            if (button?.DataContext is TacGiaViewModel tg)
+            {
+                // Gán đối tượng TacGiaViewModel
+                AUChiTietTacGia cttg = new AUChiTietTacGia(tg.MaTacGia);
+                cttg.DataContext = tg; // Truyền dữ liệu của tác giả vào cửa sổ chi tiết
+
+                // Tìm Frame chứa giao diện hiện tại
+                Frame parentFrame = FindParentFrame(button);
+                if (parentFrame != null)
+                {
+                    // Đặt Content của Frame là cttg
+                    parentFrame.Content = cttg;
+                }
+                else
+                {
+                    MessageBox.Show("Không tìm thấy Frame chứa nội dung.");
+                }
+            }
+            else
+            {
+                MessageBox.Show("Không thể lấy thông tin tác giả từ hàng được chọn.");
+            }
+        }
+
+        private Frame FindParentFrame(DependencyObject child)
+        {
+            DependencyObject parent = VisualTreeHelper.GetParent(child);
+            while (parent != null && parent is not Frame)
+            {
+                parent = VisualTreeHelper.GetParent(parent);
+            }
+            return parent as Frame;
         }
     }
 }

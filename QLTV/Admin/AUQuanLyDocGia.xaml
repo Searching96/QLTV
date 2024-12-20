@@ -69,7 +69,8 @@
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
 
-        <!-- Top Bar --><!--
+        <!-- Top Bar -->
+        <!--
         <Grid Background="White" Grid.Row="0">
             <Grid.Effect>
                 <DropShadowEffect BlurRadius="10" 
@@ -610,6 +611,25 @@ Height="470"
                         </DataGrid.Columns>
                     </DataGrid>
                 </Grid>
+            </TabItem>
+            <TabItem>
+                <TabItem.Header>
+                    <StackPanel Orientation="Horizontal">
+                        <materialDesign:PackIcon Kind="BookAccount"
+                                                 Width="24"
+                                                 Height="24"
+                                                 VerticalAlignment="Center"
+                                                 Opacity="0.7"
+                                                 Margin="0,0,8,0" />
+                        <TextBlock Text="Quản Lý Sách Của Độc Giả"
+                                   FontFamily="Segoe UI"
+                                   FontSize="14"
+                                   FontWeight="Bold"
+                                   Opacity="0.7"
+                                   VerticalAlignment="Center" />
+                    </StackPanel>
+                </TabItem.Header>
+                <ContentControl x:Name="SachDocGiaContent" />
             </TabItem>
         </TabControl>
 

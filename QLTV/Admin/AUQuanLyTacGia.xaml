@@ -258,6 +258,21 @@
                 <DataGridTextColumn Header="Tên Tác Giả:" Width="*" Binding="{Binding TenTacGia, Mode=OneWay}" IsReadOnly="True"/>
                 <DataGridTextColumn Header="Năm Sinh:" Width="*" Binding="{Binding NamSinh, Mode=OneWay}" IsReadOnly="True"/>
                 <DataGridTextColumn Header="Quốc Tịch:" Width="*" Binding="{Binding QuocTich, Mode=OneWay}" IsReadOnly="True"/>
+                <DataGridTemplateColumn Width="0.5*">
+                    <DataGridTemplateColumn.Header>
+                        <TextBlock Text="Chi Tiết" HorizontalAlignment="Left"/>
+                    </DataGridTemplateColumn.Header>
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <Button x:Name="btnChiTiet" Background="Transparent" BorderThickness="0"
+                                    HorizontalAlignment="Left" Padding="0"
+                                    ToolTip="Xem Chi Tiết" Click="btnChiTiet_Click">
+                                <materialDesign:PackIcon Kind="Eye" Width="20" Height="20" Foreground="DodgerBlue"/>
+                            </Button>
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
+
             </DataGrid.Columns>
         </DataGrid>
 

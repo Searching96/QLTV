@@ -44,7 +44,7 @@
                         Click="btnMenu_Click">
                         <materialDesign:PackIcon Kind="Menu" Width="40" Height="40"/>
                     </Button>
-                    <TextBlock Grid.Column="1" Text="LIMEN" FontSize="25" FontWeight="Bold" 
+                    <TextBlock Grid.Column="1" Text="LIMAN" FontSize="25" FontWeight="Bold" 
                            VerticalAlignment="Center" HorizontalAlignment="Left" Margin="85,0,0,0" />
                     <Rectangle Grid.Column="1" Width="75" HorizontalAlignment="Left" Margin="5,0,0,0">
                         <Rectangle.Fill>
@@ -82,7 +82,7 @@
                             <TextBlock x:Name="tbxTenTK" Text="{Binding TenTaiKhoan}" FontSize="16" FontWeight="Bold"/>
                             <TextBlock x:Name="tbxPhanQuyen" Text="{Binding LoaiDocGia}" FontSize="14"/>
                         </StackPanel>
-                        <Border Width="50" Height="50" Padding="3" Background="Red" Margin="10,0,0,0"  CornerRadius="100" DockPanel.Dock="Top" VerticalAlignment="Center">
+                        <Border Width="50" Height="50" Padding="3" Background="White" Margin="10,0,0,0"  CornerRadius="100" DockPanel.Dock="Top" VerticalAlignment="Center">
                             <Ellipse>
                                 <Ellipse.Fill>
                                     <ImageBrush ImageSource="{Binding Avatar}"/>

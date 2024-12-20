@@ -53,7 +53,12 @@ namespace QLTV.User
         {
             InitializeComponent();
             DataContext = this;
-            LoadTuaSach();
+            InitializeAsync();
+        }
+
+        private async void InitializeAsync()
+        {
+            await LoadTuaSach();
             LoadTheLoai();
         }
 
@@ -83,11 +88,11 @@ namespace QLTV.User
             }
         }
 
-        private void LoadTuaSach()
+        private async Task LoadTuaSach()
         {
             using (var context = new QLTVContext())
             {
-                _fullDataSource = context.TUASACH
+                var tuaSachList = await context.TUASACH
                     .Where(ts => !ts.IsDeleted)
                     .Include(ts => ts.TUASACH_TACGIA)
                         .ThenInclude(tg => tg.IDTacGiaNavigation)
@@ -99,7 +104,9 @@ namespace QLTV.User
                     .Include(ts => ts.SACH)
                         .ThenInclude(s => s.DANHGIA)
                             .ThenInclude(dg => dg.IDPhieuMuonNavigation)
-                    .ToList()
+                    .ToListAsync();
+
+                _fullDataSource = tuaSachList
                     .Select(ts => new TuaSachViewModel
                     {
                         MaTuaSach = ts.MaTuaSach,

@@ -312,8 +312,6 @@ namespace QLTV.User
                     .Where(dg => dg.IDTaiKhoanNavigation.ID == Settings.Default.CurrentUserID)
                     .FirstOrDefault();
 
-                MessageBox.Show(Settings.Default.CurrentUserID.ToString());
-
                 int daMuon = docGia.PHIEUMUON.Sum(dg => dg.CTPHIEUMUON.Count - dg.CTPHIEUTRA.Count);
 
                 if (daMuon + _selectedBooks.Count + 1 > docGia.IDLoaiDocGiaNavigation.SoSachMuonToiDa)
