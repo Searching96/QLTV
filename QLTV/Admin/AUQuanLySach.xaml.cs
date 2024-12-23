@@ -1083,6 +1083,7 @@ namespace QLTV.Admin
                                 IDTinhTrang = tinhTrang.ID
                             };
                             context.SACH.Add(newSach);
+                            tuaSach.SoLuong++;
                             context.SaveChanges();
                             thanhCong++;
                         }

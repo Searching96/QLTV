@@ -23,6 +23,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 
 using System.IO;
+using System.Net.WebSockets;
 
 
 namespace QLTV.Admin
@@ -30,7 +31,7 @@ namespace QLTV.Admin
     /// <summary>
     /// Interaction logic for ChiTietTaiKhoan.xaml
     /// </summary>
-    
+
 
     public partial class ChiTietTaiKhoan : UserControl
     {
@@ -58,12 +59,12 @@ namespace QLTV.Admin
         {
             InitializeComponent();
             DataContextChanged += ChiTietTaiKhoan_DataContextChanged; // Gắn sự kiện DataContextChanged
-            
+
         }
 
-        
 
-        private void LoadLoaiTaiKhoanData(AccountViewModel _currentAccount )
+
+        private void LoadLoaiTaiKhoanData(AccountViewModel _currentAccount)
         {
             // Khởi tạo danh sách
             LoaiTaiKhoanItems = new ObservableCollection<string>();
@@ -85,14 +86,14 @@ namespace QLTV.Admin
                     }
 
                     // Tìm loại độc giả hiện tại của tài khoản này từ bảng DOCGIA
-                    
+
                     var tk = db.TAIKHOAN.FirstOrDefault(t => t.MaTaiKhoan == _currentAccount.MaTaiKhoan && !t.IsDeleted);
-                    
+
                     var currentLoaiDocGia = db.DOCGIA
                                               .Where(dg => dg.IDTaiKhoan == tk.ID)
                                               .Select(dg => dg.IDLoaiDocGiaNavigation.TenLoaiDocGia)
                                               .FirstOrDefault();
-                    
+
                     if (currentLoaiDocGia != null)
                     {
                         temp = currentLoaiDocGia;
@@ -112,7 +113,7 @@ namespace QLTV.Admin
                     }
 
                     // Tìm quyền hiện tại của tài khoản từ bảng PHANQUYEN
-                    
+
                     var currentMoTa = db.PHANQUYEN
                                         .Where(pq => !pq.IsDeleted && pq.ID == _currentAccount.IDPhanQuyen)
                                         .Select(pq => pq.MoTa)
@@ -121,7 +122,7 @@ namespace QLTV.Admin
                     if (currentMoTa != null)
                     {
                         temp = currentMoTa;
-                        
+
                     }
                 }
             }
@@ -130,36 +131,88 @@ namespace QLTV.Admin
             cbLoaiTaiKhoan.ItemsSource = LoaiTaiKhoanItems;
             SelectedLoaiTaiKhoan = temp;
             cbLoaiTaiKhoan.Text = SelectedLoaiTaiKhoan;
-            
+
         }
 
         public void LoadData()
         {
-            
-            if(_currentAccount?.IDPhanQuyen == 4)
+
+            if (_currentAccount?.IDPhanQuyen == 4)
             {
                 txtNgayDong.Text = "Ngày hết hạn";
                 txtNgayMo.Text = "Ngày lập thẻ";
-                
+
             }
             else
             {
                 txtNgayDong.Text = "Ngày kết thúc";
                 txtNgayMo.Text = "Ngày vào làm";
             }
-            
 
+
+        }
+        public static int LoadTongSach(int id)
+        {
+            using (var context = new QLTVContext())
+            {
+                var dg = context.DOCGIA.FirstOrDefault(dg => dg.IDTaiKhoan == id);
+
+                if (dg == null)
+                {
+                    return 0;
+                }
+                var totalBooks = context.PHIEUMUON
+                .Where(pm => pm.IDDocGia == dg.ID)
+                .SelectMany(pm => pm.CTPHIEUMUON)
+                .Count();
+                return totalBooks;
+            }
+        }
+        public static string LoadTheLoaiYeuThich(int id)
+        {
+            using (var context = new QLTVContext())
+            {
+                // Lấy thông tin độc giả
+                var dg = context.DOCGIA.FirstOrDefault(dg => dg.IDTaiKhoan == id);
+
+                // Kiểm tra nếu độc giả không tồn tại
+                if (dg == null)
+                {
+                    return "Độc giả không tồn tại";
+                }
+
+                // Truy vấn thể loại yêu thích
+                var favoriteGenre = context.PHIEUMUON
+                    .Where(pm => pm.IDDocGia == dg.ID) // Lọc phiếu mượn của độc giả
+                    .Include(pm => pm.CTPHIEUMUON) // Include chi tiết phiếu mượn
+                        .ThenInclude(ctpm => ctpm.IDSachNavigation) // Include sách tương ứng
+                            .ThenInclude(sach => sach.IDTuaSachNavigation) // Include tựa sách
+                                .ThenInclude(tuaSach => tuaSach.TUASACH_THELOAI) // Include thể loại
+                                    .ThenInclude(tsTheLoai => tsTheLoai.IDTheLoaiNavigation) // Include tên thể loại
+                    .SelectMany(pm => pm.CTPHIEUMUON) // Lấy tất cả chi tiết phiếu mượn
+                    .Where(ctpm => !ctpm.IDSachNavigation.IsDeleted) // Lọc sách không bị xóa
+                    .SelectMany(ctpm => ctpm.IDSachNavigation.IDTuaSachNavigation.TUASACH_THELOAI) // Lấy thể loại
+                    .GroupBy(tsTheLoai => tsTheLoai.IDTheLoaiNavigation.TenTheLoai) // Nhóm theo tên thể loại
+                    .OrderByDescending(group => group.Count()) // Sắp xếp theo số lượng giảm dần
+                    .Select(group => group.Key) // Lấy tên thể loại
+                    .FirstOrDefault(); // Lấy thể loại có số lượng sách mượn nhiều nhất
+
+                // Trả về kết quả hoặc thông báo nếu không tìm thấy thể loại
+                return favoriteGenre ?? "Không xác định";
+            }
         }
 
         private void ChiTietTaiKhoan_DataContextChanged(object sender, DependencyPropertyChangedEventArgs e)
         {
             // Gán DataContext mới vào _currentAccount
             _currentAccount = DataContext as AccountViewModel;
-            
+
             if (_currentAccount != null)
             {
-                
-                AccountViewModel temp  = _currentAccount;
+
+                _currentAccount.TongSachMuon = LoadTongSach(_currentAccount.ID);
+                _currentAccount.TheLoaiYeuThich = LoadTheLoaiYeuThich(_currentAccount.ID);
+                AccountViewModel temp = _currentAccount;
                 LoadData();
                 LoadLoaiTaiKhoanData(temp);
             }
@@ -194,7 +247,7 @@ namespace QLTV.Admin
                 using (var context = new QLTVContext())
                 {
                     // Lấy thông tin từ các TextBox
-                    
+
                     var taiKhoan = context.TAIKHOAN
                         .Include(t => t.IDPhanQuyenNavigation) // Tải bảng PHANQUYEN liên quan
                         .FirstOrDefault(u => u.MaTaiKhoan == _currentAccount.MaTaiKhoan && !u.IsDeleted);
@@ -258,7 +311,7 @@ namespace QLTV.Admin
 
                         // Cập nhật thông tin DOCGIA
                         docGia.IDLoaiDocGia = loaiDocGia.ID;
-                        
+
                     }
                     else
                     {
@@ -309,7 +362,7 @@ namespace QLTV.Admin
                 txtSDT.IsReadOnly = false;
                 cbLoaiTaiKhoan.IsEnabled = false;
                 dpNgayDangKy.IsEnabled = false;
-                dpNgayHetHan.IsEnabled = false;                
+                dpNgayHetHan.IsEnabled = false;
             }
             else
             {

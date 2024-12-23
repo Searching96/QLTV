@@ -37,17 +37,17 @@ namespace QLTV.Admin
     {
         public ObservableCollection<AccountViewModel> Accounts { get; set; } = new ObservableCollection<AccountViewModel>();
         private static Random random = new Random(); // Khởi tạo Random duy nhất
-        
+
 
 
         public QuanLyTaiKhoan()
         {
             InitializeComponent();
             DataContext = this; // Gán DataContext để binding
-            
+
             LoadData();
         }
-        
+
         public void LoadData()
         {
             try
@@ -55,23 +55,25 @@ namespace QLTV.Admin
                 using (var context = new QLTVContext())
                 {
                     // Tải dữ liệu từ TAIKHOAN và liên kết với DOCGIA hoặc ADMIN dựa trên IDPhanQuyen
+
                     var accounts = context.TAIKHOAN
                         .Where(tk => !tk.IsDeleted)
                         .Select(tk => new AccountViewModel
                         {
+                            ID = tk.ID,
                             MaTaiKhoan = tk.MaTaiKhoan,
                             TenTaiKhoan = tk.TenTaiKhoan,
                             Email = tk.Email,
                             SDT = tk.SDT,
                             DiaChi = tk.DiaChi,
                             NgaySinh = tk.SinhNhat,  // Sửa lỗi tại đây: Sử dụng ?? để xử lý null
-                            IDPhanQuyen = tk.IDPhanQuyen, 
+                            IDPhanQuyen = tk.IDPhanQuyen,
                             LoaiTaiKhoan = tk.IDPhanQuyenNavigation.MoTa,
                             NgayDangKy = tk.NgayMo,
                             NgayHetHan = tk.NgayDong,
                             BgColor = GenerateRandomColor(),
                             TenNguoiDung = tk.HoTen,
-                            GioiTinh = tk.GioiTinh,          
+                            GioiTinh = tk.GioiTinh,
                             Avatar = tk.Avatar
                         })
                         .ToList();
@@ -91,7 +93,7 @@ namespace QLTV.Admin
         }
 
         private static string GenerateRandomColor()
-        { 
+        {
             int red = random.Next(0, 256);
             int green = random.Next(0, 256);
             int blue = random.Next(0, 256);
@@ -102,7 +104,7 @@ namespace QLTV.Admin
 
         private void btnLamMoi_Click(object sender, RoutedEventArgs e)
         {
-            LoadData(); 
+            LoadData();
         }
 
         private void btnTaoTaiKhoan_Click(object sender, RoutedEventArgs e)
@@ -192,7 +194,7 @@ namespace QLTV.Admin
                 }
             }
         }
-        
+
         private void txtSearch_TextChanged(object sender, TextChangedEventArgs e)
         {
             try
@@ -227,11 +229,11 @@ namespace QLTV.Admin
                             LoaiTaiKhoan = tk.IDPhanQuyenNavigation.MoTa,
                             BgColor = GenerateRandomColor(),
                         });
-                    
+
                     if (selectedSearchType == "TenTaiKhoan")
                     {
                         query = query.Where(tk => tk.TenTaiKhoan.Contains(searchValue));
-                        
+
                     }
                     else if (selectedSearchType == "IDPhanQuyen")
                     {
@@ -300,24 +302,24 @@ namespace QLTV.Admin
                 }
             }
         }
-        
-            private void CloseTab_Click(object sender, RoutedEventArgs e)
+
+        private void CloseTab_Click(object sender, RoutedEventArgs e)
+        {
+            // Get the button that was clicked
+            var button = sender as System.Windows.Controls.Button;
+
+            // Find the parent TabItem
+            if (button != null)
             {
-                // Get the button that was clicked
-                var button = sender as System.Windows.Controls.Button;
+                var tabItem = FindParent<TabItem>(button);
 
-                // Find the parent TabItem
-                if (button != null)
+                // Remove the TabItem from the TabControl
+                if (tabItem != null)
                 {
-                    var tabItem = FindParent<TabItem>(button);
-
-                    // Remove the TabItem from the TabControl
-                    if (tabItem != null)
-                    {
-                        tcQLTK.Items.Remove(tabItem);
-                    }
+                    tcQLTK.Items.Remove(tabItem);
                 }
             }
+        }
         private T FindParent<T>(DependencyObject child) where T : DependencyObject
         {
             // Search up the visual tree to find the parent of type T
@@ -331,7 +333,7 @@ namespace QLTV.Admin
 
 
         private void btnXoa_Click(object sender, RoutedEventArgs e)
-            {
+        {
             // Lấy danh sách các dòng đang được chọn
             var selectedAccounts = new List<AccountViewModel>();
             foreach (var selectedItem in dgAccount.SelectedItems)
@@ -441,7 +443,7 @@ namespace QLTV.Admin
         {
             ExcelPackage.LicenseContext = LicenseContext.NonCommercial;
             Random random = new Random();
-           
+
             string password = random.Next(100000, 999999).ToString(); // Tạo mật khẩu tạm thời
 
             // Hiển thị hộp thoại chọn file
@@ -464,7 +466,7 @@ namespace QLTV.Admin
                         int soDongThanhCong = 0;
                         int soDongBiLoi = 0;
                         List<string> danhSachLoi = new List<string>(); // Ghi nhận dòng lỗi
-                        
+
                         using (var context = new QLTVContext())
                         {
                             for (int row = 2; row <= rowCount; row++) // Bỏ qua hàng tiêu đề
@@ -495,7 +497,7 @@ namespace QLTV.Admin
                                                 ? dateNgayMo.Date
                                                 : throw new Exception($"Ngày mở không hợp lệ: {worksheet.Cells[row, 7].Value}"),
 
-                                                                                    NgayDong = worksheet.Cells[row, 8].Value is DateTime dateNgayDong
+                                        NgayDong = worksheet.Cells[row, 8].Value is DateTime dateNgayDong
                                                 ? dateNgayDong.Date
                                                 : throw new Exception($"Ngày đóng không hợp lệ: {worksheet.Cells[row, 8].Value}"),
                                         IsDeleted = false, // Đảm bảo không bị đánh dấu đã xóa
@@ -620,4 +622,3 @@ namespace QLTV.Admin
         }
     }
 }
-

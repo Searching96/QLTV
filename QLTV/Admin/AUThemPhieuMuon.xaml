@@ -311,7 +311,7 @@
             </Setter>
         </Style>
     </UserControl.Resources>
-    
+
     <Grid Margin="10" Background="White">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
@@ -320,6 +320,7 @@
             <RowDefinition Height="*" />
             <RowDefinition Height="Auto" />
             <RowDefinition Height="*" />
+            <RowDefinition Height="Auto" />
             <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
 
@@ -547,5 +548,15 @@
                     Foreground="White">
             </Button>
         </StackPanel>
+        <Grid Grid.Row="7" Margin="0,5">
+            <StackPanel>
+                <Button Content="Sinh Dữ Liệu Mượn Trả"
+                        Click="GenerateBorrowTickets_Click" />
+                <TextBlock x:Name="ResultTextBlock"
+                           TextWrapping="Wrap" FontWeight="Bold"
+                           HorizontalAlignment="Center" Foreground="Green"
+                           Margin="10" />
+            </StackPanel>
+        </Grid>
     </Grid>
 </UserControl> 

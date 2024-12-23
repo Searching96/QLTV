@@ -64,9 +64,9 @@ namespace QLTV.ViewModels
                         }
                     }
                     var phieuMuons = dbContext.PHIEUMUON
-                .Include(pm => pm.CTPHIEUMUON) // Include để tải chi tiết phiếu mượn
-                .Where(pm => pm.IDDocGia == docGia.ID && !pm.IsDeleted)
-                .ToList();
+                        .Include(pm => pm.CTPHIEUMUON) // Include để tải chi tiết phiếu mượn
+                        .Where(pm => pm.IDDocGia == docGia.ID && !pm.IsDeleted)
+                        .ToList();
 
                     foreach (var phieuMuon in phieuMuons)
                     {

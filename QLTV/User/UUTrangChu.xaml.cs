@@ -204,7 +204,7 @@ namespace QLTV.User
                 MessageBox.Show("Selected book is null!");
                 return;
             }
-            else MessageBox.Show("Co Sach");
+            // else MessageBox.Show("Co Sach");
             //// Gửi thông tin sách lên Window để mở tab chi tiết
             //var mainWindow = Application.Current.MainWindow as WUserWindow;
             //mainWindow?.OpenBookDetailTab(selectedBook);

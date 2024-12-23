@@ -26,6 +26,8 @@ namespace QLTV.GridViewModels
         public decimal? TongNo { get; set; }
         public string BgColor { get; set; } = null!;
         public string Character => string.IsNullOrEmpty(TenTaiKhoan) ? "" : TenTaiKhoan[0].ToString().ToUpper();
+        public int? TongSachMuon { get; set; }
+        public string? TheLoaiYeuThich { get; set; }
 
         private bool _isChecked;
         public bool IsChecked

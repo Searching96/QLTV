@@ -106,6 +106,8 @@
                         <RowDefinition Height="1*"/>
                         <RowDefinition Height="1*"/>
                         <RowDefinition Height="1*"/>
+                        <RowDefinition Height="1*"/>
+                        <RowDefinition Height="1*"/>
                     </Grid.RowDefinitions>
 
                     <!-- Headers -->
@@ -118,6 +120,9 @@
                     <TextBlock Text="Loại Tài Khoản" FontWeight="Bold" Grid.Row="6" Grid.Column="0" VerticalAlignment="Center"/>
                     <TextBlock x:Name="txtNgayMo" Text="ngaymo" FontWeight="Bold" Grid.Row="7" Grid.Column="0" VerticalAlignment="Center"/>
                     <TextBlock x:Name="txtNgayDong" Text="ngaydong" FontWeight="Bold" Grid.Row="8" Grid.Column="0" VerticalAlignment="Center"/>
+                    <TextBlock Text="Tổng số sách đã mượn" FontWeight="Bold" Grid.Row="9" Grid.Column="0" VerticalAlignment="Center"/>
+                    <TextBlock Text="Thể loại yêu thích" FontWeight="Bold" Grid.Row="10" Grid.Column="0" VerticalAlignment="Center"/>
+
 
                     <!-- Content -->
                     <Grid Grid.Row="0" Grid.Column="1" >
@@ -168,7 +173,7 @@
                                                 Style="{StaticResource ErrorIcon}"/>
 
                     </Grid>
-                    
+
                     <ComboBox x:Name="cbLoaiTaiKhoan" Grid.Row="6" Grid.Column="1" 
                               VerticalAlignment="Center" 
                               ItemsSource="{Binding LoaiTaiKhoanItems}" 
@@ -219,6 +224,14 @@
                                 </Style>
                             </materialDesign:PackIcon.Style>
                         </materialDesign:PackIcon>
+                    </Grid>
+                    <Grid Grid.Row="9" Grid.Column="1" >
+                        <TextBox x:Name="txtTongSoSach" Text="{Binding TongSachMuon}"  VerticalAlignment="Center" IsReadOnly="True"/>
+
+                    </Grid>
+                    <Grid Grid.Row="10" Grid.Column="1" >
+                        <TextBox x:Name="txtTheLoaiYeuThich" Text="{Binding TheLoaiYeuThich}"  VerticalAlignment="Center" IsReadOnly="True"/>
+
                     </Grid>
                 </Grid>
             </Grid>

@@ -1,6 +1,13 @@
-﻿create database [QLTV_Merged]
+﻿USE master;
+GO
+ALTER DATABASE QLTV SET SINGLE_USER WITH ROLLBACK IMMEDIATE;
+GO
+DROP DATABASE QLTV;
+GO
+
+create database [QLTV]
 go
-use [QLTV_Merged]
+use [QLTV]
 go
 
 set dateformat dmy
@@ -21,11 +28,6 @@ create table [PHANQUYEN]
 	[MaHanhDong] varchar(100) not null,
 	[MoTa] nvarchar(100) not null,
 	[IsDeleted] bit not null,
-	-- Xóa đi thì trước khi xóa thay bằng 1 phân quyền khác có tồn tại.
-	-- Thêm phân quyền Banned hoặc xét IsDeleted = 1 bằng Banned cũng được
-	-- Khi xóa 1 PQ thì hiện thông báo: Hãy gán quyền khác cho các tài khoản được gán quyền này
-	-- Quyền Ko Xac Dinh: phân quyền của bạn không xác định, vấn đề này do bên admin, 
-	-- liên hệ họ để được hỗ trợ (trường hợp cần sửa chữa hệ thống dành cho 1 phân quyền nào đó)
 )
 
 create table [LOAIDOCGIA]
@@ -49,8 +51,8 @@ create table [TAIKHOAN]
 	[SinhNhat] date not null,
 	[DiaChi] nvarchar(200) not null,
 	[SDT] varchar(20) not null,
-	[Avatar] nvarchar(500) not null DEFAULT 'D:\WPF\QLTVReal - User\QLTV\Image\DefaultAvatar.png',
-	[TrangThai] bit not null, -- co dang dang nhap hay ko
+	[Avatar] nvarchar(500) not null DEFAULT 'D:\WPF\QLTV\QLTV\Image\DefaultAvatar.png',
+	[TrangThai] bit not null,
 	[IDPhanQuyen] int not null, -- FK
 	[IsDeleted] bit not null,
 	[NgayMo] date not null,
@@ -81,7 +83,7 @@ create table [TACGIA]
 	[TenTacGia] nvarchar(100) not null,
     [NamSinh] int not null,
     [QuocTich] nvarchar(100) not null,
-    [IsDeleted] bit not null -- thu xem them cai global query excluder thi khi query sach tac gia, voi mot sach co nhieu tac gia thi co tu dong ko lay cac tac gia da delete ko
+    [IsDeleted] bit not null
 )
 
 create table [THELOAI]
@@ -99,7 +101,7 @@ create table [TUASACH]
     [MaTuaSach] as ('TS' + right('00000' + cast([ID] as varchar(5)), 5)) persisted,
     [TenTuaSach] nvarchar(100) not null,
     [BiaSach] varchar(500) not null,
-    [SoLuong] int not null, -- them rang buoc so luong nay phai bang so luong sach co ma tua sach nay
+    [SoLuong] int not null, -- SoLuong phai bang so luong sach co ma tua sach nay
     [HanMuonToiDa] int not null, -- don vi: tuan
     [MoTa] nvarchar(1500) not null,
     [IsDeleted] bit not null
@@ -121,8 +123,6 @@ create table [TUASACH_THELOAI]
 
 create table [TINHTRANG]
 (
-    -- vd: TT1: Nguyen ven, TT2: Hu muc 1 (25), TT3: muc 2 (50), TT4: 75, TT5: (Hu nang ne/ hoan toan) 100
-    -- -> tien phat bang (MHH(moi) - MHH(cu)) x 2 x GiaTri
     [ID] int identity(1, 1) constraint [PK_TINHTRANG] primary key,
     [MaTinhTrang] as ('TT' + right('00000' + cast([ID] as varchar(5)), 5)) persisted,
     [TenTinhTrang] nvarchar(100) not null,
@@ -132,7 +132,6 @@ create table [TINHTRANG]
 
 create table [SACH]
 (
-    -- Một đợt nhập nhiều quyển giống nhau thì vẫn cho là 2 sách khác nhau vì sau này có thể khác tình trạng
     [ID] int identity(1, 1) constraint [PK_SACH] primary key,
     [MaSach] as ('S' + right('00000' + cast([ID] as varchar(5)), 5)) persisted,
     [IDTuaSach] int not null, -- FK
@@ -152,9 +151,8 @@ create table [PHIEUMUON]
     [MaPhieuMuon] as ('PM' + right('00000' + cast ([ID] as varchar(5)), 5)) persisted,
     [IDDocGia] int not null, -- FK
     [NgayMuon] datetime not null,
-    [IsPending] bit not null, -- kiem tra sau 3 ngay ma IsPending van bang 1 thi IsDeleted = 1
+    [IsPending] bit not null,
     [IsDeleted] bit not null
-    -- IsPending = 0/1 xu ly tren code chu ko set default 
 )
 
 create table [CTPHIEUMUON]
@@ -163,7 +161,7 @@ create table [CTPHIEUMUON]
     [IDSach] int not null, -- FK
     constraint [PK_CTPHIEUMUON] primary key([IDPhieuMuon], [IDSach]),
     [HanTra] datetime not null,
-    [IDTinhTrangMuon] int not null -- tinh trang moi/cu cua sach luc muon?
+    [IDTinhTrangMuon] int not null 
 )
 
 create table [PHIEUTRA]
@@ -171,7 +169,7 @@ create table [PHIEUTRA]
     [ID] int identity(1, 1) constraint [PK_PHIEUTRA] primary key,
     [MaPhieuTra] as ('PT' + right('00000' + cast ([ID] as varchar(5)), 5)) persisted,
     [NgayTra] datetime not null,
-    [IsDeleted] bit not null -- cho xoa vi lo nhap sai
+    [IsDeleted] bit not null
 )
 
 create table [CTPHIEUTRA]
@@ -224,7 +222,7 @@ create table [PHIEUTHUTIENPHAT]
     [MaPTTP] as ('PTTP' + right('00000' + cast ([ID] as varchar(5)), 5)) persisted,
     [IDDocGia] int not null,
     [NgayThu] datetime not null,
-    [TongNo] decimal(18, 0) not null, -- = TongNo doc gia, lay ben DOCGIA khoi luu cung duoc, ma luu cho tien?
+    [TongNo] decimal(18, 0) not null,
     [SoTienThu] decimal(18, 0) not null,
     [ConLai] decimal(18, 0) not null,
 	[IsDeleted] bit not null
@@ -389,41 +387,31 @@ foreign key ([IDTheLoai]) references [THELOAI]([ID]);
 alter table [PHIEUTHUTIENPHAT] add constraint [FK_PHIEUTHUTIENPHAT_IDDocGia]
 foreign key ([IDDocGia]) references [DOCGIA]([ID]);
 
-insert into THAMSO(ThoiGian, TuoiToiThieu, TienPhatTraTreMotNgay, TiLeDenBu)
-values('2024/11/10', 10, 5000, 2)
+INSERT INTO TACGIA(TenTacGia, NamSinh, QuocTich) VALUES (N'William Shakespeare', 1564, 'England');
+INSERT INTO TACGIA(TenTacGia, NamSinh, QuocTich) VALUES (N'Jane Austen', 1775, 'England');
+INSERT INTO TACGIA(TenTacGia, NamSinh, QuocTich) VALUES (N'Mark Twain', 1835, 'United States');
+INSERT INTO TACGIA(TenTacGia, NamSinh, QuocTich) VALUES (N'Leo Tolstoy', 1828, 'Russia');
+INSERT INTO TACGIA(TenTacGia, NamSinh, QuocTich) VALUES (N'Victor Hugo', 1802, 'France');
+INSERT INTO TACGIA(TenTacGia, NamSinh, QuocTich) VALUES (N'Gabriel Garcia Marquez', 1927, 'Colombia');
+INSERT INTO TACGIA(TenTacGia, NamSinh, QuocTich) VALUES (N'Haruki Murakami', 1949, 'Japan');
+INSERT INTO TACGIA(TenTacGia, NamSinh, QuocTich) VALUES (N'Nguyễn Du', 1766, 'Vietnam');
+INSERT INTO TACGIA(TenTacGia, NamSinh, QuocTich) VALUES (N'Chinua Achebe', 1930, 'Nigeria');
 
-insert into TUASACH(TenTuaSach, HanMuonToiDa, MoTa) values('Two Dimensions', 2, N'Giữa hai the gioi ta thay duoc dieu gi');
-insert into THELOAI(TenTheLoai, MoTa) values('Khong xac dinh', 'mo ta')
-insert into TACGIA(TenTacGia, NamSinh, QuocTich) values('Aurora', 2077, 'Somewhere')
-
-insert into TUASACH_TACGIA(IDTuaSach, IDTacGia) values(1, 1)
-insert into TUASACH_THELOAI(IDTuaSach, IDTheLoai) values(1, 1)
-
-INSERT INTO TACGIA(TenTacGia, NamSinh, QuocTich) VALUES ('William Shakespeare', 1564, 'England');
-INSERT INTO TACGIA(TenTacGia, NamSinh, QuocTich) VALUES ('Jane Austen', 1775, 'England');
-INSERT INTO TACGIA(TenTacGia, NamSinh, QuocTich) VALUES ('Mark Twain', 1835, 'United States');
-INSERT INTO TACGIA(TenTacGia, NamSinh, QuocTich) VALUES ('Leo Tolstoy', 1828, 'Russia');
-INSERT INTO TACGIA(TenTacGia, NamSinh, QuocTich) VALUES ('Victor Hugo', 1802, 'France');
-INSERT INTO TACGIA(TenTacGia, NamSinh, QuocTich) VALUES ('Gabriel Garcia Marquez', 1927, 'Colombia');
-INSERT INTO TACGIA(TenTacGia, NamSinh, QuocTich) VALUES ('Haruki Murakami', 1949, 'Japan');
-INSERT INTO TACGIA(TenTacGia, NamSinh, QuocTich) VALUES ('Nguyen Du', 1766, 'Vietnam');
-INSERT INTO TACGIA(TenTacGia, NamSinh, QuocTich) VALUES ('Chinua Achebe', 1930, 'Nigeria');
-
-INSERT INTO THELOAI(TenTheLoai, MoTa) VALUES (N'Văn học cổ điển', 'mo ta');
-INSERT INTO THELOAI(TenTheLoai, MoTa) VALUES (N'Khoa học viễn tưởng', 'mo ta');
-INSERT INTO THELOAI(TenTheLoai, MoTa) VALUES (N'Kinh dị', 'mo ta');
-INSERT INTO THELOAI(TenTheLoai, MoTa) VALUES (N'Hồi ký', 'mo ta');
-INSERT INTO THELOAI(TenTheLoai, MoTa) VALUES (N'Trinh thám', 'mo ta');
-INSERT INTO THELOAI(TenTheLoai, MoTa) VALUES (N'Lãng mạn', 'mo ta');
-INSERT INTO THELOAI(TenTheLoai, MoTa) VALUES (N'Tâm lý học', 'mo ta');
-INSERT INTO THELOAI(TenTheLoai, MoTa) VALUES (N'Giáo dục', 'mo ta');
-INSERT INTO THELOAI(TenTheLoai, MoTa) VALUES (N'Thần thoại', 'mo ta');
-INSERT INTO THELOAI(TenTheLoai, MoTa) VALUES (N'Thiếu nhi', 'mo ta');
-INSERT INTO THELOAI(TenTheLoai, MoTa) VALUES (N'Kinh doanh', 'mo ta');
-INSERT INTO THELOAI(TenTheLoai, MoTa) VALUES (N'Kỹ năng số', 'mo ta');
-INSERT INTO THELOAI(TenTheLoai, MoTa) VALUES (N'Lịch sử', 'mo ta');
-INSERT INTO THELOAI(TenTheLoai, MoTa) VALUES (N'Chính trị', 'mo ta');
-INSERT INTO THELOAI(TenTheLoai, MoTa) VALUES (N'Khoa học tự nhiên', 'mo ta');
+INSERT INTO THELOAI(TenTheLoai, MoTa) VALUES (N'Văn học cổ điển', N'Những tác phẩm văn học thời xưa');
+INSERT INTO THELOAI(TenTheLoai, MoTa) VALUES (N'Khoa học viễn tưởng', N'Chủ đề về khoa học công nghệ chưa có thật');
+INSERT INTO THELOAI(TenTheLoai, MoTa) VALUES (N'Kinh dị', N'Giật gân ám ảnh');
+INSERT INTO THELOAI(TenTheLoai, MoTa) VALUES (N'Hồi ký', N'Kể về những chuyển đã trải qua');
+INSERT INTO THELOAI(TenTheLoai, MoTa) VALUES (N'Trinh thám', N'Phiêu lưu phá án');
+INSERT INTO THELOAI(TenTheLoai, MoTa) VALUES (N'Lãng mạn', N'Nói về tình yêu');
+INSERT INTO THELOAI(TenTheLoai, MoTa) VALUES (N'Tâm lý học', N'Bàn về các chủ đề tâm lý');
+INSERT INTO THELOAI(TenTheLoai, MoTa) VALUES (N'Giáo dục', N'Nội dung về việc giáo dục');
+INSERT INTO THELOAI(TenTheLoai, MoTa) VALUES (N'Thần thoại', N'Kể các chuyện thần thoại');
+INSERT INTO THELOAI(TenTheLoai, MoTa) VALUES (N'Thiếu nhi', N'Nội dung dành cho trẻ em');
+INSERT INTO THELOAI(TenTheLoai, MoTa) VALUES (N'Kinh doanh', N'Các kiến thức kinh doanh');
+INSERT INTO THELOAI(TenTheLoai, MoTa) VALUES (N'Kỹ năng số', N'Cung cấp kỹ năng trong thời đại mới');
+INSERT INTO THELOAI(TenTheLoai, MoTa) VALUES (N'Lịch sử', N'Kể về lịch sử');
+INSERT INTO THELOAI(TenTheLoai, MoTa) VALUES (N'Chính trị', N'Các chủ đề chính trị');
+INSERT INTO THELOAI(TenTheLoai, MoTa) VALUES (N'Khoa học tự nhiên', N'Các kiến thức về khoa học');
 
 insert into TINHTRANG(TenTinhTrang, MucHuHong) values(N'Mới', 0);
 insert into TINHTRANG(TenTinhTrang, MucHuHong) values(N'Hỏng nhẹ', 25);
@@ -432,21 +420,49 @@ insert into TINHTRANG(TenTinhTrang, MucHuHong) values(N'Hỏng nặng', 75);
 insert into TINHTRANG(TenTinhTrang, MucHuHong) values(N'Hỏng hoàn toàn', 100);
 insert into TINHTRANG(TenTinhTrang, MucHuHong) values(N'Mất', 100);
 
-insert into SACH(IDTuaSach, NamXuatBan, NhaXuatBan, NgayNhap, TriGia, IDTinhTrang, ViTri) values(1 , 2077, 'Su That', '1/1/2049', 100000, 1, 'L02P01K12');
-insert into SACH(IDTuaSach, NamXuatBan, NhaXuatBan, NgayNhap, TriGia, IDTinhTrang, ViTri) values(1 , 2011, 'Su That', '1/1/2009', 90000, 1, 'L02P01K11');
-
-set dateformat ymd
-go
-
 insert into [PHANQUYEN](MaHanhDong, MoTa) values('SuperAdmin', N'Siêu Quản Trị');
 insert into [PHANQUYEN](MaHanhDong, MoTa) values('QLTK', N'Quản Lý Tài Khoản');
 insert into [PHANQUYEN](MaHanhDong, MoTa) values('ThuThu', N'Thủ Thư');
 insert into [PHANQUYEN](MaHanhDong, MoTa) values('DG', N'Độc Giả');
 
+insert into [LOAIDOCGIA](TenLoaiDocGia, SoSachMuonToiDa) values(N'Sinh Viên', 10);
+insert into [LOAIDOCGIA](TenLoaiDocGia, SoSachMuonToiDa) values(N'Giảng Viên', 20);
+insert into [LOAIDOCGIA](TenLoaiDocGia, SoSachMuonToiDa) values(N'Cán Bộ', 15);
+insert into [LOAIDOCGIA](TenLoaiDocGia, SoSachMuonToiDa) values(N'Mặc Định', 0);
+
 insert into [TAIKHOAN](TenTaiKhoan, Hoten, GioiTinh, MatKhau, Email, SinhNhat, DiaChi, SDT, TrangThai, IDPhanQuyen, NgayMo, NgayDong)
-values (N'sa', N'super admin', N'Nam', 'sa123', 'sa@gm.com', '1999-01-02', N'Right here', '0999987789', 0, 1, '2024-01-01', '2025-01-01');
+values 
+(N'sa', N'Super Admin', N'Nam', 'sa123', 'sa@gm.com', '1/2/1995', N'Right here', '0999987789', 0, 1, '1/1/2024', '1/1/2026'),
+(N'qltk', N'Quản Lý Hoàng', N'Nam', 'qltk123', 'qltk@gm.com', '1/2/1995', N'Right here', '0999987789', 0, 2, '1/1/2024', '1/1/2026'),
+(N'thuthu', N'Thủ Thư Hải', N'Nam', 'tt123', 'tt@gm.com', '1/2/1995', N'Right here', '0999987789', 0, 3, '1/1/2024', '1/1/2026'),
+(N'docgia', N'Phúc Thành', N'Nam', 'dg123', 'dg@gm.com', '31/1/2000', N'Right here', '0999987789', 0, 4, '1/1/2024', '1/1/2026'),
+(N'docgia1', N'Hải Dương', N'Nam', 'dg123', 'dg1@gm.com', '31/1/2000', N'Right here', '0999987789', 0, 4, '1/1/2024', '1/1/2026'),
+(N'docgia2', N'Minh Anh', N'Nam', 'dg123', 'dg2@gm.com', '31/1/2000', N'Right here', '0999987789', 0, 4, '1/1/2024', '1/1/2026'),
+(N'docgia3', N'Thế Việt', N'Nam', 'dg123', 'dg3@gm.com', '31/1/2000', N'Right here', '0999987789', 0, 4, '1/1/2024', '1/1/2026'),
+(N'docgia4', N'Đắc Minh', N'Nam', 'dg123', 'dg4@gm.com', '31/1/2000', N'Right here', '0999987789', 0, 4, '1/1/2024', '1/1/2026'),
+(N'docgia5', N'Việt Hoàng', N'Nam', 'dg123', 'dg5@gm.com', '31/1/2000', N'Right here', '0999987789', 0, 4, '1/1/2024', '1/1/2026'),
+(N'docgia6', N'Nhân Thiện', N'Nam', 'dg123', 'dg6@gm.com', '31/1/2000', N'Right here', '0999987789', 0, 4, '1/1/2024', '1/1/2026'),
+(N'docgia7', N'Trường Thọ', N'Nam', 'dg123', 'dg7@gm.com', '31/1/2000', N'Right here', '0999987789', 0, 4, '1/1/2024', '1/1/2026'),
+(N'docgia8', N'Chính Vũ', N'Nam', 'dg123', 'dg8@gm.com', '31/1/2000', N'Right here', '0999987789', 0, 4, '1/1/2024', '1/1/2026'),
+(N'docgia9', N'Thái Sơn', N'Nam', 'dg123', 'dg9@gm.com', '31/1/2000', N'Right here', '0999987789', 0, 4, '1/1/2024', '1/1/2026'),
+(N'docgia10', N'Ngọc Anh', N'Nam', 'dg123', 'dg10@gm.com', '31/1/2000', N'Right here', '0999987789', 0, 4, '1/1/2024', '1/1/2026');
+
 
 INSERT INTO [ADMIN] ([IDTaiKhoan])
 SELECT [ID]
 FROM [TAIKHOAN]
 WHERE [IDPhanQuyen] BETWEEN 1 AND 3;
+
+INSERT INTO [DOCGIA] ([IDTaiKhoan], [IDLoaiDocGia], [GioiThieu])
+SELECT 
+    [ID] AS IDTaiKhoan,
+    ABS(CHECKSUM(NEWID())) % 3 + 1 AS IDLoaiDocGia,
+	N'Chưa Có'
+FROM [TAIKHOAN]
+WHERE [IDPhanQuyen] = 4;
+
+insert into THAMSO(ThoiGian, TuoiToiThieu, TienPhatTraTreMotNgay, TiLeDenBu) values('01/12/2023', 10, 4000, 1.5)
+insert into THAMSO(ThoiGian, TuoiToiThieu, TienPhatTraTreMotNgay, TiLeDenBu) values('01/04/2024', 10, 5000, 2)
+insert into THAMSO(ThoiGian, TuoiToiThieu, TienPhatTraTreMotNgay, TiLeDenBu) values('01/06/2024', 10, 4500, 2.5)
+insert into THAMSO(ThoiGian, TuoiToiThieu, TienPhatTraTreMotNgay, TiLeDenBu) values('01/09/2024', 10, 5500, 2)
+insert into THAMSO(ThoiGian, TuoiToiThieu, TienPhatTraTreMotNgay, TiLeDenBu) values('01/12/2024', 10, 7000, 1.75)
